@@ -1,0 +1,27 @@
+.container-login {
+    position: relative;
+    height: 100vh;
+    background-color: $color-grey-light-2;
+}
+
+
+
+.banner {
+    height: 50vh;
+    background-image: url('/images/matina2.jpg');
+    background-size: 100% 115%;
+    background-position:bottom;
+}
+
+.login {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    &__form {
+        background-color: white;
+        padding: 2rem;
+        box-shadow: 0 0 1rem rgba($color-black,.2);
+    }
+}

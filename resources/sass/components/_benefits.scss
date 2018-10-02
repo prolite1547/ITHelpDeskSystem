@@ -1,0 +1,19 @@
+.benefit {
+    background-color: rgba($color-white,.8);
+    text-align: center;
+    padding: 2rem;
+    border-radius: 3px;
+    transition: all .3s;
+    box-shadow: 0 1.5rem 3rem rgba($color-black,.1);
+    &__icon {
+        color: transparent;
+        font-size: 6rem;
+        background-image: linear-gradient(to right,$color-primary-light,$color-primary-dark);
+        -webkit-background-clip: text;
+        display: inline-block;
+    }
+
+    &:hover {
+        transform: translateY(-1rem);
+    }
+}
