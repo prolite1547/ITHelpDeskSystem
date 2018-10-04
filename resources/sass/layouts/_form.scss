@@ -36,9 +36,16 @@
         border-radius: 2px;
         background-color: $color-white;
         border: 1px solid $color-grey-dark-2;
-        width: 100%;
         display: inline-block;
         transition: all .3s;
+    }
+
+    &__search {
+        padding: .5rem;
+        padding-left: 2.5rem;
+        border-radius: 10rem;
+        border: none;
+        text-align: left;
     }
 
 
@@ -78,6 +85,16 @@
         left: 2rem;
         transform: translateY(4rem);
         transition: all .3s;
+    }
+
+    &--search {
+        display: inline-block;
+        &__icon {
+            cursor: pointer;
+            font-size: $default-font-size;
+            position: relative;
+            left: 2rem;
+        }
     }
 }
 

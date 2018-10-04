@@ -1,0 +1,40 @@
+.side {
+    background-color: $color-white;
+    display: inline-block;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 1rem rgba($color-black,.4);
+
+    &__title {
+        display: flex;
+        height: 3rem;
+        background-color: $color-menu-active;
+        color: $color-white;
+        align-items: center;
+        padding: 0 1rem;
+
+        & > * {
+            flex: 1 0;
+        }
+    }
+
+    &__filter {
+        text-align: right;
+    }
+
+    &__content {
+        padding: 1rem 1rem;
+    }
+
+    &__dt {
+        font-size: $default-font-size;
+        text-transform: capitalize;
+        font-weight: 700;
+    }
+
+    &__dd{
+        font-size: $medium-font-size;
+        padding-left: 2rem;
+    }
+}
