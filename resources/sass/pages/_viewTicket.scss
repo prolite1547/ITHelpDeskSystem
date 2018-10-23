@@ -1,0 +1,182 @@
+.ticket-content,.ticket-details,.thread {
+    background-color: $color-white;
+    box-shadow: $shadow-light;
+    border-radius: 3px;
+}
+
+.ticket-content {
+    padding: $padding-default;
+
+
+    & > * {
+        color: $color-black;
+    }
+
+    &__reply {
+        margin-top: 3rem;
+        width: 100%;
+        background-color: $color-grey-light-2;
+    }
+
+    &__more-box{
+        position: relative;
+        display: inline-block;
+        text-align: right;
+        float: right;
+    }
+
+    &__more {
+        display: inline-block;
+        padding: 0 2px;
+        background-color: $color-grey-light-2;
+        font-size: $small-font-size;
+        box-shadow: 0 0 2px rgba($color-black,.3);
+        color: inherit;
+        cursor:pointer;
+    }
+
+    &__list {
+        list-style: none;
+        background-color: $color-grey-light-1;
+        display: none;
+        min-width: 10rem;
+        position: absolute;
+        transform: translateX(-63px);
+
+
+    }
+
+    &__item {
+        padding: 3px 6px 3px 0;
+
+        &:hover {
+            background-color: $color-grey-light-2;
+        }
+    }
+
+    &__link {
+
+
+        &,
+        &:visited,
+        &:link {
+            text-decoration: none;
+            color: inherit;
+        }
+    }
+
+    &__more-box:hover  &__list {
+        display: block;
+    }
+}
+
+
+.ticket-details {
+
+    &__title-box {
+        background-color: $color-grey-light-2;
+        padding: $padding-default-s;
+
+        & > * {
+            display: inline-block;
+            width: 49%;
+        }
+    }
+
+    &__icon {
+        text-align: right;
+    }
+
+    &__content {
+        padding: $padding-default;
+    }
+
+    &__id {
+        display: inline-block;
+        background-color: $color-grey-light-2;
+        border-radius: 100px;
+        font-size: 1.5rem;
+        color: $color-black;
+        font-weight: 700;
+        padding: 0 1rem;
+        margin-bottom: 1rem;
+    }
+
+    &__list {
+        list-style: none;
+    }
+
+    &__field {
+        display: inline-block;
+        width: 30%;
+    }
+
+    &__value {
+
+        &,
+        &:visited,
+        &:link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        &--link {
+            color: $color-tertiary-light !important;
+        }
+
+        &--status {
+            font-weight: 700 !important;
+            color: $color-black !important;
+        }
+
+        &--normal {
+            color: $color-primary !important;
+        }
+
+    }
+}
+
+.thread {
+    padding: $padding-default;
+}
+
+.message {
+
+    &__name {
+        color: $color-tertiary-light;
+        font-weight: 700;
+    }
+
+    &__content {
+        display: inline-block;
+        padding-left: 5px;
+        width: 60%;
+    }
+
+    &__message-box {
+        background-color: $color-grey-light-2;
+        padding: 5px;
+        border-radius: $border-radius-small;
+    }
+
+    &__img-box{
+        float: left;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    &__img {
+        width: 100%;
+    }
+
+    &__time{
+        display: block;
+    }
+
+    &:not(:last-child){
+        margin-bottom: 1rem;
+    }
+}
+

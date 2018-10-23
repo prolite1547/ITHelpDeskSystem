@@ -19,6 +19,16 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+Route::get('/add', function () {
+    return view('add_ticket');
+});
+
+
+Route::get('/view', function () {
+    return view('ticket_lookup');
+});
+
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

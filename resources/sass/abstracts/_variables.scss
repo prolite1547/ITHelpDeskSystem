@@ -28,8 +28,22 @@ $default-font-size: 1.2rem;
 $small-font-size: 1rem;
 $medium-font-size: 1.1rem;
 
+$form-default-size: 1.6rem;
+
 // GRID
-$grid-width: 130.6rem;
+$grid-width: 100%;
 $gutter-vertical: 8rem;
 $gutter-vertical-small: 6rem;
+$gutter-vertical-xsmall: 3rem;
 $gutter-horizontal: 6rem;
+$gutter-horizontal-small: 3rem;
+
+/*BOX SHADOW*/
+$shadow-light: 0 0 1rem rgba($color-black,.4);
+
+/*BORDER RADIUS*/
+$border-radius-small: 3px;
+
+/*PADDING*/
+$padding-default : 1rem;
+$padding-default-s : .5rem;
