@@ -4,10 +4,23 @@
             <img src="{{asset('images/icon.png')}}" alt="Citihardware Logo" class="header__logo">
         </div>
         <div class="header__user">
-            <span class="header__name">Nimper B. Aragulo</span>
+            <span class="header__name">{{Auth::user()->name}}</span>
             <div class="header__settings">
-                <i class="fas fa-user-cog"></i>
-                <i class="fas fa-caret-down"></i>
+                <div class="header__dropdown">
+                    <div class="header__icon-box">
+                        <i class="fas fa-caret-down"></i>
+                    </div>
+                    <ul class="header__list">
+                        <li class="header__item"><a href="#!" class="header__link">Profile</a></li>
+                        <li class="header__item">
+                            <a href="!#" class="header__link" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">Logout</a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -18,10 +31,10 @@
             <nav class="nav">
                 <ul class="nav__ul">
                     <li class="nav__li">
-                        <a href="#!" class="nav__a ">Dashboard</a>
+                        <a href="{{route('dashboard')}}" class="nav__a {{Route::currentRouteName() == 'dashboard' ? 'nav__a--active' : ''}}">Dashboard</a>
                     </li>
                     <li class="nav__li">
-                        <a href="#!" class="nav__a nav__a--active">Tickets</a>
+                        <a href="{{route('tickets')}}" class="nav__a {{Route::currentRouteName() == 'tickets' ? 'nav__a--active' : ''}}">Tickets</a>
                     </li>
                     <li class="nav__li">
                         <a href="#!" class="nav__a">Requets</a>

@@ -25,14 +25,14 @@
             </div>
             <div class="form__group">
                 {!! Form::label('type','Type:',['class' => 'form__label'])!!}
-                {!! Form::select('type', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select type)','class' => 'form__input']) !!}
+                {!! Form::select('type', $issueSelect, null, ['placeholder' => '(select type)','class' => 'form__input']) !!}
                 {!! Form::label('priority','Priority:',['class' => 'form__label'])!!}
-                {!! Form::select('priority', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select priority)','class' => 'form__input']) !!}
+                {!! Form::select('priority', $prioSelect, null, ['placeholder' => '(select priority)','class' => 'form__input']) !!}
             </div>
             <div class="form__group">
-                {!! Form::select('category', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select category)','class' => 'form__input']) !!}
+                {!! Form::select('category', $incSelect, null, ['placeholder' => '(select category)','class' => 'form__input']) !!}
 
-                {!! Form::select('categoryA', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-A)','class' => 'form__input']) !!}
+                {!! Form::select('categoryA', $incASelect, null, ['placeholder' => '(select sub-A)','class' => 'form__input']) !!}
 
                 {!! Form::select('categoryB', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-B)','class' => 'form__input']) !!}
 

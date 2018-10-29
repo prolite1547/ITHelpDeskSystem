@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUsernameColumnToUsersTable extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddUsernameColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('uname',25)->unique();
+        Schema::create('categories', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('value');
+            $table->string('name');
+            $table->integer('group');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ class AddUsernameColumnToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('uname');
-        });
+        Schema::dropIfExists('category');
     }
 }

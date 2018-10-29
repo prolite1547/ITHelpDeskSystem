@@ -5,7 +5,7 @@
         <div class="col-3-of-4">
             <div class="group">
                 <div class="ticket-content">
-                    <div class="ticket-content__more-box">
+                    <div class="ticket-content__more-dropdown">
                         <span class="ticket-content__more">More...</span>
                         <ul class="ticket-content__list">
                             <li class="ticket-content__item"><a href="#!" class="ticket-content__link">Print</a></li>

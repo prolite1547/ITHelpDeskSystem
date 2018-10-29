@@ -201,6 +201,45 @@ body {
   border-right: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+.header__dropdown {
+  position: relative;
+}
+
+.header__icon-box {
+  cursor: pointer;
+}
+
+.header__list {
+  display: none;
+  background-color: #f7f7f7;
+  position: absolute;
+  list-style: none;
+  min-width: 10rem;
+  -webkit-transform: translateX(-10rem);
+          transform: translateX(-10rem);
+  -webkit-box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+          box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+}
+
+.header__item {
+  padding: 3px 6px 3px 0;
+}
+
+.header__item:hover {
+  background-color: #eee;
+}
+
+.header__link,
+.header__link:visited,
+.header__link:link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.header__dropdown:hover .header__list {
+  display: inline-block;
+}
+
 .nav__ul {
   list-style: none;
 }
@@ -558,7 +597,7 @@ body {
   background-color: #eee;
 }
 
-.ticket-content__more-box {
+.ticket-content__more-dropdown {
   position: relative;
   display: inline-block;
   text-align: right;
@@ -601,7 +640,7 @@ body {
   color: inherit;
 }
 
-.ticket-content__more-box:hover .ticket-content__list {
+.ticket-content__more-dropdown:hover .ticket-content__list {
   display: block;
 }
 

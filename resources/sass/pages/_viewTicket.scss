@@ -18,7 +18,7 @@
         background-color: $color-grey-light-2;
     }
 
-    &__more-box{
+    &__more-dropdown{
         position: relative;
         display: inline-block;
         text-align: right;
@@ -65,7 +65,7 @@
         }
     }
 
-    &__more-box:hover  &__list {
+    &__more-dropdown:hover  &__list {
         display: block;
     }
 }
