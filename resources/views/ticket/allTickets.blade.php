@@ -20,19 +20,44 @@
                 </aside>
             </div>
             <div class="col-3-of-4">
-                <table class="table">
+                <table class="table" id="tickets-table">
                     <thead class="table__thead">
-                        <th class="table__th"></th>
+                        <th class="table__th">Subject</th>
+                        <th class="table__th">Priority</th>
+                        <th class="table__th">Status</th>
+                        <th class="table__th">Branch</th>
+                        <th class="table__th">Expiration Date</th>
+                        <th class="table__th">Assignee</th>
+                        <th class="table__th"><input type="checkbox"></th>
                     </thead>
                     <tbody class="table__tbody">
-                        <tr>
-                            <td class="table__td"></td>
-                        </tr>
+
+                    </tbody><tbody class="table__tbody">
+
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            $('#tickets-table').DataTable({
+                ajax: '{!! route('datatables.tickets') !!}',
+                columns: [
+                    { data: 'subject_display'},
+                    { data: 'priority'},
+                    { data: 'status'},
+                    { data: 'store_name'},
+                    { data: 'expiration'},
+                    { data: 'assignee'},
+                    { data: 'action'}
+                ]
+            });
+        });
+    </script>
+@endpush
 
 

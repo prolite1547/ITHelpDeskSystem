@@ -35,3 +35,23 @@
 .u-display-ib {
     display: inline-block;
 }
+
+.u-display-n {
+    display: none;
+}
+
+.u-urgent {
+    color: $color-red !important;
+}
+
+.u-high {
+    color: $color-orange !important;
+}
+
+.u-normal {
+    color: $color-primary !important;
+}
+
+.u-bold {
+    font-weight: bold !important;
+}

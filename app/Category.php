@@ -9,7 +9,9 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'group'
+        'order',
+        'group',
+        'value'
     ];
 
     public function group(){
@@ -20,5 +22,9 @@ class Category extends Model
     public function getNameAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function incidents(){
+        return $this->hasMany('App\Incident');
     }
 }

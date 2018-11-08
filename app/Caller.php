@@ -10,4 +10,13 @@ class Caller extends Model
         'name',
         'store_id',
     ];
+
+
+    public function users(){
+        return $this->belongsToMany('App\User','calls');
+    }
+
+    public  function call(){
+        return $this->hasMany('App\Call','caller_id','id');
+    }
 }

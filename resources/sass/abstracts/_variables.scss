@@ -3,7 +3,7 @@ $color-global: rgb(52,56,62);
 
 $color-menu-active: #4e5d6d;
 
-$color-primary: #6f9a43;
+$color-primary: #6f9a43; /*PRIORITY*/
 $color-primary-light: #7ed56f;
 $color-primary-dark: #28b485;
 
@@ -15,6 +15,7 @@ $color-tertiary-dark: #5643fa;
 
 $color-grey-light-1: #f7f7f7;
 $color-grey-light-2: #eee;
+$color-grey-light-3: #bebebe;
 $color-grey-dark: #777;
 
 $color-grey-dark-2: #999;
@@ -23,10 +24,17 @@ $color-grey-dark-3: #333;
 $color-white: #fff;
 $color-black: #000;
 
+$color-blue-light-1: #6790ff;
+
+$color-red: #ff3b2f; /*PRIORITY*/
+
+$color-orange: #ffa500; /*PRIORITY*/
+
 // FONT
 $default-font-size: 1.2rem;
 $small-font-size: 1rem;
 $medium-font-size: 1.1rem;
+$large-font-size: 1.5rem;
 
 $form-default-size: 1.6rem;
 
@@ -47,3 +55,4 @@ $border-radius-small: 3px;
 /*PADDING*/
 $padding-default : 1rem;
 $padding-default-s : .5rem;
+$padding-default-l : 1rem;

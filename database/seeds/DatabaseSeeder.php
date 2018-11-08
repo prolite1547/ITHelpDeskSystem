@@ -32,23 +32,6 @@ class DatabaseSeeder extends Seeder
             ['role' => 'User']
         ]);
 
-        DB::table('categories')->insert([
-            ['value'=>'inc', 'name' => 'Incident', 'group' => 1],
-            ['value'=>'req', 'name' => 'Request', 'group' => 1],
-            ['value'=>'low', 'name' => 'Low', 'group' => 2],
-            ['value'=>'nrml', 'name' => 'Normal', 'group' => 2],
-            ['value'=>'high', 'name' => 'High', 'group' => 2],
-            ['value'=>'urgt', 'name' => 'Urgent', 'group' => 2],
-            ['value'=>'hrd', 'name' => 'Hardware', 'group' => 3],
-            ['value'=>'sft', 'name' => 'Software', 'group' => 3],
-            ['value'=>'POShrd', 'name' => 'POS Hardware', 'group' => 4],
-            ['value'=>'POSsft', 'name' => 'POS Software', 'group' => 4],
-            ['value'=>'opn', 'name' => 'Open', 'group' => 5],
-            ['value'=>'ong', 'name' => 'Ongoing', 'group' => 5],
-            ['value'=>'cls', 'name' => 'Closed', 'group' => 5],
-            ['value'=>'tel', 'name' => 'Telephone', 'group' => 6],
-            ['value'=>'cell', 'name' => 'Cell', 'group' => 6]
-        ]);
 
         DB::table('category_groups')->insert([
             ['group_name' => 'Ticket'],
@@ -57,7 +40,29 @@ class DatabaseSeeder extends Seeder
             ['group_name' => 'IncCatA'],
             ['group_name' => 'IncStatus'],
             ['group_name' => 'NumberType'],
+            ['group_name' => 'No Value'],
         ]);
+
+        DB::table('categories')->insert([
+            ['value'=>'inc', 'name' => 'Incident', 'group' => 1,'order' => 1],
+            ['value'=>'req', 'name' => 'Request', 'group' => 1,'order' => 1],
+            ['value'=>'low', 'name' => 'Low', 'group' => 2,'order' => 1],
+            ['value'=>'nrml', 'name' => 'Normal', 'group' => 2,'order' => 2],
+            ['value'=>'high', 'name' => 'High', 'group' => 2,'order' => 3],
+            ['value'=>'urgt', 'name' => 'Urgent', 'group' => 2,'order' => 4],
+            ['value'=>'hrd', 'name' => 'Hardware', 'group' => 3,'order' => 1],
+            ['value'=>'sft', 'name' => 'Software', 'group' => 3,'order' => 1],
+            ['value'=>'POShrd', 'name' => 'POS Hardware', 'group' => 4,'order' => 1],
+            ['value'=>'POSsft', 'name' => 'POS Software', 'group' => 4,'order' => 1],
+            ['value'=>'opn', 'name' => 'Open', 'group' => 5,'order' => 1],
+            ['value'=>'ong', 'name' => 'Ongoing', 'group' => 5,'order' => 1],
+            ['value'=>'cls', 'name' => 'Closed', 'group' => 5,'order' => 1],
+            ['value'=>'tel', 'name' => 'Telephone', 'group' => 6,'order' => 1],
+            ['value'=>'cell', 'name' => 'Cell', 'group' => 6,'order' => 1],
+            ['value'=>'null', 'name' => '', 'group' => 7,'order' => 1],
+        ]);
+
+
 
         DB::table('stores')->insert([
             ['store_name' => 'Bajada'],
@@ -71,7 +76,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ContactsTableSeeder::class,
             CallersTableSeeder::class,
-            CallsTableSeeder::class,
+//            CallsTableSeeder::class,
             TicketTableSeeder::class
         ]);
 

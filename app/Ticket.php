@@ -17,4 +17,16 @@ class Ticket extends Model
 public function incident(){
     return $this->belongsTo('App\Incident');
 }
+
+public function assigneeRelation(){
+    return $this->belongsTo('App\User','assignee');
+}
+
+public function priorityRelation(){
+    return $this->belongsTo('App\Category','priority');
+}
+
+public function statusRelation(){
+    return $this->belongsTo('App\Category','status');
+}
 }

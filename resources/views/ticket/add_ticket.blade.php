@@ -9,6 +9,9 @@
         <div class="window__content">
             {!! Form::open(['method' => 'POST','class' => 'form']) !!}
             <div class="form__group">
+                {!! Form::select('caller', $callerSelect, null, ['placeholder' => '(caller)','class' => 'form__input']) !!}
+            </div>
+            <div class="form__group">
                 {!! Form::label('caller','Caller :',['class' => 'form__label'])!!}
                 {!! Form::text('caller',null,['class' => 'form__input','placeholder' => 'caller name']) !!}
             </div>

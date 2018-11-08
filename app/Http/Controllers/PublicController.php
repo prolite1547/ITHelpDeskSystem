@@ -21,7 +21,7 @@ class PublicController extends Controller
         return view('dashboard');
     }
 
-    public function tickets(){
-        return view('tickets');
-    }
+
+
+
 }

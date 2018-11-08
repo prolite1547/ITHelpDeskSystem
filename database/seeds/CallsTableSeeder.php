@@ -11,8 +11,9 @@ class CallsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Call::class,30)->create()->each(function ($u){
-           $u->incident()->save(factory(App\Incident::class)->make());
+        factory(App\Call::class, 50)->create()->each(function ($t) {
+            $t->incident()->save(factory(App\Incident::class)->make());
         });
+
     }
 }

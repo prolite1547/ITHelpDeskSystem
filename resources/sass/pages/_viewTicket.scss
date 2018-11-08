@@ -1,3 +1,6 @@
+////////////////////////////
+///*VIEW TICKET LAYOUT *////
+////////////////////////////
 .ticket-content,.ticket-details,.thread {
     background-color: $color-white;
     box-shadow: $shadow-light;
@@ -131,6 +134,14 @@
 
         &--normal {
             color: $color-primary !important;
+        }
+
+        &--urgent {
+            color: $color-red !important;
+        }
+
+        &--high {
+            color: $color-orange !important;
         }
 
     }

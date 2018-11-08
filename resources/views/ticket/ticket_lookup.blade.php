@@ -13,10 +13,10 @@
                         </ul>
                     </div>
                     <div>
-                        <h3 class="heading-tertiary">Accounting printer won't print</h3>
+                        <h3 class="heading-tertiary">{{$ticket->incident->subject}}</h3>
                     </div>
                     <p class="ticket-content__details">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, accusamus eos explicabo illo laudantium repellat voluptatibus. Architecto consequatur cumque dolorum ducimus esse fuga illum, nam nobis non nostrum nulla quasi?
+                        {{$ticket->incident->details}}
                     </p>
                     <textarea name="reply" id="" rows="5" class="ticket-content__reply" placeholder="Enter message here..."></textarea>
                 </div>
@@ -77,41 +77,42 @@
                             </div>
                         </div>
                         <div class="ticket-details__content">
-                            <span class="ticket-details__id">Ticket ID: #12345</span>
+                            <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
                             <ul class="ticket-details__list">
                                 <li class="ticket-details__item"><span class="ticket-details__field">Status:</span> <a
-                                        href="#!" class="ticket-details__value ticket-details__value--status">Open</a></li>
+                                        href="#!" class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Origin:</span> <a
                                         href="#!" class="ticket-details__value">Call</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span> <a
-                                        href="#!" class="ticket-details__value">Malu Pet</a></li>
+                                        href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span><a
-                                        href="#!" class="ticket-details__value"> September 9,2018</a></li>
+                                        href="#!" class="ticket-details__value"> {{$ticket->created_at}}</a></li>
                                 <li class="ticket-details__item"><span
                                         class="ticket-details__field">Expiration date:</span>
-                                    <a href="#!" class="ticket-details__value">September 10,201</a>8
+                                    <a href="#!" class="ticket-details__value">{{$ticket->expiration}}</a>8
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">John Edward R. Labor</a></li>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span> <a
-                                        href="#!" class="ticket-details__value ticket-details__value--normal">Normal</a></li>
+                                        href="#!" class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Type:</span> <a
-                                        href="#!" class="ticket-details__value">Incident</a></li>
+                                        href="#!" class="ticket-details__value">&nbsp;</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">Citihardware Matina</a></li>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->store->store_name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Category:</span> <a
-                                        href="#!" class="ticket-details__value">Hardware</a></li>
+                                        href="#!" class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span
                                         class="ticket-details__field">Sub-A Category:</span><a
-                                        href="#!" class="ticket-details__value"></a></li>
+                                        href="#!" class="ticket-details__value">&nbsp;</a></li>
                                 <li class="ticket-details__item"><span
                                         class="ticket-details__field">Sub-B Category:</span><a
-                                        href="#!" class="ticket-details__value"></a></li>
+                                        href="#!" class="ticket-details__value">&nbsp;</a></li>
                                 <li class="ticket-details__item"><span
                                         class="ticket-details__field">Data Correction:</span>
-                                    <a href="#!" class="ticket-details__value">n/a</a></li>
+                                    <a href="#!" class="ticket-details__value">{{$ticket->incident->drd}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Attachment:</span>
                                     <a href="#!" class="ticket-details__value">Empty</a></li>
                             </ul>

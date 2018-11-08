@@ -17,8 +17,10 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
             $table->string('value');
             $table->string('name');
-            $table->integer('group');
+            $table->integer('order')->default(0);
+            $table->unsignedInteger('group');
             $table->timestamps();
+            $table->foreign('group')->references('id')->on('category_groups');
         });
     }
 

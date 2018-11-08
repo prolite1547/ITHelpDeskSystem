@@ -10,8 +10,11 @@
 
 
 @import "components/button";
+@import "components/table";
 @import "components/header";
 @import "components/window";
+@import "components/datatables";
+@import "components/loader";
 
 
 @import "layouts/grid";
@@ -21,5 +24,4 @@
 @import "pages/login";
 @import "pages/master";
 @import "pages/viewTicket";
-
-
+@import "pages/ticketTable";

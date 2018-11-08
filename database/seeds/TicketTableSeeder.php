@@ -11,6 +11,6 @@ class TicketTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Ticket::class,DB::table('incidents')->count())->create();
+        factory(App\Ticket::class,10000)->create();
     }
 }

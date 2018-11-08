@@ -18,11 +18,17 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('incident_id');
             $table->unsignedInteger('assignee');
             $table->unsignedInteger('resolved_by');
-            $table->integer('type');
+            $table->unsignedInteger('type')->default(1);
+            $table->unsignedInteger('priority');
+            $table->unsignedInteger('status');
+            $table->timestamp('expiration');
+            $table->timestamp('date_closed')->nullable();
+            $table->foreign('incident_id')->references('id')->on('incidents');
             $table->foreign('assignee')->references('id')->on('users');
             $table->foreign('resolved_by')->references('id')->on('users');
-            $table->foreign('incident_id')->references('id')->on('incidents');
-            $table->timestamp('date_closed');
+            $table->foreign('status')->references('id')->on('categories');
+            $table->foreign('type')->references('id')->on('categories');
+            $table->foreign('priority')->references('id')->on('categories');
             $table->timestamps();
         });
     }

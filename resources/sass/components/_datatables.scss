@@ -1,0 +1,59 @@
+.paginate_button {
+    cursor: pointer;
+    font-size: $default-font-size;
+    padding: 3px 1rem;
+
+    &:hover {
+        color: $color-blue-light-1;
+    }
+
+}
+
+.disabled {
+    cursor: text;
+}
+
+.current {
+    background-color: $color-grey-light-3;
+}
+
+
+.dataTables_wrapper {
+    position: relative;
+    min-height: 40rem;
+}
+
+
+.dataTables_info{
+    font-size: $medium-font-size;
+    float:left;
+}
+
+.dataTables_paginate {
+    float: right;
+}
+
+.sorting,.sorting_asc,.sorting_desc {
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+
+
+.sorting {
+    background-image: url("/images/datatables/sort_both.png");
+}
+
+.sorting_asc {
+    background-image: url("/images/datatables/sort_asc.png");
+}
+
+.sorting_desc {
+    background-image: url("/images/datatables/sort_desc.png");
+}
+
+.dataTables_processing {
+
+    position: absolute;
+    @include  absCenter;
+}
