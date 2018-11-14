@@ -37,7 +37,7 @@
 }
 
 .u-display-n {
-    display: none;
+    display: none !important;
 }
 
 .u-urgent {
@@ -55,3 +55,9 @@
 .u-bold {
     font-weight: bold !important;
 }
+
+.u-margin-l {
+    margin-left: 3px;
+}
+
+

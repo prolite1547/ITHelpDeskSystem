@@ -10,6 +10,5 @@ $factory->define(App\Contact::class, function (Faker $faker) {
     return [
         'number' =>  $faker->phoneNumber,
         'store_id' => $faker->numberBetween(1,DB::table('stores')->count()),
-        'type' => $type->id
     ];
 });

@@ -1,4 +1,6 @@
 import {elements,elementStrings} from "./views/base";
+$(document).ready( function(){
+
 
 $.extend( true, $.fn.dataTable.defaults, {
     searching: false,
@@ -78,14 +80,39 @@ $.extend( $.fn.dataTable.ext.classes, {
     "sJUIFooter": ""
 } );
 
-elements.table.addEventListener('click',e => {
-  if(e.target.matches(elementStrings.ticketCheckbox)){
 
-      //clear menu
+if(elements.table) {
+    elements.table.addEventListener('click',e => {
+        if(e.target.matches(elementStrings.ticketCheckbox)){
+
+            //clear menu
 
 
-      //show the menu
-      e.target.closest('tr').classList.toggle('selected-row')
-      console.log(e.target.parentNode.childNodes['1'].classList.toggle('u-display-n'));
-  }
+            //show the menu
+            e.target.closest('tr').classList.toggle('selected-row')
+            console.log(e.target.parentNode.childNodes['1'].classList.toggle('u-display-n'));
+        }
+    });
+};
+
+/*ADDED SELECT2 PLUGIN*/
+if(elements.select2elements){
+  elements.select2elements.select2();
+};
+
+
+document.querySelector('.window__content').addEventListener('click',(e) => {
+   if(e.target.matches('button,button *')){
+
+       if(e.target.matches('i')){
+           e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
+           e.target.classList.toggle('fa-plus');
+           e.target.classList.toggle('fa-minus');
+       }
+   }
+
+});
+
+
+
 });

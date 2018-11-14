@@ -13,7 +13,10 @@
 
 use App\Category;
 use App\CategoryGroup;
+use App\Role;
+use App\Store;
 use App\Ticket;
+use App\User;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -28,7 +31,8 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 ////////*TICKETS*/////////
 //////////////////////////
 
-Route::get('/tickets/add', 'TicketController@addView')->name('addTicketView');
+Route::get('/ticket/add', 'TicketController@addTicket')->name('addTicketView');
+Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::get('/tickets/open', 'TicketController@open')->name('openTickets');
 Route::get('/tickets/ongoing', 'TicketController@ongoing')->name('ongoingTickets');
@@ -48,12 +52,10 @@ Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name
 
 Route::get('/test',function (){
 
-    $result = Ticket::with('incident')
-        ->where('tickets.status','=',13);
-    dd($result);
-    foreach ($result as $data){
-//        dd($data);
-    }
+$dataArray = groupListSelectArray(Role::class,'role','users','id','name');
+$branchArray = groupListSelectArray(Store::class,'store_name','contactNumbers','id','number');
+
+dd($dataArray);
 });
 
 Auth::routes();

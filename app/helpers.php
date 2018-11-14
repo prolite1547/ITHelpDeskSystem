@@ -1,12 +1,11 @@
 <?php
 
-    use App\CategoryGroup;
     use App\Category;
 
     if (! function_exists('selectArray')) {
-        function selectArray($group){
+        function selectArray($group,$model){
 
-            $categories = CategoryGroup::findOrFail($group)->categories;
+            $categories = $model::findOrFail($group)->categories;
             if(!$categories) return 'No Output';
             $select = [];
             foreach ($categories as $category) {
@@ -31,5 +30,21 @@
 
             return $lookupCategories;
         }
+    }
+
+    if (! function_exists('groupListSelectArray')) {
+        function groupListSelectArray($model,$groupName,$relationship,$value,$name){
+
+            $records = $model::with($relationship)->get();
+
+            $dataArray = [];
+            foreach ($records as $row){
+                $dataArray[$row->$groupName] = $row->$relationship->pluck($name,$value)->toArray();
+            }
+
+            return $dataArray;
+        }
+
+
     }
 ?>

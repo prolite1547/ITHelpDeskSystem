@@ -31,4 +31,8 @@ class User extends Authenticatable
     public function calls(){
         return $this->belongsToMany('App\Call','calls');
     }
+
+    public function role(){
+        return $this->belongsTo('App\Role');
+    }
 }

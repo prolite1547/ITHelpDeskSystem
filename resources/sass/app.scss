@@ -7,10 +7,15 @@
 //
 //// Bootstrap
 //@import '~bootstrap/scss/bootstrap';
-//
-//.navbar-laravel {
-//  background-color: #fff;
-//  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-//}
+
+// Select2
+@import 'node_modules/select2/src/scss/core';
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+
 
 @import 'main';

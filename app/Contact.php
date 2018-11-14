@@ -9,6 +9,9 @@ class Contact extends Model
     protected $fillable = [
         'number',
         'store_id',
-        'type'
     ];
+
+    public function store(){
+        return $this->belongsTo('App\Store','store_id','id');
+    }
 }
