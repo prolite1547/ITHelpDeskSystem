@@ -12,6 +12,8 @@ class Ticket extends Model
         'assignee',
         'date_closed',
         'resolved_by',
+        'priority',
+        'status'
     ];
 
 public function incident(){
@@ -29,4 +31,10 @@ public function priorityRelation(){
 public function statusRelation(){
     return $this->belongsTo('App\Category','status');
 }
+
+public function typeRelation(){
+    return $this->belongsTo('App\Category','type');
+}
+
+
 }

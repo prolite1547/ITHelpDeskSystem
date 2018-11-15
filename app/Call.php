@@ -9,7 +9,7 @@ class Call extends Model
     protected $fillable = [
     'caller_id',
     'user_id',
-    'store_id',
+    'contact_id',
     ];
 
 
@@ -17,8 +17,8 @@ class Call extends Model
         return $this->hasOne('App\Incident');
     }
 
-    public function store(){
-        return $this->belongsTo('App\Store');
+    public function contact(){
+        return $this->belongsTo('App\Contact');
     }
 
     public function callerRelation(){
@@ -28,6 +28,7 @@ class Call extends Model
     public function loggedBy(){
         return $this->belongsTo('App\User','user_id');
     }
+
 
 
 

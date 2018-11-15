@@ -9,10 +9,10 @@
         <div class="window__content">
             <div class="row">
                 <div class="col-1-of-2">
-                    {!! Form::open(['method' => 'POST','route' => 'addTicket','class' => 'form']) !!}
+                    {!! Form::open(['method' => 'POST','route' => 'addTicket','class' => 'form','enctype'=>'multipart/form-data']) !!}
                     <div class="form__group">
                         {!! Form::select('caller_id', $callerSelect, null, ['placeholder' => '(caller)','class' => 'form__input form__input--select2','required']) !!}
-                        {!! Form::select('number', $branchGroupSelect, null, ['placeholder' => '(number used)','class' => 'form__input form__input--select2','required']) !!}
+                        {!! Form::select('contact_id', $branchGroupSelect, null, ['placeholder' => '(number used)','class' => 'form__input form__input--select2','required']) !!}
                     </div>
 
                     <div class="form__group">
@@ -23,6 +23,10 @@
                         {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required']) !!}
                     </div>
                     <div class="form__group">
+                        {{ Form::file('attachments[]', array('multiple'))  }}
+                    </div>
+
+                    <div class="form__group">
                         {!! Form::label('type','Type:',['class' => 'form__label'])!!}
                         {!! Form::select('type', $issueSelect, null, ['placeholder' => '(select type)','class' => 'form__input','required']) !!}
                         {!! Form::label('priority','Priority:',['class' => 'form__label'])!!}
@@ -31,13 +35,17 @@
                     <div class="form__group">
                         {!! Form::select('category', $incSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
 
-                        {!! Form::select('categoryA', $incASelect, null, ['placeholder' => '(select sub-A)','class' => 'form__input','required']) !!}
+                        {!! Form::select('catA', $incASelect, null, ['placeholder' => '(select sub-A)','class' => 'form__input','required']) !!}
 
-                        {!! Form::select('categoryB', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-B)','class' => 'form__input']) !!}
+                        {!! Form::select('catB', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-B)','class' => 'form__input']) !!}
 
                     </div>
                     <div class="form__group">
-                        {!! Form::select('assigned', array_merge($selfOption,$assigneeSelect), null, ['placeholder' => '(assign to)','class' => 'form__input']) !!}
+                        {!! Form::label('drd','Drd :',['class' => 'form__label'])!!}
+                        {!! Form::checkbox('drd',1,false,['class' => 'form__input form__input--checkbox']) !!}
+                    </div>
+                    <div class="form__group">
+                        {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input','required']) !!}
                     </div>
                     {!! Form::button('submit',['class' => 'btn btn--blue','type' => 'submit']) !!}
                     {!! Form::close() !!}

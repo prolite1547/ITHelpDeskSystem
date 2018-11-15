@@ -1,5 +1,5 @@
 @extends('layouts.dashboardLayout')
-@section('title','Tickets')
+@section('title','Ongoing Tickets')
 
 @section('dashboardContent')
     <main>
@@ -22,13 +22,14 @@
             <div class="col-3-of-4">
                 <table class="table" id="tickets-table">
                     <thead class="table__thead">
-                        <th class="table__th">Subject</th>
-                        <th class="table__th">Priority</th>
-                        <th class="table__th">Status</th>
-                        <th class="table__th">Branch</th>
-                        <th class="table__th">Expiration Date</th>
-                        <th class="table__th">Assignee</th>
-                        <th class="table__th"><input type="checkbox"></th>
+                    <th class="table__th">Subject</th>
+                    <th class="table__th">Priority</th>
+                    <th class="table__th">Status</th>
+                    <th class="table__th">Branch</th>
+                    <th class="table__th">Created At</th>
+                    <th class="table__th">Expiration Date</th>
+                    <th class="table__th">Assignee</th>
+                    <th class="table__th"><input type="checkbox"></th>
                     </thead>
                     <tbody class="table__tbody">
 
@@ -45,16 +46,22 @@
     <script>
         $(function() {
             $('#tickets-table').DataTable({
-                ajax: '{!! route('datatables.tickets') !!}',
+                ajax: '{!! route('datatables.tickets',['status' => 'ongoing']) !!}',
+                order: [[4,'desc']],
                 columns: [
-                    { data: 'subject_display'},
-                    { data: 'priority'},
-                    { data: 'status'},
-                    { data: 'store_name'},
+                    { data: 'subject_display',name:'incident.subject'},
+                    { data: 'priority',name:'priorityRelation.order'},
+                    { data: 'status',orderable: false},
+                    { data: 'store_name',name:'incident.call.contact.store.store_name'},
+                    { data: 'created_at',visible:true},
                     { data: 'expiration'},
-                    { data: 'assignee'},
-                    { data: 'action'}
-                ]
+                    { data: 'assignee',name: 'assigneeRelation.name'},
+                    { data: 'action' ,orderable: false,className: 'select-checkbox'}
+                ],
+                select: {
+                    style:    'os',
+                    selector: 'td:last-child'
+                }
             });
         });
     </script>

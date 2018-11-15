@@ -1,5 +1,5 @@
 @extends('layouts.dashboardLayout')
-@section('title','Tickets')
+@section('title','Open Tickets')
 
 @section('dashboardContent')
     <main>
@@ -28,7 +28,6 @@
                         <th class="table__th">Branch</th>
                         <th class="table__th">Created At</th>
                         <th class="table__th">Expiration Date</th>
-                        <th class="table__th">Assignee</th>
                         <th class="table__th"><input type="checkbox"></th>
                     </thead>
                     <tbody class="table__tbody">
@@ -52,10 +51,9 @@
                     { data: 'subject_display',name:'incident.subject'},
                     { data: 'priority',name:'priorityRelation.order'},
                     { data: 'status',orderable: false},
-                    { data: 'store_id',name:'incident.call.store.store_name'},
+                    { data: 'store_name',name:'incident.call.contact.store.store_name'},
                     { data: 'created_at',visible:true},
                     { data: 'expiration'},
-                    { data: 'assignee',name:'assigneeRelation.name'},
                     { data: 'action' ,orderable: false,className: 'select-checkbox'}
                 ],
                 select: {

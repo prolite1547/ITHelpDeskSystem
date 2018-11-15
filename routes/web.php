@@ -51,11 +51,9 @@ Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
 
 Route::get('/test',function (){
-
-$dataArray = groupListSelectArray(Role::class,'role','users','id','name');
-$branchArray = groupListSelectArray(Store::class,'store_name','contactNumbers','id','number');
-
-dd($dataArray);
+    return Storage::download('file.txt');
+//    $url = Storage::url('file.jpg');
+//echo $url;
 });
 
 Auth::routes();

@@ -22,10 +22,13 @@ class DatatablesController extends Controller
     }
 
     public function tickets($status){
+
         $get_status = Category::where('name',$status)->firstOrFail();
-        $model = Ticket::with('incident','incident.call.store','priorityRelation','assigneeRelation')
+
+        $model = Ticket::with('incident','incident.call.contact.store','priorityRelation','assigneeRelation')
             ->where('tickets.status','=',$get_status->id);
-        return DataTables::of($model)
+
+        $datatablesJSON = DataTables::of($model)
             ->addColumn('subject_display', function ($data){
                 return "
                         <a href='".\route('lookupTicketView',['id' => $data->id])."' class='table__subject'>{$data->incident->subject}</a>
@@ -52,15 +55,20 @@ class DatatablesController extends Controller
 
                 return $data->statusRelation->name;
             })
-            ->editColumn('store_id',function ($data){
+            ->editColumn('store_name',function ($data){
 
-                return $data->incident->call->store->store_name;
+                return $data->incident->call->contact->store->store_name;
             })
-            ->addColumn('assignee',function ($data){
+            ->rawColumns(['subject_display','action','priority']);
+
+        if($status === 'ongoing'){
+            $datatablesJSON = $datatablesJSON->addColumn('assignee',function ($data){
 
                 return $data->assigneeRelation->name;
-            })
-            ->rawColumns(['subject_display','action','priority'])
-            ->make(true);
+            });
+        }
+
+        return $datatablesJSON->make(true);
+;
     }
 }

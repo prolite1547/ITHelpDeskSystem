@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Call;
+use App\Incident;
 use App\Ticket;
 use App\Category;
 use Illuminate\Http\Request;
@@ -25,12 +27,28 @@ class TicketController extends Controller
     }
 
     public function addTicket(Request $request){
-        if($request->isMethod('get')){
+
+
+        if($request->isMethod('GET')){
+
+
             $userID = Auth::user()->id;
-            $selfOption = [0 => 'None',$userID => 'Self'];
+            $selfOption = [null => 'None',$userID => 'Self'];
             return view('ticket.add_ticket',['selfOption' => $selfOption]);
-        }else {
-            $call = Call::create($request->only('caller_id','user_id','store_id'));
+        }else if($request->isMethod('POST')) {
+
+            $request->request->add(['user_id'=>$request->user()->id]);
+            $openID = Category::where('name','like','Open')->first()->id;
+            $ongoingID = Category::where('name','like','Ongoing')->first()->id;
+
+            if(!$request->assignee){
+                 $request->request->add(['status'=>$openID]);
+            }else {
+                 $request->request->add(['status'=>$ongoingID]);
+            }
+            $call = Call::create($request->only('caller_id','user_id','contact_id'));
+            $call->incident()->create($request->only('subject','details','category','catA','catB'))->ticket()->create($request->only('type','priority','assignee','status'));
+
         }
 
     }
@@ -42,7 +60,7 @@ class TicketController extends Controller
 
     public function ongoing(){
 
-        return view('ticket.openTickets');
+        return view('ticket.ongoingTickets');
     }
 
     public function forVerification(){

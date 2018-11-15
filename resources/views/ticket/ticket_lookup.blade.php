@@ -96,17 +96,17 @@
                                 <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span> <a
                                         href="#!" class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Type:</span> <a
-                                        href="#!" class="ticket-details__value">&nbsp;</a></li>
+                                        href="#!" class="ticket-details__value">{{$ticket->typeRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->store->store_name}}</a></li>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">@if(!is_null($ticket->assigneeRelation)){{$ticket->assigneeRelation->name}}@endif</a>
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Category:</span> <a
                                         href="#!" class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</a></li>
                                 <li class="ticket-details__item"><span
                                         class="ticket-details__field">Sub-A Category:</span><a
-                                        href="#!" class="ticket-details__value">&nbsp;</a></li>
+                                        href="#!" class="ticket-details__value">&nbsp;{{$ticket->incident->catARelation->name}}</a></li>
                                 <li class="ticket-details__item"><span
                                         class="ticket-details__field">Sub-B Category:</span><a
                                         href="#!" class="ticket-details__value">&nbsp;</a></li>

@@ -31,5 +31,9 @@ class Incident extends Model
         return $this->belongsTo('App\Category','category');
     }
 
+    public function catARelation(){
+        return $this->belongsTo('App\Category','catA');
+    }
+
 
 }

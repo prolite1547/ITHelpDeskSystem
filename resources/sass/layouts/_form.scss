@@ -27,29 +27,24 @@
         color: $color-grey-dark-3;
     }
 
-    //&__input {
-    //    position: relative;
-    //    font-size: 1.5rem;
-    //    font-family: inherit;
-    //    color: inherit;
-    //    padding: 1rem 1.5rem;
-    //    border-radius: 2px;
-    //    background-color: $color-white;
-    //    border: 1px solid $color-grey-dark-2;
-    //    display: inline-block;
-    //    transition: all .3s;
-    //}
+
     &__input {
         font-size: $medium-font-size;
         padding: .5rem;
         color: inherit;
         font-family: inherit;
         border: 1px solid $color-grey-light-2;
-    ;
+
 
         &--100w {
             width: 100%;
         }
+
+        &--checkbox {
+            vertical-align: middle;
+        }
+
+
     }
 
     &__label {
