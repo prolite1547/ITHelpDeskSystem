@@ -100,7 +100,7 @@
                                 <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
                                     <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a></li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">@if(!is_null($ticket->assigneeRelation)){{$ticket->assigneeRelation->name}}@endif</a>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Category:</span> <a
                                         href="#!" class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</a></li>

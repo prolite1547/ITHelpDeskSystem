@@ -23,6 +23,7 @@
                         {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required']) !!}
                     </div>
                     <div class="form__group">
+
                         {{ Form::file('attachments[]', array('multiple'))  }}
                     </div>
 
@@ -45,6 +46,7 @@
                         {!! Form::checkbox('drd',1,false,['class' => 'form__input form__input--checkbox']) !!}
                     </div>
                     <div class="form__group">
+                        {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
                         {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input','required']) !!}
                     </div>
                     {!! Form::button('submit',['class' => 'btn btn--blue','type' => 'submit']) !!}

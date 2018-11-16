@@ -21,7 +21,7 @@ public function incident(){
 }
 
 public function assigneeRelation(){
-    return $this->belongsTo('App\User','assignee');
+    return $this->belongsTo('App\User','assignee')->withDefault(['name' => 'none']);
 }
 
 public function priorityRelation(){

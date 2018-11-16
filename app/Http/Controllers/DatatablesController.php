@@ -61,6 +61,7 @@ class DatatablesController extends Controller
             })
             ->rawColumns(['subject_display','action','priority']);
 
+
         if($status === 'ongoing'){
             $datatablesJSON = $datatablesJSON->addColumn('assignee',function ($data){
 
