@@ -15,7 +15,6 @@ class Incident extends Model
         'catB',
         'catC',
         'expiration',
-        'files',
         'drd',
     ];
 
@@ -33,6 +32,10 @@ class Incident extends Model
 
     public function catARelation(){
         return $this->belongsTo('App\Category','catA');
+    }
+
+    public function getFiles(){
+        return $this->hasMany('App\File','incident_id','id');
     }
 
 

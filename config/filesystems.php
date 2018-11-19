@@ -85,6 +85,13 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'ticket' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/ticket_attachments'),
+            'url' => env('APP_URL').'/storage/public/ticket_attachments',
+            'visibility' => 'public',
+        ],
+
     ],
 
 ];

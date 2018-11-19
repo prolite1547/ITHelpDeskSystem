@@ -76,7 +76,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ContactsTableSeeder::class,
             CallersTableSeeder::class,
-//            TicketTableSeeder::class
+            TicketTableSeeder::class
         ]);
 
     }

@@ -41,8 +41,10 @@ Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/tickets', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 
-
-
+//////////////////////////
+////////*FILE*/////////
+//////////////////////////
+Route::get('/file/download/{id}','FileController@download')->name('fileDownload');
 
 //Route::get('/requests', 'PublicController@dashboard')->name('requests');
 //Route::get('/reports', 'PublicController@dashboard')->name('reports');

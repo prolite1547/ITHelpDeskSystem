@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Call;
+use App\File;
 use App\Incident;
 use App\Ticket;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
@@ -55,7 +58,9 @@ class TicketController extends Controller
 
             /*INSERT CALL TO THE DATABASE AND TO ITS RELATED TABLES*/
             $call = Call::create($request->only('caller_id','user_id','contact_id'));
-            $call->incident()->create($request->only('subject','details','category','catA','catB'))->ticket()->create($request->only('type','priority','assignee','status'));
+            $call->incident()->create($request->only('subject','details','category','catA','catB'))
+                 ->ticket()->create($request->only('type','priority','assignee','status'));
+
 
             /*ID OF THE TICKET INSERTED*/
             $insertedTicketID = $call->incident->ticket->id;
@@ -66,7 +71,13 @@ class TicketController extends Controller
             /*CHECK IF REQUEST CONTAINS A FILE AND STORE IT*/
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment){
-                    $attachment->storeAs('files/ticket_attachments/'.$ticketDirectoryName.'',$attachment->getClientOriginalName());
+
+                    $original_name = $attachment->getClientOriginalName();
+                    $mime_type = $attachment->getMimeType();
+                    $original_ext = $attachment->getClientOriginalExtension();
+                    $path = $attachment->store("$ticketDirectoryName",'ticket');
+
+                    File::create(['incident_id' => $insertedTicketID,'path' => $path,'original_name' => $original_name,'mime_type' => $mime_type,'extension' => $original_ext]);
                 };
             }
 

@@ -62,10 +62,10 @@
         @section('submenu')
             <ul class="submenu__ul">
                 <li class="submenu__li">
-                    <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>(2)</span></a>
+                    <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>({{$ticketOpenCount}})</span></a>
                 </li>
                 <li class="submenu__li">
-                    <a href="{{route('ongoingTickets')}}" class="submenu__a {{Route::currentRouteName() == 'ongoingTickets' ? 'submenu__a--active' : ''}}">Ongoing <span>(0)</span></a>
+                    <a href="{{route('ongoingTickets')}}" class="submenu__a {{Route::currentRouteName() == 'ongoingTickets' ? 'submenu__a--active' : ''}}">Ongoing <span>({{$ticketOngoingCount}})</span></a>
                 </li>
                 <li class="submenu__li">
                     <a href="{{route('verificationTickets')}}" class="submenu__a {{Route::currentRouteName() == 'verificationTickets' ? 'submenu__a--active' : ''}}">For Verification <span>(0)</span></a>

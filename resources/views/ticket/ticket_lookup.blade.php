@@ -79,42 +79,57 @@
                         <div class="ticket-details__content">
                             <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
                             <ul class="ticket-details__list">
-                                <li class="ticket-details__item"><span class="ticket-details__field">Status:</span> <a
-                                        href="#!" class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</a></li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Origin:</span> <a
-                                        href="#!" class="ticket-details__value">Call</a></li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span> <a
-                                        href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->name}}</a></li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span><a
-                                        href="#!" class="ticket-details__value"> {{$ticket->created_at}}</a></li>
-                                <li class="ticket-details__item"><span
-                                        class="ticket-details__field">Expiration date:</span>
-                                    <a href="#!" class="ticket-details__value">{{$ticket->expiration}}</a>8
+                                <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
+                                    <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Origin:</span>
+                                    <span href="#!" class="ticket-details__value">Call</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
+                                    <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->name}}</a>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
+                                    <span class="ticket-details__value"> {{$ticket->created_at}}</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Expiration date:</span>
+                                    <span class="ticket-details__value">{{$ticket->expiration}}</span>8
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a></li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span> <a
-                                        href="#!" class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</a></li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Type:</span> <a
-                                        href="#!" class="ticket-details__value">{{$ticket->typeRelation->name}}</a></li>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
+                                    <span class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Type:</span>
+                                    <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
+                                </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a></li>
+                                    <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
+                                </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
                                     <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
                                 </li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Category:</span> <a
-                                        href="#!" class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</a></li>
-                                <li class="ticket-details__item"><span
-                                        class="ticket-details__field">Sub-A Category:</span><a
-                                        href="#!" class="ticket-details__value">&nbsp;{{$ticket->incident->catARelation->name}}</a></li>
-                                <li class="ticket-details__item"><span
-                                        class="ticket-details__field">Sub-B Category:</span><a
-                                        href="#!" class="ticket-details__value">&nbsp;</a></li>
-                                <li class="ticket-details__item"><span
-                                        class="ticket-details__field">Data Correction:</span>
-                                    <a href="#!" class="ticket-details__value">{{$ticket->incident->drd}}</a></li>
-                                <li class="ticket-details__item"><span class="ticket-details__field">Attachment:</span>
-                                    <a href="#!" class="ticket-details__value">Empty</a></li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
+                                    <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Sub-A Category:</span>
+                                    <span class="ticket-details__value">{{$ticket->incident->catARelation->name}}</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>
+                                    <span class="ticket-details__value">&nbsp;</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Data Correction:</span>
+                                    <span class="ticket-details__value">{{$ticket->incident->drd}}</span>
+                                </li>
+                                <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
+                                    @if(!$ticket->incident->getFiles->isEmpty())
+                                    @foreach($ticket->incident->getFiles as $file)
+                                        <span class="ticket-details__value ticket-details__value--file"><a href="{{route('fileDownload',['id' => $file->id])}}" target="_blank">{{$file->original_name}}</a></span>
+                                    @endforeach
+                                    @else
+                                        <span class="ticket-details__value ticket-details__value--file">No Attachments</span>
+                                    @endif
+                                </li>
                             </ul>
                         </div>
                 </div>

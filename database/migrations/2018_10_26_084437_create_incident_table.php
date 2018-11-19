@@ -22,7 +22,6 @@ class CreateIncidentTable extends Migration
             $table->unsignedInteger('catA');
             $table->unsignedInteger('catB')->nullable();
             $table->unsignedInteger('catC')->nullable();
-            $table->string('files')->default('');
             $table->boolean('drd')->default(0);
             $table->foreign('call_id')->references('id')->on('calls');
             $table->foreign('category')->references('id')->on('categories');

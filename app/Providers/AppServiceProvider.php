@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Category;
 use App\CategoryGroup;
 use App\Role;
 use App\Store;
+use App\Ticket;
 use App\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
@@ -19,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $openID = Category::where('name','LIKE','Open')->first()->id;
+        $ongoingID = Category::where('name','LIKE','Ongoing')->first()->id;
+
+        $ticketOpenCount = Ticket::whereStatus($openID)->count();
+        $ticketOngoingCount = Ticket::whereStatus($ongoingID)->count();
+
         $issueSelect = selectArray(1,CategoryGroup::class);  /*Ticket*/
         $prioSelect = selectArray(2,CategoryGroup::class);   /*Priority*/
         $incSelect = selectArray(3,CategoryGroup::class);   /*Incident category*/
@@ -30,7 +38,6 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-
         View::share([
             'issueSelect' => $issueSelect,
             'prioSelect' => $prioSelect,
@@ -39,7 +46,9 @@ class AppServiceProvider extends ServiceProvider
             'callerSelect' => $callerSelect,
             'branchGroupSelect' => $branchGroupSelect,
             'branchSelect' => $branchSelect,
-            'assigneeSelect' => $assigneeSelect
+            'assigneeSelect' => $assigneeSelect,
+            'ticketOpenCount' => $ticketOpenCount,
+            'ticketOngoingCount' => $ticketOngoingCount
         ]);
 
     }

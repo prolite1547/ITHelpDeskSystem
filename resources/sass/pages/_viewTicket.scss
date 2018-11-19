@@ -144,6 +144,15 @@
             color: $color-orange !important;
         }
 
+        &--file {
+            display: inline-block;
+            padding-right: 5px;
+
+            & > a {
+                color: $color-tertiary-light !important;
+            }
+        }
+
     }
 }
 
