@@ -1,24 +1,39 @@
 @extends('layouts.dashboardLayout')
-@section('title','#123455')
+@section('title','#'.$ticket->id)
 @section('dashboardContent')
     <div class="row">
         <div class="col-3-of-4">
             <div class="group">
                 <div class="ticket-content">
-                    <div class="ticket-content__more-dropdown">
-                        <span class="ticket-content__more">More...</span>
-                        <ul class="ticket-content__list">
-                            <li class="ticket-content__item"><a href="#!" class="ticket-content__link">Print</a></li>
-                            <li class="ticket-content__item"><a href="#!" class="ticket-content__link">Delete</a></li>
-                        </ul>
+                    <div class="ticket-content__more-dropdown-container">
+                        <div class="ticket-content__more-dropdown">
+                            <span class="ticket-content__more">More...</span>
+                            <ul class="ticket-content__list">
+                                <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
+                                <li class="ticket-content__item"><a href="#!" class="ticket-content__link">Print</a></li>
+                                <li class="ticket-content__item">
+                                    <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
+                                    <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
+                                        @csrf
+                                        <input type="hidden" name="_method" value="DELETE" >
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div>
-                        <h3 class="heading-tertiary">{{$ticket->incident->subject}}</h3>
+                        <h3 class="heading-tertiary ticket-content__subject">{{$ticket->incident->subject}}</h3>
                     </div>
                     <p class="ticket-content__details">
                         {{$ticket->incident->details}}
                     </p>
                     <textarea name="reply" id="" rows="5" class="ticket-content__reply" placeholder="Enter message here..."></textarea>
+                    <div class="ticket-content__updateBtns">
+                        <div class="ticket-content__buttons u-float-r">
+                            <button class="btn btn--red" data-action="cancel">Cancel</button>
+                            <button class="btn btn--green" data-action="confirm">Done</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -72,8 +87,9 @@
                             <div class="ticket-details__title">
                                 <h4 class="heading-quaternary">Details</h4>
                             </div>
-                            <div class="ticket-details__icon">
-                                <i class="far fa-edit"></i>
+                            <div class="ticket-details__icon-box">
+                                <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
+                                <i class="far fa-edit ticket-details__icon ticket-details__icon--edit" title="Edit Details"></i>
                             </div>
                         </div>
                         <div class="ticket-details__content">
@@ -123,9 +139,9 @@
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
                                     @if(!$ticket->incident->getFiles->isEmpty())
-                                    @foreach($ticket->incident->getFiles as $file)
-                                        <span class="ticket-details__value ticket-details__value--file"><a href="{{route('fileDownload',['id' => $file->id])}}" target="_blank">{{$file->original_name}}</a></span>
-                                    @endforeach
+                                        @foreach($ticket->incident->getFiles as $file)
+                                            <span class="ticket-details__value ticket-details__value--file"><a href="{{route('fileDownload',['id' => $file->id])}}" target="_blank">{{$file->original_name}}</a></span>
+                                        @endforeach
                                     @else
                                         <span class="ticket-details__value ticket-details__value--file">No Attachments</span>
                                     @endif

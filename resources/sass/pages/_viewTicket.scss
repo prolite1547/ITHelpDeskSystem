@@ -21,6 +21,12 @@
         background-color: $color-grey-light-2;
     }
 
+    &__more-dropdown-container{
+        display: block;
+
+        @include clearfix;
+    }
+
     &__more-dropdown{
         position: relative;
         display: inline-block;
@@ -71,6 +77,20 @@
     &__more-dropdown:hover  &__list {
         display: block;
     }
+
+    &__subject,&__details {
+        display: inline-block;
+    }
+
+    &__subject{
+        margin-bottom: .5rem;
+    }
+
+    &__updateBtns{
+        display: none;
+        @include clearfix;
+    }
+
 }
 
 
@@ -86,8 +106,16 @@
         }
     }
 
-    &__icon {
+    &__icon-box {
         text-align: right;
+
+        & i:first-child {
+            margin: 3px;
+        }
+    }
+
+    &__icon{
+        cursor: pointer;
     }
 
     &__content {
@@ -112,6 +140,10 @@
     &__field {
         display: inline-block;
         width: 30%;
+    }
+
+    &__select {
+        font-size: 1.2rem;
     }
 
     &__value {

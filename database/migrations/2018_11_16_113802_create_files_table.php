@@ -20,7 +20,7 @@ class CreateFilesTable extends Migration
             $table->string('mime_type');
             $table->string('extension');
             $table->unsignedInteger('incident_id');
-            $table->foreign('incident_id')->references('id')->on('incidents');
+            $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade');
             $table->timestamps();
         });
     }

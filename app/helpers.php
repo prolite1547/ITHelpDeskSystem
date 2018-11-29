@@ -4,9 +4,11 @@
 
     if (! function_exists('selectArray')) {
         function selectArray($group,$model){
+            $category = $model::find($group);
+            if(!$category) return [null => 'N/A'];
 
-            $categories = $model::findOrFail($group)->categories;
-            if(!$categories) return 'No Output';
+            $categories = $category->categories;
+
             $select = [];
             foreach ($categories as $category) {
                 $select = array_add($select,$category->id,$category->name);

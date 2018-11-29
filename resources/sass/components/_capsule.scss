@@ -1,0 +1,22 @@
+.capsule {
+    display: inline-block;
+    border-radius: 100px;
+    background-color: rgba($color-grey-light-3,.5);
+    padding: 0 6px;
+
+    &:not(:last-child){
+        margin-right: 5px;
+    }
+
+    &__text {
+        color: $color-blue-light-1;
+        cursor: default;
+        text-decoration: none;
+    }
+
+    &__close {
+        margin-left: 3px;
+        cursor: pointer;
+    }
+
+}

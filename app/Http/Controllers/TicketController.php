@@ -20,12 +20,42 @@ class TicketController extends Controller
         $this->middleware('auth');
     }
 
+    public function getTicket($id){
 
+        $ticket = Ticket::with([
+            'incident.call.loggedBy',
+            'statusRelation',
+            'incident.call.callerRelation',
+            'typeRelation',
+            'incident.call.contact.store',
+            'assigneeRelation',
+            'incident.categoryRelation',
+            'incident.catARelation',
+            'incident',
+            'incident.getFiles'
+        ])
+            ->findOrFail($id)->toArray();
+
+        return response()->json($ticket);
+    }
 
     public function lookupView($id){
 
-        $ticket = Ticket::findOrFail($id);
+        $ticket = Ticket::with([
+            'incident.call.loggedBy',
+            'statusRelation',
+            'incident.call.callerRelation',
+            'typeRelation',
+            'incident.call.contact.store',
+            'assigneeRelation',
+            'incident.categoryRelation',
+            'incident.catARelation',
+            'incident',
+            'incident.getFiles'
+            ])
+            ->findOrFail($id);
 
+//            dd($ticket->incident->id);
         return view('ticket.ticket_lookup',['ticket' => $ticket]);
     }
 
@@ -96,12 +126,17 @@ class TicketController extends Controller
         return view('ticket.ongoingTickets');
     }
 
-    public function forVerification(){
+    public function closed(){
 
-        return view('ticket.openTickets');
+        return view('ticket.closedTickets');
     }
 
-    public function closed(){
+    public function all(){
+
+        return view('ticket.allTickets');
+    }
+
+    public function forVerification(){
 
         return view('ticket.openTickets');
     }
@@ -111,9 +146,88 @@ class TicketController extends Controller
         return view('ticket.openTickets');
     }
 
-    public function all(){
+    public function delete($id){
 
-        return view('ticket.openTickets');
+        $ticket = Ticket::findOrFail($id)->delete();
+//        $ticket = Ticket::findOrFail($id)->incident->call->delete();
+
+        return redirect()->route('openTickets');
+    }
+
+    public function edit($id,Request $request){
+        try{
+            DB::beginTransaction();
+            $bool = true;
+            if($request->filled(['incident'])){
+                $incident = Ticket::findOrFail($id)->incident;
+
+                foreach ($request->incident as $key => $value){
+                    $incident->$key = $value;
+                }
+                $incident->save();
+
+            }
+
+            if ($request->filled(['ticket'])){
+                $ticket = Ticket::findOrFail($id);
+                foreach ($request->ticket as $key => $value){
+                    $ticket->$key = $value;
+                }
+                $ticket->save();
+            }
+
+            if ($request->filled(['fileID'])){
+                foreach ($request->fileID as $id){
+                    $file = File::findOrFail($id);
+                    if(Storage::disk('ticket')->delete($file->path))$file->delete();
+                }
+            }
+
+            DB::commit();
+        }catch(\Exception $e){
+            $bool = false;
+            DB::rollback();
+        }
+
+
+
+
+        return response()->json(['success' => $bool]);
+
+    }
+
+    public function editModal($id){
+        $ticket = Ticket::with([
+            'incident.call.loggedBy',
+            'statusRelation',
+            'incident.call.callerRelation',
+            'typeRelation',
+            'incident.call.contact.store',
+            'assigneeRelation',
+            'incident.categoryRelation',
+            'incident.catARelation',
+            'incident',
+        ])
+            ->findOrFail($id);
+        $view = view('modal.ticket_edit',['ticket' => $ticket]);
+        $viewString = strlen($view->render());
+        return response()->view('modal.ticket_edit',['ticket' => $ticket])->header('Content-Encoding','none')->header('Content-Length',$viewString);
+    }
+
+    public function addFile($id,Request $request){
+
+        $ticket = Ticket::findOrFail($id);
+        $destination = $ticket->getFileDirectoryFolder();
+
+        foreach ($request->file as $attachment){
+
+            $original_name = $attachment->getClientOriginalName();
+            $mime_type = $attachment->getMimeType();
+            $original_ext = $attachment->getClientOriginalExtension();
+            $path = $attachment->store($destination,'ticket');
+
+            File::create(['incident_id' => $ticket->incident->id,'path' => $path,'original_name' => $original_name,'mime_type' => $mime_type,'extension' => $original_ext]);
+        };
     }
 
 }

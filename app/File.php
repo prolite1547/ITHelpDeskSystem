@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
+    protected $table = 'files';
     protected $fillable = [
         'path',
         'original_name',
@@ -17,6 +18,6 @@ class File extends Model
 
 
     public function incident(){
-        return $this->belongsTo('App\Incident','incident_id','id');
+        return $this->belongsTo('App\Incident');
     }
 }

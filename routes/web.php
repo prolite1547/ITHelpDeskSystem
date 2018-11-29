@@ -17,8 +17,9 @@ use App\Role;
 use App\Store;
 use App\Ticket;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-
+use Webklex\IMAP\Client;
 
 
 
@@ -31,20 +32,30 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 ////////*TICKETS*/////////
 //////////////////////////
 
+Route::get('/ticket/{id}','TicketController@getTicket');
 Route::get('/ticket/add', 'TicketController@addTicket')->name('addTicketView');
 Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
+Route::patch('/tickets/view/edit/{id}', 'TicketController@edit')->name('editTicket');
 Route::get('/tickets/open', 'TicketController@open')->name('openTickets');
 Route::get('/tickets/ongoing', 'TicketController@ongoing')->name('ongoingTickets');
+Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
+Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::get('/tickets/verification', 'TicketController@forVerifcation')->name('verificationTickets');
 Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/tickets', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
-
+Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
 //////////////////////////
-////////*FILE*/////////
+////////*FILE*////////////
 //////////////////////////
 Route::get('/file/download/{id}','FileController@download')->name('fileDownload');
+Route::post('/file/ticket/{id}','TicketController@addFile');
+//////////////////////////
+////////*MODAL*////////////
+//////////////////////////
+Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
+
 
 //Route::get('/requests', 'PublicController@dashboard')->name('requests');
 //Route::get('/reports', 'PublicController@dashboard')->name('reports');
@@ -53,9 +64,22 @@ Route::get('/file/download/{id}','FileController@download')->name('fileDownload'
 Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
 
 Route::get('/test',function (){
-    return Storage::download('file.txt');
-//    $url = Storage::url('file.jpg');
-//echo $url;
+    $incident = App\Incident::find(10004);
+//    var_dump($incident->getFiles);
+    dd($incident->getFiles);
+
+});
+
+Route::get('/test2',function (){
+    $oClient = new Client();
+    $oClient->connect();
+    $aFolder = $oClient->getFolder('INBOX');
+    $aMessage = $aFolder->query()->UNSEEN()->get();
+
+    foreach ($aMessage as $message){
+        echo $message->getHTMLBody(true);
+    }
+    dd($aMessage);
 });
 
 Auth::routes();

@@ -15,7 +15,7 @@ class CreateIncidentTable extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('call_id');
+            $table->unsignedInteger('call_id')->unique();
             $table->string('subject');
             $table->string('details');
             $table->unsignedInteger('category');
@@ -23,7 +23,7 @@ class CreateIncidentTable extends Migration
             $table->unsignedInteger('catB')->nullable();
             $table->unsignedInteger('catC')->nullable();
             $table->boolean('drd')->default(0);
-            $table->foreign('call_id')->references('id')->on('calls');
+            $table->foreign('call_id')->references('id')->on('calls')->onDelete('cascade');
             $table->foreign('category')->references('id')->on('categories');
             $table->foreign('catA')->references('id')->on('categories');
             $table->foreign('catB')->references('id')->on('categories');

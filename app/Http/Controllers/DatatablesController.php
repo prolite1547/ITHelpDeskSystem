@@ -23,10 +23,13 @@ class DatatablesController extends Controller
 
     public function tickets($status){
 
-        $get_status = Category::where('name',$status)->firstOrFail();
+        $model = Ticket::with('incident','incident.call.contact.store','priorityRelation','assigneeRelation','resolvedBy');
 
-        $model = Ticket::with('incident','incident.call.contact.store','priorityRelation','assigneeRelation')
-            ->where('tickets.status','=',$get_status->id);
+        if($status !== 'all'){
+            $get_status = Category::where('name',$status)->firstOrFail();
+            $model = $model->where('tickets.status','=',$get_status->id);
+        }
+
 
         $datatablesJSON = DataTables::of($model)
             ->addColumn('subject_display', function ($data){
@@ -55,19 +58,20 @@ class DatatablesController extends Controller
 
                 return $data->statusRelation->name;
             })
+            ->addColumn('assignee',function ($data){
+
+                return $data->assigneeRelation->name;
+            })
+            ->addColumn('resolved_by',function ($data){
+
+                return $data->resolvedBy->name;
+            })
             ->editColumn('store_name',function ($data){
 
                 return $data->incident->call->contact->store->store_name;
             })
             ->rawColumns(['subject_display','action','priority']);
 
-
-        if($status === 'ongoing'){
-            $datatablesJSON = $datatablesJSON->addColumn('assignee',function ($data){
-
-                return $data->assigneeRelation->name;
-            });
-        }
 
         return $datatablesJSON->make(true);
 ;

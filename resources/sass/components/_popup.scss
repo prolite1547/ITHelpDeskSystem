@@ -4,70 +4,49 @@
     left: 0;
     height: 100vh;
     width: 100vw;
-    background-color: rgba($color-black,.8);
+    background-color: rgba($color-black,.3);
     z-index: 5000;
     visibility: hidden;
     opacity: 0;
     transition: all .5s;
 
-    &:target {
-        opacity: 1;
-        visibility: visible;
+    & .ticket-details__item:not(:last-child) {
+        margin-bottom: 3px;
     }
 
-    &:target &__content{
-        transform: translate(-50%, -50%) scale(1) !important;
-    }
+
 
     &__content {
+        position: relative;
         @include absCenter;
+        min-width: 30%;
         background-color: white;
-        width: 70%;
-        display: table;
         transition: all .8s;
-        transform: translate(-50%,-50%) scale(0) !important;
+        padding: 5px;
     }
 
-    &__img-box {
-        display: table-cell;
-        width: 100%;
-        float: left;
-    }
-
-    &__img{
-        width:100%;
-        display: block;
-    }
-
-    &__content-text {
-        display: table-cell;
-        width: 70%;
-        vertical-align: middle;
-        padding: 4rem;
-    }
-
-    &__paragraph {
-        column-count: 2;
-        column-gap: 2rem;
-        column-rule: 1px solid $color-grey-light-2;
-        font-size: 1.4rem;
-        -webkit-hyphens: auto;
-    }
 
     &__close {
 
-        &:link,
-        &:visited,{
-            position: absolute;
-            top:2.5rem;
-            right: 2.5rem;
-            font-size: 3.5rem;
-            text-decoration: none;
-            color: black;
-            line-height: initial;
+        position: absolute;
+        top: -.5rem;
+        right: -.5rem;
+        font-size: 1.5rem;
+        text-decoration: none;
+        color: black;
+        line-height: initial;
+        background-color: $color-grey-dark-2;
+        border-radius: 50%;
+        width: 2rem;
+        height: 2rem;
+        text-align: center;
+        color: $color-white;
+        cursor: pointer;
+
+        &:active {
+            transform: translateY(1px);
         }
-        
-        
+
     }
-    
+
 }

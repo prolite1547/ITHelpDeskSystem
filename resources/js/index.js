@@ -1,4 +1,4 @@
-import {elements,elementStrings} from "./views/base";
+import {elements, elementStrings, hideModal} from "./views/base";
 $(document).ready( function(){
 
 
@@ -100,8 +100,8 @@ if(elements.select2elements){
   elements.select2elements.select2();
 };
 
-
-document.querySelector('.window__content').addEventListener('click',(e) => {
+if(elements.addTicketWindow){
+    elements.addTicketWindow.addEventListener('click',(e) => {
    if(e.target.matches('button,button *')){
 
        if(e.target.matches('i')){
@@ -112,7 +112,10 @@ document.querySelector('.window__content').addEventListener('click',(e) => {
    }
 
 });
+}
 
-
+elements.popupClose.addEventListener('click',() => {
+    hideModal();
+});
 
 });
