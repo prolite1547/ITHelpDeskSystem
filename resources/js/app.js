@@ -6,7 +6,8 @@
  */
 
 require('./bootstrap');
+window.Dropzone = require('dropzone');
+window.moment = require('moment');
 require('select2/dist/js/select2');
 require('./index.js');
 require('./TicketController');
-window.Dropzone = require('dropzone');

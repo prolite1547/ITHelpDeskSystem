@@ -24,7 +24,6 @@ use Webklex\IMAP\Client;
 
 
 
-
 Route::get('/', 'PublicController@login')->name('index');
 Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 
@@ -33,7 +32,7 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 //////////////////////////
 
 Route::get('/ticket/{id}','TicketController@getTicket');
-Route::get('/ticket/add', 'TicketController@addTicket')->name('addTicketView');
+Route::get('/tickets/add','TicketController@addTicket')->name('addTicketView');
 Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::patch('/tickets/view/edit/{id}', 'TicketController@edit')->name('editTicket');
@@ -43,7 +42,7 @@ Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::get('/tickets/verification', 'TicketController@forVerifcation')->name('verificationTickets');
 Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
-Route::get('/tickets/tickets', 'TicketController@userTickets')->name('myTickets');
+Route::get('/tickets/my', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
 //////////////////////////
@@ -55,7 +54,10 @@ Route::post('/file/ticket/{id}','TicketController@addFile');
 ////////*MODAL*////////////
 //////////////////////////
 Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
-
+//////////////////////////
+////////*MESSAGE*/////////
+//////////////////////////
+Route::post('/message/new','MessageController@create');
 
 //Route::get('/requests', 'PublicController@dashboard')->name('requests');
 //Route::get('/reports', 'PublicController@dashboard')->name('reports');
@@ -64,9 +66,12 @@ Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTi
 Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
 
 Route::get('/test',function (){
-    $incident = App\Incident::find(10004);
-//    var_dump($incident->getFiles);
-    dd($incident->getFiles);
+    $ticket = Ticket::find(51);
+    echo $ticket->test;
+    echo "</br>";
+    echo $ticket->created_at;
+    echo "</br>";
+    echo $ticket->created_at->add(new DateInterval('P2D'));
 
 });
 

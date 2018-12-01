@@ -17,7 +17,7 @@ class CreateCallersTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->unsignedInteger('store_id');
-            $table->foreign('store_id')->references('id')->on('stores');
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->timestamps();
 
         });

@@ -1057,6 +1057,30 @@ body {
   }
 }
 
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  100% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  100% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+  }
+}
+
 .u-center-text {
   text-align: center !important;
 }
@@ -1618,6 +1642,45 @@ body {
   cursor: pointer;
 }
 
+.chat {
+  display: table;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 3rem;
+  background-color: #eee;
+  border-top-right-radius: 3rem;
+  border-bottom-right-radius: 3rem;
+}
+
+.chat__textarea {
+  display: table-cell;
+  width: 100%;
+  vertical-align: middle;
+}
+
+.chat__send {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  width: 10%;
+}
+
+.chat__button {
+  font-family: inherit;
+  color: #fff;
+  background-color: #6790ff;
+  padding: 1rem 2rem;
+  border-radius: 10rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.chat__button:active {
+  -webkit-transform: translateY(1px);
+          transform: translateY(1px);
+}
+
 .row {
   max-width: 100%;
   margin: 0 auto;
@@ -1925,12 +1988,6 @@ body {
   color: #000;
 }
 
-.ticket-content__reply {
-  margin-top: 3rem;
-  width: 100%;
-  background-color: #eee;
-}
-
 .ticket-content__more-dropdown-container {
   display: block;
 }
@@ -2096,6 +2153,8 @@ body {
 
 .thread {
   padding: 1rem;
+  max-height: 26rem;
+  overflow-y: scroll;
 }
 
 .message__name {
@@ -2110,6 +2169,7 @@ body {
 }
 
 .message__message-box {
+  display: inline-block;
   background-color: #eee;
   padding: 5px;
   border-radius: 3px;
@@ -2198,6 +2258,14 @@ body {
 
 .selected-row {
   background: rgba(255, 235, 14, 0.47);
+}
+
+.expired {
+  font-weight: 700;
+  display: inline-block;
+  color: #ff3b2f;
+  -webkit-animation: .5s linear infinite alternate pulse;
+          animation: .5s linear infinite alternate pulse;
 }
 
 

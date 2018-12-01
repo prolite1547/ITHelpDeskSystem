@@ -28,3 +28,13 @@
         transform: rotate(0); }
     100% {
         transform: rotate(360deg); } }
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.2);
+    }
+}

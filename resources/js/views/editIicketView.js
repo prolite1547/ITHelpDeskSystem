@@ -51,3 +51,11 @@ export const addEventListenerToEditInputs = (ticket) => {
 }
 
 export const addFileMarkup = `<div class="dropzone" id="addFiles"><button type="button" class="dropzone__upload btn">Upload</button></div>`;
+
+export const getMessageData = () => {
+  return elements.reply.value;
+};
+
+export const resetReply = () => {
+  elements.reply.value = "";
+};

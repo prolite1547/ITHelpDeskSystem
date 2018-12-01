@@ -24,10 +24,10 @@ class CreateIncidentTable extends Migration
             $table->unsignedInteger('catC')->nullable();
             $table->boolean('drd')->default(0);
             $table->foreign('call_id')->references('id')->on('calls')->onDelete('cascade');
-            $table->foreign('category')->references('id')->on('categories');
-            $table->foreign('catA')->references('id')->on('categories');
-            $table->foreign('catB')->references('id')->on('categories');
-            $table->foreign('catC')->references('id')->on('categories');
+            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('catA')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('catB')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('catC')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -27,11 +27,16 @@
                     <p class="ticket-content__details">
                         {{$ticket->incident->details}}
                     </p>
-                    <textarea name="reply" id="" rows="5" class="ticket-content__reply" placeholder="Enter message here..."></textarea>
+                    <div class="chat">
+                        <textarea name="reply" id="" rows="5" class="chat__textarea" placeholder="Enter message here..."></textarea>
+                        <div class="chat__send">
+                            <button class="chat__button">Send</button>
+                        </div>
+                    </div>
                     <div class="ticket-content__updateBtns">
                         <div class="ticket-content__buttons u-float-r">
-                            <button class="btn btn--red" data-action="cancel">Cancel</button>
-                            <button class="btn btn--green" data-action="confirm">Done</button>
+                            <button class="btn btn--red" data-action="cancel" id="contentEditCancel">Cancel</button>
+                            <button class="btn btn--green" data-action="confirm" id="contentEditSave">Done</button>
                         </div>
                     </div>
                 </div>
@@ -39,45 +44,20 @@
 
             <div class="group">
                 <div class="thread">
+                    @foreach($ticket->ticketMessages as $message)
                     <div class="message">
                         <div class="message__img-box">
                             <img src="{{asset('images/users/user-1.jpeg')}}" alt="John Edward R. Labor" class="message__img">
                         </div>
                         <div class="message__content">
                             <div class="message__message-box">
-                                <div class="message__name">John Edward R. Labor</div>
-                                <div class="message__message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam minus nisi repudiandae.</div>
+                                <div class="message__name">{{$message->user->name}}</div>
+                                <div class="message__message">{{$message->message}}</div>
                             </div>
-                            <span class="message__time">3 minutes ago...</span>
+                            <span class="message__time">{{$message->created_at}}</span>
                         </div>
-
                     </div>
-                    <div class="message">
-                        <div class="message__img-box">
-                            <img src="{{asset('images/users/user-1.jpeg')}}" alt="John Edward R. Labor" class="message__img">
-                        </div>
-                        <div class="message__content">
-                            <div class="message__message-box">
-                                <div class="message__name">John Edward R. Labor</div>
-                                <div class="message__message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam minus nisi repudiandae. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque deserunt error eveniet excepturi expedita inventore necessitatibus nihil quam quia rem. </div>
-                            </div>
-                            <span class="message__time">3 minutes ago...</span>
-                        </div>
-
-                    </div>
-                    <div class="message">
-                        <div class="message__img-box">
-                            <img src="{{asset('images/users/user-1.jpeg')}}" alt="John Edward R. Labor" class="message__img">
-                        </div>
-                        <div class="message__content">
-                            <div class="message__message-box">
-                                <div class="message__name">John Edward R. Labor</div>
-                                <div class="message__message">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aperiam minus nisi repudiandae.</div>
-                            </div>
-                            <span class="message__time">3 minutes ago...</span>
-                        </div>
-
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -108,7 +88,7 @@
                                     <span class="ticket-details__value"> {{$ticket->created_at}}</span>
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Expiration date:</span>
-                                    <span class="ticket-details__value">{{$ticket->expiration}}</span>8
+                                    <span class="ticket-details__value">{{$ticket->expiration}}</span>
                                 </li>
                                 <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
                                     <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a>

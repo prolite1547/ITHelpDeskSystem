@@ -14,6 +14,9 @@ export const elements = {
     ticketDetailsEditIcon: document.querySelector('.ticket-details__icon--edit'),
     ticketDetailsAddFilesIcon: document.querySelector('.ticket-details__icon--add'),
     popupClose: document.querySelector('.popup__close'),
+    chatSendButton: document.querySelector('.chat__button'),
+    reply: document.querySelector('.chat__textarea'),
+    categoryInput: document.querySelector('.form__input[name="category"]')
 }
 
 

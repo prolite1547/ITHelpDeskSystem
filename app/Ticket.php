@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,10 +16,13 @@ class Ticket extends Model
         'date_closed',
         'resolved_by',
         'priority',
-        'status'
+        'status',
+        'expiration'
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at','created_at','updated_at','expiration'];
+
+
 
 public function incident(){
     return $this->belongsTo('App\Incident');
@@ -44,12 +48,26 @@ public function typeRelation(){
     return $this->belongsTo('App\Category','type');
 }
 
+public function ticketMessages(){
+    return $this->hasMany('App\Message')->latest('created_at');
+}
+
 public function getFileDirectoryFolder()
 {
 
     $date = str_replace(':','',preg_replace('/[-,\s]/','_',$this->created_at));
 
     return "{$date}_{$this->id}";
+}
+
+public function getExpirationAttribute($value){
+        $now = Carbon::now();
+        if( $now > $value){
+            return 'Expired';
+        }else {
+            return Carbon::parse($value)->diffForHumans($now);
+        }
+
 }
 
 }

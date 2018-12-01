@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use function PHPSTORM_META\type;
 use Yajra\DataTables\Facades\DataTables;
@@ -22,12 +23,14 @@ class DatatablesController extends Controller
     }
 
     public function tickets($status){
-
+        $statuses = Category::whereGroup(5)->whereNotIn('name',['all','user'])->pluck('name')->toArray();
         $model = Ticket::with('incident','incident.call.contact.store','priorityRelation','assigneeRelation','resolvedBy');
 
-        if($status !== 'all'){
+        if(in_array(strtolower($status),array_map('strtolower',$statuses),true)){
             $get_status = Category::where('name',$status)->firstOrFail();
             $model = $model->where('tickets.status','=',$get_status->id);
+        }elseif ($status === 'user'){
+            $model = $model->where('assignee',Auth::user()->id);
         }
 
 
@@ -65,6 +68,10 @@ class DatatablesController extends Controller
             ->addColumn('resolved_by',function ($data){
 
                 return $data->resolvedBy->name;
+            })
+            ->addColumn('created_at_carbon',function ($data){
+
+                return $data->created_at->diffForHumans();
             })
             ->editColumn('store_name',function ($data){
 

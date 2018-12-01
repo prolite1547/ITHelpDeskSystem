@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class TicketTableSeeder extends Seeder
+class MessageTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class TicketTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Ticket::class,50)->create();
+        factory(App\Message::class,500)->create();
     }
 }

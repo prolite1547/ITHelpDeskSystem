@@ -1,0 +1,40 @@
+.chat {
+
+    display: table;
+    width: 100%;
+    padding: $padding-default;
+    margin-top: 3rem;
+    background-color: $color-grey-light-2;
+    border-top-right-radius: 3rem;
+    border-bottom-right-radius: 3rem;
+
+    &__textarea {
+        display: table-cell;
+        width: 100%;
+        vertical-align: middle;
+    }
+
+    &__send {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        width: 10%;
+    }
+
+    &__button {
+        font-family: inherit;
+        color: $color-white;
+        background-color: $color-blue-light-1;
+        padding: 1rem 2rem;
+        border-radius: 10rem;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+
+}

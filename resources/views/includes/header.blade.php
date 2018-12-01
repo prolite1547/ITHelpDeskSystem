@@ -34,7 +34,7 @@
                         <a href="{{route('dashboard')}}" class="nav__a {{Route::currentRouteName() == 'dashboard' ? 'nav__a--active' : ''}}">Dashboard</a>
                     </li>
                     <li class="nav__li">
-                        <a href="{{route('openTickets')}}" class="nav__a {{Route::currentRouteName() == 'openTickets' ? 'nav__a--active' : ''}}">Tickets</a>
+                        <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),['openTickets','myTickets','ongoingTickets','closedTickets','allTickets']) ? 'nav__a--active' : ''}}">Tickets</a>
                     </li>
                     <li class="nav__li">
                         <a href="#!" class="nav__a">Requets</a>
@@ -62,19 +62,19 @@
         @section('submenu')
             <ul class="submenu__ul">
                 <li class="submenu__li">
+                    <a href="{{route('myTickets')}}" class="submenu__a {{Route::currentRouteName() == 'myTickets' ? 'submenu__a--active' : ''}}">My Tickets <span>(0)</span></a>
+                </li>
+                <li class="submenu__li">
                     <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>({{$ticketOpenCount}})</span></a>
                 </li>
                 <li class="submenu__li">
                     <a href="{{route('ongoingTickets')}}" class="submenu__a {{Route::currentRouteName() == 'ongoingTickets' ? 'submenu__a--active' : ''}}">Ongoing <span>({{$ticketOngoingCount}})</span></a>
                 </li>
-                <li class="submenu__li">
-                    <a href="{{route('verificationTickets')}}" class="submenu__a {{Route::currentRouteName() == 'verificationTickets' ? 'submenu__a--active' : ''}}">For Verification <span>(0)</span></a>
-                </li>
+                {{--<li class="submenu__li">--}}
+                    {{--<a href="{{route('verificationTickets')}}" class="submenu__a {{Route::currentRouteName() == 'verificationTickets' ? 'submenu__a--active' : ''}}">For Verification <span>(0)</span></a>--}}
+                {{--</li>--}}
                 <li class="submenu__li">
                     <a href="{{route('closedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'closedTickets' ? 'submenu__a--active' : ''}}">Closed <span>(0)</span></a>
-                </li>
-                <li class="submenu__li">
-                    <a href="{{route('myTickets')}}" class="submenu__a {{Route::currentRouteName() == 'myTickets' ? 'submenu__a--active' : ''}}">My Tickets <span>(0)</span></a>
                 </li>
                 <li class="submenu__li">
                     <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>(2)</span></a>

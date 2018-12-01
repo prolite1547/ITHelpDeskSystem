@@ -7,6 +7,8 @@ use App\File;
 use App\Incident;
 use App\Ticket;
 use App\Category;
+use App\Message;
+use DateInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +34,8 @@ class TicketController extends Controller
             'incident.categoryRelation',
             'incident.catARelation',
             'incident',
-            'incident.getFiles'
+            'incident.getFiles',
+            'ticketMessages'
         ])
             ->findOrFail($id)->toArray();
 
@@ -61,7 +64,6 @@ class TicketController extends Controller
 
     public function addTicket(Request $request){
 
-
         if($request->isMethod('GET')){
 
             $userID = Auth::user()->id;
@@ -87,31 +89,39 @@ class TicketController extends Controller
             }
 
             /*INSERT CALL TO THE DATABASE AND TO ITS RELATED TABLES*/
-            $call = Call::create($request->only('caller_id','user_id','contact_id'));
-            $call->incident()->create($request->only('subject','details','category','catA','catB'))
-                 ->ticket()->create($request->only('type','priority','assignee','status'));
+            $insertedTicketID = DB::transaction(function () use ($request) {
+                $call = Call::create($request->only('caller_id','user_id','contact_id'));
+                $call->incident()->create($request->only('subject','details','category','catA','catB'))
+                    ->ticket()->create($request->only('expiration','type','priority','assignee','status'));
 
 
-            /*ID OF THE TICKET INSERTED*/
-            $insertedTicketID = $call->incident->ticket->id;
+                /*ID OF THE TICKET INSERTED*/
+                $insertedTicketID = $call->incident->ticket->id;
 
-            /*CREATE DIRECTORY NAME*/
-            $ticketDirectoryName =  str_replace(':','',preg_replace('/[-,\s]/','_',$call->incident->ticket->created_at)) . '_' .$insertedTicketID;
+                /*CREATE DIRECTORY NAME*/
+                $ticketDirectoryName =  str_replace(':','',preg_replace('/[-,\s]/','_',$call->incident->ticket->created_at)) . '_' .$insertedTicketID;
 
-            /*CHECK IF REQUEST CONTAINS A FILE AND STORE IT*/
-            if ($request->hasFile('attachments')) {
-                foreach ($request->attachments as $attachment){
+                /*CHECK IF REQUEST CONTAINS A FILE AND STORE IT*/
+                if ($request->hasFile('attachments')) {
+                    foreach ($request->attachments as $attachment){
 
-                    $original_name = $attachment->getClientOriginalName();
-                    $mime_type = $attachment->getMimeType();
-                    $original_ext = $attachment->getClientOriginalExtension();
-                    $path = $attachment->store("$ticketDirectoryName",'ticket');
+                        $original_name = $attachment->getClientOriginalName();
+                        $mime_type = $attachment->getMimeType();
+                        $original_ext = $attachment->getClientOriginalExtension();
+                        $path = $attachment->store("$ticketDirectoryName",'ticket');
 
-                    File::create(['incident_id' => $insertedTicketID,'path' => $path,'original_name' => $original_name,'mime_type' => $mime_type,'extension' => $original_ext]);
-                };
-            }
+                        File::create(['incident_id' => $insertedTicketID,'path' => $path,'original_name' => $original_name,'mime_type' => $mime_type,'extension' => $original_ext]);
+                    };
+                }
+
+                return $insertedTicketID;
+
+            });
+
+
 
             return redirect()->route('lookupTicketView',['id' => $insertedTicketID]);
+
         }
 
     }
@@ -143,7 +153,7 @@ class TicketController extends Controller
 
     public function userTickets(){
 
-        return view('ticket.openTickets');
+        return view('ticket.myTickets');
     }
 
     public function delete($id){

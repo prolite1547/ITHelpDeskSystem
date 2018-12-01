@@ -15,12 +15,6 @@
         color: $color-black;
     }
 
-    &__reply {
-        margin-top: 3rem;
-        width: 100%;
-        background-color: $color-grey-light-2;
-    }
-
     &__more-dropdown-container{
         display: block;
 
@@ -190,6 +184,8 @@
 
 .thread {
     padding: $padding-default;
+    max-height: 26rem;
+    overflow-y: scroll;
 }
 
 .message {
@@ -206,6 +202,7 @@
     }
 
     &__message-box {
+        display: inline-block;
         background-color: $color-grey-light-2;
         padding: 5px;
         border-radius: $border-radius-small;

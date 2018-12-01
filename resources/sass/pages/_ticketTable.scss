@@ -67,3 +67,11 @@
 .selected-row {
     background: rgba(255, 235, 14, 0.47);
 }
+
+.expired {
+    font-weight: 700;
+    display: inline-block;
+    color:$color-red;
+    animation: .5s linear infinite alternate pulse;
+
+}

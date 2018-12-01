@@ -1,9 +1,52 @@
 import {elements,elementStrings} from "./views/base";
 import * as editTicketView from './views/editIicketView';
 import Ticket from './models/Ticket';
+import Message from './models/Message';
 import {renderLoader,clearLoader,showModal,insertToModal,hideModal} from "./views/base";
-import {addFileMarkup} from "./views/editIicketView";
 
+
+
+
+
+////////////////////////////////
+////////////////////////////////
+////*ADD TICKET CONTROLLER*/////
+////////////////////////////////
+////////////////////////////////
+
+if(elements.categoryInput){
+
+elements.categoryInput.addEventListener('change',e => {
+
+   let category ,date;
+   category = e.target.options[e.target.selectedIndex].text.toLowerCase();
+
+   switch (category) {
+       case 'hardware':
+            date = moment().add(3,'days').format('YYYY-MM-DD HH:mm:ss');
+           break;
+       case 'software':
+            date = moment().add(7,'days').format('YYYY-MM-DD HH:mm:ss');
+           break;
+       default:
+            date = moment().format();
+   }
+
+   const expirationInput = `<input name="expiration" value="${date}" hidden>`
+
+    e.target.parentNode.insertAdjacentHTML('beforeend',expirationInput);
+
+
+});
+}
+
+////////////////////////////////
+////////////////////////////////
+////*LOOK UP TICKET CONTROLLER*/////
+////////////////////////////////
+////////////////////////////////
+
+if(window.location.pathname === '/tickets/view/2'){
 
 const ticket = new Ticket(elements.ticketID,elements.ticketSubject,elements.ticketDetails);
 
@@ -25,43 +68,30 @@ elements.ticketContent.addEventListener('click', e => {
 
 
     /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
-    if(e.target.matches('button')){
+    if(e.target.matches('#contentEditSave')){
 
-        /*Get value of the dataset action*/
-        const action = e.target.dataset.action;
+        /*PLACE DATA TO THE TICKET OBJECT*/
+        ticket.storeContentEditTicket(elements.ticketSubject,elements.ticketDetails);
 
+        /*XHR TO SAVE EDITED INPUTS*/
+        ticket.saveEdit(ticket.detailsEditData).done(data => {
+            if(data.success === true){
+                editTicketView.makeElementsNotEditable();
+                editTicketView.hideButtons();
+                alert('Updated Successfully!');
+            }else{
+                alert('Failed to update...');
+            }
+        });
+    }
 
-        if(action === 'cancel') { /*IF BUTTON CANCEL*/
-
-            /*GET LATEST DETAILS OF THE TICKET*/
-            ticket.fetchOriginalData().done(() => {
-                editTicketView.restoreElementsTextContent(ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
-            });
-            editTicketView.makeElementsNotEditable(); /*REMOVE THE EDITABLE MODE*/
-            editTicketView.hideButtons(); /*HIDE THE CANCEL AND DONE BUTTONS*/
-
-        }else if('confirm'){ /*IF BUTTON DONE*/
-
-            /*PLACE DATA TO THE TICKET OBJECT*/
-            ticket.storeContentEditTicket(elements.ticketSubject,elements.ticketDetails);
-
-            /*XHR TO SAVE EDITED INPUTS*/
-            ticket.saveEdit(ticket.detailsEditData).done(data => {
-                if(data.success === true){
-                    editTicketView.makeElementsNotEditable();
-                    editTicketView.hideButtons();
-                    alert('Updated Successfully!');
-                }else{
-                    alert('Failed to update...');
-                }
-            });
-
-
-        }else {
-            alert('button not found')
-        }
-
-
+    if(e.target.matches('#contentEditCancel')){
+        /*GET LATEST DETAILS OF THE TICKET*/
+        ticket.fetchOriginalData().done(() => {
+            editTicketView.restoreElementsTextContent(ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
+        });
+        editTicketView.makeElementsNotEditable(); /*REMOVE THE EDITABLE MODE*/
+        editTicketView.hideButtons(); /*HIDE THE CANCEL AND DONE BUTTONS*/
     }
 });
 
@@ -114,7 +144,6 @@ elements.ticketDetailsAddFilesIcon.addEventListener('click', () => {
 elements.modal.addEventListener('click',e => {
     if(e.target.matches('button')){
         const action = e.target.dataset.action;
-
         if(action === 'cancel') {
             hideModal();
         }else if(action === 'confirm'){
@@ -140,5 +169,14 @@ elements.modal.addEventListener('click',e => {
     }
 });
 
+elements.chatSendButton.addEventListener('click',function () {
+    const newMessage = editTicketView.getMessageData()
+        if(!newMessage){
+            return alert(`What's the point of sending a message if its empty!! Message: ${newMessage}`);
+        }
+    editTicketView.resetReply();
+    const newMessageObject = new Message(ticket.ID,newMessage);
+    newMessageObject.saveMessage(newMessageObject);
+});
 
-
+}
