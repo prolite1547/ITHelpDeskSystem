@@ -12,6 +12,7 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
         "php-imap/php-imap": "^3.0",
+        "pusher/pusher-php-server": "~3.0",
         "webklex/laravel-imap": "^1.2",
         "yajra/laravel-datatables-oracle": "~8.0"
     },

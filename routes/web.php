@@ -66,12 +66,10 @@ Route::post('/message/new','MessageController@create');
 Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
 
 Route::get('/test',function (){
-    $ticket = Ticket::find(51);
-    echo $ticket->test;
-    echo "</br>";
-    echo $ticket->created_at;
-    echo "</br>";
-    echo $ticket->created_at->add(new DateInterval('P2D'));
+
+    $array = ['name' => 'John'];
+
+    echo json_encode($array);
 
 });
 

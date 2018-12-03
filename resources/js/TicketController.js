@@ -51,6 +51,27 @@ if(window.location.pathname === '/tickets/view/2'){
 const ticket = new Ticket(elements.ticketID,elements.ticketSubject,elements.ticketDetails);
 
 
+Echo.private(`chat.${ticket.ID}`)
+    .listen('MessageSent', (e) => {
+
+        let messageMarkup = `<div class="message">
+                        <div class="message__img-box">
+                            <img src="{{asset('images/users/user-1.jpeg')}}" alt="John Edward R. Labor" class="message__img">
+                        </div>
+                        <div class="message__content">
+                            <div class="message__message-box">
+                                <div class="message__name">${e.user}</div>
+                                <div class="message__message">${e.message.message}</div>
+                            </div>
+                            <span class="message__time">${e.message['created_at']}</span>
+                        </div>
+                    </div>`;
+
+
+
+        document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
+    });
+
 /*ADD CLICK EVENT LISTENER */
 elements.ticketContent.addEventListener('click', e => {
 
@@ -178,5 +199,9 @@ elements.chatSendButton.addEventListener('click',function () {
     const newMessageObject = new Message(ticket.ID,newMessage);
     newMessageObject.saveMessage(newMessageObject);
 });
+
+
+
+
 
 }

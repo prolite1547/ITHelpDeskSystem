@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Message;
+use App\User;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,12 +32,18 @@ class MessageController extends Controller
      */
     public function create(Request $request)
     {
-
         /*GET ID OF THE USER WHO ADDED THE TICKET*/
-        $request->request->add(['user_id'=>$request->user()->id]);
+        $requesterID = $request->user()->id;
 
-        Message::create($request->all());
+        /*GET USER DETAILS OF THE REQUESTOR*/
+        $user = User::findOrFail($requesterID);
+
+        $request->request->add(['user_id'=>$requesterID]);
+        $message = Message::create($request->all());
+
+        event(new MessageSent($message,$user,$request->ticket_id));
     }
+
 
     /**
      * Store a newly created resource in storage.
