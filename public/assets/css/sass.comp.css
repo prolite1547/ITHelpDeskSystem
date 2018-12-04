@@ -1776,6 +1776,15 @@ body {
   vertical-align: middle;
 }
 
+.form__input--textarea {
+  resize: none;
+  display: block;
+  width: 100%;
+  min-height: 10rem;
+  min-width: 15rem;
+  margin: .5rem 0;
+}
+
 .form__label {
   font-size: 1.1rem;
   margin-right: 3px;
@@ -1870,6 +1879,11 @@ body {
   padding: 1.5rem 1rem 1rem 1rem;
   -webkit-transform: translateY(-1rem);
           transform: translateY(-1rem);
+}
+
+.form-resolve {
+  padding: .5rem .5rem;
+  background-color: #fff;
 }
 
 .row-flex {

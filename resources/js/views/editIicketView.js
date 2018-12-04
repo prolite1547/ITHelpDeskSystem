@@ -37,9 +37,14 @@ export const restoreElementsTextContent = (ticket) => {
 };
 
 
+export const getResolveFormMarkUp = () => {
+
+    return $.ajax('/modal/form/resolve',{
+        type: 'GET'
+    });
 
 
-
+}
 
 
 export const addEventListenerToEditInputs = (ticket) => {

@@ -10,7 +10,8 @@
                             <span class="ticket-content__more">More...</span>
                             <ul class="ticket-content__list">
                                 <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
-                                <li class="ticket-content__item"><a href="#!" class="ticket-content__link">Print</a></li>
+                                <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--print">Print</a></li>
+                                <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
                                 <li class="ticket-content__item">
                                     <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                                     <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">

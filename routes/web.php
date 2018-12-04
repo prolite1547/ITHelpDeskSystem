@@ -54,6 +54,7 @@ Route::post('/file/ticket/{id}','TicketController@addFile');
 ////////*MODAL*////////////
 //////////////////////////
 Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
+Route::view('/modal/form/resolve','TicketController@resolveModal')->name('modalTicketEdit');
 //////////////////////////
 ////////*MESSAGE*/////////
 //////////////////////////

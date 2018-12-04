@@ -44,6 +44,15 @@
             vertical-align: middle;
         }
 
+        &--textarea{
+            resize: none;
+            display: block;
+            width: 100%;
+            min-height: 10rem;
+            min-width: 15rem;
+            margin: .5rem 0;
+        }
+
 
     }
 
@@ -143,4 +152,9 @@
         transform: translateY(-1rem);
     }
 
+}
+
+.form-resolve {
+    padding: .5rem .5rem;
+    background-color: $color-white;
 }

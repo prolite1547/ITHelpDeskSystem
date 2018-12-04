@@ -1,5 +1,8 @@
 import {elements, elementStrings, hideModal} from "./views/base";
+import {ticketViewController,ticketAddController} from "./TicketController";
+
 $(document).ready( function(){
+
 
 
 $.extend( true, $.fn.dataTable.defaults, {
@@ -117,5 +120,20 @@ if(elements.addTicketWindow){
 elements.popupClose.addEventListener('click',() => {
     hideModal();
 });
+
+    const ticketView_route  = new RegExp("\/tickets\/view\/\\d+",'gm');
+    const ticketAdd_route  = new RegExp("\/tickets\/add",'gm');
+    const pathName = window.location.pathname;
+
+    switch (true){
+        case ticketView_route.test(pathName):
+            ticketViewController();
+            break;
+        case ticketAdd_route.test(pathName):
+            ticketAddController();
+            break;
+        default:
+            console.log('route not set');
+    }
 
 });

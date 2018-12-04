@@ -16,7 +16,8 @@ export const elements = {
     popupClose: document.querySelector('.popup__close'),
     chatSendButton: document.querySelector('.chat__button'),
     reply: document.querySelector('.chat__textarea'),
-    categoryInput: document.querySelector('.form__input[name="category"]')
+    categoryInput: document.querySelector('.form__input[name="category"]'),
+    resolve: document.querySelector('.ticket-content__link--resolve'),
 }
 
 
@@ -60,3 +61,4 @@ export const hideModal= () => {
     elements.modal.style.visibility = 'hidden';
     elements.modal.style.opacity = '0';
 }
+
