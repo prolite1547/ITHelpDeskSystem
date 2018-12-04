@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Resolve;
+use App\Ticket;
 use Illuminate\Http\Request;
 
 class ResolveController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,9 +29,20 @@ class ResolveController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request,$id)
     {
-        //
+        $ticket = Ticket::findOrFail($id);
+
+        $ticket->status = 13;
+
+        $ticket->save();
+
+        /*GET ID OF THE USER WHO RESOLVED THE TICKE*/
+        $request->request->add(['resolved_by' =>$request->user()->id]);
+
+        $resolve = $ticket->resolve()->create($request->except('_token'));
+
+
     }
 
     /**

@@ -51,7 +51,7 @@
                     { data: 'status',orderable: false},
                     { data: 'store_name',name:'incident.call.contact.store.store_name'},
                     { data: 'created_at',visible:true},
-                    { data: 'date_closed'},
+                    { data: 'resolve.created_at'},
                     { data: 'resolved_by'},
                 ]
             });

@@ -11,7 +11,7 @@
                         <i class="fas fa-caret-down"></i>
                     </div>
                     <ul class="header__list">
-                        <li class="header__item"><a href="#!" class="header__link">Profile</a></li>
+                        <li class="header__item"><a href="{{route('userProfile',['id' => Auth::id()])}}" class="header__link">Profile</a></li>
                         <li class="header__item">
                             <a href="!#" class="header__link" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Logout</a>

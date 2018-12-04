@@ -2,6 +2,7 @@ import {elements,elementStrings} from "./views/base";
 import * as editTicketView from './views/editIicketView';
 import Ticket from './models/Ticket';
 import Message from './models/Message';
+import Resolve from './models/Resolve';
 import {renderLoader,clearLoader,showModal,insertToModal,hideModal} from "./views/base";
 
 
@@ -156,7 +157,11 @@ export const ticketViewController = () => {
         });
 
         document.querySelector('.dropzone__upload').addEventListener('click',() => {
-            myDropzone.processQueue();
+            if(myDropzone.files.length !== 0){
+                myDropzone.processQueue();
+            }else{
+                return alert('No files found to be uploaded!!');
+            }
         })
 
     });
@@ -204,15 +209,34 @@ export const ticketViewController = () => {
 
 
     /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-    elements.resolve.addEventListener('click',() => {
+    elements.resolve.addEventListener('click',(e) => {
        showModal();
+        renderLoader(elements.modalContent);
+       const resolveRequest = editTicketView.getResolveFormMarkUp();
+       resolveRequest.done(data => {
+           clearLoader();
+           insertToModal(data);
 
-       const markup = editTicketView.getResolveFormMarkUp();
-        insertToModal(markup);
+           document.querySelector('button[data-action=resolved]').addEventListener('click',() => {
 
-        document.querySelector('button[data-action=resolved]').addEventListener('click',() => {
+               document.querySelector(elementStrings.resolve_form).addEventListener('submit',e => {
+                   e.preventDefault();
+               });
 
-        });
+               const formdata = $(elementStrings.resolve_form).serialize();
+
+               let resolve = new Resolve(ticket.ID,formdata);
+
+               resolve.createResolve();
+
+           });
+
+
+
+       });
+
+
+
     });
 
 

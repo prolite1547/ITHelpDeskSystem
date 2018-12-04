@@ -25,7 +25,8 @@ export const elementStrings = {
     ticketCheckbox: '.menu__checkbox',
     select2element: '.form__input--select2',
     loader2: 'loader2',
-    ticketContentEditIcon: '.ticket-content__link--edit'
+    ticketContentEditIcon: '.ticket-content__link--edit',
+    resolve_form: '.form-resolve'
 }
 
 

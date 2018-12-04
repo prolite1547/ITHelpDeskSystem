@@ -39,4 +39,8 @@ class User extends Authenticatable
     public function ticketMessage(){
         return $this->hasMany('App\Message');
     }
+
+    public function resolved(){
+        return $this->hasMany('App\Resolve');
+    }
 }

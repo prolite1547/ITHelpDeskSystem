@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             ['group_name' => 'IncStatus'],
             ['group_name' => 'NumberType'],
             ['group_name' => 'No Value'],
-            ['group_name' => 'No Value'],
+            ['group_name' => 'Resolve'],
         ]);
 
         DB::table('categories')->insert([

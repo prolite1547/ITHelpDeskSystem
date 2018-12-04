@@ -27,6 +27,12 @@ use Webklex\IMAP\Client;
 Route::get('/', 'PublicController@login')->name('index');
 Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 
+
+//////////////////////////
+////////*USER*///////////
+//////////////////////////
+Route::get('/user/profile/{id}','UserController@profile')->name('userProfile');
+
 //////////////////////////
 ////////*TICKETS*/////////
 //////////////////////////
@@ -45,6 +51,12 @@ Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/my', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
+
+//////////////////////////
+////////*RESOLVE*/////////
+//////////////////////////
+Route::post('/ticket/{id}/resolve/create','ResolveController@create')->name('addResolve');
+
 //////////////////////////
 ////////*FILE*////////////
 //////////////////////////
@@ -54,7 +66,7 @@ Route::post('/file/ticket/{id}','TicketController@addFile');
 ////////*MODAL*////////////
 //////////////////////////
 Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
-Route::view('/modal/form/resolve','TicketController@resolveModal')->name('modalTicketEdit');
+Route::view('/modal/form/resolve','modal.resolve_form')->name('modalTicketEdit');
 //////////////////////////
 ////////*MESSAGE*/////////
 //////////////////////////

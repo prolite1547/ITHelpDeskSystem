@@ -13,8 +13,6 @@ class Ticket extends Model
         'type',
         'incident_id',
         'assignee',
-        'date_closed',
-        'resolved_by',
         'priority',
         'status',
         'expiration'
@@ -32,9 +30,7 @@ public function assigneeRelation(){
     return $this->belongsTo('App\User','assignee')->withDefault(['name' => 'none']);
 }
 
-public function resolvedBy(){
-    return $this->belongsTo('App\User','resolved_by')->withDefault(['name' => 'none']);
-}
+
 
 public function priorityRelation(){
     return $this->belongsTo('App\Category','priority');
@@ -50,6 +46,10 @@ public function typeRelation(){
 
 public function ticketMessages(){
     return $this->hasMany('App\Message')->latest('created_at');
+}
+
+public function resolve(){
+    return $this->hasOne('App\Resolve');
 }
 
 public function getFileDirectoryFolder()

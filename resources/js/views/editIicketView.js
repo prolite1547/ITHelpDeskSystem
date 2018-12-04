@@ -39,9 +39,9 @@ export const restoreElementsTextContent = (ticket) => {
 
 export const getResolveFormMarkUp = () => {
 
-    return $.ajax('/modal/form/resolve',{
+     return $.ajax('/modal/form/resolve',{
         type: 'GET'
-    });
+    })
 
 
 }

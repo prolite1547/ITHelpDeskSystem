@@ -15322,7 +15322,8 @@ var elementStrings = {
     ticketCheckbox: '.menu__checkbox',
     select2element: '.form__input--select2',
     loader2: 'loader2',
-    ticketContentEditIcon: '.ticket-content__link--edit'
+    ticketContentEditIcon: '.ticket-content__link--edit',
+    resolve_form: '.form-resolve'
 };
 
 var renderLoader = function renderLoader(parent) {
@@ -30340,6 +30341,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__ = __webpack_require__(172);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_Ticket__ = __webpack_require__(173);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Message__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Resolve__ = __webpack_require__(182);
+
 
 
 
@@ -30472,7 +30475,11 @@ var ticketViewController = function ticketViewController() {
         });
 
         document.querySelector('.dropzone__upload').addEventListener('click', function () {
-            myDropzone.processQueue();
+            if (myDropzone.files.length !== 0) {
+                myDropzone.processQueue();
+            } else {
+                return alert('No files found to be uploaded!!');
+            }
         });
     });
 
@@ -30516,13 +30523,27 @@ var ticketViewController = function ticketViewController() {
     });
 
     /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].resolve.addEventListener('click', function () {
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].resolve.addEventListener('click', function (e) {
         Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* showModal */])();
+        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].modalContent);
+        var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getResolveFormMarkUp */]();
+        resolveRequest.done(function (data) {
+            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
+            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* insertToModal */])(data);
 
-        var markup = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getResolveFormMarkUp */]();
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* insertToModal */])(markup);
+            document.querySelector('button[data-action=resolved]').addEventListener('click', function () {
 
-        document.querySelector('button[data-action=resolved]').addEventListener('click', function () {});
+                document.querySelector(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].resolve_form).addEventListener('submit', function (e) {
+                    e.preventDefault();
+                });
+
+                var formdata = $(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].resolve_form).serialize();
+
+                var resolve = new __WEBPACK_IMPORTED_MODULE_4__models_Resolve__["a" /* default */](ticket.ID, formdata);
+
+                resolve.createResolve();
+            });
+        });
     });
 };
 
@@ -99141,6 +99162,44 @@ var Message = function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Resolve = function () {
+    function Resolve(ticketID, data) {
+        _classCallCheck(this, Resolve);
+
+        this.ticketID = ticketID;
+        this.data = data;
+    }
+
+    _createClass(Resolve, [{
+        key: 'createResolve',
+        value: function createResolve() {
+
+            $.ajax('/ticket/' + this.ticketID + '/resolve/create', {
+                type: 'POST',
+                data: this.data
+            });
+        }
+    }]);
+
+    return Resolve;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Resolve);
 
 /***/ })
 /******/ ]);
