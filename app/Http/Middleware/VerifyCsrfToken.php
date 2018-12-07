@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '*/tickets/view/edit/*',
         '*/file/ticket/*',
-        '*/message/new'
+        '*/message/new',
+        '*/image'
     ];
 }

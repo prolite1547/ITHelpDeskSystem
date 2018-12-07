@@ -91,6 +91,12 @@ return [
             'url' => env('APP_URL').'/storage/public/ticket_attachments',
             'visibility' => 'public',
         ],
+        'profpic' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/profpic'),
+            'url' => env('APP_URL').'/storage/public/profpic',
+            'visibility' => 'public',
+        ],
 
     ],
 

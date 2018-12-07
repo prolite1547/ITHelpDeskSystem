@@ -1,0 +1,16 @@
+.alert{
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    border-radius: $border-radius-small;
+
+    & li{
+        padding: 3px;
+    }
+}
+
+.alert-danger{
+
+    & li{
+        background-color: rgba($color-red,.5);
+    }
+}

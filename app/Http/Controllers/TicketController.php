@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Call;
 use App\File;
+use App\Http\Requests\StoreTicket;
 use App\Incident;
 use App\Ticket;
 use App\Category;
@@ -62,15 +63,14 @@ class TicketController extends Controller
         return view('ticket.ticket_lookup',['ticket' => $ticket]);
     }
 
-    public function addTicket(Request $request){
+    public function addTicketView(Request $request){
+        $userID = Auth::user()->id;
+        $selfOption = [null => 'None',$userID => 'Self'];
 
-        if($request->isMethod('GET')){
+        return view('ticket.add_ticket',['selfOption' => $selfOption]);
+    }
 
-            $userID = Auth::user()->id;
-            $selfOption = [null => 'None',$userID => 'Self'];
-
-            return view('ticket.add_ticket',['selfOption' => $selfOption]);
-        }else if($request->isMethod('POST')) {
+    public function addTicket(StoreTicket $request){
 
 
             /*GET ID OF THE USER WHO ADDED THE TICKET*/
@@ -122,7 +122,7 @@ class TicketController extends Controller
 
             return redirect()->route('lookupTicketView',['id' => $insertedTicketID]);
 
-        }
+
 
     }
 

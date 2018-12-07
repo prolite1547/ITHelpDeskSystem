@@ -11,10 +11,10 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{ mix('/css/app.css') }}"/>
 </head>
 <body>
-
     @include('includes.modal')
+
     <div class="container">
-           @yield('content')
+        @yield('inside_container')
     </div>
 
     <script src="{{asset('js/app.js')}}"></script>

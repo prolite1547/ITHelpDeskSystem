@@ -1145,6 +1145,10 @@ body {
   float: right;
 }
 
+.u-w-70 {
+  width: 100% !important;
+}
+
 .btn,
 .btn:link,
 .btn:visited {
@@ -1681,6 +1685,20 @@ body {
           transform: translateY(1px);
 }
 
+.alert {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  border-radius: 3px;
+}
+
+.alert li {
+  padding: 3px;
+}
+
+.alert-danger li {
+  background-color: rgba(255, 59, 47, 0.5);
+}
+
 .row {
   max-width: 100%;
   margin: 0 auto;
@@ -1910,8 +1928,8 @@ body {
   margin-bottom: 2rem;
 }
 
-.container-dashboard {
-  padding: 2rem;
+main {
+  padding: 1rem;
 }
 
 .container--login {
@@ -2207,6 +2225,39 @@ body {
 
 .message:not(:last-child) {
   margin-bottom: 1rem;
+}
+
+.user {
+  text-align: right;
+}
+
+.user__img-box {
+  position: relative;
+  display: inline-block;
+  height: 20rem;
+  width: 20rem;
+  -webkit-box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+          box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+}
+
+.user__img-box:hover .user__edit {
+  display: block;
+}
+
+.user__edit {
+  position: absolute;
+  display: none;
+  top: 5px;
+  right: 5px;
+}
+
+.user__edit i {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.user__img {
+  width: 100%;
 }
 
 .menu {

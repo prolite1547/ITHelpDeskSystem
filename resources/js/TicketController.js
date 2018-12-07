@@ -1,5 +1,6 @@
 import {elements,elementStrings} from "./views/base";
 import * as editTicketView from './views/editIicketView';
+import * as addTicketView from './views/ticket_add';
 import Ticket from './models/Ticket';
 import Message from './models/Message';
 import Resolve from './models/Resolve';
@@ -19,25 +20,30 @@ export const ticketAddController = () => {
 
     elements.categoryInput.addEventListener('change',e => {
 
-       let category ,date;
+       let category,expirationInput;
+
+       /*CATEGORY CHOSEN BY THE USER*/
        category = e.target.options[e.target.selectedIndex].text.toLowerCase();
 
-       switch (category) {
-           case 'hardware':
-                date = moment().add(3,'days').format('YYYY-MM-DD HH:mm:ss');
-               break;
-           case 'software':
-                date = moment().add(7,'days').format('YYYY-MM-DD HH:mm:ss');
-               break;
-           default:
-                date = moment().format();
-       }
+       /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
+        expirationInput = addTicketView.generateExpirationInputMarkup(category);
 
-       const expirationInput = `<input name="expiration" value="${date}" hidden>`
+        /*REMOVE THE EXPIRATION INPUT*/
+        e.target.closest('div').lastElementChild.remove()
 
+        /*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*/
         e.target.parentNode.insertAdjacentHTML('beforeend',expirationInput);
 
 
+    });
+
+    elements.ticketAddSubmitBtn.addEventListener('click',(e) => {
+
+        /*DISABLE THE TICKET ADD SUMBIT BUTTON TO PREVENT MUTIPLE FORM SUBMISSION*/
+        e.target.disabled = true;
+
+        /*SUBMIT THE TICKET ADD FORM*/
+        document.querySelector('.form-addTicket').submit();
     });
 }
 
@@ -57,7 +63,7 @@ export const ticketViewController = () => {
 
             let messageMarkup = `<div class="message">
                             <div class="message__img-box">
-                                <img src="/images/users/user-1.jpeg" alt="John Edward R. Labor" class="message__img">
+                                <img src="/storage/profpic/${e.image}" alt="John Edward R. Labor" class="message__img">
                             </div>
                             <div class="message__content">
                                 <div class="message__message-box">

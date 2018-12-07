@@ -1,7 +1,7 @@
 @extends('layouts.dashboardLayout')
 @section('title','My Tickets')
 
-@section('dashboardContent')
+@section('content')
     <main>
         <div class="row">
             <div class="col-1-of-4">

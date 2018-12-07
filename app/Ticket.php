@@ -15,7 +15,8 @@ class Ticket extends Model
         'assignee',
         'priority',
         'status',
-        'expiration'
+        'expiration',
+        '_token'
     ];
 
     protected $dates = ['deleted_at','created_at','updated_at','expiration'];

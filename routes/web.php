@@ -32,13 +32,14 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 ////////*USER*///////////
 //////////////////////////
 Route::get('/user/profile/{id}','UserController@profile')->name('userProfile');
+Route::post('/image','UserController@changeProf')->name('changeProf');
 
 //////////////////////////
 ////////*TICKETS*/////////
 //////////////////////////
 
 Route::get('/ticket/{id}','TicketController@getTicket');
-Route::get('/tickets/add','TicketController@addTicket')->name('addTicketView');
+Route::get('/tickets/add','TicketController@addTicketView')->name('addTicketView');
 Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::patch('/tickets/view/edit/{id}', 'TicketController@edit')->name('editTicket');

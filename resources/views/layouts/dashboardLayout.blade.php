@@ -1,9 +1,6 @@
 @extends('layouts.master')
 
-@section('content')
+@section('inside_container')
     @include('includes.header')
-
-    <div class="container-dashboard">
-        @yield('dashboardContent')
-    </div>
+    @yield('content')
 @endsection

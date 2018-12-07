@@ -2,7 +2,7 @@
 
     @section('title','Login')
 
-    @section('content')
+    @section('inside_container')
         <div class="container container--login">
             <div class="banner">&nbsp;</div>
             <div class="login">
@@ -12,7 +12,15 @@
                     </h2>
                 </div>
                 <div class="login__form">
-
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     {!! Form::open(['method' => 'POST','route' => 'login', 'class' => 'form']) !!}
                     <div class="form__group form__group--login">
                         <i class="form__icon fas fa-user"></i>

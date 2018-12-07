@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -14,6 +16,25 @@ class UserController extends Controller
 
     public function profile($id){
 
-        return view('user_profile');
+        $user = User::findOrFail($id);
+
+        return view('user_profile',with(['user' => $user]));
+    }
+
+    public function changeProf(Request $request){
+        $userID = $request->user()->id;
+        $file = $request->image->store($userID,'profpic');
+
+
+        $user = User::findOrFail($userID);
+        $prevImage = $user->profpic->image;
+
+
+        if($prevImage !== 'default.png') {
+            Storage::disk('profpic')->delete($prevImage);
+        }
+
+
+            $user->profpic->update(['image' => $file])->save();
     }
 }

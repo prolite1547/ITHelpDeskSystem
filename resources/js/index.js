@@ -1,5 +1,6 @@
 import {elements, elementStrings, hideModal} from "./views/base";
 import {ticketViewController,ticketAddController} from "./TicketController";
+import {profileController} from "./ProfileController";
 
 $(document).ready( function(){
 
@@ -123,6 +124,7 @@ elements.popupClose.addEventListener('click',() => {
 
     const ticketView_route  = new RegExp("\/tickets\/view\/\\d+",'gm');
     const ticketAdd_route  = new RegExp("\/tickets\/add",'gm');
+    const userProfile_route  = new RegExp("\/user\/profile\/\\d+",'gm');
     const pathName = window.location.pathname;
 
     switch (true){
@@ -131,6 +133,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case ticketAdd_route.test(pathName):
             ticketAddController();
+            break;
+        case userProfile_route.test(pathName):
+            profileController();
             break;
         default:
             console.log('route not set');

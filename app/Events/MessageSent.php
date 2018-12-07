@@ -20,6 +20,7 @@ class MessageSent implements ShouldBroadcast
     public $message;
     public $user;
     public $ticketID;
+    public $image;
     /**
      * Create a new event instance.
      *
@@ -29,6 +30,7 @@ class MessageSent implements ShouldBroadcast
     {
         $this->message = $message;
         $this->user = $user->name;
+        $this->image = $user->profpic->image;
         $this->ticketID = $ticketID;
 
     }

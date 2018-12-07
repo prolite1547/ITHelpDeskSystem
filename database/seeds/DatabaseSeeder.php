@@ -77,7 +77,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            UsersTableSeeder::class,
+            ProfPicTableSeeder::class,
             ContactsTableSeeder::class,
             CallersTableSeeder::class,
 //            TicketTableSeeder::class,

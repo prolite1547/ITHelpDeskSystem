@@ -18,6 +18,8 @@ export const elements = {
     reply: document.querySelector('.chat__textarea'),
     categoryInput: document.querySelector('.form__input[name="category"]'),
     resolve: document.querySelector('.ticket-content__link--resolve'),
+    profilePicEditIcon: document.getElementById('profImage'),
+    ticketAddSubmitBtn: document.getElementById('ticketAdd')
 }
 
 

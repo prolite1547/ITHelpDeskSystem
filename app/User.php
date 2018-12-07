@@ -43,4 +43,8 @@ class User extends Authenticatable
     public function resolved(){
         return $this->hasMany('App\Resolve');
     }
+
+    public function profpic(){
+        return $this->hasOne('App\ProfPic');
+    }
 }

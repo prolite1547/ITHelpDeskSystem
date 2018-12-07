@@ -1,0 +1,32 @@
+.user {
+
+    text-align: right;
+
+    &__img-box {
+        position: relative;
+        display: inline-block;
+        height: 20rem;
+        width: 20rem;
+        box-shadow: $shadow-light;
+    }
+
+    &__img-box:hover &__edit {
+        display: block;
+    }
+
+    &__edit {
+        position: absolute;
+        display: none;
+        top: 5px;
+        right: 5px;
+
+        & i {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    }
+
+    &__img {
+        width: 100%;
+    }
+}

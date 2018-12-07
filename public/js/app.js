@@ -4915,6 +4915,77 @@ module.exports = g;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return elements; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return elementStrings; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return renderLoader; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clearLoader; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return showModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return insertToModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return hideModal; });
+var elements = {
+    table: document.querySelector('table'),
+    select2elements: $('.form__input--select2'),
+    editTicketButton: document.querySelector('.ticket-content__link--edit'),
+    addTicketWindow: document.querySelector('.window__content'),
+    ticketDetails: document.querySelector('p.ticket-content__details'),
+    ticketSubject: document.querySelector('.ticket-content__subject'),
+    updateButtonsContainer: document.querySelector('.ticket-content__updateBtns'),
+    ticketContent: document.querySelector('.ticket-content'),
+    ticketID: document.querySelector('.ticket-details__id'),
+    modal: document.querySelector('.popup'),
+    modalContent: document.querySelector('.popup__body'),
+    container: document.querySelector('.container'),
+    ticketDetailsEditIcon: document.querySelector('.ticket-details__icon--edit'),
+    ticketDetailsAddFilesIcon: document.querySelector('.ticket-details__icon--add'),
+    popupClose: document.querySelector('.popup__close'),
+    chatSendButton: document.querySelector('.chat__button'),
+    reply: document.querySelector('.chat__textarea'),
+    categoryInput: document.querySelector('.form__input[name="category"]'),
+    resolve: document.querySelector('.ticket-content__link--resolve'),
+    profilePicEditIcon: document.getElementById('profImage'),
+    ticketAddSubmitBtn: document.getElementById('ticketAdd')
+};
+
+var elementStrings = {
+    ticketCheckbox: '.menu__checkbox',
+    select2element: '.form__input--select2',
+    loader2: 'loader2',
+    ticketContentEditIcon: '.ticket-content__link--edit',
+    resolve_form: '.form-resolve'
+};
+
+var renderLoader = function renderLoader(parent) {
+    var loader = '\n        <div class="' + elementStrings.loader2 + '">\n            <svg>\n                <use href="/images/loader/icons.svg#icon-cw"></use>\n            </svg>\n        </div>\n    ';
+    parent.insertAdjacentHTML('afterbegin', loader);
+};
+
+var clearLoader = function clearLoader() {
+    var loader = document.querySelector('.' + elementStrings.loader2);
+    if (loader) loader.parentElement.removeChild(loader);
+};
+
+var showModal = function showModal() {
+    elements.modalContent.innerHTML = "";
+    elements.container.style.filter = 'blur(1px)';
+    elements.modal.style.visibility = 'visible';
+    elements.modal.style.opacity = '1';
+};
+
+var insertToModal = function insertToModal(markup) {
+    elements.modalContent.insertAdjacentHTML('beforeend', markup);
+};
+
+var hideModal = function hideModal() {
+    elements.container.style.filter = '';
+    elements.modal.style.visibility = 'hidden';
+    elements.modal.style.opacity = '0';
+};
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -15283,75 +15354,6 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return elements; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return elementStrings; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return renderLoader; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clearLoader; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return showModal; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return insertToModal; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return hideModal; });
-var elements = {
-    table: document.querySelector('table'),
-    select2elements: $('.form__input--select2'),
-    editTicketButton: document.querySelector('.ticket-content__link--edit'),
-    addTicketWindow: document.querySelector('.window__content'),
-    ticketDetails: document.querySelector('p.ticket-content__details'),
-    ticketSubject: document.querySelector('.ticket-content__subject'),
-    updateButtonsContainer: document.querySelector('.ticket-content__updateBtns'),
-    ticketContent: document.querySelector('.ticket-content'),
-    ticketID: document.querySelector('.ticket-details__id'),
-    modal: document.querySelector('.popup'),
-    modalContent: document.querySelector('.popup__body'),
-    container: document.querySelector('.container'),
-    ticketDetailsEditIcon: document.querySelector('.ticket-details__icon--edit'),
-    ticketDetailsAddFilesIcon: document.querySelector('.ticket-details__icon--add'),
-    popupClose: document.querySelector('.popup__close'),
-    chatSendButton: document.querySelector('.chat__button'),
-    reply: document.querySelector('.chat__textarea'),
-    categoryInput: document.querySelector('.form__input[name="category"]'),
-    resolve: document.querySelector('.ticket-content__link--resolve')
-};
-
-var elementStrings = {
-    ticketCheckbox: '.menu__checkbox',
-    select2element: '.form__input--select2',
-    loader2: 'loader2',
-    ticketContentEditIcon: '.ticket-content__link--edit',
-    resolve_form: '.form-resolve'
-};
-
-var renderLoader = function renderLoader(parent) {
-    var loader = '\n        <div class="' + elementStrings.loader2 + '">\n            <svg>\n                <use href="/images/loader/icons.svg#icon-cw"></use>\n            </svg>\n        </div>\n    ';
-    parent.insertAdjacentHTML('afterbegin', loader);
-};
-
-var clearLoader = function clearLoader() {
-    var loader = document.querySelector('.' + elementStrings.loader2);
-    if (loader) loader.parentElement.removeChild(loader);
-};
-
-var showModal = function showModal() {
-    elements.modalContent.innerHTML = "";
-    elements.container.style.filter = 'blur(1px)';
-    elements.modal.style.visibility = 'visible';
-    elements.modal.style.opacity = '1';
-};
-
-var insertToModal = function insertToModal(markup) {
-    elements.modalContent.insertAdjacentHTML('beforeend', markup);
-};
-
-var hideModal = function hideModal() {
-    elements.container.style.filter = '';
-    elements.modal.style.visibility = 'hidden';
-    elements.modal.style.opacity = '0';
-};
 
 /***/ }),
 /* 5 */
@@ -30337,11 +30339,13 @@ module.exports = Cancel;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketAddController", function() { return ticketAddController; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketViewController", function() { return ticketViewController; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__ = __webpack_require__(172);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_Ticket__ = __webpack_require__(173);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Message__ = __webpack_require__(174);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Resolve__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Ticket__ = __webpack_require__(173);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Message__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_Resolve__ = __webpack_require__(175);
+
 
 
 
@@ -30360,23 +30364,28 @@ var ticketAddController = function ticketAddController() {
     __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].categoryInput.addEventListener('change', function (e) {
 
         var category = void 0,
-            date = void 0;
+            expirationInput = void 0;
+
+        /*CATEGORY CHOSEN BY THE USER*/
         category = e.target.options[e.target.selectedIndex].text.toLowerCase();
 
-        switch (category) {
-            case 'hardware':
-                date = moment().add(3, 'days').format('YYYY-MM-DD HH:mm:ss');
-                break;
-            case 'software':
-                date = moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss');
-                break;
-            default:
-                date = moment().format();
-        }
+        /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
+        expirationInput = __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* generateExpirationInputMarkup */](category);
 
-        var expirationInput = '<input name="expiration" value="' + date + '" hidden>';
+        /*REMOVE THE EXPIRATION INPUT*/
+        e.target.closest('div').lastElementChild.remove();
 
+        /*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*/
         e.target.parentNode.insertAdjacentHTML('beforeend', expirationInput);
+    });
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketAddSubmitBtn.addEventListener('click', function (e) {
+
+        /*DISABLE THE TICKET ADD SUMBIT BUTTON TO PREVENT MUTIPLE FORM SUBMISSION*/
+        e.target.disabled = true;
+
+        /*SUBMIT THE TICKET ADD FORM*/
+        document.querySelector('.form-addTicket').submit();
     });
 };
 
@@ -30388,11 +30397,11 @@ var ticketAddController = function ticketAddController() {
 
 var ticketViewController = function ticketViewController() {
 
-    var ticket = new __WEBPACK_IMPORTED_MODULE_2__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketDetails);
+    var ticket = new __WEBPACK_IMPORTED_MODULE_3__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketDetails);
 
     Echo.private('chat.' + ticket.ID).listen('MessageSent', function (e) {
 
-        var messageMarkup = '<div class="message">\n                            <div class="message__img-box">\n                                <img src="/images/users/user-1.jpeg" alt="John Edward R. Labor" class="message__img">\n                            </div>\n                            <div class="message__content">\n                                <div class="message__message-box">\n                                    <div class="message__name">' + e.user + '</div>\n                                    <div class="message__message">' + e.message.message + '</div>\n                                </div>\n                                <span class="message__time">' + e.message['created_at'] + '</span>\n                            </div>\n                        </div>';
+        var messageMarkup = '<div class="message">\n                            <div class="message__img-box">\n                                <img src="/storage/profpic/' + e.image + '" alt="John Edward R. Labor" class="message__img">\n                            </div>\n                            <div class="message__content">\n                                <div class="message__message-box">\n                                    <div class="message__name">' + e.user + '</div>\n                                    <div class="message__message">' + e.message.message + '</div>\n                                </div>\n                                <span class="message__time">' + e.message['created_at'] + '</span>\n                            </div>\n                        </div>';
 
         document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
     });
@@ -30518,7 +30527,7 @@ var ticketViewController = function ticketViewController() {
             return alert('What\'s the point of sending a message if its empty!! Message: ' + newMessage);
         }
         __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* resetReply */]();
-        var newMessageObject = new __WEBPACK_IMPORTED_MODULE_3__models_Message__["a" /* default */](ticket.ID, newMessage);
+        var newMessageObject = new __WEBPACK_IMPORTED_MODULE_4__models_Message__["a" /* default */](ticket.ID, newMessage);
         newMessageObject.saveMessage(newMessageObject);
     });
 
@@ -30539,7 +30548,7 @@ var ticketViewController = function ticketViewController() {
 
                 var formdata = $(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].resolve_form).serialize();
 
-                var resolve = new __WEBPACK_IMPORTED_MODULE_4__models_Resolve__["a" /* default */](ticket.ID, formdata);
+                var resolve = new __WEBPACK_IMPORTED_MODULE_5__models_Resolve__["a" /* default */](ticket.ID, formdata);
 
                 resolve.createResolve();
             });
@@ -30552,7 +30561,7 @@ var ticketViewController = function ticketViewController() {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(139);
-module.exports = __webpack_require__(176);
+module.exports = __webpack_require__(178);
 
 
 /***/ }),
@@ -30572,8 +30581,8 @@ window.Dropzone = __webpack_require__(168);
 window.moment = __webpack_require__(0);
 __webpack_require__(170);
 __webpack_require__(171);
+__webpack_require__(176);
 __webpack_require__(137);
-window.Navigo = __webpack_require__(175);
 
 /***/ }),
 /* 140 */
@@ -30593,7 +30602,7 @@ window.Popper = __webpack_require__(7).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(3);
+  window.$ = window.jQuery = __webpack_require__(4);
   window.dt = __webpack_require__(142)();
   __webpack_require__(143);
 } catch (e) {}
@@ -47789,7 +47798,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 	if ( true ) {
 		// AMD
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = (function ( $ ) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(4)], __WEBPACK_AMD_DEFINE_RESULT__ = (function ( $ ) {
 			return factory( $, window, document );
 		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -63067,7 +63076,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(3), __webpack_require__(7)) :
+   true ? factory(exports, __webpack_require__(4), __webpack_require__(7)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -93008,7 +93017,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 ;(function (factory) {
   if (true) {
     // AMD. Register as an anonymous module.
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(3)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(4)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -98856,9 +98865,11 @@ S2.define('jquery.select2',[
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TicketController__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ProfileController__ = __webpack_require__(176);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -98925,6 +98936,7 @@ $(document).ready(function () {
 
     var ticketView_route = new RegExp("\/tickets\/view\/\\d+", 'gm');
     var ticketAdd_route = new RegExp("\/tickets\/add", 'gm');
+    var userProfile_route = new RegExp("\/user\/profile\/\\d+", 'gm');
     var pathName = window.location.pathname;
 
     switch (true) {
@@ -98933,6 +98945,9 @@ $(document).ready(function () {
             break;
         case ticketAdd_route.test(pathName):
             Object(__WEBPACK_IMPORTED_MODULE_1__TicketController__["ticketAddController"])();
+            break;
+        case userProfile_route.test(pathName):
+            Object(__WEBPACK_IMPORTED_MODULE_2__ProfileController__["profileController"])();
             break;
         default:
             console.log('route not set');
@@ -98954,7 +98969,7 @@ $(document).ready(function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return addFileMarkup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return getMessageData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return resetReply; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(3);
 
 
 var makeElementsEditable = function makeElementsEditable() {
@@ -99151,25 +99166,6 @@ var Message = function () {
 
 /***/ }),
 /* 175 */
-/***/ (function(module, exports, __webpack_require__) {
-
-!function(e,t){ true?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Navigo=t()}(this,function(){"use strict";var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function t(){return!("undefined"==typeof window||!window.history||!window.history.pushState)}function n(e,n,o){this.root=null,this._routes=[],this._useHash=n,this._hash=void 0===o?"#":o,this._paused=!1,this._destroyed=!1,this._lastRouteResolved=null,this._notFoundHandler=null,this._defaultHandler=null,this._usePushState=!n&&t(),this._onLocationChange=this._onLocationChange.bind(this),this._genericHooks=null,this._historyAPIUpdateMethod="pushState",e?this.root=n?e.replace(/\/$/,"/"+this._hash):e.replace(/\/$/,""):n&&(this.root=this._cLoc().split(this._hash)[0].replace(/\/$/,"/"+this._hash)),this._listen(),this.updatePageLinks()}function o(e){return e instanceof RegExp?e:e.replace(/\/+$/,"").replace(/^\/+/,"^/")}function i(e){return e.replace(/\/$/,"").split("/").length}function s(e,t){return i(t)-i(e)}function r(e,t){return function(e){return(arguments.length>1&&void 0!==arguments[1]?arguments[1]:[]).map(function(t){var i=function(e){var t=[];return{regexp:e instanceof RegExp?e:new RegExp(e.replace(n.PARAMETER_REGEXP,function(e,o,i){return t.push(i),n.REPLACE_VARIABLE_REGEXP}).replace(n.WILDCARD_REGEXP,n.REPLACE_WILDCARD)+n.FOLLOWED_BY_SLASH_REGEXP,n.MATCH_REGEXP_FLAGS),paramNames:t}}(o(t.route)),s=i.regexp,r=i.paramNames,a=e.replace(/^\/+/,"/").match(s),h=function(e,t){return 0===t.length?null:e?e.slice(1,e.length).reduce(function(e,n,o){return null===e&&(e={}),e[t[o]]=decodeURIComponent(n),e},null):null}(a,r);return!!a&&{match:a,route:t,params:h}}).filter(function(e){return e})}(e,t)[0]||!1}function a(e,t){var n=t.map(function(t){return""===t.route||"*"===t.route?e:e.split(new RegExp(t.route+"($|/)"))[0]}),i=o(e);return n.length>1?n.reduce(function(e,t){return e.length>t.length&&(e=t),e},n[0]):1===n.length?n[0]:i}function h(e,n,o){var i,s=function(e){return e.split(/\?(.*)?$/)[0]};return void 0===o&&(o="#"),t()&&!n?s(e).split(o)[0]:(i=e.split(o)).length>1?s(i[1]):s(i[0])}function u(t,n,o){if(n&&"object"===(void 0===n?"undefined":e(n))){if(n.before)return void n.before(function(){(!(arguments.length>0&&void 0!==arguments[0])||arguments[0])&&(t(),n.after&&n.after(o))},o);if(n.after)return t(),void(n.after&&n.after(o))}t()}return n.prototype={helpers:{match:r,root:a,clean:o,getOnlyURL:h},navigate:function(e,t){var n;return e=e||"",this._usePushState?(n=(n=(t?"":this._getRoot()+"/")+e.replace(/^\/+/,"/")).replace(/([^:])(\/{2,})/g,"$1/"),history[this._historyAPIUpdateMethod]({},"",n),this.resolve()):"undefined"!=typeof window&&(e=e.replace(new RegExp("^"+this._hash),""),window.location.href=window.location.href.replace(/#$/,"").replace(new RegExp(this._hash+".*$"),"")+this._hash+e),this},on:function(){for(var t=this,n=arguments.length,o=Array(n),i=0;i<n;i++)o[i]=arguments[i];if("function"==typeof o[0])this._defaultHandler={handler:o[0],hooks:o[1]};else if(o.length>=2)if("/"===o[0]){var r=o[1];"object"===e(o[1])&&(r=o[1].uses),this._defaultHandler={handler:r,hooks:o[2]}}else this._add(o[0],o[1],o[2]);else"object"===e(o[0])&&Object.keys(o[0]).sort(s).forEach(function(e){t.on(e,o[0][e])});return this},off:function(e){return null!==this._defaultHandler&&e===this._defaultHandler.handler?this._defaultHandler=null:null!==this._notFoundHandler&&e===this._notFoundHandler.handler&&(this._notFoundHandler=null),this._routes=this._routes.reduce(function(t,n){return n.handler!==e&&t.push(n),t},[]),this},notFound:function(e,t){return this._notFoundHandler={handler:e,hooks:t},this},resolve:function(e){var n,o,i=this,s=(e||this._cLoc()).replace(this._getRoot(),"");this._useHash&&(s=s.replace(new RegExp("^/"+this._hash),"/"));var a=function(e){return e.split(/\?(.*)?$/).slice(1).join("")}(e||this._cLoc()),l=h(s,this._useHash,this._hash);return!this._paused&&(this._lastRouteResolved&&l===this._lastRouteResolved.url&&a===this._lastRouteResolved.query?(this._lastRouteResolved.hooks&&this._lastRouteResolved.hooks.already&&this._lastRouteResolved.hooks.already(this._lastRouteResolved.params),!1):(o=r(l,this._routes))?(this._callLeave(),this._lastRouteResolved={url:l,query:a,hooks:o.route.hooks,params:o.params,name:o.route.name},n=o.route.handler,u(function(){u(function(){o.route.route instanceof RegExp?n.apply(void 0,o.match.slice(1,o.match.length)):n(o.params,a)},o.route.hooks,o.params,i._genericHooks)},this._genericHooks,o.params),o):this._defaultHandler&&(""===l||"/"===l||l===this._hash||function(e,n,o){if(t()&&!n)return!1;if(!e.match(o))return!1;var i=e.split(o);return i.length<2||""===i[1]}(l,this._useHash,this._hash))?(u(function(){u(function(){i._callLeave(),i._lastRouteResolved={url:l,query:a,hooks:i._defaultHandler.hooks},i._defaultHandler.handler(a)},i._defaultHandler.hooks)},this._genericHooks),!0):(this._notFoundHandler&&u(function(){u(function(){i._callLeave(),i._lastRouteResolved={url:l,query:a,hooks:i._notFoundHandler.hooks},i._notFoundHandler.handler(a)},i._notFoundHandler.hooks)},this._genericHooks),!1))},destroy:function(){this._routes=[],this._destroyed=!0,this._lastRouteResolved=null,this._genericHooks=null,clearTimeout(this._listeningInterval),"undefined"!=typeof window&&(window.removeEventListener("popstate",this._onLocationChange),window.removeEventListener("hashchange",this._onLocationChange))},updatePageLinks:function(){var e=this;"undefined"!=typeof document&&this._findLinks().forEach(function(t){t.hasListenerAttached||(t.addEventListener("click",function(n){if((n.ctrlKey||n.metaKey)&&"a"==n.target.tagName.toLowerCase())return!1;var o=e.getLinkPath(t);e._destroyed||(n.preventDefault(),e.navigate(o.replace(/\/+$/,"").replace(/^\/+/,"/")))}),t.hasListenerAttached=!0)})},generate:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=this._routes.reduce(function(n,o){var i;if(o.name===e)for(i in n=o.route,t)n=n.toString().replace(":"+i,t[i]);return n},"");return this._useHash?this._hash+n:n},link:function(e){return this._getRoot()+e},pause:function(){var e=!(arguments.length>0&&void 0!==arguments[0])||arguments[0];this._paused=e,this._historyAPIUpdateMethod=e?"replaceState":"pushState"},resume:function(){this.pause(!1)},historyAPIUpdateMethod:function(e){return void 0===e?this._historyAPIUpdateMethod:(this._historyAPIUpdateMethod=e,e)},disableIfAPINotAvailable:function(){t()||this.destroy()},lastRouteResolved:function(){return this._lastRouteResolved},getLinkPath:function(e){return e.getAttribute("href")},hooks:function(e){this._genericHooks=e},_add:function(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;return"string"==typeof t&&(t=encodeURI(t)),this._routes.push("object"===(void 0===n?"undefined":e(n))?{route:t,handler:n.uses,name:n.as,hooks:o||n.hooks}:{route:t,handler:n,hooks:o}),this._add},_getRoot:function(){return null!==this.root?this.root:(this.root=a(this._cLoc().split("?")[0],this._routes),this.root)},_listen:function(){var e=this;if(this._usePushState)window.addEventListener("popstate",this._onLocationChange);else if("undefined"!=typeof window&&"onhashchange"in window)window.addEventListener("hashchange",this._onLocationChange);else{var t=this._cLoc(),n=void 0,o=void 0;(o=function(){n=e._cLoc(),t!==n&&(t=n,e.resolve()),e._listeningInterval=setTimeout(o,200)})()}},_cLoc:function(){return"undefined"!=typeof window?void 0!==window.__NAVIGO_WINDOW_LOCATION_MOCK__?window.__NAVIGO_WINDOW_LOCATION_MOCK__:o(window.location.href):""},_findLinks:function(){return[].slice.call(document.querySelectorAll("[data-navigo]"))},_onLocationChange:function(){this.resolve()},_callLeave:function(){var e=this._lastRouteResolved;e&&e.hooks&&e.hooks.leave&&e.hooks.leave(e.params)}},n.PARAMETER_REGEXP=/([:*])(\w+)/g,n.WILDCARD_REGEXP=/\*/g,n.REPLACE_VARIABLE_REGEXP="([^/]+)",n.REPLACE_WILDCARD="(?:.*)",n.FOLLOWED_BY_SLASH_REGEXP="(?:/$|$)",n.MATCH_REGEXP_FLAGS="",n});
-//# sourceMappingURL=navigo.min.js.map
-
-
-/***/ }),
-/* 176 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 177 */,
-/* 178 */,
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99200,6 +99196,142 @@ var Resolve = function () {
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (Resolve);
+
+/***/ }),
+/* 176 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "profileController", function() { return profileController; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_ProfPic__ = __webpack_require__(177);
+
+
+
+var profileController = function profileController() {
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].profilePicEditIcon.addEventListener('change', function (e) {
+
+        var input = e.target;
+
+        var image = new __WEBPACK_IMPORTED_MODULE_1__models_ProfPic__["a" /* default */](input.files);
+
+        if (image.file) {
+            image.saveImage();
+        }
+        window.asd = image;
+    });
+};
+
+/***/ }),
+/* 177 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ProfPic = function () {
+    function ProfPic(files) {
+        _classCallCheck(this, ProfPic);
+
+        this.error = [];
+        this.validate(files);
+    }
+
+    _createClass(ProfPic, [{
+        key: 'validate',
+        value: function validate(files) {
+
+            this.validateLength(files);
+            this.validateType(files[0]);
+            this.validateSize(files[0]);
+            if (this.error.length != 0) {
+                return alert('' + this.error);
+            } else {
+                this.error = [];
+                return this.file = files[0];
+            }
+        }
+    }, {
+        key: 'validateLength',
+        value: function validateLength(files) {
+            if (files.length !== 1) {
+                this.error.push('Uploaded nothing or uploaded more than one file!! ');
+                return false;
+            }
+        }
+    }, {
+        key: 'validateType',
+        value: function validateType(file) {
+
+            if (!file['type'].includes('image')) {
+                this.error.push('Invalid file type! ');
+                return false;
+            }
+        }
+    }, {
+        key: 'validateSize',
+        value: function validateSize(file) {
+
+            if (file.size >= 100000) {
+                this.error.push('Exceeded the file size limit of 100kb! ');
+                return false;
+            }
+        }
+    }, {
+        key: 'saveImage',
+        value: function saveImage() {
+
+            var formData = new FormData();
+
+            formData.append("image", this.file);
+            var request = new XMLHttpRequest();
+            request.open("POST", "/image");
+            request.send(formData);
+        }
+    }]);
+
+    return ProfPic;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (ProfPic);
+
+/***/ }),
+/* 178 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return generateExpirationInputMarkup; });
+var generateExpirationInputMarkup = function generateExpirationInputMarkup(category) {
+
+    var date = void 0;
+    switch (category) {
+        case 'hardware':
+            date = moment().add(3, 'days').format('YYYY-MM-DD HH:mm:ss');
+            break;
+        case 'software':
+            date = moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss');
+            break;
+        default:
+            date = moment().format();
+    }
+
+    return '<input name="expiration" value="' + date + '" hidden>';
+};
 
 /***/ })
 /******/ ]);
