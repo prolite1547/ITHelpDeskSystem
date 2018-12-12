@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreResolve;
 use App\Resolve;
 use App\Ticket;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class ResolveController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request,$id)
+    public function create(StoreResolve $request,$id)
     {
         $ticket = Ticket::findOrFail($id);
 
@@ -62,9 +63,11 @@ class ResolveController extends Controller
      * @param  \App\Resolve  $resolve
      * @return \Illuminate\Http\Response
      */
-    public function show(Resolve $resolve)
+    public function show($id)
     {
-        //
+        $resolve = Ticket::findOrFail($id)->resolve;
+
+        return view('modal.resolve_lookup')->with(['resolve' => $resolve]);
     }
 
     /**

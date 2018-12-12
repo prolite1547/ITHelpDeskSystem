@@ -12,8 +12,8 @@
                     <div class="col-1-of-2">
                         {!! Form::open(['method' => 'POST','route' => 'addTicket','class' => 'form-addTicket','enctype'=>'multipart/form-data']) !!}
                         <div class="form__group">
-                            {!! Form::select('caller_id', $callerSelect, null, ['placeholder' => '(caller)','class' => 'form__input form__input--select2','required']) !!}
-                            {!! Form::select('contact_id', $branchGroupSelect, null, ['placeholder' => '(number used)','class' => 'form__input form__input--select2','required']) !!}
+                            {!! Form::select('caller_id', [], null, ['placeholder' => '(caller)','class' => 'form__input form__input--select2','required','id' => 'caller_id']) !!}
+                            {!! Form::select('contact_id', [], null, ['placeholder' => '(number used)','class' => 'form__input form__input--select2','required','id' => 'contact_id']) !!}
                         </div>
 
                         <div class="form__group">
@@ -59,36 +59,53 @@
                             <button class="form-callerAdd__button u-margin-l" type="button"><i class="fas fa-plus"></i> Add Caller</button>
 
                             <div class="form-callerAdd__content-box u-display-n">
-                                {!! Form::open(['method' => 'POST','class' => 'form']) !!}
+                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addCaller']) !!}
                                 <div class="form__group">
-                                    {!! Form::label('caller','Name :',['class' => 'form__label'])!!}
-                                    {!! Form::text('caller',null,['class' => 'form__input','placeholder' => 'caller name']) !!}
+                                    {!! Form::label('name','Name :',['class' => 'form__label'])!!}
+                                    {!! Form::text('name',null,['class' => 'form__input','placeholder' => 'caller name']) !!}
                                 </div>
                                 <div class="form__group">
-                                    {!! Form::label('callerNum','Branch:',['class' => 'form__label']) !!}
-                                    {!! Form::select('caller', $branchSelect, null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2']) !!}
+                                    {!! Form::label('store_id','Branch:',['class' => 'form__label']) !!}
+                                    {!! Form::select('store_id', [], null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'store','id' => 'callerBranchSelect' ]) !!}
                                 </div>
-                                {!! Form::button('Add',['type' => 'submit','class'=>'btn']) !!}
+                                {!! Form::button('Add',['type'=>'submit','class'=>'btn','data-action' => 'addCaller']) !!}
                                 {!! Form::close() !!}
                             </div>
                         </div>
-
                         <div class="form-branchAdd">
                             <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i> Add Branch</button>
 
                             <div class="form-branchAdd__content-box u-display-n">
-                                {!! Form::open(['method' => 'POST','class' => 'form']) !!}
+                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addBranch']) !!}
                                 <div class="form__group">
-                                    {!! Form::label('caller','Name :',['class' => 'form__label'])!!}
-                                    {!! Form::text('caller',null,['class' => 'form__input','placeholder' => 'branch name']) !!}
+                                    {!! Form::label('store_name','Name :',['class' => 'form__label'])!!}
+                                    {!! Form::text('store_name',null,['class' => 'form__input','placeholder' => 'branch name']) !!}
                                 </div>
-                                {!! Form::button('Add',['type' => 'submit','class'=>'btn']) !!}
+                                {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addBranch']) !!}
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
+                        <div class="form-contactAdd">
+                            <button class="form-contactAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i> Add Contact Number</button>
+
+                            <div class="form-contactAdd__content-box u-display-n">
+                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addContact']) !!}
+                                <div class="form__group">
+                                    {!! Form::label('store_id','Branch:',['class' => 'form__label']) !!}
+                                    {!! Form::select('store_id',[] ,null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'contactBranchSelect']) !!}
+                                </div>
+                                <div class="form__group u-display-n" id="contactFormGroup">
+                                    {!! Form::label('number','#',['class' => 'form__label']) !!}
+                                    {!! Form::text('number',null, ['placeholder' => 'Enter number...','class' => 'form__input ']) !!}
+                                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addContact']) !!}
+                                </div>
+
                                 {!! Form::close() !!}
                             </div>
                         </div>
 
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
+                    @if ($errors->any())
+                            <div class="alert alert-danger"
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>

@@ -1,3 +1,6 @@
+import {elements,elementStrings} from "./base";
+
+
 export const generateExpirationInputMarkup = (category) => {
 
     let date;
@@ -14,3 +17,14 @@ export const generateExpirationInputMarkup = (category) => {
 
     return `<input name="expiration" value="${date}" hidden>`;
 };
+
+
+export const showContactFormGroup = () => {
+    elements.contactFormGroup.classList.remove('u-display-n');
+
+};
+
+export const hideContactFormGroup = () => {
+    elements.contactFormGroup.classList.add('u-display-n');
+};
+

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Http\Requests\StoreUserMessage;
 use App\Message;
 use App\User;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(StoreUserMessage $request)
     {
         /*GET ID OF THE USER WHO ADDED THE TICKET*/
         $requesterID = $request->user()->id;

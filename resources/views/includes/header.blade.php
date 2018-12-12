@@ -4,22 +4,26 @@
             <img src="{{asset('images/icon.png')}}" alt="Citihardware Logo" class="header__logo">
         </div>
         <div class="header__user">
-            <span class="header__name">{{Auth::user()->name}}</span>
+            <div class="user">
+                <div class="user__name">{{Auth::user()->name}}</div>
+                <span class="user__position">{{Auth::user()->role->role}}</span>
+            </div>
             <div class="header__settings">
                 <div class="header__dropdown">
-                    <div class="header__icon-box">
-                        <i class="fas fa-caret-down"></i>
-                    </div>
-                    <ul class="header__list">
-                        <li class="header__item"><a href="{{route('userProfile',['id' => Auth::id()])}}" class="header__link">Profile</a></li>
-                        <li class="header__item">
-                            <a href="!#" class="header__link" onclick="event.preventDefault();
+                    <svg class="header__icon">
+                        <use xlink:href="{{asset('svg/sprite.svg#icon-caret-down')}}"></use>
+                        <ul class="header__list">
+                            <li class="header__item"><a href="{{route('userProfile',['id' => Auth::id()])}}" class="header__link">Profile</a></li>
+                            <li class="header__item">
+                                <a href="!#" class="header__link" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">Logout</a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    </svg>
+
                 </div>
             </div>
         </div>
@@ -34,16 +38,16 @@
                         <a href="{{route('dashboard')}}" class="nav__a {{Route::currentRouteName() == 'dashboard' ? 'nav__a--active' : ''}}">Dashboard</a>
                     </li>
                     <li class="nav__li">
-                        <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),['openTickets','myTickets','ongoingTickets','closedTickets','allTickets']) ? 'nav__a--active' : ''}}">Tickets</a>
+                        <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),$routes) ? 'nav__a--active' : ''}}">Tickets</a>
                     </li>
                     <li class="nav__li">
-                        <a href="#!" class="nav__a">Requets</a>
+                        <a href="#!" class="nav__a">Requests</a>
                     </li>
                     <li class="nav__li">
                         <a href="#!" class="nav__a">Reports</a>
                     </li>
                     <li class="nav__li">
-                        <a href="#!" class="nav__a">Knowledge Base</a>
+                        <a href="{{route('adminPage')}}" class="nav__a {{in_array(Route::currentRouteName(),$routes) ? 'nav__a--active' : ''}}">Admin Previleges</a>
                     </li>
                 </ul>
             </nav>
@@ -62,7 +66,7 @@
         @section('submenu')
             <ul class="submenu__ul">
                 <li class="submenu__li">
-                    <a href="{{route('myTickets')}}" class="submenu__a {{Route::currentRouteName() == 'myTickets' ? 'submenu__a--active' : ''}}">My Tickets <span>(0)</span></a>
+                    <a href="{{route('myTickets')}}" class="submenu__a {{Route::currentRouteName() == 'myTickets' ? 'submenu__a--active' : ''}}">My Tickets <span>({{$ticketUserTicketsCount}})</span></a>
                 </li>
                 <li class="submenu__li">
                     <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>({{$ticketOpenCount}})</span></a>
@@ -74,10 +78,10 @@
                     {{--<a href="{{route('verificationTickets')}}" class="submenu__a {{Route::currentRouteName() == 'verificationTickets' ? 'submenu__a--active' : ''}}">For Verification <span>(0)</span></a>--}}
                 {{--</li>--}}
                 <li class="submenu__li">
-                    <a href="{{route('closedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'closedTickets' ? 'submenu__a--active' : ''}}">Closed <span>(0)</span></a>
+                    <a href="{{route('closedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'closedTickets' ? 'submenu__a--active' : ''}}">Resolved <span>({{$ticketClosedCount}})</span></a>
                 </li>
                 <li class="submenu__li">
-                    <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>(2)</span></a>
+                    <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>({{$ticketCount}})</span></a>
                 </li>
             </ul>
         @show

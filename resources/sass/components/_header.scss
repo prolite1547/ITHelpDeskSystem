@@ -2,7 +2,7 @@
     background-color: $color-global;
 
     &__logo-box{
-        width: 200px;
+        flex: 0 0 20%;
     }
 
     &__logo{
@@ -10,8 +10,10 @@
     }
 
     &__user{
-        flex-grow: 1;
-        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 0 0 80%;
 
         & > * {
             display: inline-block;
@@ -28,8 +30,11 @@
 
     }
 
-    &__icon-box {
+    &__icon {
         cursor: pointer;
+        fill: currentColor;
+        width: 1.5rem;
+        height: 1.5rem;
     }
 
     &__list{
@@ -38,6 +43,8 @@
         position: absolute;
         list-style: none;
         min-width: 10rem;
+        top: 1.5rem;
+        left: 1.5rem;
         transform: translateX(-10rem);
         box-shadow: $shadow-light;
     }

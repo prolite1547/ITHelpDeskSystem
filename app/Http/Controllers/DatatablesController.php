@@ -24,7 +24,7 @@ class DatatablesController extends Controller
 
     public function tickets($status){
         $statuses = Category::whereGroup(5)->whereNotIn('name',['all','user'])->pluck('name')->toArray();
-        $model = Ticket::with('incident','incident.call.contact.store','priorityRelation','assigneeRelation','resolve.resolvedBy','resolve');
+        $model = Ticket::with(['incident','incident.call.contact.store','priorityRelation','assigneeRelation','resolve','resolve.resolvedBy']);
 
         if(in_array(strtolower($status),array_map('strtolower',$statuses),true)){
             $get_status = Category::where('name',$status)->firstOrFail();
@@ -65,10 +65,19 @@ class DatatablesController extends Controller
 
                 return $data->assigneeRelation->name;
             })
-            ->addColumn('resolved_by',function ($data){
+//            ->addColumn('resolved_by',function ($data){
+//
+//                if($data->resolve){
+//                    return $data->resolve->resolvedBy->name;
+//                }else{
+//                    return 'null';
+//                };
+//
+//            })
+            ->addColumn('closed_date',function ($data){
 
                 if($data->resolve){
-                    return $data->resolve->resolvedBy->name;
+                    return $data->resolve->created_at;
                 }else{
                     return 'null';
                 };

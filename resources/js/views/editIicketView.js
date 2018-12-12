@@ -1,4 +1,4 @@
-import {elements,elementStrings} from "./base";
+import {clearLoader, elements, elementStrings, insertToModal, renderLoader, showModal} from "./base";
 
 export const makeElementsEditable = () => {
 
@@ -37,12 +37,20 @@ export const restoreElementsTextContent = (ticket) => {
 };
 
 
-export const getResolveFormMarkUp = () => {
+export const getResolveFormMarkUp = (lookup = false,ticketID = 0) => {
+    let ajax;
 
-     return $.ajax('/modal/form/resolve',{
-        type: 'GET'
-    })
+    if(!lookup){
+         ajax = $.ajax('/modal/form/resolve',{
+                    type: 'GET'
+                });
+    }else{
+        ajax = $.ajax(`/modal/form/resolve/${ticketID}`,{
+            type: 'GET'
+        });
+    }
 
+    return ajax;
 
 }
 
@@ -64,3 +72,18 @@ export const getMessageData = () => {
 export const resetReply = () => {
   elements.reply.value = "";
 };
+
+export const showResolveButton = () => {
+    elements.resolveButton.classList.remove('u-display-n');
+
+};
+
+export const getModalWithData = (ticketID) => {
+        showModal();
+        renderLoader(elements.modalContent);
+        getResolveFormMarkUp(true,ticketID)
+            .done(data => {
+                clearLoader();
+                insertToModal(data);
+            });
+}

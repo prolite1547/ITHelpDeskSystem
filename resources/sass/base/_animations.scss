@@ -38,3 +38,15 @@
         transform: scale(1.2);
     }
 }
+
+/*BOX LOADER*/
+@keyframes lds-facebook {
+    0% {
+        top: 6px;
+        height: 51px;
+    }
+    50%, 100% {
+        top: 19px;
+        height: 26px;
+    }
+}

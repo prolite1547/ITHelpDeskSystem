@@ -8,12 +8,14 @@
                 <div class="user">
                     <div class="user__img-box">
                         <img src="{{asset("storage/profpic/".$user->profpic->image."")}}" alt="" class="user__img">
+                        @if(Auth::id() === $user->id)
                         <div class="user__edit">
                             <label>
                                 <i class="far fa-edit" title="Edit Profile Picture"></i>
                                 <input type="file" id="profImage" name="profImage" style="display: none;" accept="image/*">
                             </label>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

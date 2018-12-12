@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Caller;
 use App\Category;
@@ -22,16 +23,26 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        view()->composer('includes.header',function($view) {
+        view()->composer(['includes.header','ticket.ticket_lookup'],function($view) {
             $openID = Category::where('name','LIKE','Open')->first()->id;
             $ongoingID = Category::where('name','LIKE','Ongoing')->first()->id;
+            $closedID = Category::where('name','LIKE','Closed')->first()->id;
+            $userID = Auth::id();
+
 
             $ticketOpenCount = Ticket::whereStatus($openID)->count();
             $ticketOngoingCount = Ticket::whereStatus($ongoingID)->count();
-
+            $ticketClosedCount = Ticket::whereStatus($closedID)->count();
+            $ticketUserTicketsCount = Ticket::whereAssignee($userID)->count();
+            $ticketCount = Ticket::all()->count();
             $view->with([
                 'ticketOpenCount' => $ticketOpenCount,
                 'ticketOngoingCount' => $ticketOngoingCount,
+                'ticketClosedCount' => $ticketClosedCount,
+                'ticketCount' => $ticketCount,
+                'ticketUserTicketsCount' => $ticketUserTicketsCount,
+                'closedID' => $closedID,
+                'routes' => ['openTickets','myTickets','ongoingTickets','closedTickets','allTickets','adminPage']
             ]);
         });
 

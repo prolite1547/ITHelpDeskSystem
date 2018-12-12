@@ -11,14 +11,7 @@
 |
 */
 
-use App\Category;
-use App\CategoryGroup;
-use App\Role;
-use App\Store;
-use App\Ticket;
-use App\User;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\Facades\DataTables;
+
 use Webklex\IMAP\Client;
 
 
@@ -67,11 +60,39 @@ Route::post('/file/ticket/{id}','TicketController@addFile');
 ////////*MODAL*////////////
 //////////////////////////
 Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
-Route::view('/modal/form/resolve','modal.resolve_form')->name('modalTicketEdit');
+Route::view('/modal/form/resolve','modal.resolve_form')->name('modalResolveForm');
+Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalResolveView');
 //////////////////////////
 ////////*MESSAGE*/////////
 //////////////////////////
 Route::post('/message/new','MessageController@create');
+
+//////////////////////////
+////////*CALLER*/////////
+//////////////////////////
+Route::post('/caller/save','CallerController@create');
+
+//////////////////////////
+////////*STORE*/////////
+//////////////////////////
+Route::post('/store/save','StoreController@create');
+
+//////////////////////////
+////////*CONTACT*/////////
+//////////////////////////
+Route::post('/contact/save','ContactController@create');
+
+//////////////////////////
+////////*ADMIN*/////////
+//////////////////////////
+Route::get('/admin','AdminController@index')->name('adminPage');
+
+//////////////////////////
+////////*SELECT*/////////
+//////////////////////////
+Route::get('/select/store', 'SelectController@branch');
+Route::get('/select/caller', 'SelectController@caller');
+Route::get('/select/contact', 'SelectController@contact');
 
 //Route::get('/requests', 'PublicController@dashboard')->name('requests');
 //Route::get('/reports', 'PublicController@dashboard')->name('reports');
@@ -81,9 +102,9 @@ Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name
 
 Route::get('/test',function (){
 
-    $array = ['name' => 'John'];
+    $ticket = Call::find(1);
 
-    echo json_encode($array);
+    dd($ticket->incident->call->created_at);
 
 });
 

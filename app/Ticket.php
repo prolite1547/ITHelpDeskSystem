@@ -50,7 +50,7 @@ public function ticketMessages(){
 }
 
 public function resolve(){
-    return $this->hasOne('App\Resolve');
+    return $this->hasOne('App\Resolve','ticket_id','id');
 }
 
 public function getFileDirectoryFolder()
