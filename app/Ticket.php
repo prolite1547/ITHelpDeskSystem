@@ -71,4 +71,18 @@ public function getExpirationAttribute($value){
 
 }
 
+public static function TicketCategory($category){
+    return static::leftJoin(
+        'incidents',
+        'incidents.id', '=', 'tickets.incident_id'
+        )->where('category', '=', $category);
+}
+
+public function SDC(){
+    return $this->hasOne('App\SystemDataCorrection','ticket_no');
+}
+
+public function MDC(){
+    return $this->hasOne('App\ManualDataCorrection', 'ticket_no');
+}
 }

@@ -102,3 +102,17 @@ Route::get('/test2',function (){
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::resource('sdc', 'SDCController');
+Route::resource('mdc', 'MDCController');
+Route::get('system/{id}/print', 'PrintController@sdcprinter')->name('sdc.printer');
+Route::get('manual/{id}/print', 'PrintController@mdcprinter')->name('mdc.printer');
+Route::get('reports/reports', 'ReportsController@reports')->name('reports.reports');
+Route::post('reports/genipp', 'ReportsController@generateIPP')->name('reports.genipp');
+Route::post('reports/genipc', 'ReportsController@generateIPC')->name('reports.genipc');
+Route::post('reports/genilr', 'ReportsController@generateILR')->name('reports.genilr');
+Route::get('reports/charts', 'ReportsController@loadChart')->name('reports.charts');
+Route::post('reports/lvr', 'ReportsController@loadLVR')->name('reports.lvrchart');
+Route::post('reports/ipcr', 'ReportsController@loadIPCR')->name('reports.ipcr');
+Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');

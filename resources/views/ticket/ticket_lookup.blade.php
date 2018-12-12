@@ -116,9 +116,36 @@
                                     <li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>
                                         <span class="ticket-details__value">&nbsp;</span>
                                     </li>
+                                    
                                     <li class="ticket-details__item"><span class="ticket-details__field">Data Correction:</span>
+                                    
+                                        <span class="ticket-details__value">
+                                            
+                                                @if(isset($ticket->SDC->id))
+                                                <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }} 
+                                                    <?php 
+                                                        if($ticket->SDC->posted){
+                                                              echo " [POSTED]";
+                                                        }
+                                                    ?>
+                                                </a>
+                                                @elseif (isset($ticket->MDC->id))
+                                                 <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('mdc.printer', ['id'=>$ticket->MDC->id])}}">{{ $ticket->MDC->mdc_no }} 
+                                                    <?php 
+                                                        if($ticket->MDC->posted){
+                                                              echo " [POSTED]";
+                                                        }
+                                                    ?>
+                                                </a>
+                                                @endif
+
+                                            
+                                        </span>
+                                  </li>
+
+                                    {{-- <li class="ticket-details__item"><span class="ticket-details__field">Data Correction:</span>
                                         <span class="ticket-details__value">{{$ticket->incident->drd}}</span>
-                                    </li>
+                                    </li> --}}
                                     <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
                                         @if(!$ticket->incident->getFiles->isEmpty())
                                             @foreach($ticket->incident->getFiles as $file)
@@ -130,7 +157,21 @@
                                     </li>
                                 </ul>
                             </div>
+
+                            @if (!isset($ticket->SDC->id) && !isset($ticket->MDC->id)) 
+                                <div class="ticket-details__title-box">
+                                        <div class="ticket-details__title">
+                                            <h4 class="heading-quaternary">Create/Add Data Correction</h4>
+                                        </div>
+                                </div>
+                                <div class="ticket-details__content">
+                                        <a class="btn btn--blue" href="{{ route('sdc.show', ['id'=>$ticket->id]) }}">System Data Correct</A>
+                                        <a class="btn btn--red" href= "{{ route('mdc.show', ['id'=>$ticket->id]) }}">Manual Data Correct</a>
+                                </div>
+                            @endif
                     </div>
+
+
             </div>
         </div>
     </main>

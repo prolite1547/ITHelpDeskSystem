@@ -41,10 +41,26 @@ class User extends Authenticatable
     }
 
     public function resolved(){
-        return $this->hasMany('App\Resolve');
+        return $this->hasMany('App\Resolve','resolved_by');
     }
 
     public function profpic(){
         return $this->hasOne('App\ProfPic');
     }
+
+     public function ticketLogged(){
+         return $this->hasMany('App\Call');
+     }
+
+
+     public function isDateBetween($start,$end, $created_at){
+
+        if (( $created_at >= $start) && ($created_at <= $end)){
+            return true;
+        }else{
+            return false;
+        }
+    
+     }
+    
 }

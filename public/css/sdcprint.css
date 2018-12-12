@@ -1,0 +1,154 @@
+.container{
+    border: 2px solid black;
+    
+    
+    
+}
+
+.container1{
+    border: 2px solid black;
+    margin-top: 25px;
+    padding-top:5px;
+    padding-left:5px;
+    padding-right:5px;
+}
+.wborder{
+    border:1px solid black;
+}
+
+.labels2{
+    
+    font-size: 12px;
+    display:block;
+    text-align: center;
+  
+}
+
+.data{
+    font-size: 14px;
+}
+.wunderline{
+    border-bottom: 1px solid black;
+    width:400px;
+    margin:0 auto;
+}
+
+
+.wunderline-2{
+    border-bottom: 1px solid black;
+    width:300px;
+    margin:0 auto;
+}
+
+.row-height{
+    display:block;
+    height: 75px;
+}
+
+.title-header{
+    font-size:24px;
+    
+}
+
+.sub-title{
+    font-size:16px;
+}
+
+.heading{
+    color:white;
+    background-color:black;
+    font-size: 18px;
+}
+
+.subheading{
+    color:black;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.note{
+    font-size: 12px;
+    
+    color:lightslategray;
+}
+
+.labels{
+    font-size:12px;
+    font-weight:  600;
+}
+
+.fandr{
+    display:block;
+    height: 60px;
+}
+
+.shouldbe{
+    display:block;
+    height: 25px;
+}
+
+.height-space{
+    display:block;
+    height: 50px;
+}
+
+.adjust-span{
+    display:block;
+    
+}
+
+.signed{
+    font-size:12px;
+    color:red;
+
+}
+
+.table-fields-affected{
+    font-size: 12px;
+}
+
+.findings-recommendations{
+    font-size: 12px;
+}
+
+
+.sdc_label{
+    display:inline-block;
+    font-weight:bold;
+    font-size:12px;
+    height: 70px;
+    padding:5px;
+    line-height:55px;
+    
+}
+
+.ids{
+    font-weight:bold;
+    font-size:16px;
+}   
+
+.hdticketno{
+    font-size:12px;
+}
+
+ 
+
+@media print {
+    .heading {
+        background-color:black !important;
+        -webkit-print-color-adjust: exact; 
+    }
+    .action-buttons {
+        display: none;
+    }
+}
+
+@media print {
+    .heading {
+        color: white !important;
+    }
+    .action-buttons {
+        display: none;
+    }
+}
