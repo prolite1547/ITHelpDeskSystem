@@ -4891,13 +4891,17 @@ module.exports = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return elements; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return elementStrings; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return renderLoader; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return elements; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return elementStrings; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return renderLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clearLoader; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return showModal; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return insertToModal; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return hideModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return showModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return insertToModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return hideModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return displayError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return setDisable; });
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var elements = {
     table: document.querySelector('table'),
     select2elements: $('.form__input--select2'),
@@ -4919,7 +4923,13 @@ var elements = {
     categoryInput: document.querySelector('.form__input[name="category"]'),
     resolve: document.querySelector('.ticket-content__link--resolve'),
     profilePicEditIcon: document.getElementById('profImage'),
-    ticketAddSubmitBtn: document.getElementById('ticketAdd')
+    ticketAddSubmitBtn: document.getElementById('ticketAdd'),
+    addCallerForm: document.getElementById('addCaller'),
+    addBranchForm: document.getElementById('addBranch'),
+    addContactForm: document.getElementById('addContact'),
+    addTicketForm: document.querySelector('.form-addTicket'),
+    contactFormGroup: document.getElementById('contactFormGroup'),
+    resolveButton: document.querySelector('button[data-action=viewRslveDtls')
 };
 
 var elementStrings = {
@@ -4927,7 +4937,11 @@ var elementStrings = {
     select2element: '.form__input--select2',
     loader2: 'loader2',
     ticketContentEditIcon: '.ticket-content__link--edit',
-    resolve_form: '.form-resolve'
+    resolve_form: '.form-resolve',
+    addCallerSubmit: 'button[data-action=addCaller]',
+    addBranchSubmit: 'button[data-action=addBranch]',
+    addContactSubmit: 'button[data-action=addContact]',
+    branchSelectContact: 'select[data-select=contact]'
 };
 
 var renderLoader = function renderLoader(parent) {
@@ -4955,6 +4969,24 @@ var hideModal = function hideModal() {
     elements.container.style.filter = '';
     elements.modal.style.visibility = 'hidden';
     elements.modal.style.opacity = '0';
+};
+
+var displayError = function displayError(jqXHR) {
+    var errorMessage = '';
+    Object.entries(jqXHR.responseJSON.errors).forEach(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            key = _ref2[0],
+            value = _ref2[1];
+
+        return errorMessage += value;
+    });
+    alert(errorMessage);
+};
+
+var setDisable = function setDisable(el) {
+    var bool = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+    el.disabled = bool;
 };
 
 /***/ }),
@@ -30345,6 +30377,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Ticket__ = __webpack_require__(175);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Message__ = __webpack_require__(176);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_Resolve__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_Caller__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_Store__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_Contact__ = __webpack_require__(180);
+var _this = this;
+
+
+
+
 
 
 
@@ -30361,7 +30401,69 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 var ticketAddController = function ticketAddController() {
 
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].categoryInput.addEventListener('change', function (e) {
+    $('#callerBranchSelect,#contactBranchSelect').select2({
+        ajax: {
+            url: '/select/store',
+            processResults: function processResults(data) {
+                return {
+                    results: data.data
+                };
+            }
+        }
+    });
+
+    $('#caller_id').select2({
+        width: '30%',
+        ajax: {
+            url: '/select/caller',
+            processResults: function processResults(data) {
+
+                var data = $.map(data.data, function (obj) {
+                    return {
+                        text: obj.store_name,
+                        children: obj.callers.map(function (obj2) {
+                            return {
+                                id: obj2.id,
+                                text: obj2.name
+                            };
+                        })
+                    };
+                });
+
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    $('#contact_id').select2({
+        width: '30%',
+        ajax: {
+            url: '/select/contact',
+            processResults: function processResults(data) {
+
+                var data = $.map(data.data, function (obj) {
+                    return {
+                        text: obj.store_name,
+                        children: obj.contact_numbers.map(function (obj2) {
+                            return {
+                                id: obj2.id,
+                                text: obj2.number
+                            };
+                        })
+                    };
+                });
+
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    /*CHANGE EVENT ON CATEGORY INPUT*/
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].categoryInput.addEventListener('change', function (e) {
 
         var category = void 0,
             expirationInput = void 0;
@@ -30379,14 +30481,68 @@ var ticketAddController = function ticketAddController() {
         e.target.parentNode.insertAdjacentHTML('beforeend', expirationInput);
     });
 
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketAddSubmitBtn.addEventListener('click', function (e) {
+    /*CLICK ON SUBMIT TICKET BTN*/
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketAddSubmitBtn.addEventListener('click', function (e) {
 
         /*DISABLE THE TICKET ADD SUMBIT BUTTON TO PREVENT MUTIPLE FORM SUBMISSION*/
         e.target.disabled = true;
 
         /*SUBMIT THE TICKET ADD FORM*/
-        document.querySelector('.form-addTicket').submit();
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketForm.submit();
     });
+
+    $(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].branchSelectContact).on('select2:select', function (e) {
+        var data = void 0;
+        data = e.params.data;
+        if (data.id !== "") {
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* showContactFormGroup */]();
+        } else {
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* hideContactFormGroup */]();
+        }
+    });
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addContactForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addContactSubmit));
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addCallerForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addCallerSubmit));
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addBranchForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addBranchSubmit));
+
+    function sendForm(button, e) {
+        e.preventDefault();
+
+        var submitBtn = void 0,
+            formdata = void 0,
+            form = void 0,
+            object = void 0;
+        form = e.target;
+        submitBtn = form.querySelector(button);
+
+        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn);
+
+        /*SERIALIZE FORM DATA*/
+        formdata = $(form).serialize();
+
+        if (form.id === 'addCaller') {
+            object = new __WEBPACK_IMPORTED_MODULE_6__models_Caller__["a" /* default */]();
+        } else if (form.id === 'addBranch') {
+            object = new __WEBPACK_IMPORTED_MODULE_7__models_Store__["a" /* default */]();
+        } else if (form.id === 'addContact') {
+            object = new __WEBPACK_IMPORTED_MODULE_8__models_Contact__["a" /* default */]();
+        } else {
+            alert('form not found');
+        }
+
+        object.storeData(formdata).done(function (data) {
+            setTimeout(function () {
+                alert('Added Successfully!!');
+                form.reset();
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn, false);
+            }, 2000);
+        }).fail(function (jqXHR, textStatus) {
+            setTimeout(function () {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn, false);
+            }, 2000);
+        });
+    }
 };
 
 ////////////////////////////////
@@ -30397,161 +30553,181 @@ var ticketAddController = function ticketAddController() {
 
 var ticketViewController = function ticketViewController() {
 
-    var ticket = new __WEBPACK_IMPORTED_MODULE_3__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketDetails);
+    var ticket = new __WEBPACK_IMPORTED_MODULE_3__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
 
     Echo.private('chat.' + ticket.ID).listen('MessageSent', function (e) {
 
-        var messageMarkup = '<div class="message">\n                            <div class="message__img-box">\n                                <img src="/storage/profpic/' + e.image + '" alt="John Edward R. Labor" class="message__img">\n                            </div>\n                            <div class="message__content">\n                                <div class="message__message-box">\n                                    <div class="message__name">' + e.user + '</div>\n                                    <div class="message__message">' + e.message.message + '</div>\n                                </div>\n                                <span class="message__time">' + e.message['created_at'] + '</span>\n                            </div>\n                        </div>';
+        var messageMarkup = '<div class="message">\n                                    <div class="message__img-box">\n                                        <img src="/storage/profpic/' + e.image + '" alt="John Edward R. Labor" class="message__img">\n                                    </div>\n                                    <div class="message__content">\n                                        <div class="message__message-box">\n                                            <div class="message__name">' + e.user + '</div>\n                                            <div class="message__message">' + e.message + '</div>\n                                        </div>\n                                        <span class="message__time">' + moment().fromNow() + '</span>\n                                    </div>\n                                 </div>';
 
         document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
     });
 
-    /*ADD CLICK EVENT LISTENER */
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketContent.addEventListener('click', function (e) {
+    ticket.fetchOriginalData().done(function (data) {
+        if (data.status === 13) {
 
-        /*IF USER CLICK THE EDIT INSIDE THE MORE*/
-        if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].ticketContentEditIcon)) {
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getModalWithData */].bind(_this, data.id));
+        } else {
 
-            /*make elements editable*/
-            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* makeElementsEditable */]();
+            /*ADD CLICK EVENT LISTENER */
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketContent.addEventListener('click', function (e) {
 
-            /*show save button*/
-            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["j" /* showButtons */]();
-        }
+                /*IF USER CLICK THE EDIT INSIDE THE MORE*/
+                if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketContentEditIcon)) {
 
-        /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
-        if (e.target.matches('#contentEditSave')) {
+                    /*make elements editable*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* makeElementsEditable */]();
 
-            /*PLACE DATA TO THE TICKET OBJECT*/
-            ticket.storeContentEditTicket(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketDetails);
+                    /*show save button*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["k" /* showButtons */]();
+                }
 
-            /*XHR TO SAVE EDITED INPUTS*/
-            ticket.saveEdit(ticket.detailsEditData).done(function (data) {
-                if (data.success === true) {
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* makeElementsNotEditable */]();
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* hideButtons */]();
-                    alert('Updated Successfully!');
-                } else {
-                    alert('Failed to update...');
+                /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
+                if (e.target.matches('#contentEditSave')) {
+
+                    /*PLACE DATA TO THE TICKET OBJECT*/
+                    ticket.storeContentEditTicket(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
+
+                    /*XHR TO SAVE EDITED INPUTS*/
+                    ticket.saveEdit(ticket.detailsEditData).done(function (data) {
+                        console.log('tae');
+                        if (data.success === true) {
+                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */]();
+                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */]();
+                            alert('Updated Successfully!');
+                        } else {
+                            alert('Failed to update...');
+                        }
+                    }).fail(function (jqXHR) {
+                        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+                    });
+                }
+
+                if (e.target.matches('#contentEditCancel')) {
+                    /*GET LATEST DETAILS OF THE TICKET*/
+                    ticket.fetchOriginalData().done(function () {
+                        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["j" /* restoreElementsTextContent */](ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
+                    });
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */](); /*REMOVE THE EDITABLE MODE*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */](); /*HIDE THE CANCEL AND DONE BUTTONS*/
                 }
             });
-        }
 
-        if (e.target.matches('#contentEditCancel')) {
-            /*GET LATEST DETAILS OF THE TICKET*/
-            ticket.fetchOriginalData().done(function () {
-                __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* restoreElementsTextContent */](ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
+            /*EVENT LISTENER EDIT ICON CLICK*/
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetailsEditIcon.addEventListener('click', function () {
+
+                ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
+
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(); /*SHOW MODAL*/
+
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent); /*RENDER LOADER*/
+
+                /*GET THE MARKUP FOR THE MODAL*/
+                ticket.getEditModal().done(function (data) {
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["a" /* addEventListenerToEditInputs */](ticket);
+                }).fail(function (error) {
+                    console.log('Error on making edit modal markup!! Error: ' + error);
+                });
             });
-            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* makeElementsNotEditable */](); /*REMOVE THE EDITABLE MODE*/
-            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* hideButtons */](); /*HIDE THE CANCEL AND DONE BUTTONS*/
-        }
-    });
 
-    /*EVENT LISTENER EDIT ICON CLICK*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketDetailsEditIcon.addEventListener('click', function () {
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetailsAddFilesIcon.addEventListener('click', function () {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(); /*SHOW MODAL*/
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(__WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["b" /* addFileMarkup */]);
 
-        ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
+                var myDropzone = new Dropzone("#addFiles", {
+                    url: '/file/ticket/' + ticket.ID,
+                    parallelUploads: 3,
+                    uploadMultiple: true,
+                    autoProcessQueue: false,
+                    addRemoveLinks: true,
+                    dictDefaultMessage: 'Drop files here to be uploaded'
+                });
 
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* showModal */])(); /*SHOW MODAL*/
+                myDropzone.on("complete", function (file) {
+                    myDropzone.removeAllFiles();
+                });
 
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].modalContent); /*RENDER LOADER*/
-
-        /*GET THE MARKUP FOR THE MODAL*/
-        ticket.getEditModal().done(function (data) {
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* insertToModal */])(data);
-            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["a" /* addEventListenerToEditInputs */](ticket);
-        }).fail(function (error) {
-            console.log('Error on making edit modal markup!! Error: ' + error);
-        });
-    });
-
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].ticketDetailsAddFilesIcon.addEventListener('click', function () {
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* showModal */])(); /*SHOW MODAL*/
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* insertToModal */])(__WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["b" /* addFileMarkup */]);
-
-        var myDropzone = new Dropzone("#addFiles", {
-            url: '/file/ticket/' + ticket.ID,
-            parallelUploads: 3,
-            uploadMultiple: true,
-            autoProcessQueue: false,
-            addRemoveLinks: true,
-            dictDefaultMessage: 'Drop files here to be uploaded'
-        });
-
-        myDropzone.on("complete", function (file) {
-            myDropzone.removeAllFiles();
-        });
-
-        document.querySelector('.dropzone__upload').addEventListener('click', function () {
-            if (myDropzone.files.length !== 0) {
-                myDropzone.processQueue();
-            } else {
-                return alert('No files found to be uploaded!!');
-            }
-        });
-    });
-
-    /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].modal.addEventListener('click', function (e) {
-        if (e.target.matches('button')) {
-            var action = e.target.dataset.action;
-            if (action === 'cancel') {
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* hideModal */])();
-            } else if (action === 'confirm') {
-                ticket.saveEdit(ticket.detailsEditData).done(function (data) {
-                    if (data.success === true) {
-                        alert('Updated Successfully!');
-                        window.location.reload();
+                document.querySelector('.dropzone__upload').addEventListener('click', function () {
+                    if (myDropzone.files.length !== 0) {
+                        myDropzone.processQueue();
                     } else {
-                        alert('Failed to update...');
+                        return alert('No files found to be uploaded!!');
                     }
                 });
-            }
-        } else if (e.target.matches('.capsule__close')) {
+            });
 
-            var capsule = e.target.closest('.capsule');
+            /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modal.addEventListener('click', function (e) {
+                if (e.target.matches('button')) {
+                    var action = e.target.dataset.action;
+                    if (action === 'cancel') {
+                        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
+                    } else if (action === 'confirm') {
+                        ticket.saveEdit(ticket.detailsEditData).done(function (data) {
+                            if (data.success === true) {
+                                alert('Updated Successfully!');
+                                window.location.reload();
+                            } else {
+                                alert('Failed to update...');
+                            }
+                        });
+                    }
+                } else if (e.target.matches('.capsule__close')) {
 
-            var removedFile = capsule.parentNode.removeChild(capsule);
+                    var capsule = e.target.closest('.capsule');
 
-            var fileID = parseInt(removedFile.dataset.id);
+                    var removedFile = capsule.parentNode.removeChild(capsule);
 
-            ticket.storeToBeDeletedFileID(fileID);
+                    var fileID = parseInt(removedFile.dataset.id);
+
+                    ticket.storeToBeDeletedFileID(fileID);
+                }
+            });
+
+            /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolve.addEventListener('click', function (e) {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])();
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent);
+                var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getResolveFormMarkUp */]();
+                resolveRequest.done(function (data) {
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
+
+                    document.querySelector('button[data-action=resolved]').addEventListener('click', function () {
+
+                        document.querySelector(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].resolve_form).addEventListener('submit', function (e) {
+                            e.preventDefault();
+                        });
+
+                        var formdata = $(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].resolve_form).serialize();
+
+                        var resolve = new __WEBPACK_IMPORTED_MODULE_5__models_Resolve__["a" /* default */](ticket.ID, formdata);
+
+                        resolve.createResolve().done(function () {
+                            alert('Ticket marked as resolved successfully!!');
+                            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
+                        }).fail(function (jqXHR) {
+                            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+                        });
+                    });
+                });
+            });
         }
     });
 
     /*EVENT LISTENER ON SEND BUTTON*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].chatSendButton.addEventListener('click', function () {
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].chatSendButton.addEventListener('click', function () {
         var newMessage = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["c" /* getMessageData */]();
         if (!newMessage) {
             return alert('What\'s the point of sending a message if its empty!! Message: ' + newMessage);
         }
-        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* resetReply */]();
+        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* resetReply */]();
         var newMessageObject = new __WEBPACK_IMPORTED_MODULE_4__models_Message__["a" /* default */](ticket.ID, newMessage);
-        newMessageObject.saveMessage(newMessageObject);
-    });
-
-    /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].resolve.addEventListener('click', function (e) {
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* showModal */])();
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].modalContent);
-        var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getResolveFormMarkUp */]();
-        resolveRequest.done(function (data) {
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* insertToModal */])(data);
-
-            document.querySelector('button[data-action=resolved]').addEventListener('click', function () {
-
-                document.querySelector(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].resolve_form).addEventListener('submit', function (e) {
-                    e.preventDefault();
-                });
-
-                var formdata = $(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].resolve_form).serialize();
-
-                var resolve = new __WEBPACK_IMPORTED_MODULE_5__models_Resolve__["a" /* default */](ticket.ID, formdata);
-
-                resolve.createResolve();
-            });
+        newMessageObject.saveMessage(newMessageObject).done(function () {
+            alert('Message Sent Successfull!');
+        }).fail(function (jqXHR) {
+            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
         });
     });
 };
@@ -30570,7 +30746,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 var profileController = function profileController() {
 
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].profilePicEditIcon.addEventListener('change', function (e) {
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].profilePicEditIcon.addEventListener('change', function (e) {
 
         var input = e.target;
 
@@ -98925,9 +99101,9 @@ $(document).ready(function () {
         "sPageButton": "paginate_button"
     }, _defineProperty(_$$extend, "sPageButton", "paginate_button"), _defineProperty(_$$extend, "sPageButtonActive", "current"), _defineProperty(_$$extend, "sPageButtonDisabled", "disabled"), _defineProperty(_$$extend, "sStripeOdd", "odd"), _defineProperty(_$$extend, "sStripeEven", "even"), _defineProperty(_$$extend, "sRowEmpty", "dataTables_empty"), _defineProperty(_$$extend, "sWrapper", "dataTables_wrapper"), _defineProperty(_$$extend, "sFilter", "dataTables_filter"), _defineProperty(_$$extend, "sInfo", "dataTables_info"), _defineProperty(_$$extend, "sPaging", "dataTables_paginate paging_"), _defineProperty(_$$extend, "sLength", "dataTables_length"), _defineProperty(_$$extend, "sProcessing", "dataTables_processing"), _defineProperty(_$$extend, "sSortAsc", "sorting_asc"), _defineProperty(_$$extend, "sSortDesc", "sorting_desc"), _defineProperty(_$$extend, "sSortable", "sorting"), _defineProperty(_$$extend, "sSortableAsc", "sorting_asc_disabled"), _defineProperty(_$$extend, "sSortableDesc", "sorting_desc_disabled"), _defineProperty(_$$extend, "sSortableNone", "sorting_disabled"), _defineProperty(_$$extend, "sSortColumn", "sorting_"), _defineProperty(_$$extend, "sFilterInput", ""), _defineProperty(_$$extend, "sLengthSelect", ""), _defineProperty(_$$extend, "sScrollWrapper", "dataTables_scroll"), _defineProperty(_$$extend, "sScrollHead", "dataTables_scrollHead"), _defineProperty(_$$extend, "sScrollHeadInner", "dataTables_scrollHeadInner"), _defineProperty(_$$extend, "sScrollBody", "dataTables_scrollBody"), _defineProperty(_$$extend, "sScrollFoot", "dataTables_scrollFoot"), _defineProperty(_$$extend, "sScrollFootInner", "dataTables_scrollFootInner"), _defineProperty(_$$extend, "sHeaderTH", ""), _defineProperty(_$$extend, "sFooterTH", ""), _defineProperty(_$$extend, "sSortJUIAsc", ""), _defineProperty(_$$extend, "sSortJUIDesc", ""), _defineProperty(_$$extend, "sSortJUI", ""), _defineProperty(_$$extend, "sSortJUIAscAllowed", ""), _defineProperty(_$$extend, "sSortJUIDescAllowed", ""), _defineProperty(_$$extend, "sSortJUIWrapper", ""), _defineProperty(_$$extend, "sSortIcon", ""), _defineProperty(_$$extend, "sJUIHeader", ""), _defineProperty(_$$extend, "sJUIFooter", ""), _$$extend));
 
-    if (__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].table) {
-        __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].table.addEventListener('click', function (e) {
-            if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* elementStrings */].ticketCheckbox)) {
+    if (__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].table) {
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].table.addEventListener('click', function (e) {
+            if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketCheckbox)) {
 
                 //clear menu
 
@@ -98940,12 +99116,12 @@ $(document).ready(function () {
     };
 
     /*ADDED SELECT2 PLUGIN*/
-    if (__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].select2elements) {
-        __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].select2elements.select2();
+    if (__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].select2elements) {
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].select2elements.select2();
     };
 
-    if (__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].addTicketWindow) {
-        __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].addTicketWindow.addEventListener('click', function (e) {
+    if (__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketWindow) {
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketWindow.addEventListener('click', function (e) {
             if (e.target.matches('button,button *')) {
 
                 if (e.target.matches('i')) {
@@ -98957,8 +99133,8 @@ $(document).ready(function () {
         });
     }
 
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elements */].popupClose.addEventListener('click', function () {
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* hideModal */])();
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].popupClose.addEventListener('click', function () {
+        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
     });
 
     var ticketView_route = new RegExp("\/tickets\/view\/\\d+", 'gm');
@@ -98986,57 +99162,71 @@ $(document).ready(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return makeElementsEditable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return makeElementsNotEditable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return showButtons; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return hideButtons; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return restoreElementsTextContent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return getResolveFormMarkUp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return makeElementsEditable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return makeElementsNotEditable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return showButtons; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return hideButtons; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return restoreElementsTextContent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return getResolveFormMarkUp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addEventListenerToEditInputs; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return addFileMarkup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return getMessageData; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return resetReply; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return resetReply; });
+/* unused harmony export showResolveButton */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return getModalWithData; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
 
 
 var makeElementsEditable = function makeElementsEditable() {
 
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.contentEditable = "true";
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.contentEditable = "true";
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.style.border = '1px solid #999';
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.style.border = '1px solid #999';
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.style.padding = '0 1rem';
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.style.padding = '0 1rem';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.contentEditable = "true";
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.contentEditable = "true";
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.style.border = '1px solid #999';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.style.border = '1px solid #999';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.style.padding = '0 1rem';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.style.padding = '0 1rem';
 };
 
 var makeElementsNotEditable = function makeElementsNotEditable() {
 
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.contentEditable = "false";
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.contentEditable = "false";
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.style.border = 'none';
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.style.border = 'none';
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.style.padding = '';
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.style.padding = '';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.contentEditable = "false";
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.contentEditable = "false";
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.style.border = 'none';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.style.border = 'none';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.style.padding = '';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.style.padding = '';
 };
 
 var showButtons = function showButtons() {
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].updateButtonsContainer.style.display = 'block';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].updateButtonsContainer.style.display = 'block';
 };
 
 var hideButtons = function hideButtons() {
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].updateButtonsContainer.style.display = 'none';
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].updateButtonsContainer.style.display = 'none';
 };
 
 var restoreElementsTextContent = function restoreElementsTextContent(ticket) {
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketDetails.textContent = ticket.details;
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].ticketSubject.textContent = ticket.subject;
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketDetails.textContent = ticket.details;
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].ticketSubject.textContent = ticket.subject;
 };
 
 var getResolveFormMarkUp = function getResolveFormMarkUp() {
+    var lookup = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    var ticketID = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-    return $.ajax('/modal/form/resolve', {
-        type: 'GET'
-    });
+    var ajax = void 0;
+
+    if (!lookup) {
+        ajax = $.ajax('/modal/form/resolve', {
+            type: 'GET'
+        });
+    } else {
+        ajax = $.ajax("/modal/form/resolve/" + ticketID, {
+            type: 'GET'
+        });
+    }
+
+    return ajax;
 };
 
 var addEventListenerToEditInputs = function addEventListenerToEditInputs(ticket) {
@@ -99050,11 +99240,24 @@ var addEventListenerToEditInputs = function addEventListenerToEditInputs(ticket)
 var addFileMarkup = "<div class=\"dropzone\" id=\"addFiles\"><button type=\"button\" class=\"dropzone__upload btn\">Upload</button></div>";
 
 var getMessageData = function getMessageData() {
-    return __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].reply.value;
+    return __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].reply.value;
 };
 
 var resetReply = function resetReply() {
-    __WEBPACK_IMPORTED_MODULE_0__base__["c" /* elements */].reply.value = "";
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].reply.value = "";
+};
+
+var showResolveButton = function showResolveButton() {
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].resolveButton.classList.remove('u-display-n');
+};
+
+var getModalWithData = function getModalWithData(ticketID) {
+    Object(__WEBPACK_IMPORTED_MODULE_0__base__["i" /* showModal */])();
+    Object(__WEBPACK_IMPORTED_MODULE_0__base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].modalContent);
+    getResolveFormMarkUp(true, ticketID).done(function (data) {
+        Object(__WEBPACK_IMPORTED_MODULE_0__base__["a" /* clearLoader */])();
+        Object(__WEBPACK_IMPORTED_MODULE_0__base__["f" /* insertToModal */])(data);
+    });
 };
 
 /***/ }),
@@ -99063,6 +99266,11 @@ var resetReply = function resetReply() {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return generateExpirationInputMarkup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return showContactFormGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return hideContactFormGroup; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
+
+
 var generateExpirationInputMarkup = function generateExpirationInputMarkup(category) {
 
     var date = void 0;
@@ -99078,6 +99286,14 @@ var generateExpirationInputMarkup = function generateExpirationInputMarkup(categ
     }
 
     return '<input name="expiration" value="' + date + '" hidden>';
+};
+
+var showContactFormGroup = function showContactFormGroup() {
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].contactFormGroup.classList.remove('u-display-n');
+};
+
+var hideContactFormGroup = function hideContactFormGroup() {
+    __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].contactFormGroup.classList.add('u-display-n');
 };
 
 /***/ }),
@@ -99235,7 +99451,7 @@ var Resolve = function () {
         key: 'createResolve',
         value: function createResolve() {
 
-            $.ajax('/ticket/' + this.ticketID + '/resolve/create', {
+            return $.ajax('/ticket/' + this.ticketID + '/resolve/create', {
                 type: 'POST',
                 data: this.data
             });
@@ -99248,9 +99464,105 @@ var Resolve = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Resolve);
 
 /***/ }),
-/* 178 */,
-/* 179 */,
-/* 180 */,
+/* 178 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Caller = function () {
+    function Caller() {
+        _classCallCheck(this, Caller);
+    }
+
+    _createClass(Caller, [{
+        key: 'storeData',
+        value: function storeData(data) {
+
+            return $.ajax('/caller/save', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }]);
+
+    return Caller;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Caller);
+
+/***/ }),
+/* 179 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Store = function () {
+    function Store(store_name) {
+        _classCallCheck(this, Store);
+
+        this.stoer_name = store_name;
+    }
+
+    _createClass(Store, [{
+        key: 'storeData',
+        value: function storeData(data) {
+
+            return $.ajax('/store/save', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }, {
+        key: 'getStoreResource',
+        value: function getStoreResource() {
+            return $.ajax('/select/store', {
+                type: 'GET'
+            });
+        }
+    }]);
+
+    return Store;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Store);
+
+/***/ }),
+/* 180 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Contact = function () {
+    function Contact() {
+        _classCallCheck(this, Contact);
+    }
+
+    _createClass(Contact, [{
+        key: 'storeData',
+        value: function storeData(data) {
+
+            return $.ajax('/contact/save', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }]);
+
+    return Contact;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Contact);
+
+/***/ }),
 /* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

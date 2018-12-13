@@ -52,7 +52,7 @@
                     { data: 'store_name',name:'incident.call.contact.store.store_name'},
                     { data: 'created_at',visible:true},
                     { data: 'resolve.created_at'},
-                    { data: 'resolved_by'},
+                    { data: 'resolve.resolved_by.name'},
                 ]
             });
         });

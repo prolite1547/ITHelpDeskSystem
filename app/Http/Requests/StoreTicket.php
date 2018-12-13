@@ -24,19 +24,32 @@ class StoreTicket extends FormRequest
     public function rules()
     {
         return [
-            'caller_id' =>  'required|numeric',
-            'contact_id' =>  'required|numeric',
-            'subject' =>  'required|string|max:255|min:10',
-            'details' =>  'required|string|max:255|min:10',
-            'attachments' => 'nullable|file',
-            'type' =>  'required|numeric',
-            'priority' => 'required|numeric',
-            'category' => 'required|numeric',
-            'catA' =>  'required|numeric',
-            'catB' =>  'nullable|numeric',
-            'expiration' => 'required' ,
-            'assignee' =>'nullable'
+            'caller_id' =>  'sometimes|required|numeric',
+            'contact_id' =>  'sometimes|required|numeric',
+            'subject' =>  'sometimes|required|string|max:255|min:10',
+            'details' =>  'sometimes|required|string|max:255|min:10',
+            'attachments' => 'sometimes|nullable',
+            'type' =>  'sometimes|required|numeric',
+            'priority' => 'sometimes|required|numeric',
+            'category' => 'sometimes|required|numeric',
+            'catA' =>  'sometimes|required|numeric',
+            'catB' =>  'sometimes|nullable|numeric',
+            'expiration' => 'sometimes|required' ,
+            'assignee' =>'sometimes|nullable',
+            'incident.subject' =>  'sometimes|required|string|max:255|min:10',
+            'incident.details' =>  'sometimes|required|string|max:255|min:10',
 
+        ];
+    }
+
+
+    public function attributes()
+    {
+        return [
+            'catA' => 'Category A',
+            'catB' => 'Category B',
+            'incident.subject' => 'subject',
+            'incident.details' => 'details'
         ];
     }
 }

@@ -19,4 +19,8 @@ class Caller extends Model
     public  function call(){
         return $this->hasMany('App\Call','caller_id','id');
     }
+
+    public function store(){
+        return $this->belongsTo('App\Store');
+    }
 }

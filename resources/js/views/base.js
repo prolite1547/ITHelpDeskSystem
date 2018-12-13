@@ -19,7 +19,13 @@ export const elements = {
     categoryInput: document.querySelector('.form__input[name="category"]'),
     resolve: document.querySelector('.ticket-content__link--resolve'),
     profilePicEditIcon: document.getElementById('profImage'),
-    ticketAddSubmitBtn: document.getElementById('ticketAdd')
+    ticketAddSubmitBtn: document.getElementById('ticketAdd'),
+    addCallerForm: document.getElementById('addCaller'),
+    addBranchForm: document.getElementById('addBranch'),
+    addContactForm: document.getElementById('addContact'),
+    addTicketForm: document.querySelector('.form-addTicket'),
+    contactFormGroup: document.getElementById('contactFormGroup'),
+    resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
 }
 
 
@@ -28,7 +34,11 @@ export const elementStrings = {
     select2element: '.form__input--select2',
     loader2: 'loader2',
     ticketContentEditIcon: '.ticket-content__link--edit',
-    resolve_form: '.form-resolve'
+    resolve_form: '.form-resolve',
+    addCallerSubmit: 'button[data-action=addCaller]',
+    addBranchSubmit: 'button[data-action=addBranch]',
+    addContactSubmit: 'button[data-action=addContact]',
+    branchSelectContact: 'select[data-select=contact]'
 }
 
 
@@ -63,5 +73,15 @@ export const hideModal= () => {
     elements.container.style.filter = '';
     elements.modal.style.visibility = 'hidden';
     elements.modal.style.opacity = '0';
-}
+};
+
+export const displayError = (jqXHR) => {
+    let errorMessage = '';
+    Object.entries(jqXHR.responseJSON.errors).forEach(([key, value]) => errorMessage+=value);
+    alert(errorMessage);
+};
+
+export const setDisable = (el,bool = true) => {
+      el.disabled = bool;
+};
 

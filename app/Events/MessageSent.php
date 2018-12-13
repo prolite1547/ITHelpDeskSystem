@@ -28,7 +28,7 @@ class MessageSent implements ShouldBroadcast
      */
     public function __construct(Message $message,User $user,$ticketID)
     {
-        $this->message = $message;
+        $this->message = htmlspecialchars($message->message);
         $this->user = $user->name;
         $this->image = $user->profpic->image;
         $this->ticketID = $ticketID;

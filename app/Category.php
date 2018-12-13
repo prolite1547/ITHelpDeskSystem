@@ -27,4 +27,8 @@ class Category extends Model
     public function incidents(){
         return $this->hasMany('App\Incident');
     }
+
+    public function resolves(){
+        return $this->hasMany('App\Resolve');
+    }
 }

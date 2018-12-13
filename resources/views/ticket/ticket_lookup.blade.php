@@ -10,9 +10,11 @@
                             <div class="ticket-content__more-dropdown">
                                 <span class="ticket-content__more">More...</span>
                                 <ul class="ticket-content__list">
+                                    @if($ticket->status !== $closedID)
                                     <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
-                                    <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--print">Print</a></li>
                                     <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
+                                    @endif
+                                    <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--print">Print</a></li>
                                     <li class="ticket-content__item">
                                         <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                                         <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
@@ -69,10 +71,12 @@
                                 <div class="ticket-details__title">
                                     <h4 class="heading-quaternary">Details</h4>
                                 </div>
+                                @if($ticket->status !== $closedID)
                                 <div class="ticket-details__icon-box">
                                     <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
                                     <i class="far fa-edit ticket-details__icon ticket-details__icon--edit" title="Edit Details"></i>
                                 </div>
+                                @endif
                             </div>
                             <div class="ticket-details__content">
                                 <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
@@ -93,7 +97,7 @@
                                         <span class="ticket-details__value">{{$ticket->expiration}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                                        <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a>
+                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
                                         <span class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</span>
@@ -105,7 +109,7 @@
                                         <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
-                                        <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
+                                        <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
                                         <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
@@ -156,6 +160,8 @@
                                         @endif
                                     </li>
                                 </ul>
+                                    <button class="btn u-margin-top-xsmall {{$ticket->status !== $closedID ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
+                                {{--{!! Form::button('Resolve Details',['class' => "btn u-margin-top-xsmall u-display-n",'data-action' => 'viewRslveDtls']) !!}--}}
                             </div>
 
                             @if (!isset($ticket->SDC->id) && !isset($ticket->MDC->id)) 

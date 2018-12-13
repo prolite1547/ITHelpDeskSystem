@@ -13,7 +13,7 @@ $factory->define(App\Incident::class, function (Faker $faker) {
             return factory(App\Call::class)->create()->id;
         },
         'subject' => $faker->catchPhrase . ' ' .$faker->bs,
-        'details' => $faker->text($faker->numberBetween(150,250)),
+        'details' => $faker->text($faker->numberBetween(150,150)),
         'category' => $incCategory->id,
         'catA' => $incCategoryA->id,
 

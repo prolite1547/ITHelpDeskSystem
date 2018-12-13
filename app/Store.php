@@ -14,4 +14,8 @@ class Store extends Model
     public function contactNumbers(){
         return $this->hasMany('App\Contact','store_id','id');
     }
+
+    public function callers(){
+        return $this->hasMany('App\Caller');
+    }
 }

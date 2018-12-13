@@ -1081,6 +1081,32 @@ body {
   }
 }
 
+/*BOX LOADER*/
+
+@-webkit-keyframes lds-facebook {
+  0% {
+    top: 6px;
+    height: 51px;
+  }
+
+  50%, 100% {
+    top: 19px;
+    height: 26px;
+  }
+}
+
+@keyframes lds-facebook {
+  0% {
+    top: 6px;
+    height: 51px;
+  }
+
+  50%, 100% {
+    top: 19px;
+    height: 26px;
+  }
+}
+
 .u-center-text {
   text-align: center !important;
 }
@@ -1244,6 +1270,30 @@ body {
           box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
 }
 
+/* width */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .table {
   width: 100%;
   font-size: 1.2rem;
@@ -1312,7 +1362,9 @@ body {
 }
 
 .header__logo-box {
-  width: 200px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 20%;
+          flex: 0 0 20%;
 }
 
 .header__logo {
@@ -1320,10 +1372,18 @@ body {
 }
 
 .header__user {
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  text-align: right;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 80%;
+          flex: 0 0 80%;
 }
 
 .header__user > * {
@@ -1339,8 +1399,11 @@ body {
   position: relative;
 }
 
-.header__icon-box {
+.header__icon {
   cursor: pointer;
+  fill: currentColor;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .header__list {
@@ -1349,6 +1412,8 @@ body {
   position: absolute;
   list-style: none;
   min-width: 10rem;
+  top: 1.5rem;
+  left: 1.5rem;
   -webkit-transform: translateX(-10rem);
           transform: translateX(-10rem);
   -webkit-box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
@@ -1568,6 +1633,43 @@ body {
           transform-origin: 44% 50%;
   -webkit-animation: rotate 1.5s infinite linear;
           animation: rotate 1.5s infinite linear;
+}
+
+/*BOX LOADER*/
+
+.lds-facebook {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.lds-facebook div {
+  display: inline-block;
+  position: absolute;
+  left: 6px;
+  width: 13px;
+  background: #333;
+  -webkit-animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+          animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+.lds-facebook div:nth-child(1) {
+  left: 6px;
+  -webkit-animation-delay: -0.24s;
+          animation-delay: -0.24s;
+}
+
+.lds-facebook div:nth-child(2) {
+  left: 26px;
+  -webkit-animation-delay: -0.12s;
+          animation-delay: -0.12s;
+}
+
+.lds-facebook div:nth-child(3) {
+  left: 45px;
+  -webkit-animation-delay: 0;
+          animation-delay: 0;
 }
 
 .popup {
@@ -1874,6 +1976,9 @@ body {
 .form-callerAdd__button,
 .form-callerAdd__button:link,
 .form-callerAdd__button:visited,
+.form-contactAdd__button,
+.form-contactAdd__button:link,
+.form-contactAdd__button:visited,
 .form-branchAdd__button,
 .form-branchAdd__button:link,
 .form-branchAdd__button:visited {
@@ -1892,6 +1997,7 @@ body {
 }
 
 .form-callerAdd__content-box,
+.form-contactAdd__content-box,
 .form-branchAdd__content-box {
   border: 1px solid #bebebe;
   padding: 1.5rem 1rem 1rem 1rem;

@@ -20,6 +20,10 @@ class Resolve extends Model
         return $this->belongsTo('App\Ticket');
     }
 
+    public function resolveCategory(){
+        return $this->belongsTo('App\Category','res_category');
+    }
+
     public function resolvedBy(){
         return $this->belongsTo('App\User','resolved_by')->withDefault(['name' => 'none']);
     }

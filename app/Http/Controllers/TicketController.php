@@ -164,7 +164,7 @@ class TicketController extends Controller
         return redirect()->route('openTickets');
     }
 
-    public function edit($id,Request $request){
+    public function edit($id,StoreTicket $request){
         try{
             DB::beginTransaction();
             $bool = true;

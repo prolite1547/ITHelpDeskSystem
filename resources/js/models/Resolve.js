@@ -7,7 +7,7 @@ export default class Resolve {
 
     createResolve(){
 
-        $.ajax(`/ticket/${this.ticketID}/resolve/create`,{
+        return $.ajax(`/ticket/${this.ticketID}/resolve/create`,{
             type: 'POST',
             data: this.data
         })
