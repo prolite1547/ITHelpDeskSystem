@@ -135,44 +135,47 @@ export const ticketAddController = () => {
 
 
     function sendForm(button,e) {
-        e.preventDefault();
-
-        let submitBtn,formdata,form,object;
-        form = e.target;
-        submitBtn = form.querySelector(button);
-
-        setDisable(submitBtn);
 
 
-        /*SERIALIZE FORM DATA*/
-        formdata = $(form).serialize();
+        if(e.target.checkValidity()){
+            e.preventDefault();
 
-        if(form.id === 'addCaller'){
-            object =  new Caller();
-        }else if(form.id === 'addBranch'){
-            object = new Store();
-        }else if(form.id === 'addContact'){
-            object = new Contact();
-        }else {
-            alert('form not found');
+            let submitBtn,formdata,form,object;
+            form = e.target;
+            submitBtn = form.querySelector(button);
+
+            setDisable(submitBtn);
+
+
+            /*SERIALIZE FORM DATA*/
+            formdata = $(form).serialize();
+
+            if(form.id === 'addCaller'){
+                object =  new Caller();
+            }else if(form.id === 'addBranch'){
+                object = new Store();
+            }else if(form.id === 'addContact'){
+                object = new Contact();
+            }else {
+                alert('form not found');
+            }
+
+
+            object.storeData(formdata)
+                .done(data => {
+                    setTimeout(() => {
+                        alert('Added Successfully!!');
+                        form.reset();
+                        setDisable(submitBtn,false);
+                    },2000)
+                })
+                .fail((jqXHR, textStatus) => {
+                    setTimeout(() => {
+                        displayError(jqXHR);
+                        setDisable(submitBtn,false);
+                    },2000)
+                });
         }
-
-
-        object.storeData(formdata)
-            .done(data => {
-                setTimeout(() => {
-                    alert('Added Successfully!!');
-                    form.reset();
-                    setDisable(submitBtn,false);
-                },2000)
-            })
-            .fail((jqXHR, textStatus) => {
-                setTimeout(() => {
-                    displayError(jqXHR);
-                    setDisable(submitBtn,false);
-                },2000)
-            });
-
 
     }
 }

@@ -81,6 +81,7 @@ class DatabaseSeeder extends Seeder
             ProfPicTableSeeder::class,
             ContactsTableSeeder::class,
             CallersTableSeeder::class,
+//            ResolveTableSeeder::class,
             TicketTableSeeder::class,
 //            MessageTableSeeder::class
         ]);

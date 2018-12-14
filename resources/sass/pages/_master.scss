@@ -5,22 +5,15 @@
     border-radius: 5px;
     overflow: hidden;
     box-shadow: $shadow-light;
+    -webkit-user-select: none;
 
     &__title {
         display: flex;
-        height: 3rem;
+        justify-content: space-between;
+        align-items: center;
         background-color: $color-menu-active;
         color: $color-white;
-        align-items: center;
         padding: 0 1rem;
-
-        & > * {
-            flex: 1 0;
-        }
-    }
-
-    &__filter {
-        text-align: right;
     }
 
     &__content {

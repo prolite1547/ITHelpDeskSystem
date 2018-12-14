@@ -24,7 +24,7 @@ class DatatablesController extends Controller
 
     public function tickets($status){
         $statuses = Category::whereGroup(5)->whereNotIn('name',['all','user'])->pluck('name')->toArray();
-        $model = Ticket::with(['incident','incident.call.contact.store','priorityRelation','assigneeRelation','resolve','resolve.resolvedBy']);
+        $model = Ticket::with(['incident','incident.call.contact.store','priorityRelation','assigneeRelation','statusRelation','resolve','resolve.resolvedBy']);
 
         if(in_array(strtolower($status),array_map('strtolower',$statuses),true)){
             $get_status = Category::where('name',$status)->firstOrFail();
@@ -85,7 +85,12 @@ class DatatablesController extends Controller
             })
             ->addColumn('created_at_carbon',function ($data){
 
-                return $data->created_at->diffForHumans();
+
+                if($data->created_at){
+                    return $data->created_at->diffForHumans();
+                }else{
+                    return 'null';
+                };
             })
             ->editColumn('store_name',function ($data){
 

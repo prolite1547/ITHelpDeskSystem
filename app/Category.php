@@ -24,8 +24,12 @@ class Category extends Model
         return ucfirst($value);
     }
 
-    public function incidents(){
-        return $this->hasMany('App\Incident');
+    public function openIncidents(){
+        return $this->hasMany('App\Incident','');
+    }
+
+    public function Tickets(){
+        return $this->hasMany('App\Ticket','status','id');
     }
 
     public function resolves(){

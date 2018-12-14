@@ -26,6 +26,11 @@ export const elements = {
     addTicketForm: document.querySelector('.form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
+
+
+    filterTicketsIcon:document.querySelector('#ticketFilter'),
+    filterContent: document.querySelector('.filter'),
+    filterTicketForm: document.querySelector('.form-ticketFilter')
 }
 
 

@@ -1,0 +1,16 @@
+.filter {
+    background-color: $color-grey-light-2;
+    position: relative;
+    padding: 1rem;
+
+    &__icon {
+        position: absolute;
+        top: -1.4rem;
+        right: -.5rem;
+        width: 2rem;
+        height: 2rem;
+        fill: $color-grey-light-2;
+    }
+}
+
+
