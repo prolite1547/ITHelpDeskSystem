@@ -10,7 +10,7 @@
             </div>
             <div class="header__settings">
                 <div class="header__dropdown">
-                    <svg class="header__icon">
+                    <svg class="icon">
                         <use xlink:href="{{asset('svg/sprite.svg#icon-caret-down')}}"></use>
                         <ul class="header__list">
                             <li class="header__item"><a href="{{route('userProfile',['id' => Auth::id()])}}" class="header__link">Profile</a></li>
@@ -38,17 +38,19 @@
                         <a href="{{route('dashboard')}}" class="nav__a {{Route::currentRouteName() == 'dashboard' ? 'nav__a--active' : ''}}">Dashboard</a>
                     </li>
                     <li class="nav__li">
-                        <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),$routes) ? 'nav__a--active' : ''}}">Tickets</a>
+                        <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),$ticketRoutes) ? 'nav__a--active' : ''}}">Tickets</a>
                     </li>
                     <li class="nav__li">
                         <a href="#!" class="nav__a">Requests</a>
                     </li>
                     <li class="nav__li">
-                        <a href="{{route('reports')}}" class="nav__a">Reports</a>
+                        <a href="{{route('reportsPage')}}" class="nav__a {{Route::currentRouteName() == 'reportsPage' ? 'nav__a--active' : ''}}">Reports</a>
                     </li>
+                    @if(Auth::user()->role_id === 4)
                     <li class="nav__li">
-                        <a href="{{route('adminPage')}}" class="nav__a {{in_array(Route::currentRouteName(),$routes) ? 'nav__a--active' : ''}}">Admin Previleges</a>
+                        <a href="{{route('adminPage')}}" class="nav__a {{Route::currentRouteName() == 'adminPage' ? 'nav__a--active' : ''}}">Admin Previleges</a>
                     </li>
+                    @endif
                 </ul>
             </nav>
         </div>

@@ -1,5 +1,5 @@
 import {elements, elementStrings, hideModal} from "./views/base";
-import {ticketViewController,ticketAddController} from "./TicketController";
+import {ticketViewController,ticketAddController} from "./TicketViewController";
 import {profileController} from "./ProfileController";
 
 $(document).ready( function(){

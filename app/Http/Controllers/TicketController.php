@@ -128,22 +128,27 @@ class TicketController extends Controller
 
     public function open(){
 
-        return view('ticket.openTickets');
+        $ticketTotals = tickeyTypeCount('status',11);
+
+        return view('ticket.openTickets',$ticketTotals);
     }
 
     public function ongoing(){
 
-        return view('ticket.ongoingTickets');
+        $ticketTotals = tickeyTypeCount('status',12);
+        return view('ticket.ongoingTickets',$ticketTotals);
     }
 
     public function closed(){
 
-        return view('ticket.closedTickets');
+        $ticketTotals = tickeyTypeCount('status',13);
+        return view('ticket.closedTickets',$ticketTotals);
     }
 
     public function all(){
 
-        return view('ticket.allTickets');
+        $ticketTotals = tickeyTypeCount('all');
+        return view('ticket.allTickets',$ticketTotals);
     }
 
     public function forVerification(){
@@ -152,8 +157,8 @@ class TicketController extends Controller
     }
 
     public function userTickets(){
-
-        return view('ticket.myTickets');
+        $ticketTotals = tickeyTypeCount('user',Auth::id());
+        return view('ticket.myTickets',$ticketTotals);
     }
 
     public function delete($id){

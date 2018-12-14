@@ -30,12 +30,7 @@
 
     }
 
-    &__icon {
-        cursor: pointer;
-        fill: currentColor;
-        width: 1.5rem;
-        height: 1.5rem;
-    }
+
 
     &__list{
         display: none;
@@ -146,3 +141,4 @@
     flex: 1 1;
     text-align: right;
 }
+

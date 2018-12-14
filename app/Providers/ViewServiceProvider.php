@@ -42,7 +42,7 @@ class ViewServiceProvider extends ServiceProvider
                 'ticketCount' => $ticketCount,
                 'ticketUserTicketsCount' => $ticketUserTicketsCount,
                 'closedID' => $closedID,
-                'routes' => ['openTickets','myTickets','ongoingTickets','closedTickets','allTickets','adminPage']
+                'ticketRoutes' => ['openTickets','myTickets','ongoingTickets','closedTickets','allTickets']
             ]);
         });
 
@@ -56,12 +56,12 @@ class ViewServiceProvider extends ServiceProvider
             ]);
         });
 
-        view()->composer(['ticket.add_ticket','modal.ticket_edit'],function ($view) {
+        view()->composer(['ticket.add_ticket','modal.ticket_edit','includes.ticket_filter'],function ($view) {
 
             $statusSelect = selectArray(5,CategoryGroup::class);  /*Status*/
             $issueSelect = selectArray(1,CategoryGroup::class);  /*Ticket*/
             $prioSelect = selectArray(2,CategoryGroup::class);   /*Priority*/
-            $incSelect = selectArray(3,CategoryGroup::class);   /*Incident category*/
+            $typeSelect = selectArray(3,CategoryGroup::class);   /*Incident category*/
             $incASelect = selectArray(4,CategoryGroup::class); /*A Sub category for incident*/
             $incBSelect = selectArray('',CategoryGroup::class); /*B Sub category for incident*/
             $callerSelect = Caller::get()->pluck('name','id');
@@ -74,7 +74,7 @@ class ViewServiceProvider extends ServiceProvider
                 'statusSelect' => $statusSelect,
                 'issueSelect' => $issueSelect,
                 'prioSelect' => $prioSelect,
-                'incSelect' => $incSelect,
+                'typeSelect' => $typeSelect,
                 'incASelect' => $incASelect,
                 'incBSelect' => $incBSelect,
                 'callerSelect' => $callerSelect,

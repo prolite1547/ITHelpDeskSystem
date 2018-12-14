@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 $factory->define(App\Ticket::class, function (Faker $faker) {
 
     $priority = DB::table('categories')->where('group',2)->orderByRaw('RAND()')->first();
-    $incStatus = DB::table('categories')->where('group',5)->where('id','!=',13)->orderByRaw('RAND()')->first();
+    $incStatus = DB::table('categories')->where('group',5)->orderByRaw('RAND()')->first();
 
 
     return [
@@ -19,4 +19,11 @@ $factory->define(App\Ticket::class, function (Faker $faker) {
         'expiration' => $faker->dateTimeBetween( 'now','+ 3 days'),
         'created_at' => $faker->dateTime('- 1 days')
     ];
+});
+
+$factory->afterCreating(App\Ticket::class, function ($ticket, $faker) {
+
+    if($ticket->status === 13){
+        $ticket->resolve()->save(factory(App\Resolve::class)->make());
+    }
 });

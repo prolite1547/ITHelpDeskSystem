@@ -97,7 +97,7 @@ Route::get('/select/contact', 'SelectController@contact');
 //////////////////////////
 ////////*REPORTS*/////////
 //////////////////////////
-Route::get('/reports', 'AdminController@report')->name('reports');
+Route::get('/reports', 'AdminController@report')->name('reportsPage');
 
 //Route::get('/requests', 'PublicController@dashboard')->name('requests');
 //Route::get('/reports', 'PublicController@dashboard')->name('reports');

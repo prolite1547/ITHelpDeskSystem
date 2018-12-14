@@ -53,6 +53,10 @@ class User extends Authenticatable
      }
 
 
+     public function assignedTickets(){
+        return $this->hasMany('App\Ticket','assignee','id');
+     }
+
      public function isDateBetween($start,$end, $created_at){
 
         if (( $created_at >= $start) && ($created_at <= $end)){
@@ -60,7 +64,7 @@ class User extends Authenticatable
         }else{
             return false;
         }
-    
+
      }
-    
+
 }
