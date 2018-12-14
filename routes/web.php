@@ -142,3 +142,5 @@ Route::get('reports/charts', 'ReportsController@loadChart')->name('reports.chart
 Route::post('reports/lvr', 'ReportsController@loadLVR')->name('reports.lvrchart');
 Route::post('reports/ipcr', 'ReportsController@loadIPCR')->name('reports.ipcr');
 Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');
+
+Route::post('get/positions', 'SDCController@getPosition')->name('get.positions');

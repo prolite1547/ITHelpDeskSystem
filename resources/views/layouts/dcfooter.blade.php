@@ -5,6 +5,20 @@
 
 
 <script>
+        $('#department').on('change',function(){
+          var depID =  $(this).find(':selected').data('id');
+            $.ajax({
+                type : "POST",
+                url : "/get/positions",
+                data : { _token: '{{csrf_token()}}', department_id: depID },
+                success:function(data){
+                     $('#position').html(data.data);
+                }
+               
+            });
+        });
+
+        
 
         $('.date1').datepicker({
           multidate: true

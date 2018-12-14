@@ -1,0 +1,114 @@
+[33mcommit 6a24992858b98914958cb47f0746a22571e232d0[m[33m ([m[1;36mHEAD -> [m[1;32mmike[m[33m, [m[1;31morigin/mike[m[33m)[m
+Merge: a7e4c2d 63c3c53
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Thu Dec 13 10:55:35 2018 +0800
+
+    added reports
+
+[33mcommit a7e4c2d104ec4934b431738d0e20361198d418e9[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Wed Dec 12 16:53:19 2018 +0800
+
+    mike merge
+
+[33mcommit 5fe98527b00914687f56f15290883ca6fb91a8ba[m
+Author: Michael <dequina1547@gmail.com>
+Date:   Wed Dec 12 16:45:37 2018 +0800
+
+    reports and data correction
+
+[33mcommit 63c3c53076107fc10e13e1fdf2f0240101e52378[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Wed Dec 12 16:39:35 2018 +0800
+
+    select elements ajax done
+
+[33mcommit f129666c24ecf3062d22a8f6697ee44fbd6ee02b[m[33m ([m[1;32mmaster[m[33m)[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Fri Dec 7 08:31:09 2018 +0800
+
+    validation added
+
+[33mcommit 4d7721fb2b107f6c79b5e67ac77a8210b743d045[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Tue Dec 4 16:55:34 2018 +0800
+
+    resolve functionality done
+
+[33mcommit b9d1a7a44f0eb2d14112242947ef3e0861916f55[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Tue Dec 4 10:47:15 2018 +0800
+
+    resolve table not yet inlcuded
+
+[33mcommit 93b1a057cdff5d66fe8d1f31f7ab983631380d26[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Mon Dec 3 10:59:03 2018 +0800
+
+    broadcast okay
+
+[33mcommit 69427d60cb860faba8b9281028cacdacb2c3bf43[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Sat Dec 1 16:36:04 2018 +0800
+
+    add event listeners
+
+[33mcommit f52a8b97530f005bcddfafb7088a69c124f4b8bd[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Thu Nov 29 11:07:50 2018 +0800
+
+    crud okay
+
+[33mcommit 07bbd3e4a0c1c2d47de0f761c9a5d871338728b8[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Mon Nov 19 14:04:09 2018 +0800
+
+    state before adding gmail package
+
+[33mcommit d643bdc7488240b3307c7302834992f158ebb4c0[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Fri Nov 16 11:37:08 2018 +0800
+
+    state before adding the files table
+
+[33mcommit ad4b1077191cc7a50a346682784dd08329cf0033[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Thu Nov 15 15:08:35 2018 +0800
+
+    state before adding dropzone plugin
+
+[33mcommit 4af9fb21314727688149efc55f57e8606c9f7afa[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Wed Nov 14 09:16:47 2018 +0800
+
+    state before adding the contact field to the calls tables for the add ticket
+
+[33mcommit 52bb6d207dbd24c5206007359dbbae6bad198990[m[33m ([m[1;31morigin/test[m[33m)[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Thu Nov 8 10:35:06 2018 +0800
+
+    optimized fething of tickets datatables
+
+[33mcommit 8bbd2cdd732d26626b77d536b402d553de58e07f[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Mon Oct 29 13:23:14 2018 +0800
+
+    databbase models,seeds,factory partial done
+
+[33mcommit 24bd77ed9df2d214cbc5ff91cd7db54d6ead8776[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Tue Oct 23 13:42:13 2018 +0800
+
+    view and add ticket views partial done
+
+[33mcommit a69902f45633baaded9c501b7f8a3b559fd75ae2[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Thu Oct 4 10:16:23 2018 +0800
+
+    dashboard header and side ok and state before adding datatab;es plugin
+
+[33mcommit 7b435cf6e0b2582715e6a9e5eceee4de85ec9bb2[m
+Author: John Edward R. Labor <john.dotaboy13@gmail.com>
+Date:   Tue Oct 2 11:41:44 2018 +0800
+
+    fist commit with login and ongoing dashboard css design

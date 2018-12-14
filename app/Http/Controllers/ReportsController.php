@@ -158,10 +158,6 @@ class ReportsController extends Controller
 
     public function loadChart(){
       return view('reports.chart');
-
-      
-         
-        
     }
 
     public function loadLVR(Request $request){

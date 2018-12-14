@@ -228,5 +228,17 @@ class SDCController extends Controller
     }
 
 
+    public function getPosition(Request $request){
+        
+        $positions = Position::where('department_id', '=', $request->department_id)->get();
+        $data = "<option value=''>Choose...</option>";
+        foreach($positions as $position){
+            $data .= "<option value='".$position->position."'>".$position->position."</option>";
+        }
+
+        return response()->json(array('success'=>true, 'data'=>"$data"), 200);
+    }
+
+
    
 }

@@ -77,9 +77,9 @@
                         <div class="col-md-4 mb-3">
                                 <label for="department">Department : </label>
                                     <select class="custom-select d-block w-100" name="department" id="department" required>
-                                        <option value="">Choose...</option>
+                                        <option data-id="0" value="">Choose...</option>
                                          @foreach ($departments  as $department)
-                                                 <option value="{{ $department->department }}">{{ $department->department }}</option>
+                                                <option data-id="{{ $department->id }}" value="{{ $department->department }}">{{ $department->department }}</option>
                                          @endforeach
                                     </select>
                                     <div class="invalid-tooltip ">
@@ -91,9 +91,9 @@
                                 <label for="position">Position : </label>
                                 <select class="custom-select d-block w-100" name="position" id="position"  required>
                                         <option value="">Choose...</option> 
-                                        @foreach ($positions  as $position)
+                                        {{-- @foreach ($positions  as $position)
                                                 <option value="{{ $position->position }}">{{ $position->position }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                 </select>
                                 <div class="invalid-tooltip " style="width: 100%;">
                                 Valid position is required

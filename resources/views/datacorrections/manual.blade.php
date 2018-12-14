@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="form-group" style="padding:30px;">
-<form class="needs-validation" action="{{ route('mdc.store') }}" method="post" novalidate>
+<form class="needs-validation" action="{{ route('mdc.store') }}"  method="post" novalidate>
    
 {{ csrf_field() }}
  
@@ -72,7 +72,7 @@
                                     <select class="custom-select d-block w-100" name="department" id="department" required>
                                         <option value="">Choose...</option>
                                         @foreach ($departments as $department)
-                                    <option value="{{ $department->department }}"> {{ $department->department }} </option>
+                                         <option  data-id="{{ $department->id }}" value="{{ $department->department }}"> {{ $department->department }} </option>
                                         @endforeach
                                     </select>
                                     <div class="invalid-tooltip ">
@@ -84,9 +84,9 @@
                                 <label for="position">Position : </label>
                                 <select class="custom-select d-block w-100" name="position" id="position"  required>
                                         <option value="">Choose...</option> 
-                                        @foreach ($positions  as $position)
+                                        {{-- @foreach ($positions  as $position)
                                                 <option value="{{ $position->position }}">{{ $position->position }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                 </select>
                                 <div class="invalid-tooltip " style="width: 100%;">
                                 Valid position is required
