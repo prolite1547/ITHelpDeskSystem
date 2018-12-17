@@ -21,7 +21,7 @@ class ReportsController extends Controller
     public function generateIPP(Request $request){
         $ticket_logged = 0;
         $start = date('Y-m-d', strtotime($request->start)) . " 00:00:00";
-        $end = date('Y-m-d', strtotime($request->end)). " 11:59:59";
+        $end = date('Y-m-d', strtotime($request->end)). " 23:59:59";
 
         // $user = User::where('id', '=', $request->user_id)->get();
         $TicketUserLogged = Call::where('user_id', $request->user_id)->whereBetween('created_at', [$start, $end])->get();
@@ -116,7 +116,7 @@ class ReportsController extends Controller
     public function generateILR(Request $request){
         $category = $request->category;
         $start = date('Y-m-d', strtotime($request->start)) . " 00:00:00";
-        $end = date('Y-m-d', strtotime($request->end)). " 11:59:59";
+        $end = date('Y-m-d', strtotime($request->end)). " 23:59:59";
         $resdate = "N/A";
         $resinterval = "N/A";
       
