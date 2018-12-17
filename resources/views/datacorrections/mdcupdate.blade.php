@@ -2,6 +2,12 @@
 
 @section('content')
 
+<?php 
+         if($mdc->posted){
+                echo "<script>location.href=window.history.back()</script>";
+        }
+?>
+
 <div class="form-group" style="padding:30px;">
 <form class="needs-validation" action="{{ route('mdc.update', ['id'=>$mdc->id]) }}" method="post" novalidate>
    

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\ManualDataCorrection;
+use App\SystemDataCorrection;
 use App\Ticket;
 use App\Department;
 use App\Position;
@@ -61,8 +62,15 @@ class MDCController extends Controller
  
     public function show($id)
     {
-      $mdc = ManualDataCorrection::orderBy('created_at','desc')->first();
-      return view('datacorrections.manual')->with('mdc',$mdc)->with('ticket', Ticket::find($id))->with('departments', Department::all())->with('positions', Position::all());
+      $checkMDC = ManualDataCorrection::where('ticket_no', $id)->get();
+      $checkSDC = SystemDataCorrection::where('ticket_no', $id)->get();
+
+         if(count($checkMDC) <= 0 && count($checkSDC) <= 0 ){
+            $mdc = ManualDataCorrection::orderBy('created_at','desc')->first();
+            return view('datacorrections.manual')->with('mdc',$mdc)->with('ticket', Ticket::find($id))->with('departments', Department::all())->with('positions', Position::all());
+         }else{
+            return redirect()->back();
+         }
     }
 
     
