@@ -105,17 +105,14 @@ export const ticketAddController = () => {
     });
 
 
-    /*CLICK ON SUBMIT TICKET BTN*/
-    elements.ticketAddSubmitBtn.addEventListener('click',(e) => {
 
-        /*DISABLE THE TICKET ADD SUMBIT BUTTON TO PREVENT MUTIPLE FORM SUBMISSION*/
-        e.target.disabled = true;
-
-        /*SUBMIT THE TICKET ADD FORM*/
-        elements.addTicketForm.submit();
+    /*ADD EVENT LISTENER ON ADD TICKET FORM*/
+    elements.addTicketForm.addEventListener('submit',(e) => {
+        if(e.target.checkValidity()){
+            e.target.querySelector(elementStrings.ticketAddBtn).disabled = true;
+            e.submit();
+        }
     });
-
-
 
     $(elementStrings.branchSelectContact).on('select2:select', function (e) {
         let data;

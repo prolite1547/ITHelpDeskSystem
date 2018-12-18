@@ -33,7 +33,7 @@
             {!! Form::select('assignee',$assigneeSelect, $ticket->assigneeRelation->id, ['placeholder' => '(assign to)','class' => 'ticket-details__select','required']) !!}
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
-            {!! Form::select('category', $incSelect, $ticket->incident->categoryRelation->id, ['placeholder' => '(select category)','class' => 'ticket-details__select','required']) !!}
+            {!! Form::select('category', $typeSelect, $ticket->incident->categoryRelation->id, ['placeholder' => '(select category)','class' => 'ticket-details__select','required']) !!}
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Sub-A Category:</span>
             {!! Form::select('catA', $incASelect, $ticket->incident->catARelation->id, ['placeholder' => '(select sub-A)','class' => 'ticket-details__select','required']) !!}

@@ -56,7 +56,7 @@ class ViewServiceProvider extends ServiceProvider
             ]);
         });
 
-        view()->composer(['ticket.add_ticket','modal.ticket_edit','includes.ticket_filter'],function ($view) {
+        view()->composer(['ticket.add_ticket','modal.ticket_edit'],function ($view) {
 
             $statusSelect = selectArray(5,CategoryGroup::class);  /*Status*/
             $issueSelect = selectArray(1,CategoryGroup::class);  /*Ticket*/
@@ -82,6 +82,16 @@ class ViewServiceProvider extends ServiceProvider
                 'branchSelect' => $branchSelect,
                 'assigneeSelect' => $assigneeSelect,
             ]);
+        });
+
+
+        view()->composer('includes.ticket_filter',function ($view) {
+
+            $categoryFilter = Category::whereGroup(3)->pluck('name','name');
+            $statusFilter = Category::whereGroup(5)->pluck('name','name');
+            $storeFilter = Store::pluck('store_name','store_name');
+
+            $view->with(compact('categoryFilter','statusFilter','storeFilter'));
         });
 
     }

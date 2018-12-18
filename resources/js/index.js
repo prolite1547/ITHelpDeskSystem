@@ -1,5 +1,6 @@
 import {elements, elementStrings, hideModal} from "./views/base";
 import {ticketViewController,ticketAddController} from "./TicketViewController";
+import {ticketPageController} from "./TicketPageController";
 import {profileController} from "./ProfileController";
 
 $(document).ready( function(){
@@ -7,7 +8,70 @@ $(document).ready( function(){
 
 
 $.extend( true, $.fn.dataTable.defaults, {
-    searching: false,
+    searching: true,
+    columnDefs: [
+        {
+            targets: -1, /*CHECKBOX*/
+            render: () => {
+                return `<div class='menu'>
+                            <ul class='menu__list u-display-n'>
+                                <li class='menu__item'><a href='#!' class='menu__link'>Print</a></li>
+                                <li class='menu__item'><a href='#!' class='menu__link'>Delete</a></li>
+                                <li class='menu__item'><a href='#!' class='menu__link'>Mark as resolved</a></li>
+                           </ul>
+                            <input type='checkbox' class='menu__checkbox'>
+                        </div>`
+            }
+        },
+        {
+            targets: 2, /*CATEGORY*/
+            render: (data) => {
+                return `<span class='u-bold u-${data.toLowerCase()}'>${data}</span>`
+            }
+        },
+        {
+            targets: 0, /*SUBJECT*/
+            createdCell: ( cell, cellData,rowData) => {
+                cell.setAttribute('title',rowData.subject);
+            },
+            orderable: false,
+            render: (data, type, row) => {
+                return `<a href='/tickets/view/${data}' class='table__subject'>${row.subject}</a>
+                <span class='table__info'>Ticket #: ${data}</span>
+                <span class='table__info'>Category: ${row.category}</span>`
+            }
+
+        },
+        {
+            targets: 5, /*CREATED_AT COLUMN*/
+            createdCell: ( cell, cellData) => {
+                cell.setAttribute('title',cellData);
+            },
+            render: (data, type, row) => {
+                return moment(data).fromNow();
+            }
+
+        },
+        {
+            targets: 6, /*EXPIRATION DATE COLUMN*/
+            createdCell: ( cell, cellData) => {
+                cell.setAttribute('title',cellData);
+            },
+            render: (data, type, row) => {
+                let now;
+
+                now = moment();
+
+                if(now >= moment(data)){
+                    return `<span class="expired">Expired</span>`;
+                }else {
+                    return moment(data).fromNow();
+                }
+            }
+
+        }
+    ],
+    dom: 'lrtip',
     processing: true,
     serverSide: true,
     orderable: false,
@@ -125,6 +189,7 @@ elements.popupClose.addEventListener('click',() => {
     const ticketView_route  = new RegExp("\/tickets\/view\/\\d+",'gm');
     const ticketAdd_route  = new RegExp("\/tickets\/add",'gm');
     const userProfile_route  = new RegExp("\/user\/profile\/\\d+",'gm');
+    const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all)",'gm');
     const pathName = window.location.pathname;
 
     switch (true){
@@ -136,6 +201,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case userProfile_route.test(pathName):
             profileController();
+            break;
+        case tikcketPages_route.test(pathName):
+            ticketPageController();
             break;
         default:
             console.log('route not set');

@@ -99,11 +99,13 @@ Route::get('/select/contact', 'SelectController@contact');
 //////////////////////////
 Route::get('/reports', 'AdminController@report')->name('reportsPage');
 
-//Route::get('/requests', 'PublicController@dashboard')->name('requests');
-//Route::get('/reports', 'PublicController@dashboard')->name('reports');
-//Route::get('/knowledgeBase', 'PublicController@dashboard')->name('knowledgeBase');
+//////////////////////////
+////////*DATATABLES*//////
+//////////////////////////
 
 Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
+
+
 
 Route::get('/test',function (){
 

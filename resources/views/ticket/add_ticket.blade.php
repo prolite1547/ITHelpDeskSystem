@@ -35,7 +35,7 @@
                             {!! Form::select('priority', $prioSelect, null, ['placeholder' => '(select priority)','class' => 'form__input','required']) !!}
                         </div>
                         <div class="form__group">
-                            {!! Form::select('category', $incSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
+                            {!! Form::select('category', $typeSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
 
                             {!! Form::select('catA', $incASelect, null, ['placeholder' => '(select sub-A)','class' => 'form__input','required']) !!}
 

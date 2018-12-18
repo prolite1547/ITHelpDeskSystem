@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Incident extends Model
 {
+
     protected $fillable = [
         'call_id',
         'subject',

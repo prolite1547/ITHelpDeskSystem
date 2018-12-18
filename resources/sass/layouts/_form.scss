@@ -162,4 +162,24 @@
 
 
 .form-ticketFilter {
+    font-size: 1.2rem;
+
+
+    &__group {
+        display: flex;
+        align-items: center;
+        &:not(:last-child){
+            margin-bottom: 1rem;
+        }
+    }
+
+    &__label {
+        flex: 0 0 20%;
+    }
+
+    &__input {
+        padding: 3px;
+        border: none;
+        color: currentColor;
+    }
 }

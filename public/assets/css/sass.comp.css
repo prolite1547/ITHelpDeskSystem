@@ -2010,6 +2010,35 @@ body {
   background-color: #fff;
 }
 
+.form-ticketFilter {
+  font-size: 1.2rem;
+}
+
+.form-ticketFilter__group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.form-ticketFilter__group:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.form-ticketFilter__label {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 20%;
+          flex: 0 0 20%;
+}
+
+.form-ticketFilter__input {
+  padding: 3px;
+  border: none;
+  color: currentColor;
+}
+
 .row-flex {
   display: -webkit-box;
   display: -ms-flexbox;

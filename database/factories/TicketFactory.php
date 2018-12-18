@@ -17,7 +17,7 @@ $factory->define(App\Ticket::class, function (Faker $faker) {
         'priority' => $priority->id,
         'status' => $incStatus->id,
         'expiration' => $faker->dateTimeBetween( 'now','+ 3 days'),
-        'created_at' => $faker->dateTime('- 1 days')
+//        'created_at' => $faker->dateTime('- 1 days')
     ];
 });
 

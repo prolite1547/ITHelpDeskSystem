@@ -43,7 +43,8 @@ export const elementStrings = {
     addCallerSubmit: 'button[data-action=addCaller]',
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
-    branchSelectContact: 'select[data-select=contact]'
+    branchSelectContact: 'select[data-select=contact]',
+    ticketAddBtn: '#ticketAdd'
 }
 
 

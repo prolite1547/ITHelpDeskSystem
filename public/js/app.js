@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 139);
+/******/ 	return __webpack_require__(__webpack_require__.s = 140);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1902,7 +1902,7 @@
             try {
                 oldLocale = globalLocale._abbr;
                 var aliasedRequire = require;
-                __webpack_require__(170)("./" + name);
+                __webpack_require__(171)("./" + name);
                 getSetGlobalLocale(oldLocale);
             } catch (e) {}
         }
@@ -4584,7 +4584,7 @@
 
 
 var bind = __webpack_require__(8);
-var isBuffer = __webpack_require__(147);
+var isBuffer = __webpack_require__(148);
 
 /*global toString:true*/
 
@@ -4945,7 +4945,8 @@ var elementStrings = {
     addCallerSubmit: 'button[data-action=addCaller]',
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
-    branchSelectContact: 'select[data-select=contact]'
+    branchSelectContact: 'select[data-select=contact]',
+    ticketAddBtn: '#ticketAdd'
 };
 
 var renderLoader = function renderLoader(parent) {
@@ -15427,7 +15428,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(1);
-var normalizeHeaderName = __webpack_require__(149);
+var normalizeHeaderName = __webpack_require__(150);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -18280,12 +18281,12 @@ process.umask = function() { return 0; };
 
 
 var utils = __webpack_require__(1);
-var settle = __webpack_require__(150);
-var buildURL = __webpack_require__(152);
-var parseHeaders = __webpack_require__(153);
-var isURLSameOrigin = __webpack_require__(154);
+var settle = __webpack_require__(151);
+var buildURL = __webpack_require__(153);
+var parseHeaders = __webpack_require__(154);
+var isURLSameOrigin = __webpack_require__(155);
 var createError = __webpack_require__(11);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(155);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(156);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -18382,7 +18383,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(156);
+      var cookies = __webpack_require__(157);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -18466,7 +18467,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(151);
+var enhanceError = __webpack_require__(152);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -30368,15 +30369,430 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 137 */,
+/* 137 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketAddController", function() { return ticketAddController; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketViewController", function() { return ticketViewController; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Ticket__ = __webpack_require__(176);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Message__ = __webpack_require__(177);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_Resolve__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_Caller__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_Store__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_Contact__ = __webpack_require__(181);
+var _this = this;
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////
+////////////////////////////////
+////*ADD TICKET CONTROLLER*/////
+////////////////////////////////
+////////////////////////////////
+
+var ticketAddController = function ticketAddController() {
+
+    $('#callerBranchSelect,#contactBranchSelect').select2({
+        ajax: {
+            url: '/select/store',
+            processResults: function processResults(data) {
+                return {
+                    results: data.data
+                };
+            }
+        }
+    });
+
+    $('#caller_id').select2({
+        width: '30%',
+        ajax: {
+            url: '/select/caller',
+            processResults: function processResults(data) {
+
+                var data = $.map(data.data, function (obj) {
+                    return {
+                        text: obj.store_name,
+                        children: obj.callers.map(function (obj2) {
+                            return {
+                                id: obj2.id,
+                                text: obj2.name
+                            };
+                        })
+                    };
+                });
+
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    $('#contact_id').select2({
+        width: '30%',
+        ajax: {
+            url: '/select/contact',
+            processResults: function processResults(data) {
+
+                var data = $.map(data.data, function (obj) {
+                    return {
+                        text: obj.store_name,
+                        children: obj.contact_numbers.map(function (obj2) {
+                            return {
+                                id: obj2.id,
+                                text: obj2.number
+                            };
+                        })
+                    };
+                });
+
+                return {
+                    results: data
+                };
+            }
+        }
+    });
+
+    /*CHANGE EVENT ON CATEGORY INPUT*/
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].categoryInput.addEventListener('change', function (e) {
+
+        var category = void 0,
+            expirationInput = void 0;
+
+        /*CATEGORY CHOSEN BY THE USER*/
+        category = e.target.options[e.target.selectedIndex].text.toLowerCase();
+
+        /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
+        expirationInput = __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* generateExpirationInputMarkup */](category);
+
+        /*REMOVE THE EXPIRATION INPUT*/
+        e.target.closest('div').lastElementChild.remove();
+
+        /*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*/
+        e.target.parentNode.insertAdjacentHTML('beforeend', expirationInput);
+    });
+
+    /*ADD EVENT LISTENER ON ADD TICKET FORM*/
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketForm.addEventListener('submit', function (e) {
+        if (e.target.checkValidity()) {
+            e.target.querySelector(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketAddBtn).disabled = true;
+            e.submit();
+        }
+    });
+
+    $(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].branchSelectContact).on('select2:select', function (e) {
+        var data = void 0;
+        data = e.params.data;
+        if (data.id !== "") {
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* showContactFormGroup */]();
+        } else {
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* hideContactFormGroup */]();
+        }
+    });
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addContactForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addContactSubmit));
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addCallerForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addCallerSubmit));
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addBranchForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addBranchSubmit));
+
+    function sendForm(button, e) {
+
+        if (e.target.checkValidity()) {
+            e.preventDefault();
+
+            var submitBtn = void 0,
+                formdata = void 0,
+                form = void 0,
+                object = void 0;
+            form = e.target;
+            submitBtn = form.querySelector(button);
+
+            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn);
+
+            /*SERIALIZE FORM DATA*/
+            formdata = $(form).serialize();
+
+            if (form.id === 'addCaller') {
+                object = new __WEBPACK_IMPORTED_MODULE_6__models_Caller__["a" /* default */]();
+            } else if (form.id === 'addBranch') {
+                object = new __WEBPACK_IMPORTED_MODULE_7__models_Store__["a" /* default */]();
+            } else if (form.id === 'addContact') {
+                object = new __WEBPACK_IMPORTED_MODULE_8__models_Contact__["a" /* default */]();
+            } else {
+                alert('form not found');
+            }
+
+            object.storeData(formdata).done(function (data) {
+                setTimeout(function () {
+                    alert('Added Successfully!!');
+                    form.reset();
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn, false);
+                }, 2000);
+            }).fail(function (jqXHR, textStatus) {
+                setTimeout(function () {
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn, false);
+                }, 2000);
+            });
+        }
+    }
+};
+
+////////////////////////////////
+////////////////////////////////
+////*LOOK UP TICKET CONTROLLER*/////
+////////////////////////////////
+////////////////////////////////
+
+var ticketViewController = function ticketViewController() {
+
+    var ticket = new __WEBPACK_IMPORTED_MODULE_3__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
+
+    Echo.private('chat.' + ticket.ID).listen('MessageSent', function (e) {
+
+        var messageMarkup = '<div class="message">\n                                    <div class="message__img-box">\n                                        <img src="/storage/profpic/' + e.image + '" alt="John Edward R. Labor" class="message__img">\n                                    </div>\n                                    <div class="message__content">\n                                        <div class="message__message-box">\n                                            <div class="message__name">' + e.user + '</div>\n                                            <div class="message__message">' + e.message + '</div>\n                                        </div>\n                                        <span class="message__time">' + moment().fromNow() + '</span>\n                                    </div>\n                                 </div>';
+
+        document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
+    });
+
+    ticket.fetchOriginalData().done(function (data) {
+        if (data.status === 13) {
+
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getModalWithData */].bind(_this, data.id));
+        } else {
+
+            /*ADD CLICK EVENT LISTENER */
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketContent.addEventListener('click', function (e) {
+
+                /*IF USER CLICK THE EDIT INSIDE THE MORE*/
+                if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketContentEditIcon)) {
+
+                    /*make elements editable*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* makeElementsEditable */]();
+
+                    /*show save button*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["k" /* showButtons */]();
+                }
+
+                /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
+                if (e.target.matches('#contentEditSave')) {
+
+                    /*PLACE DATA TO THE TICKET OBJECT*/
+                    ticket.storeContentEditTicket(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
+
+                    /*XHR TO SAVE EDITED INPUTS*/
+                    ticket.saveEdit(ticket.detailsEditData).done(function (data) {
+                        console.log('tae');
+                        if (data.success === true) {
+                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */]();
+                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */]();
+                            alert('Updated Successfully!');
+                        } else {
+                            alert('Failed to update...');
+                        }
+                    }).fail(function (jqXHR) {
+                        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+                    });
+                }
+
+                if (e.target.matches('#contentEditCancel')) {
+                    /*GET LATEST DETAILS OF THE TICKET*/
+                    ticket.fetchOriginalData().done(function () {
+                        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["j" /* restoreElementsTextContent */](ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
+                    });
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */](); /*REMOVE THE EDITABLE MODE*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */](); /*HIDE THE CANCEL AND DONE BUTTONS*/
+                }
+            });
+
+            /*EVENT LISTENER EDIT ICON CLICK*/
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetailsEditIcon.addEventListener('click', function () {
+
+                ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
+
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(); /*SHOW MODAL*/
+
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent); /*RENDER LOADER*/
+
+                /*GET THE MARKUP FOR THE MODAL*/
+                ticket.getEditModal().done(function (data) {
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["a" /* addEventListenerToEditInputs */](ticket);
+                }).fail(function (error) {
+                    console.log('Error on making edit modal markup!! Error: ' + error);
+                });
+            });
+
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetailsAddFilesIcon.addEventListener('click', function () {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(); /*SHOW MODAL*/
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(__WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["b" /* addFileMarkup */]);
+
+                var myDropzone = new Dropzone("#addFiles", {
+                    url: '/file/ticket/' + ticket.ID,
+                    parallelUploads: 3,
+                    uploadMultiple: true,
+                    autoProcessQueue: false,
+                    addRemoveLinks: true,
+                    dictDefaultMessage: 'Drop files here to be uploaded'
+                });
+
+                myDropzone.on("complete", function (file) {
+                    myDropzone.removeAllFiles();
+                });
+
+                document.querySelector('.dropzone__upload').addEventListener('click', function () {
+                    if (myDropzone.files.length !== 0) {
+                        myDropzone.processQueue();
+                    } else {
+                        return alert('No files found to be uploaded!!');
+                    }
+                });
+            });
+
+            /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modal.addEventListener('click', function (e) {
+                if (e.target.matches('button')) {
+                    var action = e.target.dataset.action;
+                    if (action === 'cancel') {
+                        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
+                    } else if (action === 'confirm') {
+                        ticket.saveEdit(ticket.detailsEditData).done(function (data) {
+                            if (data.success === true) {
+                                alert('Updated Successfully!');
+                                window.location.reload();
+                            } else {
+                                alert('Failed to update...');
+                            }
+                        });
+                    }
+                } else if (e.target.matches('.capsule__close')) {
+
+                    var capsule = e.target.closest('.capsule');
+
+                    var removedFile = capsule.parentNode.removeChild(capsule);
+
+                    var fileID = parseInt(removedFile.dataset.id);
+
+                    ticket.storeToBeDeletedFileID(fileID);
+                }
+            });
+
+            /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolve.addEventListener('click', function (e) {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])();
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent);
+                var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getResolveFormMarkUp */]();
+                resolveRequest.done(function (data) {
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
+
+                    document.querySelector('button[data-action=resolved]').addEventListener('click', function () {
+
+                        document.querySelector(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].resolve_form).addEventListener('submit', function (e) {
+                            e.preventDefault();
+                        });
+
+                        var formdata = $(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].resolve_form).serialize();
+
+                        var resolve = new __WEBPACK_IMPORTED_MODULE_5__models_Resolve__["a" /* default */](ticket.ID, formdata);
+
+                        resolve.createResolve().done(function () {
+                            alert('Ticket marked as resolved successfully!!');
+                            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
+                        }).fail(function (jqXHR) {
+                            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+                        });
+                    });
+                });
+            });
+        }
+    });
+
+    /*EVENT LISTENER ON SEND BUTTON*/
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].chatSendButton.addEventListener('click', function () {
+        var newMessage = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["c" /* getMessageData */]();
+        if (!newMessage) {
+            return alert('What\'s the point of sending a message if its empty!! Message: ' + newMessage);
+        }
+        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* resetReply */]();
+        var newMessageObject = new __WEBPACK_IMPORTED_MODULE_4__models_Message__["a" /* default */](ticket.ID, newMessage);
+        newMessageObject.saveMessage(newMessageObject).done(function () {
+            alert('Message Sent Successfull!');
+        }).fail(function (jqXHR) {
+            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+        });
+    });
+};
+
+/***/ }),
 /* 138 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketPageController", function() { return ticketPageController; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_datatablesOptions__ = __webpack_require__(182);
+
+
+
+var ticketPageController = function ticketPageController() {
+    var table = void 0;
+
+    /*GET DATETABLE OPTION FOR INITIALIZATIONoptions*/
+    table = __WEBPACK_IMPORTED_MODULE_1__views_datatablesOptions__["a" /* initDataTables */]();
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterTicketsIcon.addEventListener('click', function () {
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterContent.classList.toggle('u-display-n');
+    });
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterTicketForm.addEventListener('submit', function (e) {
+
+        /*CHECK FORM THROUGH HTML 5 VALIDATION */
+        if (e.target.checkValidity()) {
+            var filterFormData = void 0,
+                category = void 0,
+                catOptions = void 0,
+                categorySelectElement = void 0;
+
+            e.preventDefault();
+            var inputs = $(e.target).serializeArray();
+
+            inputs.forEach(function (currentValue) {
+                table.column(currentValue['name']).search(currentValue['value']).draw();
+            });
+
+            // categorySelectElement = e.target.querySelector('select');
+            // catOptions = categorySelectElement.options;
+            // category = catOptions[catOptions.selectedIndex].text;
+
+        }
+    });
+};
+
+/***/ }),
+/* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "profileController", function() { return profileController; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_ProfPic__ = __webpack_require__(181);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_ProfPic__ = __webpack_require__(183);
 
 
 
@@ -30396,15 +30812,15 @@ var profileController = function profileController() {
 };
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(140);
-module.exports = __webpack_require__(182);
+__webpack_require__(141);
+module.exports = __webpack_require__(184);
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -30414,25 +30830,25 @@ module.exports = __webpack_require__(182);
  * application frontend using useful Laravel and JavaScript libraries.
  */
 
-__webpack_require__(141);
-window.Vue = __webpack_require__(166);
-window.Dropzone = __webpack_require__(169);
+__webpack_require__(142);
+window.Vue = __webpack_require__(167);
+window.Dropzone = __webpack_require__(170);
 window.moment = __webpack_require__(0);
-__webpack_require__(171);
 __webpack_require__(172);
+__webpack_require__(173);
+__webpack_require__(139);
 __webpack_require__(138);
-__webpack_require__(189);
-__webpack_require__(188);
+__webpack_require__(137);
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(165);
 
-window._ = __webpack_require__(142);
+window._ = __webpack_require__(143);
 window.Popper = __webpack_require__(7).default;
 
 /**
@@ -30443,8 +30859,8 @@ window.Popper = __webpack_require__(7).default;
 
 try {
   window.$ = window.jQuery = __webpack_require__(4);
-  window.dt = __webpack_require__(143)();
-  __webpack_require__(144);
+  window.dt = __webpack_require__(144)();
+  __webpack_require__(145);
 } catch (e) {}
 
 /**
@@ -30453,7 +30869,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(145);
+window.axios = __webpack_require__(146);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -30479,7 +30895,7 @@ if (token) {
 
 
 
-window.Pusher = __webpack_require__(165);
+window.Pusher = __webpack_require__(166);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */]({
   broadcaster: 'pusher',
@@ -30489,7 +30905,7 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */](
 });
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -47604,7 +48020,7 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */](
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(5)(module)))
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1.10.19
@@ -62907,7 +63323,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -66857,13 +67273,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(146);
+module.exports = __webpack_require__(147);
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66871,7 +67287,7 @@ module.exports = __webpack_require__(146);
 
 var utils = __webpack_require__(1);
 var bind = __webpack_require__(8);
-var Axios = __webpack_require__(148);
+var Axios = __webpack_require__(149);
 var defaults = __webpack_require__(6);
 
 /**
@@ -66906,14 +67322,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(13);
-axios.CancelToken = __webpack_require__(162);
+axios.CancelToken = __webpack_require__(163);
 axios.isCancel = __webpack_require__(12);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(163);
+axios.spread = __webpack_require__(164);
 
 module.exports = axios;
 
@@ -66922,7 +67338,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports) {
 
 /*!
@@ -66949,7 +67365,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -66957,8 +67373,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(6);
 var utils = __webpack_require__(1);
-var InterceptorManager = __webpack_require__(157);
-var dispatchRequest = __webpack_require__(158);
+var InterceptorManager = __webpack_require__(158);
+var dispatchRequest = __webpack_require__(159);
 
 /**
  * Create a new instance of Axios
@@ -67035,7 +67451,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67054,7 +67470,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67087,7 +67503,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67115,7 +67531,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67188,7 +67604,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67248,7 +67664,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67323,7 +67739,7 @@ module.exports = (
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67366,7 +67782,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67426,7 +67842,7 @@ module.exports = (
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67485,18 +67901,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var transformData = __webpack_require__(159);
+var transformData = __webpack_require__(160);
 var isCancel = __webpack_require__(12);
 var defaults = __webpack_require__(6);
-var isAbsoluteURL = __webpack_require__(160);
-var combineURLs = __webpack_require__(161);
+var isAbsoluteURL = __webpack_require__(161);
+var combineURLs = __webpack_require__(162);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -67578,7 +67994,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67605,7 +68021,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67626,7 +68042,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67647,7 +68063,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67711,7 +68127,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67745,7 +68161,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -68963,7 +69379,7 @@ var Echo = function () {
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -77809,7 +78225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 ;
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -88772,10 +89188,10 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(167).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(168).setImmediate))
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -88831,7 +89247,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(168);
+__webpack_require__(169);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -88845,7 +89261,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -89038,7 +89454,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(9)))
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -92576,7 +92992,7 @@ function __guardMethod__(obj, methodName, transform) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -92841,10 +93257,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 170;
+webpackContext.id = 171;
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;/*!
@@ -98700,15 +99116,17 @@ S2.define('jquery.select2',[
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TicketViewController__ = __webpack_require__(188);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ProfileController__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TicketViewController__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TicketPageController__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ProfileController__ = __webpack_require__(139);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -98718,7 +99136,55 @@ $(document).ready(function () {
     var _$$extend;
 
     $.extend(true, $.fn.dataTable.defaults, {
-        searching: false,
+        searching: true,
+        columnDefs: [{
+            targets: -1, /*CHECKBOX*/
+            render: function render() {
+                return "<div class='menu'>\n                            <ul class='menu__list u-display-n'>\n                                <li class='menu__item'><a href='#!' class='menu__link'>Print</a></li>\n                                <li class='menu__item'><a href='#!' class='menu__link'>Delete</a></li>\n                                <li class='menu__item'><a href='#!' class='menu__link'>Mark as resolved</a></li>\n                           </ul>\n                            <input type='checkbox' class='menu__checkbox'>\n                        </div>";
+            }
+        }, {
+            targets: 2, /*CATEGORY*/
+            render: function render(data) {
+                return "<span class='u-bold u-" + data.toLowerCase() + "'>" + data + "</span>";
+            }
+        }, {
+            targets: 0, /*SUBJECT*/
+            createdCell: function createdCell(cell, cellData, rowData) {
+                cell.setAttribute('title', rowData.subject);
+            },
+            orderable: false,
+            render: function render(data, type, row) {
+                return "<a href='/tickets/view/" + data + "' class='table__subject'>" + row.subject + "</a>\n                <span class='table__info'>Ticket #: " + data + "</span>\n                <span class='table__info'>Category: " + row.category + "</span>";
+            }
+
+        }, {
+            targets: 5, /*CREATED_AT COLUMN*/
+            createdCell: function createdCell(cell, cellData) {
+                cell.setAttribute('title', cellData);
+            },
+            render: function render(data, type, row) {
+                return moment(data).fromNow();
+            }
+
+        }, {
+            targets: 6, /*EXPIRATION DATE COLUMN*/
+            createdCell: function createdCell(cell, cellData) {
+                cell.setAttribute('title', cellData);
+            },
+            render: function render(data, type, row) {
+                var now = void 0;
+
+                now = moment();
+
+                if (now >= moment(data)) {
+                    return "<span class=\"expired\">Expired</span>";
+                } else {
+                    return moment(data).fromNow();
+                }
+            }
+
+        }],
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         orderable: false,
@@ -98777,6 +99243,7 @@ $(document).ready(function () {
     var ticketView_route = new RegExp("\/tickets\/view\/\\d+", 'gm');
     var ticketAdd_route = new RegExp("\/tickets\/add", 'gm');
     var userProfile_route = new RegExp("\/user\/profile\/\\d+", 'gm');
+    var tikcketPages_route = new RegExp("\/tickets\/(open|my|ongoing|closed|all)", 'gm');
     var pathName = window.location.pathname;
 
     switch (true) {
@@ -98787,7 +99254,10 @@ $(document).ready(function () {
             Object(__WEBPACK_IMPORTED_MODULE_1__TicketViewController__["ticketAddController"])();
             break;
         case userProfile_route.test(pathName):
-            Object(__WEBPACK_IMPORTED_MODULE_2__ProfileController__["profileController"])();
+            Object(__WEBPACK_IMPORTED_MODULE_3__ProfileController__["profileController"])();
+            break;
+        case tikcketPages_route.test(pathName):
+            Object(__WEBPACK_IMPORTED_MODULE_2__TicketPageController__["ticketPageController"])();
             break;
         default:
             console.log('route not set');
@@ -98795,7 +99265,7 @@ $(document).ready(function () {
 });
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -98898,7 +99368,7 @@ var getModalWithData = function getModalWithData(ticketID) {
 };
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -98934,7 +99404,7 @@ var hideContactFormGroup = function hideContactFormGroup() {
 };
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99035,7 +99505,7 @@ var Ticket = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Ticket);
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99068,7 +99538,7 @@ var Message = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Message);
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99101,7 +99571,7 @@ var Resolve = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Resolve);
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99131,7 +99601,7 @@ var Caller = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Caller);
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99170,7 +99640,7 @@ var Store = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Store);
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99200,7 +99670,76 @@ var Contact = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Contact);
 
 /***/ }),
-/* 181 */
+/* 182 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return initDataTables; });
+var userTickets = {
+    ajax: '/tickets/ticket-data/user',
+    order: [[5, 'desc']],
+    columns: [{ data: 'id' }, { data: 'category', name: 'cat.name', visible: false }, { data: 'priority', name: 'prio.name' }, { data: 'status', name: 'status.name', orderable: false }, { data: 'store_name', name: 'stores.store_name' }, { data: 'created_at', visible: true }, { data: 'expiration' }, { data: 'id', orderable: false }]
+
+};
+
+var openTickets = {
+    ajax: '/tickets/ticket-data/open',
+    order: [[5, 'desc']],
+    columns: [{ data: 'id' }, { data: 'category', name: 'cat.name', visible: false }, { data: 'priority', name: 'prio.name' }, { data: 'status', name: 'status.name', orderable: false }, { data: 'store_name', name: 'stores.store_name' }, { data: 'created_at', visible: true }, { data: 'expiration' }, { data: 'id', orderable: false }]
+
+};
+
+var ongoingTickets = {
+    ajax: '/tickets/ticket-data/ongoing',
+    order: [[5, 'desc']],
+    columns: [{ data: 'id' }, { data: 'category', name: 'cat.name', visible: false }, { data: 'priority', name: 'prio.name' }, { data: 'status', name: 'status.name', orderable: false }, { data: 'store_name', name: 'stores.store_name' }, { data: 'created_at', visible: true }, { data: 'expiration' }, { data: 'assignee', name: 'assignee.name', visible: true }, { data: 'id', orderable: false }]
+};
+
+var closedTickets = {
+    ajax: '/tickets/ticket-data/closed',
+    order: [[4, 'desc']],
+    columns: [{ data: 'id' }, { data: 'category', name: 'cat.name', visible: false }, { data: 'priority', name: 'prio.name' }, { data: 'status', name: 'status.name', orderable: false }, { data: 'store_name', name: 'stores.store_name' }, { data: 'created_at', visible: true }, { data: 'expiration', visible: false }, { data: 'resolved_date', name: 'resolves.created_at' }, { data: 'resolved_by', name: 'resolver.name', visible: true }, { data: 'id', orderable: false }]
+};
+
+var allTickets = {
+    ajax: '/tickets/ticket-data/all',
+    order: [[5, 'desc']],
+    columns: [{ data: 'id' }, { data: 'category', name: 'cat.name', visible: false }, { data: 'priority', name: 'prio.name' }, { data: 'status', name: 'status.name', orderable: false }, { data: 'store_name', name: 'stores.store_name' }, { data: 'created_at', visible: true }, { data: 'expiration' }, { data: 'assignee', name: 'assignee.name', visible: true }, { data: 'id', orderable: false }]
+};
+
+var initDataTables = function initDataTables() {
+
+    var options = void 0,
+        ticketStatus = void 0;
+
+    /*REGEX STRING FOR TICKET ROUTES TO CATURE THE TICKET STATUS*/
+    var ticketRegex = new RegExp('\/tickets\/([a-z]+)', 'gm');
+
+    /*GET TICKET STATUS FROM THE URL*/
+    ticketStatus = ticketRegex.exec(window.location.pathname)[1];
+
+    /*IF STATEMENT FOR THE RIGHT OPTION TO BE INITIALIZED TO DATATABLE*/
+    if (ticketStatus === 'open') {
+        options = openTickets;
+    } else if (ticketStatus === 'all') {
+        options = allTickets;
+    } else if (ticketStatus === 'my') {
+        options = userTickets;
+    } else if (ticketStatus === 'ongoing') {
+        options = ongoingTickets;
+    } else if (ticketStatus === 'closed') {
+        options = closedTickets;
+    } else {
+        console.log('ticket status not found');
+    }
+
+    /*APPLY THE GENERATED DATATABLE OPTION*/
+    return $('table').DataTable(options);
+    ;
+};
+
+/***/ }),
+/* 183 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -99275,407 +99814,10 @@ var ProfPic = function () {
 /* harmony default export */ __webpack_exports__["a"] = (ProfPic);
 
 /***/ }),
-/* 182 */
+/* 184 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 183 */,
-/* 184 */,
-/* 185 */,
-/* 186 */,
-/* 187 */,
-/* 188 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketAddController", function() { return ticketAddController; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketViewController", function() { return ticketViewController; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__ = __webpack_require__(173);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__ = __webpack_require__(174);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Ticket__ = __webpack_require__(175);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Message__ = __webpack_require__(176);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_Resolve__ = __webpack_require__(177);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_Caller__ = __webpack_require__(178);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_Store__ = __webpack_require__(179);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_Contact__ = __webpack_require__(180);
-var _this = this;
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////
-////////////////////////////////
-////*ADD TICKET CONTROLLER*/////
-////////////////////////////////
-////////////////////////////////
-
-var ticketAddController = function ticketAddController() {
-
-    $('#callerBranchSelect,#contactBranchSelect').select2({
-        ajax: {
-            url: '/select/store',
-            processResults: function processResults(data) {
-                return {
-                    results: data.data
-                };
-            }
-        }
-    });
-
-    $('#caller_id').select2({
-        width: '30%',
-        ajax: {
-            url: '/select/caller',
-            processResults: function processResults(data) {
-
-                var data = $.map(data.data, function (obj) {
-                    return {
-                        text: obj.store_name,
-                        children: obj.callers.map(function (obj2) {
-                            return {
-                                id: obj2.id,
-                                text: obj2.name
-                            };
-                        })
-                    };
-                });
-
-                return {
-                    results: data
-                };
-            }
-        }
-    });
-
-    $('#contact_id').select2({
-        width: '30%',
-        ajax: {
-            url: '/select/contact',
-            processResults: function processResults(data) {
-
-                var data = $.map(data.data, function (obj) {
-                    return {
-                        text: obj.store_name,
-                        children: obj.contact_numbers.map(function (obj2) {
-                            return {
-                                id: obj2.id,
-                                text: obj2.number
-                            };
-                        })
-                    };
-                });
-
-                return {
-                    results: data
-                };
-            }
-        }
-    });
-
-    /*CHANGE EVENT ON CATEGORY INPUT*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].categoryInput.addEventListener('change', function (e) {
-
-        var category = void 0,
-            expirationInput = void 0;
-
-        /*CATEGORY CHOSEN BY THE USER*/
-        category = e.target.options[e.target.selectedIndex].text.toLowerCase();
-
-        /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
-        expirationInput = __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* generateExpirationInputMarkup */](category);
-
-        /*REMOVE THE EXPIRATION INPUT*/
-        e.target.closest('div').lastElementChild.remove();
-
-        /*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*/
-        e.target.parentNode.insertAdjacentHTML('beforeend', expirationInput);
-    });
-
-    /*CLICK ON SUBMIT TICKET BTN*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketAddSubmitBtn.addEventListener('click', function (e) {
-
-        /*DISABLE THE TICKET ADD SUMBIT BUTTON TO PREVENT MUTIPLE FORM SUBMISSION*/
-        e.target.disabled = true;
-
-        /*SUBMIT THE TICKET ADD FORM*/
-        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketForm.submit();
-    });
-
-    $(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].branchSelectContact).on('select2:select', function (e) {
-        var data = void 0;
-        data = e.params.data;
-        if (data.id !== "") {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* showContactFormGroup */]();
-        } else {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* hideContactFormGroup */]();
-        }
-    });
-
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addContactForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addContactSubmit));
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addCallerForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addCallerSubmit));
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addBranchForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].addBranchSubmit));
-
-    function sendForm(button, e) {
-
-        if (e.target.checkValidity()) {
-            e.preventDefault();
-
-            var submitBtn = void 0,
-                formdata = void 0,
-                form = void 0,
-                object = void 0;
-            form = e.target;
-            submitBtn = form.querySelector(button);
-
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn);
-
-            /*SERIALIZE FORM DATA*/
-            formdata = $(form).serialize();
-
-            if (form.id === 'addCaller') {
-                object = new __WEBPACK_IMPORTED_MODULE_6__models_Caller__["a" /* default */]();
-            } else if (form.id === 'addBranch') {
-                object = new __WEBPACK_IMPORTED_MODULE_7__models_Store__["a" /* default */]();
-            } else if (form.id === 'addContact') {
-                object = new __WEBPACK_IMPORTED_MODULE_8__models_Contact__["a" /* default */]();
-            } else {
-                alert('form not found');
-            }
-
-            object.storeData(formdata).done(function (data) {
-                setTimeout(function () {
-                    alert('Added Successfully!!');
-                    form.reset();
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn, false);
-                }, 2000);
-            }).fail(function (jqXHR, textStatus) {
-                setTimeout(function () {
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["h" /* setDisable */])(submitBtn, false);
-                }, 2000);
-            });
-        }
-    }
-};
-
-////////////////////////////////
-////////////////////////////////
-////*LOOK UP TICKET CONTROLLER*/////
-////////////////////////////////
-////////////////////////////////
-
-var ticketViewController = function ticketViewController() {
-
-    var ticket = new __WEBPACK_IMPORTED_MODULE_3__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
-
-    Echo.private('chat.' + ticket.ID).listen('MessageSent', function (e) {
-
-        var messageMarkup = '<div class="message">\n                                    <div class="message__img-box">\n                                        <img src="/storage/profpic/' + e.image + '" alt="John Edward R. Labor" class="message__img">\n                                    </div>\n                                    <div class="message__content">\n                                        <div class="message__message-box">\n                                            <div class="message__name">' + e.user + '</div>\n                                            <div class="message__message">' + e.message + '</div>\n                                        </div>\n                                        <span class="message__time">' + moment().fromNow() + '</span>\n                                    </div>\n                                 </div>';
-
-        document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
-    });
-
-    ticket.fetchOriginalData().done(function (data) {
-        if (data.status === 13) {
-
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getModalWithData */].bind(_this, data.id));
-        } else {
-
-            /*ADD CLICK EVENT LISTENER */
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketContent.addEventListener('click', function (e) {
-
-                /*IF USER CLICK THE EDIT INSIDE THE MORE*/
-                if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketContentEditIcon)) {
-
-                    /*make elements editable*/
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* makeElementsEditable */]();
-
-                    /*show save button*/
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["k" /* showButtons */]();
-                }
-
-                /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
-                if (e.target.matches('#contentEditSave')) {
-
-                    /*PLACE DATA TO THE TICKET OBJECT*/
-                    ticket.storeContentEditTicket(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
-
-                    /*XHR TO SAVE EDITED INPUTS*/
-                    ticket.saveEdit(ticket.detailsEditData).done(function (data) {
-                        console.log('tae');
-                        if (data.success === true) {
-                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */]();
-                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */]();
-                            alert('Updated Successfully!');
-                        } else {
-                            alert('Failed to update...');
-                        }
-                    }).fail(function (jqXHR) {
-                        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
-                    });
-                }
-
-                if (e.target.matches('#contentEditCancel')) {
-                    /*GET LATEST DETAILS OF THE TICKET*/
-                    ticket.fetchOriginalData().done(function () {
-                        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["j" /* restoreElementsTextContent */](ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
-                    });
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */](); /*REMOVE THE EDITABLE MODE*/
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */](); /*HIDE THE CANCEL AND DONE BUTTONS*/
-                }
-            });
-
-            /*EVENT LISTENER EDIT ICON CLICK*/
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetailsEditIcon.addEventListener('click', function () {
-
-                ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
-
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(); /*SHOW MODAL*/
-
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent); /*RENDER LOADER*/
-
-                /*GET THE MARKUP FOR THE MODAL*/
-                ticket.getEditModal().done(function (data) {
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["a" /* addEventListenerToEditInputs */](ticket);
-                }).fail(function (error) {
-                    console.log('Error on making edit modal markup!! Error: ' + error);
-                });
-            });
-
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetailsAddFilesIcon.addEventListener('click', function () {
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(); /*SHOW MODAL*/
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(__WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["b" /* addFileMarkup */]);
-
-                var myDropzone = new Dropzone("#addFiles", {
-                    url: '/file/ticket/' + ticket.ID,
-                    parallelUploads: 3,
-                    uploadMultiple: true,
-                    autoProcessQueue: false,
-                    addRemoveLinks: true,
-                    dictDefaultMessage: 'Drop files here to be uploaded'
-                });
-
-                myDropzone.on("complete", function (file) {
-                    myDropzone.removeAllFiles();
-                });
-
-                document.querySelector('.dropzone__upload').addEventListener('click', function () {
-                    if (myDropzone.files.length !== 0) {
-                        myDropzone.processQueue();
-                    } else {
-                        return alert('No files found to be uploaded!!');
-                    }
-                });
-            });
-
-            /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modal.addEventListener('click', function (e) {
-                if (e.target.matches('button')) {
-                    var action = e.target.dataset.action;
-                    if (action === 'cancel') {
-                        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
-                    } else if (action === 'confirm') {
-                        ticket.saveEdit(ticket.detailsEditData).done(function (data) {
-                            if (data.success === true) {
-                                alert('Updated Successfully!');
-                                window.location.reload();
-                            } else {
-                                alert('Failed to update...');
-                            }
-                        });
-                    }
-                } else if (e.target.matches('.capsule__close')) {
-
-                    var capsule = e.target.closest('.capsule');
-
-                    var removedFile = capsule.parentNode.removeChild(capsule);
-
-                    var fileID = parseInt(removedFile.dataset.id);
-
-                    ticket.storeToBeDeletedFileID(fileID);
-                }
-            });
-
-            /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolve.addEventListener('click', function (e) {
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])();
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent);
-                var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getResolveFormMarkUp */]();
-                resolveRequest.done(function (data) {
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
-
-                    document.querySelector('button[data-action=resolved]').addEventListener('click', function () {
-
-                        document.querySelector(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].resolve_form).addEventListener('submit', function (e) {
-                            e.preventDefault();
-                        });
-
-                        var formdata = $(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].resolve_form).serialize();
-
-                        var resolve = new __WEBPACK_IMPORTED_MODULE_5__models_Resolve__["a" /* default */](ticket.ID, formdata);
-
-                        resolve.createResolve().done(function () {
-                            alert('Ticket marked as resolved successfully!!');
-                            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
-                        }).fail(function (jqXHR) {
-                            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
-                        });
-                    });
-                });
-            });
-        }
-    });
-
-    /*EVENT LISTENER ON SEND BUTTON*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].chatSendButton.addEventListener('click', function () {
-        var newMessage = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["c" /* getMessageData */]();
-        if (!newMessage) {
-            return alert('What\'s the point of sending a message if its empty!! Message: ' + newMessage);
-        }
-        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* resetReply */]();
-        var newMessageObject = new __WEBPACK_IMPORTED_MODULE_4__models_Message__["a" /* default */](ticket.ID, newMessage);
-        newMessageObject.saveMessage(newMessageObject).done(function () {
-            alert('Message Sent Successfull!');
-        }).fail(function (jqXHR) {
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
-        });
-    });
-};
-
-/***/ }),
-/* 189 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-
-
-__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterTicketsIcon.addEventListener('click', function () {
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterContent.classList.toggle('u-display-n');
-});
-
-__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterTicketForm.addEventListener('submit', function (e) {
-    if (e.target.checkValidity()) {
-        alert('tae');
-        e.preventDefault();
-    }
-});
 
 /***/ })
 /******/ ]);

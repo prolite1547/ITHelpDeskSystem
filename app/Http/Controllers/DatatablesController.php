@@ -22,84 +22,41 @@ class DatatablesController extends Controller
         return Datatables::of(User::query())->make(true);
     }
 
-    public function tickets($status){
+    public function tickets(Request $request,$status){
         $statuses = Category::whereGroup(5)->whereNotIn('name',['all','user'])->pluck('name')->toArray();
-        $model = Ticket::with(['incident','incident.call.contact.store','priorityRelation','assigneeRelation','statusRelation','resolve','resolve.resolvedBy']);
+
+        $query = DB::table('tickets')
+        ->join('incidents','tickets.incident_id','incidents.id')
+            ->leftJoin('calls','incidents.call_id','calls.id')
+            ->leftJoin('callers','calls.caller_id','callers.id')
+            ->leftJoin('resolves','tickets.id','resolves.ticket_id')
+            ->leftJoin('stores','callers.store_id','stores.id')
+            ->leftJoin('categories as cat','incidents.category','cat.id')
+            ->leftJoin('categories as status','tickets.status','status.id')
+            ->leftJoin('categories as prio','tickets.priority','prio.id')
+            ->leftJoin('users as assignee','tickets.assignee','assignee.id')
+            ->leftJoin('users as resolver','resolves.resolved_by','resolver.id')
+            ->select(
+                'tickets.id','tickets.assignee','prio.name as priority','status.name as status','tickets.expiration','tickets.created_at',
+                'incidents.created_at as tae','incidents.subject','incidents.details','cat.name as category',
+                'assignee.name as assignee',
+                'stores.store_name',
+                'resolver.name as resolved_by','resolves.created_at as resolved_date'
+            );
 
         if(in_array(strtolower($status),array_map('strtolower',$statuses),true)){
             $get_status = Category::where('name',$status)->firstOrFail();
-            $model = $model->where('tickets.status','=',$get_status->id);
+            $query = $query->whereStatus($get_status->id);
         }elseif ($status === 'user'){
-            $model = $model->where('assignee',Auth::user()->id);
+            $query = $query->where('assignee',Auth::user()->id);
         }
 
 
-        $datatablesJSON = DataTables::of($model)
-            ->addColumn('subject_display', function ($data){
-                return "
-                        <a href='".\route('lookupTicketView',['id' => $data->id])."' class='table__subject'>{$data->incident->subject}</a>
-                        <span class='table__info'>Ticket #: {$data->id}</span>
-                        <span class='table__info'>Category: {$data->incident->categoryRelation->name}</span>
-                        ";
-            })
-            ->addColumn('action',function ($data){
-                return "
-                        <div class='menu'>
-                            <ul class='menu__list u-display-n'>
-                                <li class='menu__item'><a href='#!' class='menu__link'>Print</a></li>
-                                <li class='menu__item'><a href='#!' class='menu__link'>Delete</a></li>
-                                <li class='menu__item'><a href='#!' class='menu__link'>Mark as resolved</a></li>
-                            </ul>
-                            <input type='checkbox' class='menu__checkbox'>
-                        </div>   
-                        ";
-            })
-            ->addColumn('priority',function ($data){
-                return "<span class='u-bold u-".strtolower($data->priorityRelation->name)."'>".$data->priorityRelation->name."</span>";
-            })
-            ->addColumn('status',function ($data){
+        $datatablesJSON = DataTables::of($query);
 
-                return $data->statusRelation->name;
-            })
-            ->addColumn('assignee',function ($data){
-
-                return $data->assigneeRelation->name;
-            })
-//            ->addColumn('resolved_by',function ($data){
-//
-//                if($data->resolve){
-//                    return $data->resolve->resolvedBy->name;
-//                }else{
-//                    return 'null';
-//                };
-//
-//            })
-            ->addColumn('closed_date',function ($data){
-
-                if($data->resolve){
-                    return $data->resolve->created_at;
-                }else{
-                    return 'null';
-                };
-
-            })
-            ->addColumn('created_at_carbon',function ($data){
-
-
-                if($data->created_at){
-                    return $data->created_at->diffForHumans();
-                }else{
-                    return 'null';
-                };
-            })
-            ->editColumn('store_name',function ($data){
-
-                return $data->incident->call->contact->store->store_name;
-            })
-            ->rawColumns(['subject_display','action','priority']);
 
 
         return $datatablesJSON->make(true);
-;
+
     }
 }

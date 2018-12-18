@@ -8,9 +8,24 @@
     <div class="side__content">
         <div class="filter u-display-n">
             {{Form::open(['class' => 'form-ticketFilter'])}}
-            {!! Form::select('category',$typeSelect,null,['placeholder' => '(select category...)','required']) !!}
-            <div class="form__group">
-                {{Form::button('Filter',['class' => 'btn','type' => 'submit'])}}
+            <div class="form-ticketFilter__group">
+                {!! Form::label(0,'Ticket #:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::text(0,null,['placeholder' => 'ticket #','class' => 'form-ticketFilter__input']) !!}
+            </div>
+            <div class="form-ticketFilter__group">
+                {!! Form::label(0,'Category:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::select(1,$categoryFilter,null,['placeholder' => '(select category...)','class' => 'form-ticketFilter__input']) !!}
+            </div>
+            <div class="form-ticketFilter__group">
+                {!! Form::label(0,'Priority:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::select(3,$statusFilter,null,['placeholder' => '(select priority...)','class' => 'form-ticketFilter__input']) !!}
+            </div>
+            <div class="form-ticketFilter__group">
+                {!! Form::label(0,'Store:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::select(4,$storeFilter,null,['placeholder' => '(select store...)','class' => 'form-ticketFilter__input']) !!}
+            </div>
+            <div class="form-ticketFilter__group">
+                {{Form::button('Filter',['class' => 'btn btn--blue','type' => 'submit','id' => 'filterTicketBtn'])}}
             </div>
             {{Form::close()}}
             <svg class="filter__icon">
