@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\SystemDataCorrection;
+use App\ManualDataCorrection;
 use App\Ticket;
 use App\Department;
 use App\Position;
@@ -100,12 +101,18 @@ class SDCController extends Controller
     
     public function show($id)
     {
-        $sdc = SystemDataCorrection::orderBy('created_at','desc')->first();
-        $departments = Department::all();
-        $positions = Position::all();
-        $ticket = Ticket::find($id);
-        return view('datacorrections.system')->with('sdc',$sdc)->with('ticket', $ticket)->with('departments', $departments)->with('positions',  $positions);
-         
+        $checkMDC = ManualDataCorrection::where('ticket_no', $id)->get();
+        $checkSDC = SystemDataCorrection::where('ticket_no', $id)->get();
+  
+           if(count($checkMDC) <= 0 && count($checkSDC) <= 0 ){
+                $sdc = SystemDataCorrection::orderBy('created_at','desc')->first();
+                $departments = Department::all();
+                $positions = Position::all();
+                $ticket = Ticket::find($id);
+                return view('datacorrections.system')->with('sdc',$sdc)->with('ticket', $ticket)->with('departments', $departments)->with('positions',  $positions);
+          }else{
+              return redirect()->back();
+          }
     }
 
    

@@ -79,19 +79,19 @@
 													</div>
 													<hr>
 													<div class="row" style="margin-top: 50px;">
+														{{-- <div class="loading"></div> --}}
 															<div class="panel">
-																	 
-																	 
-																	
-																	 
 																	<div class="panel-body">
+																		
 																		<div id="ticket-logged" class="row" style="margin-bottom:10px;display:none;">
 																			<div class="ticketlogged col-md-12">
 																				<label class="control-label"><b>No. of Ticket Logged : </b> </label> 
 																				<label class="control-label" id="ticket-logs"></label>
 																			</div>
 																		</div>
+																		
 																		<div  id = "IPPDATA" class="generated-data">
+																		
 																			<p class="text-center">click Generate Report to show data . .</p>
 																		</div>
 																		

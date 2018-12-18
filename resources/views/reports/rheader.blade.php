@@ -19,9 +19,24 @@
        .dataTables_length{
         
            margin-top: 10px;
-          
+
        }
        .dataTables_info{
            display: none;
-       }	
+       }
+
+       /* .loading{
+           height:50px;
+           width:50px;
+           background: url("{{ asset('images/loader/wait.gif') }}");
+           background-repeat: no-repeat;
+           background-position: center;
+           margin-top:-25px;
+           margin-left:-25px;
+           position: absolute;
+           z-index: 100;
+           top:50%;
+           left:50%;
+           display:none;
+       }	 */
 </style>

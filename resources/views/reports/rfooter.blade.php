@@ -71,7 +71,11 @@
                type:'POST',
                url:'/reports/genipp',
                data:{ _token: '{{csrf_token()}}', user_id:user_id, start: start1, end:end1 },
+               beforeSend:function(){
+                  $(".loading").show();
+               },
                success:function(data) {
+                  $(".loading").hide();
                   $('#ticket-logged').show();
                   $('#IPPDATA').html(data.ippdata);
                   $('#ticket-logs').html(data.ticket_logged);
