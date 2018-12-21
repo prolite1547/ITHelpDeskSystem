@@ -30441,7 +30441,7 @@ var ticketAddController = function ticketAddController() {
                         children: obj.callers.map(function (obj2) {
                             return {
                                 id: obj2.id,
-                                text: obj2.name
+                                text: obj2.full_name
                             };
                         })
                     };

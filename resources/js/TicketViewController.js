@@ -45,7 +45,7 @@ export const ticketAddController = () => {
                         children: obj.callers.map(obj2 => {
                             return {
                                 id: obj2.id,
-                                text: obj2.name
+                                text: obj2.full_name
                             }
                         })
                     }

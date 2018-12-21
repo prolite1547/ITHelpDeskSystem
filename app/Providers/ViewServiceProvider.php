@@ -67,7 +67,7 @@ class ViewServiceProvider extends ServiceProvider
             $callerSelect = Caller::get()->pluck('name','id');
             $branchGroupSelect = groupListSelectArray(Store::class,'store_name','contactNumbers','id','number');
             $branchSelect = Store::all()->pluck('store_name','id')->toArray();
-            $assigneeSelect = groupListSelectArray(Role::class,'role','users','id','name');
+            $assigneeSelect = groupListSelectArray(Role::class,'role','users','id','full_name');
 
 
             $view->with([

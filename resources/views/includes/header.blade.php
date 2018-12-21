@@ -5,7 +5,7 @@
         </div>
         <div class="header__user">
             <div class="user">
-                <div class="user__name">{{Auth::user()->name}}</div>
+                <div class="user__name">{{Auth::user()->full_name}}</div>
                 <span class="user__position">{{Auth::user()->role->role}}</span>
             </div>
             <div class="header__settings">

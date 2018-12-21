@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\DB;
 
 $factory->define(App\User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'fName' => $faker->firstName,
+        'mName' => $faker->lastName,
+        'lName' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'uname' => $faker->userName,
         'role_id' => $faker->numberBetween(1,DB::table('roles')->count()),

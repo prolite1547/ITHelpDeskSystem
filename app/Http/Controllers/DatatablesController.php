@@ -36,12 +36,12 @@ class DatatablesController extends Controller
             ->leftJoin('categories as prio','tickets.priority','prio.id')
             ->leftJoin('users as assignee','tickets.assignee','assignee.id')
             ->leftJoin('users as resolver','resolves.resolved_by','resolver.id')
-            ->select(
-                'tickets.id','tickets.assignee','prio.name as priority','status.name as status','tickets.expiration','tickets.created_at',
-                'incidents.created_at as tae','incidents.subject','incidents.details','cat.name as category',
-                'assignee.name as assignee',
-                'stores.store_name',
-                'resolver.name as resolved_by','resolves.created_at as resolved_date'
+            ->selectRaw(
+                'tickets.id,tickets.assignee,prio.name as priority,status.name as status,tickets.expiration,tickets.created_at,
+                incidents.created_at as incident_created,incidents.subject,incidents.details,cat.name as category,
+                CONCAT(assignee.fName," ",assignee.lName) as assignee,
+                stores.store_name,
+                CONCAT(resolver.fName," ",resolver.lName) as resolved_by,resolves.created_at as resolved_date'
             );
 
         if(in_array(strtolower($status),array_map('strtolower',$statuses),true)){

@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Caller extends Model
 {
     protected $fillable = [
-        'name',
+        'fName',
+        'mName',
+        'lName',
         'store_id',
     ];
 
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute()
+    {
+        $middle_name = $this->mName;
+
+        return ucfirst($this->fName) . ' ' . $middle_name[0] .'.' . ' ' . ucfirst($this->lName);
+    }
 
     public function users(){
         return $this->belongsToMany('App\User','calls');
