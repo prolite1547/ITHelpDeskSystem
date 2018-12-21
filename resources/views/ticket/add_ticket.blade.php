@@ -61,12 +61,20 @@
                             <div class="form-callerAdd__content-box u-display-n">
                                 {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addCaller']) !!}
                                 <div class="form__group">
-                                    {!! Form::label('name','Name :',['class' => 'form__label'])!!}
-                                    {!! Form::text('name',null,['class' => 'form__input','placeholder' => 'caller name']) !!}
+                                    {!! Form::label('fName','Firt Name :',['class' => 'form__label'])!!}
+                                    {!! Form::text('fName',null,['class' => 'form__input','placeholder' => 'first','required']) !!}
+                                </div>
+                                <div class="form__group">
+                                    {!! Form::label('mName','Middle Name :',['class' => 'form__label'])!!}
+                                    {!! Form::text('mName',null,['class' => 'form__input','placeholder' => 'middle','required']) !!}
+                                </div>
+                                <div class="form__group">
+                                    {!! Form::label('lName','Last Name :',['class' => 'form__label'])!!}
+                                    {!! Form::text('lName',null,['class' => 'form__input','placeholder' => 'last','required']) !!}
                                 </div>
                                 <div class="form__group">
                                     {!! Form::label('store_id','Branch:',['class' => 'form__label']) !!}
-                                    {!! Form::select('store_id', [], null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'store','id' => 'callerBranchSelect' ]) !!}
+                                    {!! Form::select('store_id', [], null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'store','id' => 'callerBranchSelect','required' ]) !!}
                                 </div>
                                 {!! Form::button('Add',['type'=>'submit','class'=>'btn','data-action' => 'addCaller']) !!}
                                 {!! Form::close() !!}

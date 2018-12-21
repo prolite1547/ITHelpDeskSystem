@@ -10,6 +10,7 @@ use App\Http\Resources\StoreCollection;
 use App\Role;
 use App\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SelectController extends Controller
 {
@@ -27,9 +28,12 @@ class SelectController extends Controller
     public function caller(Request $request){
 
         if($request->query('q')){
-            return new CallerCollection(Store::with('callers')->whereHas('callers',function ($query) use($request){
-                $query->where('name', 'like', "%{$request->query('q')}%");
-            })->get());
+            return DB::table('callers')->selectRaw('CONCAT(fName," ",mName," ",lName) as text,id')
+                ->where(function($query) use ($request) {
+                    $query->where('fName', 'LIKE', "%{$request->query('q')}%")
+                        ->orWhere('mName', 'LIKE', "%{$request->query('q')}%")
+                        ->orWhere('lName', 'LIKE', "%{$request->query('q')}%");
+                })->get();
         }else{
             return new CallerCollection(Store::with('callers')->get());
         }

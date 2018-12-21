@@ -24,7 +24,9 @@ class StoreCaller extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:callers|string|min:10',
+            'fName' => 'required|string|min:2',
+            'mName' => 'required|string|min:2',
+            'lName' => 'required|string|min:2',
             'store_id' => 'required|numeric'
         ];
     }
@@ -32,7 +34,9 @@ class StoreCaller extends FormRequest
     public function attributes()
     {
         return [
-            'name' => 'Caller',
+            'fName' => 'First Name',
+            'mName' => 'Middle Name',
+            'lName' => 'Last Name',
             'store_id' => 'Branch',
         ];
     }

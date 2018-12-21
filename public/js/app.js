@@ -30435,17 +30435,19 @@ var ticketAddController = function ticketAddController() {
             url: '/select/caller',
             processResults: function processResults(data) {
 
-                var data = $.map(data.data, function (obj) {
-                    return {
-                        text: obj.store_name,
-                        children: obj.callers.map(function (obj2) {
-                            return {
-                                id: obj2.id,
-                                text: obj2.full_name
-                            };
-                        })
-                    };
-                });
+                if (data.length !== 1) {
+                    data = $.map(data.data, function (obj) {
+                        return {
+                            text: obj.store_name,
+                            children: obj.callers.map(function (obj2) {
+                                return {
+                                    id: obj2.id,
+                                    text: obj2.full_name
+                                };
+                            })
+                        };
+                    });
+                }
 
                 return {
                     results: data
@@ -30459,7 +30461,6 @@ var ticketAddController = function ticketAddController() {
         ajax: {
             url: '/select/contact',
             processResults: function processResults(data) {
-
                 var data = $.map(data.data, function (obj) {
                     return {
                         text: obj.store_name,

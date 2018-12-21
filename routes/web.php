@@ -110,9 +110,9 @@ Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name
 
 Route::get('/test',function (){
 
-    $ticket = Call::find(1);
+   $callers =  DB::table('callers')->selectRaw('CONCAT(fName," ",mName," ",lName) as text,id')->get()->toArray();
 
-    dd($ticket->incident->call->created_at);
+   dd($callers);
 
 });
 

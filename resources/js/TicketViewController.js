@@ -39,17 +39,19 @@ export const ticketAddController = () => {
             url: '/select/caller',
             processResults: function (data) {
 
-                var data = $.map(data.data, (obj) => {
-                    return {
-                        text: obj.store_name,
-                        children: obj.callers.map(obj2 => {
-                            return {
-                                id: obj2.id,
-                                text: obj2.full_name
-                            }
-                        })
-                    }
-                });
+                if(data.length !== 1){
+                    data = $.map(data.data, (obj) => {
+                        return {
+                            text: obj.store_name,
+                            children: obj.callers.map(obj2 => {
+                                return {
+                                    id: obj2.id,
+                                    text: obj2.full_name
+                                }
+                            })
+                        }
+                    });
+                }
 
                 return {
                     results: data
@@ -63,7 +65,6 @@ export const ticketAddController = () => {
         ajax: {
             url: '/select/contact',
             processResults: function (data) {
-
                 var data = $.map(data.data, (obj) => {
                     return {
                         text: obj.store_name,
