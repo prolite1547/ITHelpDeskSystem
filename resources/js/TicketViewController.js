@@ -243,7 +243,6 @@ export const ticketViewController = () => {
 
                         /*XHR TO SAVE EDITED INPUTS*/
                         ticket.saveEdit(ticket.detailsEditData).done(data => {
-                            console.log('tae');
                             if(data.success === true){
                                 editTicketView.makeElementsNotEditable();
                                 editTicketView.hideButtons();

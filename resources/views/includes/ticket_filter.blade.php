@@ -25,6 +25,7 @@
                 {!! Form::select(4,$storeFilter,null,['placeholder' => '(select store...)','class' => 'form-ticketFilter__input']) !!}
             </div>
             <div class="form-ticketFilter__group">
+                {{Form::button('Clear Filters',['class' => 'btn btn--red','type' => 'button','id' => 'clearFilter'])}}
                 {{Form::button('Filter',['class' => 'btn btn--blue','type' => 'submit','id' => 'filterTicketBtn'])}}
             </div>
             {{Form::close()}}

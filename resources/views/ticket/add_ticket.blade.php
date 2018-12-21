@@ -39,14 +39,14 @@
 
                             {!! Form::select('catA', $incASelect, null, ['placeholder' => '(select sub-A)','class' => 'form__input','required']) !!}
 
-                            {!! Form::select('catB', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-B)','class' => 'form__input']) !!}
+                            {{--{!! Form::select('catB', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-B)','class' => 'form__input']) !!}--}}
                             {!! Form::text('expiration', null, ['hidden','class' => 'form__input']) !!}
 
                         </div>
-                        <div class="form__group">
-                            {!! Form::label('drd','Drd :',['class' => 'form__label'])!!}
-                            {!! Form::checkbox('drd',1,false,['class' => 'form__input form__input--checkbox']) !!}
-                        </div>
+                        {{--<div class="form__group">--}}
+                            {{--{!! Form::label('drd','Drd :',['class' => 'form__label'])!!}--}}
+                            {{--{!! Form::checkbox('drd',1,false,['class' => 'form__input form__input--checkbox']) !!}--}}
+                        {{--</div>--}}
                         <div class="form__group">
                             {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
                             {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input','required']) !!}

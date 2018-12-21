@@ -30,7 +30,12 @@ export const elements = {
 
     filterTicketsIcon:document.querySelector('#ticketFilter'),
     filterContent: document.querySelector('.filter'),
-    filterTicketForm: document.querySelector('.form-ticketFilter')
+    filterTicketForm: document.querySelector('.form-ticketFilter'),
+    clearFilter: document.querySelector('#clearFilter'),
+
+
+
+    addUserBtn: document.querySelector('[data-action=addUserBtn]')
 }
 
 
@@ -64,8 +69,12 @@ export const clearLoader = () => {
     if (loader) loader.parentElement.removeChild(loader);
 };
 
-export const showModal= () => {
-    elements.modalContent.innerHTML = "";
+export const showModal= (markup = false) => {
+    if(markup){
+        elements.modalContent.innerHTML = markup;
+    }else{
+        elements.modalContent.innerHTML = "";
+    }
     elements.container.style.filter = 'blur(1px)';
     elements.modal.style.visibility = 'visible';
     elements.modal.style.opacity = '1';
@@ -91,3 +100,4 @@ export const setDisable = (el,bool = true) => {
       el.disabled = bool;
 };
 
+export const addUserMarkup = ``;

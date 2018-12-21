@@ -48,7 +48,7 @@
                     </li>
                     @if(Auth::user()->role_id === 4)
                     <li class="nav__li">
-                        <a href="{{route('adminPage')}}" class="nav__a {{Route::currentRouteName() == 'adminPage' ? 'nav__a--active' : ''}}">Admin Previleges</a>
+                        <a href="{{route('adminPage')}}" class="nav__a {{Route::currentRouteName() == 'adminPage' ? 'nav__a--active' : ''}}">Admin</a>
                     </li>
                     @endif
                 </ul>

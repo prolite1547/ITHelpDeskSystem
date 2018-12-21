@@ -1,0 +1,59 @@
+.tool-section {
+    min-width: 50%;
+    box-shadow: $shadow-light;
+    &__header{
+        background-color: $color-grey-dark-2;
+        font-weight: 700;
+        font-size: 1.7rem;
+        padding: .2rem;
+
+        display: flex;
+        align-items: center;
+
+        &::before{
+            content: "";
+            display: inline-block;
+            height: 2.8rem;
+            width: 2.8rem;
+            fill: currentColor;
+            margin-right: .7rem;
+            // Older browsers
+            background-image: url(/svg/SVG/menu.svg);
+            background-size: cover;
+        }
+    }
+
+    &__action{
+        display: flex;
+        background-color: $color-white;
+        padding: 1rem;
+
+    }
+
+    &__action-group{
+        flex: 0 0 33.33333%;
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon {
+        width: 5.5rem;
+        height: 5.5rem;
+        fill: $color-grey-dark-3;
+    }
+
+    &__label{
+
+        &,
+        &:link,
+        &:visited {
+            text-decoration: none;
+            color: currentColor;
+            margin-left: 1rem;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

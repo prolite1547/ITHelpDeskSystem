@@ -2,6 +2,7 @@ import {elements, elementStrings, hideModal} from "./views/base";
 import {ticketViewController,ticketAddController} from "./TicketViewController";
 import {ticketPageController} from "./TicketPageController";
 import {profileController} from "./ProfileController";
+import {adminPageController} from  "./AdminPageController";
 
 $(document).ready( function(){
 
@@ -190,6 +191,7 @@ elements.popupClose.addEventListener('click',() => {
     const ticketAdd_route  = new RegExp("\/tickets\/add",'gm');
     const userProfile_route  = new RegExp("\/user\/profile\/\\d+",'gm');
     const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all)",'gm');
+    const adminPage_route  = new RegExp("\/admin",'gm');
     const pathName = window.location.pathname;
 
     switch (true){
@@ -204,6 +206,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case tikcketPages_route.test(pathName):
             ticketPageController();
+            break;
+        case adminPage_route.test(pathName):
+            adminPageController();
             break;
         default:
             console.log('route not set');

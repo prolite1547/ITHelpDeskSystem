@@ -4900,6 +4900,7 @@ module.exports = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return hideModal; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return displayError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return setDisable; });
+/* unused harmony export addUserMarkup */
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var elements = {
@@ -4933,7 +4934,10 @@ var elements = {
 
     filterTicketsIcon: document.querySelector('#ticketFilter'),
     filterContent: document.querySelector('.filter'),
-    filterTicketForm: document.querySelector('.form-ticketFilter')
+    filterTicketForm: document.querySelector('.form-ticketFilter'),
+    clearFilter: document.querySelector('#clearFilter'),
+
+    addUserBtn: document.querySelector('[data-action=addUserBtn]')
 };
 
 var elementStrings = {
@@ -4960,7 +4964,13 @@ var clearLoader = function clearLoader() {
 };
 
 var showModal = function showModal() {
-    elements.modalContent.innerHTML = "";
+    var markup = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    if (markup) {
+        elements.modalContent.innerHTML = markup;
+    } else {
+        elements.modalContent.innerHTML = "";
+    }
     elements.container.style.filter = 'blur(1px)';
     elements.modal.style.visibility = 'visible';
     elements.modal.style.opacity = '1';
@@ -4993,6 +5003,8 @@ var setDisable = function setDisable(el) {
 
     el.disabled = bool;
 };
+
+var addUserMarkup = '';
 
 /***/ }),
 /* 3 */
@@ -30595,7 +30607,6 @@ var ticketViewController = function ticketViewController() {
 
                     /*XHR TO SAVE EDITED INPUTS*/
                     ticket.saveEdit(ticket.detailsEditData).done(function (data) {
-                        console.log('tae');
                         if (data.success === true) {
                             __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */]();
                             __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */]();
@@ -30760,6 +30771,11 @@ var ticketPageController = function ticketPageController() {
         __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterContent.classList.toggle('u-display-n');
     });
 
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].clearFilter.addEventListener('click', function () {
+
+        table.columns().search('').draw();
+    });
+
     __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].filterTicketForm.addEventListener('submit', function (e) {
 
         /*CHECK FORM THROUGH HTML 5 VALIDATION */
@@ -30775,11 +30791,6 @@ var ticketPageController = function ticketPageController() {
             inputs.forEach(function (currentValue) {
                 table.column(currentValue['name']).search(currentValue['value']).draw();
             });
-
-            // categorySelectElement = e.target.querySelector('select');
-            // catOptions = categorySelectElement.options;
-            // category = catOptions[catOptions.selectedIndex].text;
-
         }
     });
 };
@@ -30816,7 +30827,7 @@ var profileController = function profileController() {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(141);
-module.exports = __webpack_require__(184);
+module.exports = __webpack_require__(185);
 
 
 /***/ }),
@@ -99125,7 +99136,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TicketViewController__ = __webpack_require__(137);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TicketPageController__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ProfileController__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__AdminPageController__ = __webpack_require__(184);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -99244,6 +99257,7 @@ $(document).ready(function () {
     var ticketAdd_route = new RegExp("\/tickets\/add", 'gm');
     var userProfile_route = new RegExp("\/user\/profile\/\\d+", 'gm');
     var tikcketPages_route = new RegExp("\/tickets\/(open|my|ongoing|closed|all)", 'gm');
+    var adminPage_route = new RegExp("\/admin", 'gm');
     var pathName = window.location.pathname;
 
     switch (true) {
@@ -99258,6 +99272,9 @@ $(document).ready(function () {
             break;
         case tikcketPages_route.test(pathName):
             Object(__WEBPACK_IMPORTED_MODULE_2__TicketPageController__["ticketPageController"])();
+            break;
+        case adminPage_route.test(pathName):
+            Object(__WEBPACK_IMPORTED_MODULE_4__AdminPageController__["a" /* adminPageController */])();
             break;
         default:
             console.log('route not set');
@@ -99815,6 +99832,28 @@ var ProfPic = function () {
 
 /***/ }),
 /* 184 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return adminPageController; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
+
+
+var adminPageController = function adminPageController() {
+
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addUserBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        $.ajax('/modal/form/userAdd', {
+            type: 'GET'
+        }).done(function (data) {
+            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])(data);
+        });
+    });
+};
+
+/***/ }),
+/* 185 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

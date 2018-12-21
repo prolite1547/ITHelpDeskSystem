@@ -7,12 +7,15 @@ export const ticketPageController = () => {
     /*GET DATETABLE OPTION FOR INITIALIZATIONoptions*/
     table = datatableOption.initDataTables();
 
-
-
     elements.filterTicketsIcon.addEventListener('click', () => {
         elements.filterContent.classList.toggle('u-display-n');
     });
 
+    elements.clearFilter.addEventListener('click',() => {
+
+        table.columns().search('').draw();
+
+    });
 
     elements.filterTicketForm.addEventListener('submit', (e) => {
 
@@ -26,14 +29,6 @@ export const ticketPageController = () => {
             inputs.forEach((currentValue) => {
                 table.column(currentValue['name']).search(currentValue['value']).draw();
             });
-
-
-            // categorySelectElement = e.target.querySelector('select');
-            // catOptions = categorySelectElement.options;
-            // category = catOptions[catOptions.selectedIndex].text;
-
-
-
        }
     });
 

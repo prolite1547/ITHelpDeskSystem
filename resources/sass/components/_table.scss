@@ -31,6 +31,10 @@
 
     }
 
+    &__tbody td:first-child:hover &__subject{
+        text-decoration: underline;
+    }
+
     &__th:first-child {
         width: 50%;
         text-align: left;

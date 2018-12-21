@@ -61,6 +61,7 @@ Route::post('/file/ticket/{id}','TicketController@addFile');
 //////////////////////////
 Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
 Route::view('/modal/form/resolve','modal.resolve_form')->name('modalResolveForm');
+Route::view('/modal/form/userAdd','modal.user_add');
 Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalResolveView');
 //////////////////////////
 ////////*MESSAGE*/////////
