@@ -202,10 +202,22 @@
     }
 
     &__message-box {
+        position: relative;
         display: inline-block;
         background-color: $color-grey-light-2;
-        padding: 5px;
+        padding: .2rem 2rem .2rem .5rem;
         border-radius: $border-radius-small;
+    }
+
+    &__close-icon {
+        position: absolute;
+        right: 3px;
+        top: 0;
+        display: inline-block;
+        font-weight: 700;
+        width: .8rem;
+        height: .8rem;
+        cursor: pointer;
     }
 
     &__img-box{

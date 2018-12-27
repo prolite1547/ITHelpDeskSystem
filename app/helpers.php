@@ -5,15 +5,21 @@ use App\Ticket;
 use App\User;
 
 if (! function_exists('selectArray')) {
-        function selectArray($group,$model){
-            $category = $model::find($group);
-            if(!$category) return [null => 'N/A'];
+        function selectArray($group = '',$model,$id,$name){
 
-            $categories = $category->categories;
+            if($group){
+                $category = $model::find($group);
+                $rows = $category->categories;
+            }else{
+                $rows = $model::all();
+            }
+
+
+
 
             $select = [];
-            foreach ($categories as $category) {
-                $select = array_add($select,$category->id,$category->name);
+            foreach ($rows as $category) {
+                $select = array_add($select,$category->$id,$category->$name);
             }
 
 

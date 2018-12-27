@@ -4931,6 +4931,7 @@ var elements = {
     addTicketForm: document.querySelector('.form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
+    chatForm: document.querySelector('.chat'),
 
     filterTicketsIcon: document.querySelector('#ticketFilter'),
     filterContent: document.querySelector('.filter'),
@@ -30575,16 +30576,13 @@ var ticketViewController = function ticketViewController() {
     var ticket = new __WEBPACK_IMPORTED_MODULE_3__models_Ticket__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketID, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketSubject, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].ticketDetails);
 
     Echo.private('chat.' + ticket.ID).listen('MessageSent', function (e) {
-
-        var messageMarkup = '<div class="message">\n                                    <div class="message__img-box">\n                                        <img src="/storage/profpic/' + e.image + '" alt="John Edward R. Labor" class="message__img">\n                                    </div>\n                                    <div class="message__content">\n                                        <div class="message__message-box">\n                                            <div class="message__name">' + e.user + '</div>\n                                            <div class="message__message">' + e.message + '</div>\n                                        </div>\n                                        <span class="message__time">' + moment().fromNow() + '</span>\n                                    </div>\n                                 </div>';
-
-        document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
+        document.querySelector('.thread').insertAdjacentHTML('afterbegin', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getMessageMarkup */](e));
     });
 
     ticket.fetchOriginalData().done(function (data) {
         if (data.status === 13) {
 
-            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["d" /* getModalWithData */].bind(_this, data.id));
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getModalWithData */].bind(_this, data.id));
         } else {
 
             /*ADD CLICK EVENT LISTENER */
@@ -30594,10 +30592,10 @@ var ticketViewController = function ticketViewController() {
                 if (e.target.matches(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketContentEditIcon)) {
 
                     /*make elements editable*/
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* makeElementsEditable */]();
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsEditable */]();
 
                     /*show save button*/
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["k" /* showButtons */]();
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["l" /* showButtons */]();
                 }
 
                 /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
@@ -30609,8 +30607,8 @@ var ticketViewController = function ticketViewController() {
                     /*XHR TO SAVE EDITED INPUTS*/
                     ticket.saveEdit(ticket.detailsEditData).done(function (data) {
                         if (data.success === true) {
-                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */]();
-                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */]();
+                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* makeElementsNotEditable */]();
+                            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* hideButtons */]();
                             alert('Updated Successfully!');
                         } else {
                             alert('Failed to update...');
@@ -30623,10 +30621,10 @@ var ticketViewController = function ticketViewController() {
                 if (e.target.matches('#contentEditCancel')) {
                     /*GET LATEST DETAILS OF THE TICKET*/
                     ticket.fetchOriginalData().done(function () {
-                        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["j" /* restoreElementsTextContent */](ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
+                        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["k" /* restoreElementsTextContent */](ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
                     });
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["h" /* makeElementsNotEditable */](); /*REMOVE THE EDITABLE MODE*/
-                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* hideButtons */](); /*HIDE THE CANCEL AND DONE BUTTONS*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* makeElementsNotEditable */](); /*REMOVE THE EDITABLE MODE*/
+                    __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["g" /* hideButtons */](); /*HIDE THE CANCEL AND DONE BUTTONS*/
                 }
             });
 
@@ -30707,7 +30705,7 @@ var ticketViewController = function ticketViewController() {
             __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolve.addEventListener('click', function (e) {
                 Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])();
                 Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent);
-                var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getResolveFormMarkUp */]();
+                var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* getResolveFormMarkUp */]();
                 resolveRequest.done(function (data) {
                     Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["a" /* clearLoader */])();
                     Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["f" /* insertToModal */])(data);
@@ -30734,19 +30732,42 @@ var ticketViewController = function ticketViewController() {
         }
     });
 
-    /*EVENT LISTENER ON SEND BUTTON*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].chatSendButton.addEventListener('click', function () {
-        var newMessage = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["c" /* getMessageData */]();
-        if (!newMessage) {
-            return alert('What\'s the point of sending a message if its empty!! Message: ' + newMessage);
+    // /*EVENT LISTENER ON SEND BUTTON*/
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].chatForm.addEventListener('submit', function (e) {
+        if (e.target.checkValidity()) {
+            e.preventDefault();
+            var newMessage = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["c" /* getMessageData */]();
+            if (!newMessage) {
+                return alert('What\'s the point of sending a message if its empty!! Message: ' + newMessage);
+            }
+            __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["j" /* resetReply */]();
+            var newMessageObject = new __WEBPACK_IMPORTED_MODULE_4__models_Message__["a" /* default */](ticket.ID, newMessage);
+            newMessageObject.saveMessage(newMessageObject).done(function () {
+                alert('Message Sent Successfull!');
+            }).fail(function (jqXHR) {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
+            });
         }
-        __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["i" /* resetReply */]();
-        var newMessageObject = new __WEBPACK_IMPORTED_MODULE_4__models_Message__["a" /* default */](ticket.ID, newMessage);
-        newMessageObject.saveMessage(newMessageObject).done(function () {
-            alert('Message Sent Successfull!');
-        }).fail(function (jqXHR) {
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);
-        });
+    });
+
+    /*DELETE MESSAGE*/
+    document.querySelector('.thread').addEventListener('click', function (e) {
+
+        if (e.target.matches('.message__close-icon')) {
+            var message = void 0,
+                messageID = void 0;
+
+            message = e.target.closest('.message');
+            messageID = message.dataset.id;
+
+            $.ajax('/message/delete/' + messageID, {
+                type: 'delete'
+            }).done(function () {
+                e.target.parentNode.parentNode.parentNode.parentNode.removeChild(message);
+            }).fail(function () {
+                alert('Fail to delete message!');
+            });
+        }
     });
 };
 
@@ -99287,18 +99308,19 @@ $(document).ready(function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return makeElementsEditable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return makeElementsNotEditable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return showButtons; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return hideButtons; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return restoreElementsTextContent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return getResolveFormMarkUp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return makeElementsEditable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return makeElementsNotEditable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return showButtons; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return hideButtons; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return restoreElementsTextContent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return getResolveFormMarkUp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addEventListenerToEditInputs; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return addFileMarkup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return getMessageData; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return resetReply; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return resetReply; });
 /* unused harmony export showResolveButton */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return getModalWithData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return getModalWithData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return getMessageMarkup; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
 
 
@@ -99383,6 +99405,19 @@ var getModalWithData = function getModalWithData(ticketID) {
         Object(__WEBPACK_IMPORTED_MODULE_0__base__["a" /* clearLoader */])();
         Object(__WEBPACK_IMPORTED_MODULE_0__base__["f" /* insertToModal */])(data);
     });
+};
+
+var getMessageMarkup = function getMessageMarkup(e) {
+    var messageMarkup = void 0;
+    console.log(authUserID, e.userID);
+    /*ADD CLOSE BUTTON IF THE RECIEVED MESSAGE IS EQUAL TO THE AUTHENTICATED USER*/
+    if (authUserID === e.userID) {
+        messageMarkup = "<div class=\"message\" data-id=\"" + e.messageID + "\">\n                                    <div class=\"message__img-box\">\n                                        <img src=\"/storage/profpic/" + e.image + "\" alt=\"" + e.user + "\" class=\"message__img\">\n                                    </div>\n                                    <div class=\"message__content\">\n                                        <div class=\"message__message-box\">\n                                            <span class=\"message__close-icon\">\n                                            X\n                                            </span>\n                                            <div class=\"message__name\">" + e.user + "</div>\n                                            <div class=\"message__message\">" + e.message + "</div>\n                                        </div>\n                                        <span class=\"message__time\">" + moment().fromNow() + "</span>\n                                    </div>\n                                 </div>";
+    } else {
+        messageMarkup = "<div class=\"message\" data-id=\"" + e.messageID + "\">\n                                    <div class=\"message__img-box\">\n                                        <img src=\"/storage/profpic/" + e.image + "\" alt=\"" + e.user + "\" class=\"message__img\">\n                                    </div>\n                                    <div class=\"message__content\">\n                                        <div class=\"message__message-box\">\n                                            <div class=\"message__name\">" + e.user + "</div>\n                                            <div class=\"message__message\">" + e.message + "</div>\n                                        </div>\n                                        <span class=\"message__time\">" + moment().fromNow() + "</span>\n                                    </div>\n                                 </div>";
+    };
+
+    return messageMarkup;
 };
 
 /***/ }),

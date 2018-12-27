@@ -191,23 +191,7 @@ export const ticketViewController = () => {
 
     Echo.private(`chat.${ticket.ID}`)
         .listen('MessageSent', (e) => {
-
-            let messageMarkup = `<div class="message">
-                                    <div class="message__img-box">
-                                        <img src="/storage/profpic/${e.image}" alt="John Edward R. Labor" class="message__img">
-                                    </div>
-                                    <div class="message__content">
-                                        <div class="message__message-box">
-                                            <div class="message__name">${e.user}</div>
-                                            <div class="message__message">${e.message}</div>
-                                        </div>
-                                        <span class="message__time">${moment().fromNow()}</span>
-                                    </div>
-                                 </div>`;
-
-
-
-            document.querySelector('.thread').insertAdjacentHTML('afterbegin', messageMarkup);
+            document.querySelector('.thread').insertAdjacentHTML('afterbegin', editTicketView.getMessageMarkup(e));
         });
 
     ticket.fetchOriginalData()
@@ -384,23 +368,44 @@ export const ticketViewController = () => {
 
 
 
-    /*EVENT LISTENER ON SEND BUTTON*/
-    elements.chatSendButton.addEventListener('click',function () {
-        const newMessage = editTicketView.getMessageData()
-            if(!newMessage){
+    // /*EVENT LISTENER ON SEND BUTTON*/
+    elements.chatForm.addEventListener('submit', e => {
+        if (e.target.checkValidity()) {
+            e.preventDefault();
+            const newMessage = editTicketView.getMessageData()
+            if (!newMessage) {
                 return alert(`What's the point of sending a message if its empty!! Message: ${newMessage}`);
             }
-        editTicketView.resetReply();
-        const newMessageObject = new Message(ticket.ID,newMessage);
-        newMessageObject.saveMessage(newMessageObject)
-            .done(() => {
-                alert('Message Sent Successfull!')
-            })
-            .fail((jqXHR)=>{
-                displayError(jqXHR);
-            });
+            editTicketView.resetReply();
+            const newMessageObject = new Message(ticket.ID, newMessage);
+            newMessageObject.saveMessage(newMessageObject)
+                .done(() => {
+                    alert('Message Sent Successfull!')
+                })
+                .fail((jqXHR) => {
+                    displayError(jqXHR);
+                    });
+        }
     });
 
 
+    /*DELETE MESSAGE*/
+    document.querySelector('.thread').addEventListener('click', e => {
+
+        if(e.target.matches('.message__close-icon')){
+            let message,messageID;
+
+            message = e.target.closest('.message');
+            messageID = message.dataset.id;
+
+            $.ajax(`/message/delete/${messageID}`,{
+               type: 'delete'
+            }).done(() => {
+                e.target.parentNode.parentNode.parentNode.parentNode.removeChild(message);
+            }).fail(() => {
+                alert('Fail to delete message!');
+            });
+        }
+    });
 
 };

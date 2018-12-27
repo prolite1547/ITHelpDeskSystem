@@ -26,6 +26,7 @@ export const elements = {
     addTicketForm: document.querySelector('.form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
+    chatForm: document.querySelector('.chat'),
 
 
     filterTicketsIcon:document.querySelector('#ticketFilter'),

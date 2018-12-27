@@ -1,22 +1,48 @@
-export default class Route {
-    constructor(window) {
-        this.url = window.location.url;
-        this.host     = window.location.host;   // www.somedomain.com (includes port if there is one[1])
-        this.hostname = window.location.hostname;   // www.somedomain.com
-        this.hash     = window.location.hash;   // #top
-        this.href     = window.location.href;   // http://www.somedomain.com/account/search?filter=a#top
-        this.pathname = window.location.pathname;   // /account/search
-        this.port     = window.location.port;   // (port if there is one[1])
-        this.protocol = window.location.protocol;   // http:
-        this.search   = window.location.search;   // ?filter=a
+import {setDisable,displayError} from "./views/base";
+import Caller from './models/Caller';
+import Store from './models/Store';
+import Contact from './models/Contact';
+export const sendForm = (button,e) => {
+
+
+    if(e.target.checkValidity()){
+        e.preventDefault();
+
+        let submitBtn,formdata,form,object;
+        form = e.target;
+        submitBtn = form.querySelector(button);
+
+        setDisable(submitBtn);
+
+
+        /*SERIALIZE FORM DATA*/
+        formdata = $(form).serialize();
+
+        if(form.id === 'addCaller'){
+            object =  new Caller();
+        }else if(form.id === 'addBranch'){
+            object = new Store();
+        }else if(form.id === 'addContact'){
+            object = new Contact();
+        }else {
+            alert('form not found');
+        }
+
+
+        object.storeData(formdata)
+            .done(data => {
+                setTimeout(() => {
+                    alert('Added Successfully!!');
+                    form.reset();
+                    setDisable(submitBtn,false);
+                },2000)
+            })
+            .fail((jqXHR, textStatus) => {
+                setTimeout(() => {
+                    displayError(jqXHR);
+                    setDisable(submitBtn,false);
+                },2000)
+            });
     }
 
-    getRoute() {
-        var reg = /.+?\:\/\/.+?(\/.+?)(?:#|\?|$)/;
-        return this.pathname = reg.exec( this.href )[1];
-    }
-
-    editRoute(id){
-        return `${this.hostname}/ticket/edit/${id}`;
-    }
 };

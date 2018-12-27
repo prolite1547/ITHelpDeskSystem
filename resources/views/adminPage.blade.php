@@ -5,7 +5,7 @@
 @section('content')
     <div class="tool">
         <div class="tool-section">
-            <div class="tool-section__header">User</div>
+            <div class="tool-section__header">Users</div>
             <div class="tool-section__action">
                 <div class="tool-section__action-group">
                     <svg class="tool-section__icon">

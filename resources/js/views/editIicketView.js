@@ -87,3 +87,41 @@ export const getModalWithData = (ticketID) => {
                 insertToModal(data);
             });
 }
+
+export const getMessageMarkup = (e) => {
+    let messageMarkup;
+    console.log(authUserID,e.userID);
+    /*ADD CLOSE BUTTON IF THE RECIEVED MESSAGE IS EQUAL TO THE AUTHENTICATED USER*/
+    if (authUserID === e.userID){
+        messageMarkup = `<div class="message" data-id="${e.messageID}">
+                                    <div class="message__img-box">
+                                        <img src="/storage/profpic/${e.image}" alt="${e.user}" class="message__img">
+                                    </div>
+                                    <div class="message__content">
+                                        <div class="message__message-box">
+                                            <span class="message__close-icon">
+                                            X
+                                            </span>
+                                            <div class="message__name">${e.user}</div>
+                                            <div class="message__message">${e.message}</div>
+                                        </div>
+                                        <span class="message__time">${moment().fromNow()}</span>
+                                    </div>
+                                 </div>`;
+    } else {
+        messageMarkup = `<div class="message" data-id="${e.messageID}">
+                                    <div class="message__img-box">
+                                        <img src="/storage/profpic/${e.image}" alt="${e.user}" class="message__img">
+                                    </div>
+                                    <div class="message__content">
+                                        <div class="message__message-box">
+                                            <div class="message__name">${e.user}</div>
+                                            <div class="message__message">${e.message}</div>
+                                        </div>
+                                        <span class="message__time">${moment().fromNow()}</span>
+                                    </div>
+                                 </div>`;
+    };
+
+    return messageMarkup;
+};

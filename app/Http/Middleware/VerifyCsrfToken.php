@@ -22,6 +22,7 @@ class VerifyCsrfToken extends Middleware
         '*/tickets/view/edit/*',
         '*/file/ticket/*',
         '*/message/new',
-        '*/image'
+        '*/image',
+        '*/message/delete/*'
     ];
 }

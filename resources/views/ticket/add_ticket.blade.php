@@ -87,7 +87,7 @@
                                 {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addBranch']) !!}
                                 <div class="form__group">
                                     {!! Form::label('store_name','Name :',['class' => 'form__label'])!!}
-                                    {!! Form::text('store_name',null,['class' => 'form__input','placeholder' => 'branch name']) !!}
+                                    {!! Form::text('store_name',null,['class' => 'form__input','placeholder' => 'branch name','required']) !!}
                                 </div>
                                 {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addBranch']) !!}
                                 {!! Form::close() !!}
@@ -100,11 +100,11 @@
                                 {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addContact']) !!}
                                 <div class="form__group">
                                     {!! Form::label('store_id','Branch:',['class' => 'form__label']) !!}
-                                    {!! Form::select('store_id',[] ,null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'contactBranchSelect']) !!}
+                                    {!! Form::select('store_id',[] ,null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'contactBranchSelect','required']) !!}
                                 </div>
                                 <div class="form__group u-display-n" id="contactFormGroup">
                                     {!! Form::label('number','#',['class' => 'form__label']) !!}
-                                    {!! Form::text('number',null, ['placeholder' => 'Enter number...','class' => 'form__input ']) !!}
+                                    {!! Form::text('number',null, ['placeholder' => 'Enter number...','class' => 'form__input','required']) !!}
                                     {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addContact']) !!}
                                 </div>
 

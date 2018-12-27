@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Position;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Caller;
@@ -56,32 +57,36 @@ class ViewServiceProvider extends ServiceProvider
             ]);
         });
 
-        view()->composer(['ticket.add_ticket','modal.ticket_edit'],function ($view) {
+        view()->composer(['ticket.add_ticket','modal.ticket_edit','modal.user_add'],function ($view) {
 
-            $statusSelect = selectArray(5,CategoryGroup::class);  /*Status*/
-            $issueSelect = selectArray(1,CategoryGroup::class);  /*Ticket*/
-            $prioSelect = selectArray(2,CategoryGroup::class);   /*Priority*/
-            $typeSelect = selectArray(3,CategoryGroup::class);   /*Incident category*/
-            $incASelect = selectArray(4,CategoryGroup::class); /*A Sub category for incident*/
-            $incBSelect = selectArray('',CategoryGroup::class); /*B Sub category for incident*/
+            $statusSelect = selectArray(5,CategoryGroup::class,'id','name');  /*Status*/
+            $issueSelect = selectArray(1,CategoryGroup::class,'id','name');  /*Ticket*/
+            $prioSelect = selectArray(2,CategoryGroup::class,'id','name');   /*Priority*/
+            $typeSelect = selectArray(3,CategoryGroup::class,'id','name');   /*Incident category*/
+            $incASelect = selectArray(4,CategoryGroup::class,'id','name'); /*A Sub category for incident*/
+//            $incBSelect = selectArray('',CategoryGroup::class,'id','name'); /*B Sub category for incident*/
+            $rolesSelect = selectArray('',Role::class,'id','role'); /*Roles*/
+            $positionsSelect = selectArray('',Position::class,'id','position'); /*Roles*/
             $callerSelect = Caller::get()->pluck('name','id');
             $branchGroupSelect = groupListSelectArray(Store::class,'store_name','contactNumbers','id','number');
             $branchSelect = Store::all()->pluck('store_name','id')->toArray();
             $assigneeSelect = groupListSelectArray(Role::class,'role','users','id','full_name');
 
 
-            $view->with([
-                'statusSelect' => $statusSelect,
-                'issueSelect' => $issueSelect,
-                'prioSelect' => $prioSelect,
-                'typeSelect' => $typeSelect,
-                'incASelect' => $incASelect,
-                'incBSelect' => $incBSelect,
-                'callerSelect' => $callerSelect,
-                'branchGroupSelect' => $branchGroupSelect,
-                'branchSelect' => $branchSelect,
-                'assigneeSelect' => $assigneeSelect,
-            ]);
+            $view->with(compact(
+                'statusSelect',
+                'issueSelect' ,
+                'prioSelect' ,
+                'typeSelect',
+                'incASelect' ,
+                'incBSelect' ,
+                'callerSelect' ,
+                'branchGroupSelect',
+                'branchSelect',
+                'assigneeSelect',
+                'rolesSelect',
+                'positionsSelect'
+            ));
         });
 
 

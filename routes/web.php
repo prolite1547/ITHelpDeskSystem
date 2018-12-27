@@ -67,6 +67,7 @@ Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalReso
 ////////*MESSAGE*/////////
 //////////////////////////
 Route::post('/message/new','MessageController@create');
+Route::delete('/message/delete/{id}','MessageController@destroy');
 
 //////////////////////////
 ////////*CALLER*/////////

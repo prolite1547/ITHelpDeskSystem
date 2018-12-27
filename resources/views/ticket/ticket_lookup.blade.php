@@ -31,12 +31,12 @@
                         <p class="ticket-content__details">
                             {{$ticket->incident->details}}
                         </p>
-                        <div class="chat">
-                            <textarea name="reply" id="" rows="5" class="chat__textarea" placeholder="Enter message here..."></textarea>
+                        <form class="chat">
+                            <textarea name="reply" id="" rows="5" class="chat__textarea" placeholder="Enter message here..." maxlength="100" minlength="5" required></textarea>
                             <div class="chat__send">
-                                <button class="chat__button">Send</button>
+                                <button class="chat__button" type="submit">Send</button>
                             </div>
-                        </div>
+                        </form>
                         <div class="ticket-content__updateBtns">
                             <div class="ticket-content__buttons u-float-r">
                                 <button class="btn btn--red" data-action="cancel" id="contentEditCancel">Cancel</button>
@@ -49,13 +49,18 @@
                 <div class="group">
                     <div class="thread">
                         @foreach($ticket->ticketMessages as $message)
-                        <div class="message">
+                        <div class="message" data-id="{{$message->id}}">
                             <div class="message__img-box">
-                                <img src="{{asset("storage/profpic/".$message->user->profpic->image."")}}" alt="John Edward R. Labor" class="message__img">
+                                <img src="{{asset("storage/profpic/".$message->user->profpic->image."")}}" alt="{{$message->user->full_name}}" class="message__img">
                             </div>
                             <div class="message__content">
                                 <div class="message__message-box">
-                                    <div class="message__name">{{$message->user->name}}</div>
+                                    @if(Auth::id() === $message->user->id)
+                                        <span class="message__close-icon">
+                                        X
+                                        </span>
+                                    @endif
+                                    <div class="message__name">{{$message->user->full_name}}</div>
                                     <div class="message__message">{{$message->message}}</div>
                                 </div>
                                 <span class="message__time">{{$message->created_at}}</span>
@@ -88,7 +93,7 @@
                                         <span href="#!" class="ticket-details__value">Call</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
-                                        <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->name}}</a>
+                                        <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
                                         <span class="ticket-details__value"> {{$ticket->created_at}}</span>
@@ -97,7 +102,7 @@
                                         <span class="ticket-details__value">{{$ticket->expiration}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->name}}</a>
+                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->full_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
                                         <span class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</span>
@@ -109,7 +114,7 @@
                                         <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
-                                        <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->name}}</a>
+                                        <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->full_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
                                         <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
@@ -182,3 +187,9 @@
         </div>
     </main>
 @endsection
+
+@push('scripts')
+    <script>
+        window.authUserID = {{ (Auth::id()) }}
+    </script>
+@endpush
