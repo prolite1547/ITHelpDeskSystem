@@ -30481,6 +30481,8 @@ var ticketAddController = function ticketAddController() {
         }
     });
 
+    $('.form__input--select2').select2();
+
     /*CHANGE EVENT ON CATEGORY INPUT*/
     __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].categoryInput.addEventListener('change', function (e) {
 
@@ -30581,7 +30583,6 @@ var ticketViewController = function ticketViewController() {
 
     ticket.fetchOriginalData().done(function (data) {
         if (data.status === 13) {
-
             __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getModalWithData */].bind(_this, data.id));
         } else {
 
@@ -30703,6 +30704,7 @@ var ticketViewController = function ticketViewController() {
 
             /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
             __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolve.addEventListener('click', function (e) {
+                e.preventDefault();
                 Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* showModal */])();
                 Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["g" /* renderLoader */])(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].modalContent);
                 var resolveRequest = __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["f" /* getResolveFormMarkUp */]();
@@ -30722,6 +30724,7 @@ var ticketViewController = function ticketViewController() {
 
                         resolve.createResolve().done(function () {
                             alert('Ticket marked as resolved successfully!!');
+                            window.location.reload();
                             Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* hideModal */])();
                         }).fail(function (jqXHR) {
                             Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["b" /* displayError */])(jqXHR);

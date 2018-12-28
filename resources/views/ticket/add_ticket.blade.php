@@ -10,10 +10,11 @@
             <div class="window__content">
                 <div class="row">
                     <div class="col-1-of-2">
+                        <span>Note: The 'number input'  will determine the location/branch of where the ticket was issued.</span>
                         {!! Form::open(['method' => 'POST','route' => 'addTicket','class' => 'form-addTicket','enctype'=>'multipart/form-data']) !!}
                         <div class="form__group">
-                            {!! Form::select('caller_id', [], null, ['placeholder' => '(caller)','class' => 'form__input form__input--select2','required','id' => 'caller_id']) !!}
-                            {!! Form::select('contact_id', [], null, ['placeholder' => '(number used)','class' => 'form__input form__input--select2','required','id' => 'contact_id']) !!}
+                            {!! Form::select('contact_id', [], null, ['placeholder' => '(number used)','class' => 'form__input','required','id' => 'contact_id']) !!}
+                            {!! Form::select('caller_id', [], null, ['placeholder' => '(caller)','class' => 'form__input','required','id' => 'caller_id']) !!}
                         </div>
 
                         <div class="form__group">
@@ -29,8 +30,9 @@
                         </div>
 
                         <div class="form__group">
-                            {!! Form::label('type','Type:',['class' => 'form__label'])!!}
-                            {!! Form::select('type', $issueSelect, null, ['placeholder' => '(select type)','class' => 'form__input','required']) !!}
+                            {{--{!! Form::label('type','Type:',['class' => 'form__label'])!!}--}}
+                            {{--{!! Form::select('type', $issueSelect, null, ['placeholder' => '(select type)','class' => 'form__input','required']) !!}--}}
+                            {!! Form::text('type',1,['class' => 'form__input','hidden','required']) !!}
                             {!! Form::label('priority','Priority:',['class' => 'form__label'])!!}
                             {!! Form::select('priority', $prioSelect, null, ['placeholder' => '(select priority)','class' => 'form__input','required']) !!}
                         </div>
@@ -49,7 +51,7 @@
                         {{--</div>--}}
                         <div class="form__group">
                             {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
-                            {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input','required']) !!}
+                            {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input form__input--select2','required']) !!}
                         </div>
                         {!! Form::button('submit',['class' => 'btn btn--blue','type' => 'submit','id'=>'ticketAdd']) !!}
                         {!! Form::close() !!}

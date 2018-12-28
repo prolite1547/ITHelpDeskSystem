@@ -50,7 +50,7 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer('modal.resolve_form',function ($view){
 
-            $resolutionOptions = selectArray(8,CategoryGroup::class);  /*Resolve*/
+            $resolutionOptions = selectArray(8,CategoryGroup::class,'id','name');  /*Resolve*/
 
             $view->with([
                 'resolutionOptions' => $resolutionOptions

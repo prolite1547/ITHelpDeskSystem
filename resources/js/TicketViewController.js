@@ -85,6 +85,9 @@ export const ticketAddController = () => {
     });
 
 
+    $('.form__input--select2').select2();
+
+
     /*CHANGE EVENT ON CATEGORY INPUT*/
     elements.categoryInput.addEventListener('change',e => {
 
@@ -197,11 +200,9 @@ export const ticketViewController = () => {
     ticket.fetchOriginalData()
         .done(data => {
             if(data.status === 13){
-
                 elements.resolveButton.addEventListener('click', editTicketView.getModalWithData.bind(this,data.id));
 
             }else {
-
 
 
                 /*ADD CLICK EVENT LISTENER */
@@ -332,6 +333,7 @@ export const ticketViewController = () => {
 
                 /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
                 elements.resolve.addEventListener('click',(e) => {
+                    e.preventDefault();
                     showModal();
                     renderLoader(elements.modalContent);
                     const resolveRequest = editTicketView.getResolveFormMarkUp();
@@ -352,6 +354,7 @@ export const ticketViewController = () => {
                             resolve.createResolve()
                                 .done(() => {
                                     alert('Ticket marked as resolved successfully!!');
+                                    window.location.reload();
                                     hideModal();
                                 })
                                 .fail((jqXHR) =>{

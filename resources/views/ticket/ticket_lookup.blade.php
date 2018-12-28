@@ -11,10 +11,10 @@
                                 <span class="ticket-content__more">More...</span>
                                 <ul class="ticket-content__list">
                                     @if($ticket->status !== $closedID)
-                                    <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
-                                    <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
+                                    <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
+                                    <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
                                     @endif
-                                    <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--print">Print</a></li>
+                                    <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--print">Print</a></li>
                                     <li class="ticket-content__item">
                                         <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                                         <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
@@ -89,8 +89,8 @@
                                     <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
                                         <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
                                     </li>
-                                    <li class="ticket-details__item"><span class="ticket-details__field">Origin:</span>
-                                        <span href="#!" class="ticket-details__value">Call</span>
+                                    <li class="ticket-details__item"><span class="ticket-details__field">Contact #:</span>
+                                        <span href="#!" class="ticket-details__value">{{$ticket->incident->call->contact->number}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
                                         <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}</a>
@@ -102,7 +102,7 @@
                                         <span class="ticket-details__value">{{$ticket->expiration}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->full_name}}</a>
+                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->full_name}}</a> <span>({{$ticket->incident->call->loggedBy->role->role}})</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
                                         <span class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</span>
@@ -114,7 +114,7 @@
                                         <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
-                                        <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->full_name}}</a>
+                                        <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->full_name}}</a> <span>({{$ticket->assigneeRelation->role->role}})
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
                                         <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
@@ -122,9 +122,9 @@
                                     <li class="ticket-details__item"><span class="ticket-details__field">Sub-A Category:</span>
                                         <span class="ticket-details__value">{{$ticket->incident->catARelation->name}}</span>
                                     </li>
-                                    <li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>
-                                        <span class="ticket-details__value">&nbsp;</span>
-                                    </li>
+                                    {{--<li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>--}}
+                                        {{--<span class="ticket-details__value">&nbsp;</span>--}}
+                                    {{--</li>--}}
 
                                     <li class="ticket-details__item"><span class="ticket-details__field">Data Correction:</span>
 
