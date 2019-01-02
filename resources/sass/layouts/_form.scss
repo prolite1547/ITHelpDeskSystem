@@ -210,4 +210,28 @@
     }
 }
 
+.form-email {
+   width: 100%;
 
+    &__input {
+        display: block;
+        border: none;
+        font-size: 1.5rem;
+        padding: .5rem;
+        width: 100%;
+        outline: none;
+
+        &:last-child {
+            background-color: red;
+            padding: 1000px;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 1px solid rgba($color-grey-light-2,.8);
+        }
+
+        &--textarea {
+            resize: none;
+        }
+    }
+ }

@@ -25,6 +25,13 @@ export const elements = {
     addContactForm: document.getElementById('addContact'),
     addTicketForm: document.querySelector('.form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
+
+    incidentFormItem: document.getElementById('incidentForm'),
+    PLDTFormItem: document.getElementById('PLDTForm'),
+    incidentFormContainerAdd: document.getElementById('incidentFormContainer'),
+    PLDTFormContainerAdd: document.getElementById('PLDTFormContainer'),
+    formItems: document.getElementsByClassName('window__item'),
+
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),
 
@@ -50,7 +57,10 @@ export const elementStrings = {
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
     branchSelectContact: 'select[data-select=contact]',
-    ticketAddBtn: '#ticketAdd'
+    ticketAddBtn: '#ticketAdd',
+
+    /*TICKET ADD*/
+    ticketAddFormActive: 'window__item--active'
 }
 
 

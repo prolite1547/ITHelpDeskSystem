@@ -21,6 +21,15 @@ import {renderLoader,clearLoader,showModal,insertToModal,hideModal,setDisable} f
 
 export const ticketAddController = () => {
 
+    (function(){
+
+        /*ADD THE ACTIVE CLASS TO THE INCIDENT ITEM*/
+        // elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
+        elements.PLDTFormItem.classList.add(elementStrings.ticketAddFormActive);
+
+        /*DISPLAY THE FORM*/
+        addTicketView.displayForm();
+    })();
 
     $('#callerBranchSelect,#contactBranchSelect').select2({
         ajax: {
@@ -86,6 +95,27 @@ export const ticketAddController = () => {
 
 
     $('.form__input--select2').select2();
+
+
+    /*DYNAMIC FORM*/
+    document.querySelector('.window').addEventListener('click',e => {
+       if(e.target.matches('.window__item')){
+           let items,item;
+           items = e.target.parentNode.querySelectorAll('.window__item');
+           item = e.target;
+
+           /*REMOVE THE ACTIVE CLASS FROM THE ITEMS*/
+           items.forEach(el => {
+              el.classList.remove(elementStrings.ticketAddFormActive);
+           });
+
+           /*ADD THE ACTIVE CLASS TO THE CLICKED ITEM*/
+           item.classList.add(elementStrings.ticketAddFormActive);
+
+           /*DISPLAY THE FORM*/
+           addTicketView.displayForm();
+       }
+    });
 
 
     /*CHANGE EVENT ON CATEGORY INPUT*/

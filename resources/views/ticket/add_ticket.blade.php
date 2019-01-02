@@ -4,10 +4,20 @@
 @section('content')
     <main>
         <div class="window">
-            <div class="window__title-box">
-                <h3 class="heading-tertiary">New Ticket</h3>
-            </div>
-            <div class="window__content">
+                <div class="window__title-box">
+                    <h3 class="heading-tertiary">New Ticket</h3>
+                </div>
+                <div class="window__menu">
+                    <label id="incidentForm" class="window__item">
+                        Incident
+                    </label>
+                    <label id="PLDTForm" class="window__item">
+                        PLDT
+                    </label>
+                    {{--<li class="window__item window__item--active"><a href="#!" class="window__link">Incident</a></li>--}}
+                    {{--<li class="window__item"><a href="#!" class="window__link">PLDT</a></li>--}}
+                </div>
+            <div class="window__content" id="incidentFormContainer">
                 <div class="row">
                     <div class="col-1-of-2">
                         <span>Note: The 'number input'  will determine the location/branch of where the ticket was issued.</span>
@@ -46,8 +56,8 @@
 
                         </div>
                         {{--<div class="form__group">--}}
-                            {{--{!! Form::label('drd','Drd :',['class' => 'form__label'])!!}--}}
-                            {{--{!! Form::checkbox('drd',1,false,['class' => 'form__input form__input--checkbox']) !!}--}}
+                        {{--{!! Form::label('drd','Drd :',['class' => 'form__label'])!!}--}}
+                        {{--{!! Form::checkbox('drd',1,false,['class' => 'form__input form__input--checkbox']) !!}--}}
                         {{--</div>--}}
                         <div class="form__group">
                             {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
@@ -58,7 +68,9 @@
                     </div>
                     <div class="col-1-of-2">
                         <div class="form-callerAdd">
-                            <button class="form-callerAdd__button u-margin-l" type="button"><i class="fas fa-plus"></i> Add Caller</button>
+                            <button class="form-callerAdd__button u-margin-l" type="button"><i class="fas fa-plus"></i>
+                                Add Caller
+                            </button>
 
                             <div class="form-callerAdd__content-box u-display-n">
                                 {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addCaller']) !!}
@@ -83,7 +95,9 @@
                             </div>
                         </div>
                         <div class="form-branchAdd">
-                            <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i> Add Branch</button>
+                            <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                Add Branch
+                            </button>
 
                             <div class="form-branchAdd__content-box u-display-n">
                                 {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addBranch']) !!}
@@ -96,7 +110,9 @@
                             </div>
                         </div>
                         <div class="form-contactAdd">
-                            <button class="form-contactAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i> Add Contact Number</button>
+                            <button class="form-contactAdd__button u-margin-l " type="button"><i
+                                    class="fas fa-plus"></i> Add Contact Number
+                            </button>
 
                             <div class="form-contactAdd__content-box u-display-n">
                                 {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addContact']) !!}
@@ -114,8 +130,8 @@
                             </div>
                         </div>
 
-                    @if ($errors->any())
-                            <div class="alert alert-danger"
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -123,10 +139,18 @@
                                 </ul>
                             </div>
                         @endif
-
                     </div>
                 </div>
+            </div>
 
+            {{--PLDT FORM--}}
+            <div class="window__content" id="PLDTFormContainer">
+                {{Form::open(array('class' => 'form-email'))}}
+                    {{Form::text('to',null,array('placeholder' => 'To','class'=> 'form-email__input form-email__input--text'))}}
+                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input form-email__input--text'))}}
+                    {{Form::textarea('details',null,array('class' => 'form-email__input form-email__input--textarea'))}}
+                    {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue'))}}
+                {{Form::close()}}
             </div>
         </div>
     </main>

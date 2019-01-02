@@ -4930,6 +4930,13 @@ var elements = {
     addContactForm: document.getElementById('addContact'),
     addTicketForm: document.querySelector('.form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
+
+    incidentFormItem: document.getElementById('incidentForm'),
+    PLDTFormItem: document.getElementById('PLDTForm'),
+    incidentFormContainerAdd: document.getElementById('incidentFormContainer'),
+    PLDTFormContainerAdd: document.getElementById('PLDTFormContainer'),
+    formItems: document.getElementsByClassName('window__item'),
+
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),
 
@@ -4951,7 +4958,10 @@ var elementStrings = {
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
     branchSelectContact: 'select[data-select=contact]',
-    ticketAddBtn: '#ticketAdd'
+    ticketAddBtn: '#ticketAdd',
+
+    /*TICKET ADD*/
+    ticketAddFormActive: 'window__item--active'
 };
 
 var renderLoader = function renderLoader(parent) {
@@ -30419,6 +30429,16 @@ var _this = this;
 
 var ticketAddController = function ticketAddController() {
 
+    (function () {
+
+        /*ADD THE ACTIVE CLASS TO THE INCIDENT ITEM*/
+        // elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].PLDTFormItem.classList.add(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketAddFormActive);
+
+        /*DISPLAY THE FORM*/
+        __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* displayForm */]();
+    })();
+
     $('#callerBranchSelect,#contactBranchSelect').select2({
         ajax: {
             url: '/select/store',
@@ -30483,6 +30503,27 @@ var ticketAddController = function ticketAddController() {
 
     $('.form__input--select2').select2();
 
+    /*DYNAMIC FORM*/
+    document.querySelector('.window').addEventListener('click', function (e) {
+        if (e.target.matches('.window__item')) {
+            var items = void 0,
+                item = void 0;
+            items = e.target.parentNode.querySelectorAll('.window__item');
+            item = e.target;
+
+            /*REMOVE THE ACTIVE CLASS FROM THE ITEMS*/
+            items.forEach(function (el) {
+                el.classList.remove(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketAddFormActive);
+            });
+
+            /*ADD THE ACTIVE CLASS TO THE CLICKED ITEM*/
+            item.classList.add(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketAddFormActive);
+
+            /*DISPLAY THE FORM*/
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* displayForm */]();
+        }
+    });
+
     /*CHANGE EVENT ON CATEGORY INPUT*/
     __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].categoryInput.addEventListener('change', function (e) {
 
@@ -30493,7 +30534,7 @@ var ticketAddController = function ticketAddController() {
         category = e.target.options[e.target.selectedIndex].text.toLowerCase();
 
         /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
-        expirationInput = __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* generateExpirationInputMarkup */](category);
+        expirationInput = __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* generateExpirationInputMarkup */](category);
 
         /*REMOVE THE EXPIRATION INPUT*/
         e.target.closest('div').lastElementChild.remove();
@@ -30514,9 +30555,9 @@ var ticketAddController = function ticketAddController() {
         var data = void 0;
         data = e.params.data;
         if (data.id !== "") {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* showContactFormGroup */]();
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["d" /* showContactFormGroup */]();
         } else {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* hideContactFormGroup */]();
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* hideContactFormGroup */]();
         }
     });
 
@@ -99428,9 +99469,10 @@ var getMessageMarkup = function getMessageMarkup(e) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return generateExpirationInputMarkup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return showContactFormGroup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return hideContactFormGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return generateExpirationInputMarkup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return showContactFormGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return hideContactFormGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return displayForm; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
 
 
@@ -99458,6 +99500,30 @@ var showContactFormGroup = function showContactFormGroup() {
 var hideContactFormGroup = function hideContactFormGroup() {
     __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].contactFormGroup.classList.add('u-display-n');
 };
+
+var displayForm = function displayForm() {
+    var items = void 0;
+    items = __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].formItems;
+
+    for (var i = 0; i < items.length; i++) {
+        if ($(items[i]).hasClass('window__item--active')) {
+            showForm(items[i].id);
+        }
+    }
+};
+
+function showForm(id) {
+
+    if (id === 'incidentForm') {
+        __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].PLDTFormContainerAdd.style.display = 'none';
+        __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].incidentFormContainerAdd.style.display = 'block';
+    } else if (id === 'PLDTForm') {
+        __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].incidentFormContainerAdd.style.display = 'none';
+        __WEBPACK_IMPORTED_MODULE_0__base__["d" /* elements */].PLDTFormContainerAdd.style.display = 'block';
+    } else {
+        alert('Form Not Found!');
+    }
+}
 
 /***/ }),
 /* 176 */

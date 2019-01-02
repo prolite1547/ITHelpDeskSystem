@@ -28,3 +28,26 @@ export const hideContactFormGroup = () => {
     elements.contactFormGroup.classList.add('u-display-n');
 };
 
+export const displayForm = () => {
+    let items;
+   items = elements.formItems;
+
+    for (let i = 0; i < items.length; i++) {
+        if($(items[i]).hasClass('window__item--active')){
+            showForm(items[i].id);
+        }
+    }
+};
+
+function showForm(id){
+
+    if(id === 'incidentForm'){
+        elements.PLDTFormContainerAdd.style.display = 'none';
+        elements.incidentFormContainerAdd.style.display = 'block';
+    }else if(id === 'PLDTForm'){
+        elements.incidentFormContainerAdd.style.display = 'none';
+        elements.PLDTFormContainerAdd.style.display = 'block';
+    }else {
+        alert('Form Not Found!');
+    }
+}

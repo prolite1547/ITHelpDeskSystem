@@ -35,14 +35,15 @@ class DatabaseSeeder extends Seeder
 
 
         DB::table('category_groups')->insert([
-            ['group_name' => 'Ticket'],
-            ['group_name' => 'Priority'],
-            ['group_name' => 'IncCat'],
-            ['group_name' => 'IncCatA'],
-            ['group_name' => 'IncStatus'],
-            ['group_name' => 'NumberType'],
-            ['group_name' => 'No Value'],
-            ['group_name' => 'Resolve'],
+            ['group_name' => 'Ticket'],         /*1*/
+            ['group_name' => 'Priority'],       /*2*/
+            ['group_name' => 'IncCat'],         /*3*/
+            ['group_name' => 'IncCatA'],        /*4*/
+            ['group_name' => 'IncStatus'],      /*5*/
+            ['group_name' => 'NumberType'],     /*6*/
+            ['group_name' => 'No Value'],       /*7*/
+            ['group_name' => 'Resolve'],        /*8*/
+            ['group_name' => 'CatB'],           /*9*/
         ]);
 
         DB::table('categories')->insert([
@@ -54,17 +55,26 @@ class DatabaseSeeder extends Seeder
             ['value'=>'urgt', 'name' => 'Urgent', 'group' => 2,'order' => 4],
             ['value'=>'hrd', 'name' => 'Hardware', 'group' => 3,'order' => 1],
             ['value'=>'sft', 'name' => 'Software', 'group' => 3,'order' => 1],
-            ['value'=>'POShrd', 'name' => 'POS Hardware', 'group' => 4,'order' => 1],
-            ['value'=>'POSsft', 'name' => 'POS Software', 'group' => 4,'order' => 1],
+            ['value'=>'pos', 'name' => 'POS', 'group' => 4,'order' => 1],
+            ['value'=>'ser', 'name' => 'Server', 'group' => 4,'order' => 1],
             ['value'=>'opn', 'name' => 'Open', 'group' => 5,'order' => 1],
             ['value'=>'ong', 'name' => 'Ongoing', 'group' => 5,'order' => 1],
             ['value'=>'cls', 'name' => 'Closed', 'group' => 5,'order' => 1],
             ['value'=>'tel', 'name' => 'Telephone', 'group' => 6,'order' => 1],
             ['value'=>'cell', 'name' => 'Cell', 'group' => 6,'order' => 1],
             ['value'=>'null', 'name' => '', 'group' => 7,'order' => 1],
-            ['value'=>'res', 'name' => 'restart', 'group' => 8,'order' => 1],
-            ['value'=>'dis', 'name' => 'dispose', 'group' => 8,'order' => 1],
-            ['value'=>'grant', 'name' => 'grant', 'group' => 8,'order' => 1],
+            ['value'=>'res', 'name' => 'Patches/Software Update', 'group' => 8,'order' => 1],
+            ['value'=>'dis', 'name' => 'Data correction', 'group' => 8,'order' => 1],
+            ['value'=>'grant', 'name' => 'Re-installation', 'group' => 8,'order' => 1],
+            ['value'=>'grant', 'name' => 'Compact & Repair', 'group' => 8,'order' => 1],
+            ['value'=>'grant', 'name' => 'Resend by Transaction', 'group' => 8,'order' => 1],
+            ['value'=>'grant', 'name' => 'Proper Execution', 'group' => 8,'order' => 1],
+            ['value'=>'roy', 'name' => 'RoyTech', 'group' => 4,'order' => 1],
+            ['value'=>'ins', 'name' => 'Installations', 'group' => 4,'order' => 1],
+            ['value'=>'ebs', 'name' => 'EBS', 'group' => 4,'order' => 1],
+            ['value'=>'con', 'name' => 'Connection', 'group' => 4,'order' => 1],
+            ['value'=>'con', 'name' => 'Error', 'group' => 9,'order' => 1],
+
         ]);
 
 
