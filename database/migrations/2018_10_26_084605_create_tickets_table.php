@@ -23,9 +23,9 @@ class CreateTicketsTable extends Migration
             $table->dateTime('expiration');
             $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade');
             $table->foreign('assignee')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('status')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('type')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('priority')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('status')->references('id')->on('ticket_status')->onDelete('cascade');
+            $table->foreign('type')->references('id')->on('ticket_types')->onDelete('cascade');
+            $table->foreign('priority')->references('id')->on('priorities')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -1,3 +1,4 @@
+{{--{{dd(\App\Ticket::all()->count())}}--}}
 <aside class="side">
     <div class="side__title">
         <h3 class="heading-tertiary">Ticket types</h3>

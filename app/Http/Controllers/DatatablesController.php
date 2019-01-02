@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Status;
 use App\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -23,8 +24,7 @@ class DatatablesController extends Controller
     }
 
     public function tickets(Request $request,$status){
-        $statuses = Category::whereGroup(5)->whereNotIn('name',['all','user'])->pluck('name')->toArray();
-
+        $statuses = Status::whereNotIn('name',['all','user'])->pluck('name')->toArray();
         $query = DB::table('tickets')
         ->join('incidents','tickets.incident_id','incidents.id')
             ->leftJoin('calls','incidents.call_id','calls.id')
@@ -32,8 +32,8 @@ class DatatablesController extends Controller
             ->leftJoin('resolves','tickets.id','resolves.ticket_id')
             ->leftJoin('stores','callers.store_id','stores.id')
             ->leftJoin('categories as cat','incidents.category','cat.id')
-            ->leftJoin('categories as status','tickets.status','status.id')
-            ->leftJoin('categories as prio','tickets.priority','prio.id')
+            ->leftJoin('ticket_status as status','tickets.status','status.id')
+            ->leftJoin('priorities as prio','tickets.priority','prio.id')
             ->leftJoin('users as assignee','tickets.assignee','assignee.id')
             ->leftJoin('users as resolver','resolves.resolved_by','resolver.id')
             ->selectRaw(
@@ -45,7 +45,7 @@ class DatatablesController extends Controller
             );
 
         if(in_array(strtolower($status),array_map('strtolower',$statuses),true)){
-            $get_status = Category::where('name',$status)->firstOrFail();
+            $get_status = Status::where('name',$status)->firstOrFail();
             $query = $query->whereStatus($get_status->id);
         }elseif ($status === 'user'){
             $query = $query->where('assignee',Auth::user()->id);

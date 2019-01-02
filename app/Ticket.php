@@ -27,21 +27,21 @@ public function incident(){
 }
 
 public function assigneeRelation(){
-    return $this->belongsTo('App\User','assignee')->withDefault(['name' => 'none']);
+    return $this->belongsTo('App\User','assignee');
 }
 
 
 
 public function priorityRelation(){
-    return $this->belongsTo('App\Category','priority');
+    return $this->belongsTo('App\Priority','priority');
 }
 
 public function statusRelation(){
-    return $this->belongsTo('App\Category','status');
+    return $this->belongsTo('App\Status','status');
 }
 
 public function typeRelation(){
-    return $this->belongsTo('App\Category','type');
+    return $this->belongsTo('App\Type','type');
 }
 
 public function ticketMessages(){

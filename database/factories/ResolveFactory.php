@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 $factory->define(App\Resolve::class, function (Faker $faker) {
 
-    $res_category = DB::table('categories')->where('group',8)->orderByRaw('RAND()')->first();
+    $res_category = DB::table('resolve_categories')->orderByRaw('RAND()')->first();
 
 
     return [

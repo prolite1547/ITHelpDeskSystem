@@ -114,7 +114,11 @@
                                         <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
-                                        <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->full_name}}</a> <span>({{$ticket->assigneeRelation->role->role}})
+                                        @if($ticket->assigneeRelation)
+                                            <a href="{{route('userProfile',['id' => $ticket->assigneeRelation->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->assigneeRelation->full_name}}</a> <span>({{$ticket->assigneeRelation->role->role}})</span>
+                                        @else
+                                            None
+                                        @endif
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
                                         <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>

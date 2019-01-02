@@ -94,7 +94,9 @@ export const ticketAddController = () => {
     });
 
 
-    $('.form__input--select2').select2();
+    $('.form__input--select2').select2({
+        width: '30%',
+    });
 
 
     /*DYNAMIC FORM*/

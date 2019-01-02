@@ -6,6 +6,7 @@ use App\Call;
 use App\File;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
+use App\Status;
 use App\Ticket;
 use App\Category;
 use App\Message;
@@ -77,8 +78,8 @@ class TicketController extends Controller
             $request->request->add(['user_id'=>$request->user()->id]);
 
             /*GET ID'S OF THE OPEN AND ONGOING CATEGORY IN THE CATEGORY TABLE*/
-            $openID = Category::where('name','like','Open')->first()->id;
-            $ongoingID = Category::where('name','like','Ongoing')->first()->id;
+            $openID = Status::where('name','like','Open')->first()->id;
+            $ongoingID = Status::where('name','like','Ongoing')->first()->id;
 
 
             /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
@@ -128,26 +129,26 @@ class TicketController extends Controller
 
     public function open(){
 
-        $ticketTotals = tickeyTypeCount('status',11);
+        $ticketTotals = ticketTypeCount('status',11);
 
         return view('ticket.openTickets',$ticketTotals);
     }
 
     public function ongoing(){
 
-        $ticketTotals = tickeyTypeCount('status',12);
+        $ticketTotals = ticketTypeCount('status',12);
         return view('ticket.ongoingTickets',$ticketTotals);
     }
 
     public function closed(){
 
-        $ticketTotals = tickeyTypeCount('status',13);
+        $ticketTotals = ticketTypeCount('status',13);
         return view('ticket.closedTickets',$ticketTotals);
     }
 
     public function all(){
 
-        $ticketTotals = tickeyTypeCount('all');
+        $ticketTotals = ticketTypeCount('all');
         return view('ticket.allTickets',$ticketTotals);
     }
 
@@ -157,7 +158,7 @@ class TicketController extends Controller
     }
 
     public function userTickets(){
-        $ticketTotals = tickeyTypeCount('user',Auth::id());
+        $ticketTotals = ticketTypeCount('user',Auth::id());
         return view('ticket.myTickets',$ticketTotals);
     }
 

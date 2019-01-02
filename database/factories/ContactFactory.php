@@ -4,7 +4,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Contact::class, function (Faker $faker) {
 
-    $type = DB::table('categories')->where('group',6)->orderByRaw('RAND()')->first();
+    $type = DB::table('contact_types')->orderByRaw('RAND()')->first();
 
 
     return [

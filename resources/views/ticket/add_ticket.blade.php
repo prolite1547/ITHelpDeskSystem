@@ -49,7 +49,7 @@
                         <div class="form__group">
                             {!! Form::select('category', $typeSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
 
-                            {!! Form::select('catA', $incASelect, null, ['placeholder' => '(select sub-A)','class' => 'form__input','required']) !!}
+                            {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input','required']) !!}
 
                             {{--{!! Form::select('catB', ['inc' => 'Incident', 'req' => 'Request'], null, ['placeholder' => '(select sub-B)','class' => 'form__input']) !!}--}}
                             {!! Form::text('expiration', null, ['hidden','class' => 'form__input']) !!}

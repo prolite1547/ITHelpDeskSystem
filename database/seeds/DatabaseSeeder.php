@@ -33,51 +33,61 @@ class DatabaseSeeder extends Seeder
             ['role' => 'Admin']
         ]);
 
+        DB::table('ticket_types')->insert([
+            ['name' => 'Incident'],
+            ['name' => 'Request'],
+        ]);
 
-        DB::table('category_groups')->insert([
-            ['group_name' => 'Ticket'],         /*1*/
-            ['group_name' => 'Priority'],       /*2*/
-            ['group_name' => 'IncCat'],         /*3*/
-            ['group_name' => 'IncCatA'],        /*4*/
-            ['group_name' => 'IncStatus'],      /*5*/
-            ['group_name' => 'NumberType'],     /*6*/
-            ['group_name' => 'No Value'],       /*7*/
-            ['group_name' => 'Resolve'],        /*8*/
-            ['group_name' => 'CatB'],           /*9*/
+        DB::table('priorities')->insert([
+            ['name' => 'Low','order' => 1],
+            ['name' => 'Normal','order' => 2],
+            ['name' => 'High','order' => 3],
+            ['name' => 'Urgent','order' => 4],
         ]);
 
         DB::table('categories')->insert([
-            ['value'=>'inc', 'name' => 'Incident', 'group' => 1,'order' => 1],
-            ['value'=>'req', 'name' => 'Request', 'group' => 1,'order' => 1],
-            ['value'=>'low', 'name' => 'Low', 'group' => 2,'order' => 1],
-            ['value'=>'nrml', 'name' => 'Normal', 'group' => 2,'order' => 2],
-            ['value'=>'high', 'name' => 'High', 'group' => 2,'order' => 3],
-            ['value'=>'urgt', 'name' => 'Urgent', 'group' => 2,'order' => 4],
-            ['value'=>'hrd', 'name' => 'Hardware', 'group' => 3,'order' => 1],
-            ['value'=>'sft', 'name' => 'Software', 'group' => 3,'order' => 1],
-            ['value'=>'pos', 'name' => 'POS', 'group' => 4,'order' => 1],
-            ['value'=>'ser', 'name' => 'Server', 'group' => 4,'order' => 1],
-            ['value'=>'opn', 'name' => 'Open', 'group' => 5,'order' => 1],
-            ['value'=>'ong', 'name' => 'Ongoing', 'group' => 5,'order' => 1],
-            ['value'=>'cls', 'name' => 'Closed', 'group' => 5,'order' => 1],
-            ['value'=>'tel', 'name' => 'Telephone', 'group' => 6,'order' => 1],
-            ['value'=>'cell', 'name' => 'Cell', 'group' => 6,'order' => 1],
-            ['value'=>'null', 'name' => '', 'group' => 7,'order' => 1],
-            ['value'=>'res', 'name' => 'Patches/Software Update', 'group' => 8,'order' => 1],
-            ['value'=>'dis', 'name' => 'Data correction', 'group' => 8,'order' => 1],
-            ['value'=>'grant', 'name' => 'Re-installation', 'group' => 8,'order' => 1],
-            ['value'=>'grant', 'name' => 'Compact & Repair', 'group' => 8,'order' => 1],
-            ['value'=>'grant', 'name' => 'Resend by Transaction', 'group' => 8,'order' => 1],
-            ['value'=>'grant', 'name' => 'Proper Execution', 'group' => 8,'order' => 1],
-            ['value'=>'roy', 'name' => 'RoyTech', 'group' => 4,'order' => 1],
-            ['value'=>'ins', 'name' => 'Installations', 'group' => 4,'order' => 1],
-            ['value'=>'ebs', 'name' => 'EBS', 'group' => 4,'order' => 1],
-            ['value'=>'con', 'name' => 'Connection', 'group' => 4,'order' => 1],
-            ['value'=>'con', 'name' => 'Error', 'group' => 9,'order' => 1],
+            ['name' => 'Hardware'],
+            ['name' => 'Software'],
+        ]);
 
+        DB::table('category_a')->insert([
+            ['name' => 'POS'],
+            ['name' => 'Server'],
+            ['name' => 'RoyTech'],
+            ['name' => 'Installations'],
+            ['name' => 'EBS'],
+            ['name' => 'Connection'],
+        ]);
+
+        DB::table('category_b')->insert([
+            ['name' => 'Error','catA_id' => 1],
+            ['name' => 'Price and Promotions','catA_id' => 3],
+            ['name' => 'Voice','catA_id' => 6],
+            ['name' => 'Network/Sync Issues','catA_id' => 2],
+            ['name' => 'BM Server','catA_id' => 4],
+            ['name' => 'Improcurement','catA_id' => 5],
+        ]);
+
+        DB::table('resolve_categories')->insert([
+            ['name' => 'Patches/Software Update'],
+            ['name' => 'Data correction'],
+            ['name' => 'Re-installation'],
+            ['name' => 'Compact & Repair'],
+            ['name' => 'Resend by Transaction'],
+            ['name' => 'Proper Execution'],
         ]);
 
 
+        DB::table('ticket_status')->insert([
+            ['name' => 'Open'],
+            ['name' => 'Ongoing'],
+            ['name' => 'Closed'],
+        ]);
+
+        DB::table('contact_types')->insert([
+            ['name' => 'Telephone'],
+            ['name' => 'Cell'],
+        ]);
 
         DB::table('stores')->insert([
             ['store_name' => 'Bajada'],

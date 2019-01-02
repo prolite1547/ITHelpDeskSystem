@@ -30501,7 +30501,9 @@ var ticketAddController = function ticketAddController() {
         }
     });
 
-    $('.form__input--select2').select2();
+    $('.form__input--select2').select2({
+        width: '30%'
+    });
 
     /*DYNAMIC FORM*/
     document.querySelector('.window').addEventListener('click', function (e) {

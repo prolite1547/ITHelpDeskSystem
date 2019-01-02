@@ -58,8 +58,8 @@ if (! function_exists('selectArray')) {
 
     }
 
-if (! function_exists('tickeyTypeCount')) {
-    function tickeyTypeCount($type,$id = ''){
+if (! function_exists('ticketTypeCount')) {
+    function ticketTypeCount($type,$id = ''){
 
         if($type === 'all'){
             $tickets = Ticket::all();
