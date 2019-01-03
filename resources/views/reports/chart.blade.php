@@ -64,7 +64,18 @@
                             <h2>Issues per Category vs. Resolved (<span id="selectedcryear"></span>) </h2>
                             <hr>
                             <div class="row">
-                                 <div class="col-md-6">
+                                <div class="col-md-4">
+                                        <div class="form-group">
+                                                <label class="control-label">Category : </label>
+                                                <select data-placeholder="Choose Category" id="crcategory" name="crcategory" class="filter demo-chosen-select" tabindex="2">
+                                                 <option value="all">All</option>
+                                                  @foreach ($categories as $category)
+                                                      <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                  @endforeach
+                                                </select>
+                                        </div>
+                                </div>
+                                 <div class="col-md-4">
                                         <label class="control-label">Month : </label>
                                         <?php 
                                              date_default_timezone_set("Asia/Manila");
@@ -88,7 +99,7 @@
                                         </select>
                                  </div>
 
-                                 <div class="col-md-6">
+                                 <div class="col-md-4">
                                         <div class="form-group">
                                                 <label class="control-label">Year : </label>
                                                 <select data-placeholder="Choose Year" id="cryear" name="cryear" class="filter demo-chosen-select" tabindex="2">

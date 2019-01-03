@@ -17,7 +17,7 @@
 					</div>
 					<div class="panel-body">
 							<h2>  Issue Reports</h2>
-							<div class="tab-base" style="border: 1px solid #c1c1c1;background:#25476a" >
+							<div class="tab-base" style="border: 1px solid #c1c1c1;background:#34383E" >
 
 									<!--Nav Tabs-->
 									<ul class="nav nav-tabs">
