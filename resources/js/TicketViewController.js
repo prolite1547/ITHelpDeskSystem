@@ -95,7 +95,6 @@ export const ticketAddController = () => {
         }
     });
 
-
     $('#assigneeSelect').select2({
         width: '30%',
     });
