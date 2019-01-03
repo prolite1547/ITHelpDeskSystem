@@ -32,11 +32,11 @@ class Incident extends Model
     }
 
     public function catARelation(){
-        return $this->belongsTo('App\Category','catA')->withDefault(['name' => 'none']);;
+        return $this->belongsTo('App\CategoryA','catA')->withDefault(['name' => 'none']);;
     }
 
     public function catBRelation(){
-        return $this->belongsTo('App\Category','catB')->withDefault(['name' => 'none','id' => 'none']);;
+        return $this->belongsTo('App\CategoryB','catB')->withDefault(['name' => 'none','id' => 'none']);;
     }
 
     public function getFiles(){

@@ -21,7 +21,6 @@ import {renderLoader,clearLoader,showModal,insertToModal,hideModal,setDisable} f
 
 export const ticketAddController = () => {
 
-
     /*INITIALIZE*/
     (function(){
 
@@ -32,6 +31,7 @@ export const ticketAddController = () => {
         /*DISPLAY THE FORM*/
         addTicketView.displayForm();
     })();
+
 
     $('#callerBranchSelect,#contactBranchSelect').select2({
         ajax: {
@@ -96,9 +96,10 @@ export const ticketAddController = () => {
     });
 
 
-    $('.form__input--select2').select2({
+    $('#assigneeSelect').select2({
         width: '30%',
     });
+
 
 
     /*DYNAMIC FORM*/
@@ -120,28 +121,6 @@ export const ticketAddController = () => {
            addTicketView.displayForm();
        }
     });
-
-
-    /*CHANGE EVENT ON CATEGORY INPUT*/
-   /* elements.categoryInput.addEventListener('change',e => {
-
-       let category,expirationInput;
-
-       /!*CATEGORY CHOSEN BY THE USER*!/
-       category = e.target.options[e.target.selectedIndex].text.toLowerCase();
-
-       /!*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*!/
-        expirationInput = addTicketView.generateExpirationInputMarkup(category);
-
-        /!*REMOVE THE EXPIRATION INPUT*!/
-        e.target.closest('div').lastElementChild.remove();
-
-        /!*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*!/
-        e.target.parentNode.insertAdjacentHTML('beforeend',expirationInput);
-
-
-    });*/
-
 
 
     /*ADD EVENT LISTENER ON ADD TICKET FORM*/

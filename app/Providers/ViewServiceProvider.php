@@ -80,10 +80,10 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with(compact(
                 'statusSelect',
-                'issueSelect' ,
+//                'issueSelect' ,
                 'prioSelect' ,
                 'typeSelect',
-                'incASelect' ,
+//                'incASelect' ,
                 'incBSelect' ,
                 'callerSelect' ,
                 'branchGroupSelect',

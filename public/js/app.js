@@ -30502,7 +30502,7 @@ var ticketAddController = function ticketAddController() {
         }
     });
 
-    $('.form__input--select2').select2({
+    $('#assigneeSelect').select2({
         width: '30%'
     });
 
@@ -30526,19 +30526,6 @@ var ticketAddController = function ticketAddController() {
             __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* displayForm */]();
         }
     });
-
-    /*CHANGE EVENT ON CATEGORY INPUT*/
-    /* elements.categoryInput.addEventListener('change',e => {
-         let category,expirationInput;
-         /!*CATEGORY CHOSEN BY THE USER*!/
-        category = e.target.options[e.target.selectedIndex].text.toLowerCase();
-         /!*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*!/
-         expirationInput = addTicketView.generateExpirationInputMarkup(category);
-          /!*REMOVE THE EXPIRATION INPUT*!/
-         e.target.closest('div').lastElementChild.remove();
-          /!*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*!/
-         e.target.parentNode.insertAdjacentHTML('beforeend',expirationInput);
-       });*/
 
     /*ADD EVENT LISTENER ON ADD TICKET FORM*/
     __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketForm.addEventListener('submit', function (e) {

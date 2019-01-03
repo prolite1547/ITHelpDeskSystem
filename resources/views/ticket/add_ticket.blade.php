@@ -61,7 +61,7 @@
                         {{--</div>--}}
                         <div class="form__group">
                             {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
-                            {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input form__input--select2','required']) !!}
+                            {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input form__input--select2','required','id' => 'assigneeSelect']) !!}
                         </div>
                         {!! Form::button('submit',['class' => 'btn btn--blue','type' => 'submit','id'=>'ticketAdd']) !!}
                         {!! Form::close() !!}

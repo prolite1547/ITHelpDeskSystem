@@ -124,7 +124,7 @@
                                         <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Sub-A Category:</span>
-                                        <span class="ticket-details__value">{{$ticket->incident->catARelation->name}}</span>
+                                        <span class="ticket-details__value">{{$ticket->incident->catARelation->name}} - {{$ticket->incident->catBRelation->name}}</span>
                                     </li>
                                     {{--<li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>--}}
                                         {{--<span class="ticket-details__value">&nbsp;</span>--}}
