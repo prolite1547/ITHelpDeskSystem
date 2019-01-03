@@ -21,11 +21,13 @@ import {renderLoader,clearLoader,showModal,insertToModal,hideModal,setDisable} f
 
 export const ticketAddController = () => {
 
+
+    /*INITIALIZE*/
     (function(){
 
         /*ADD THE ACTIVE CLASS TO THE INCIDENT ITEM*/
         // elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
-        elements.PLDTFormItem.classList.add(elementStrings.ticketAddFormActive);
+        elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
 
         /*DISPLAY THE FORM*/
         addTicketView.displayForm();
@@ -121,24 +123,24 @@ export const ticketAddController = () => {
 
 
     /*CHANGE EVENT ON CATEGORY INPUT*/
-    elements.categoryInput.addEventListener('change',e => {
+   /* elements.categoryInput.addEventListener('change',e => {
 
        let category,expirationInput;
 
-       /*CATEGORY CHOSEN BY THE USER*/
+       /!*CATEGORY CHOSEN BY THE USER*!/
        category = e.target.options[e.target.selectedIndex].text.toLowerCase();
 
-       /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
+       /!*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*!/
         expirationInput = addTicketView.generateExpirationInputMarkup(category);
 
-        /*REMOVE THE EXPIRATION INPUT*/
+        /!*REMOVE THE EXPIRATION INPUT*!/
         e.target.closest('div').lastElementChild.remove();
 
-        /*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*/
+        /!*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*!/
         e.target.parentNode.insertAdjacentHTML('beforeend',expirationInput);
 
 
-    });
+    });*/
 
 
 

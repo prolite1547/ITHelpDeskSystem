@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Call;
+use App\CategoryB;
 use App\File;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
@@ -10,6 +11,7 @@ use App\Status;
 use App\Ticket;
 use App\Category;
 use App\Message;
+use Carbon\Carbon;
 use DateInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -74,6 +76,18 @@ class TicketController extends Controller
     public function addTicket(StoreTicket $request){
 
 
+            /*FETCH THE EXPIRATION HOURS COLUMN*/
+            $expiration_hours = CategoryB::findOrFail($request->catB)->expiration;
+            $catA = CategoryB::findOrFail($request->catB)->group->id;
+
+            /*GENERATE TE EXPIRATION DATE*/
+            $expiration_date = Carbon::now()->addHours($expiration_hours);
+
+
+            /*ADD EXPIRATION IN REQUEST ARRAY*/
+            $request->request->add(array('expiration' => $expiration_date,'catA' => $catA));
+
+
             /*GET ID OF THE USER WHO ADDED THE TICKET*/
             $request->request->add(['user_id'=>$request->user()->id]);
 
@@ -129,20 +143,20 @@ class TicketController extends Controller
 
     public function open(){
 
-        $ticketTotals = ticketTypeCount('status',11);
+        $ticketTotals = ticketTypeCount('status',1);
 
         return view('ticket.openTickets',$ticketTotals);
     }
 
     public function ongoing(){
 
-        $ticketTotals = ticketTypeCount('status',12);
+        $ticketTotals = ticketTypeCount('status',2);
         return view('ticket.ongoingTickets',$ticketTotals);
     }
 
     public function closed(){
 
-        $ticketTotals = ticketTypeCount('status',13);
+        $ticketTotals = ticketTypeCount('status',3);
         return view('ticket.closedTickets',$ticketTotals);
     }
 

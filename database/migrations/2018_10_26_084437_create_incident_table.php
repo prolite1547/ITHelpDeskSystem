@@ -19,13 +19,13 @@ class CreateIncidentTable extends Migration
             $table->string('subject');
             $table->string('details');
             $table->unsignedInteger('category');
-//            $table->unsignedInteger('catA');
+            $table->unsignedInteger('catA');
             $table->unsignedInteger('catB');
 //            $table->unsignedInteger('catC')->nullable();
             $table->boolean('drd')->default(0);
             $table->foreign('call_id')->references('id')->on('calls')->onDelete('cascade');
             $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
-//            $table->foreign('catA')->references('id')->on('category_a')->onDelete('cascade');
+            $table->foreign('catA')->references('id')->on('category_a')->onDelete('cascade');
             $table->foreign('catB')->references('id')->on('category_b')->onDelete('cascade');
 //            $table->foreign('catC')->references('id')->on('category_c')->onDelete('cascade');
             $table->timestamps();

@@ -12,6 +12,7 @@
 */
 
 
+use Illuminate\Support\Carbon;
 use Webklex\IMAP\Client;
 
 
@@ -111,9 +112,7 @@ Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name
 
 Route::get('/test',function (){
 
-   $callers =  DB::table('callers')->selectRaw('CONCAT(fName," ",mName," ",lName) as text,id')->get()->toArray();
-
-   dd($callers);
+   return view('search');
 
 });
 

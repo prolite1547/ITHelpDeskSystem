@@ -30429,11 +30429,12 @@ var _this = this;
 
 var ticketAddController = function ticketAddController() {
 
+    /*INITIALIZE*/
     (function () {
 
         /*ADD THE ACTIVE CLASS TO THE INCIDENT ITEM*/
         // elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
-        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].PLDTFormItem.classList.add(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketAddFormActive);
+        __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].incidentFormItem.classList.add(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* elementStrings */].ticketAddFormActive);
 
         /*DISPLAY THE FORM*/
         __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* displayForm */]();
@@ -30527,23 +30528,17 @@ var ticketAddController = function ticketAddController() {
     });
 
     /*CHANGE EVENT ON CATEGORY INPUT*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].categoryInput.addEventListener('change', function (e) {
-
-        var category = void 0,
-            expirationInput = void 0;
-
-        /*CATEGORY CHOSEN BY THE USER*/
+    /* elements.categoryInput.addEventListener('change',e => {
+         let category,expirationInput;
+         /!*CATEGORY CHOSEN BY THE USER*!/
         category = e.target.options[e.target.selectedIndex].text.toLowerCase();
-
-        /*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*/
-        expirationInput = __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* generateExpirationInputMarkup */](category);
-
-        /*REMOVE THE EXPIRATION INPUT*/
-        e.target.closest('div').lastElementChild.remove();
-
-        /*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*/
-        e.target.parentNode.insertAdjacentHTML('beforeend', expirationInput);
-    });
+         /!*GENERATE THE EXPIRATION INPUT BASE ON THE CATEGORY*!/
+         expirationInput = addTicketView.generateExpirationInputMarkup(category);
+          /!*REMOVE THE EXPIRATION INPUT*!/
+         e.target.closest('div').lastElementChild.remove();
+          /!*RENDER THE NEW GENERATED EXPIRATION DATE INPUT TO THE FORM*!/
+         e.target.parentNode.insertAdjacentHTML('beforeend',expirationInput);
+       });*/
 
     /*ADD EVENT LISTENER ON ADD TICKET FORM*/
     __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].addTicketForm.addEventListener('submit', function (e) {
@@ -30557,9 +30552,9 @@ var ticketAddController = function ticketAddController() {
         var data = void 0;
         data = e.params.data;
         if (data.id !== "") {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["d" /* showContactFormGroup */]();
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* showContactFormGroup */]();
         } else {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* hideContactFormGroup */]();
+            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* hideContactFormGroup */]();
         }
     });
 
@@ -99471,9 +99466,9 @@ var getMessageMarkup = function getMessageMarkup(e) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return generateExpirationInputMarkup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return showContactFormGroup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return hideContactFormGroup; });
+/* unused harmony export generateExpirationInputMarkup */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return showContactFormGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return hideContactFormGroup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return displayForm; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
 

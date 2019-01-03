@@ -29,7 +29,7 @@ $factory->define(App\Ticket::class, function (Faker $faker) {
 
 $factory->afterCreating(App\Ticket::class, function ($ticket, $faker) {
 
-    if($ticket->status === 13){
+    if($ticket->status === 3){
         $ticket->resolve()->save(factory(App\Resolve::class)->make());
     }
 });

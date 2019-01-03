@@ -60,12 +60,45 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('category_b')->insert([
-            ['name' => 'Error','catA_id' => 1],
-            ['name' => 'Price and Promotions','catA_id' => 3],
-            ['name' => 'Voice','catA_id' => 6],
-            ['name' => 'Network/Sync Issues','catA_id' => 2],
-            ['name' => 'BM Server','catA_id' => 4],
-            ['name' => 'Improcurement','catA_id' => 5],
+            ['name' => 'Error','catA_id' => 1,'expiration' => 24],
+            ['name' => 'Receipt printout','catA_id' => 1,'expiration' => 24],
+            ['name' => 'Hardware','catA_id' => 1,'expiration' => 24],
+            ['name' => 'Network/Sync','catA_id' => 1,'expiration' => 24],
+            ['name' => 'License','catA_id' => 1,'expiration' => 24],
+            ['name' => 'Virus/Malwares(POS)','catA_id' => 1,'expiration' => 24],
+            ['name' => 'New Terminal','catA_id' => 1,'expiration' => 24],
+            ['name' => 'User Access(POS)','catA_id' => 1,'expiration' => 48],
+            ['name' => 'POS backup','catA_id' => 1,'expiration' => 24],
+            ['name' => 'Price and Promotions','catA_id' => 3,'expiration' => 24],
+            ['name' => 'Sales Reports','catA_id' => 3,'expiration' => 24],
+            ['name' => 'Item Assignment','catA_id' => 3,'expiration' => 24],
+            ['name' => 'Branch Agent/HQ Agent Error','catA_id' => 3,'expiration' => 24],
+            ['name' => 'POS Agent Error','catA_id' => 3,'expiration' => 24],
+            ['name' => 'User Access(RoyTec)','catA_id' => 3,'expiration' => 48],
+            ['name' => 'Voice','catA_id' => 6,'expiration' => 72],
+            ['name' => 'Data','catA_id' => 6,'expiration' => 72],
+            ['name' => 'Both','catA_id' => 6,'expiration' => 72],
+            ['name' => 'Network/Sync Issues','catA_id' => 2,'expiration' => 24],
+            ['name' => 'Virus/Malwares(Server)','catA_id' => 2,'expiration' => 48],
+            ['name' => 'Xampp control panel Issues','catA_id' => 2,'expiration' => 24],
+            ['name' => 'BM Server Issues','catA_id' => 2,'expiration' => 24],
+            ['name' => 'License','catA_id' => 2,'expiration' => 24],
+            ['name' => 'Roytec Issues','catA_id' => 2,'expiration' => 24],
+            ['name' => 'Server Backup (USB)','catA_id' => 2,'expiration' => 24],
+            ['name' => 'EBS(PROD,UAT,DEV)','catA_id' => 4,'expiration' => 24],
+            ['name' => 'BM Server','catA_id' => 4,'expiration' => 24],
+            ['name' => 'Roytec','catA_id' => 4,'expiration' => 24],
+            ['name' => 'POS','catA_id' => 4,'expiration' => 24],
+            ['name' => 'POS Agent','catA_id' => 4,'expiration' => 24],
+            ['name' => 'Branch Agent/HQ Agent','catA_id' => 4,'expiration' => 24],
+            ['name' => 'Forticlient','catA_id' => 4,'expiration' => 48],
+            ['name' => 'Improcurement','catA_id' => 5,'expiration' => 24],
+            ['name' => 'Custom pages','catA_id' => 5,'expiration' => 24],
+            ['name' => 'Inventory','catA_id' => 5,'expiration' => 24],
+            ['name' => 'Order Management','catA_id' => 5,'expiration' => 24],
+            ['name' => 'Purchasing','catA_id' => 5,'expiration' => 24],
+            ['name' => 'LCM','catA_id' => 5,'expiration' => 24],
+            ['name' => 'User Access(EBS)','catA_id' => 5,'expiration' => 48],
         ]);
 
         DB::table('resolve_categories')->insert([
@@ -98,11 +131,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            ProfPicTableSeeder::class,
-            ContactsTableSeeder::class,
-            CallersTableSeeder::class,
+//            ProfPicTableSeeder::class,
+//            ContactsTableSeeder::class,
+//            CallersTableSeeder::class,
 //            ResolveTableSeeder::class,
-            TicketTableSeeder::class,
+//            TicketTableSeeder::class,
 //            MessageTableSeeder::class
         ]);
 
