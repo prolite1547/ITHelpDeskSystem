@@ -62,7 +62,6 @@
         function getIPPData() {
          
            var user_id = $('#user').val();
-
            var start1 = $('#ippstartDate').val();
            var end1 = $('#ippendDate').val();
 
@@ -86,9 +85,9 @@
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [
                                 {extend: 'copy'},
-                                {extend: 'csv'},
-                                {extend: 'excel', title: 'ExampleFile'},
-                                {extend: 'pdf', title: 'ExampleFile'},
+                                {extend: 'csv', title: 'Issues Per Person ('+start1+'-'+end1+')'},
+                                {extend: 'excel', title: 'Issues Per Person ('+start1+'-'+end1+')'},
+                                {extend: 'pdf', title: 'Issues Per Person ('+start1+'-'+end1+')'},
 
                                 {extend: 'print',
                                 customize: function (win){
@@ -127,10 +126,10 @@
                             responsive: true,
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [
-                                { extend: 'copy'},
-                                {extend: 'csv'},
-                                {extend: 'excel', title: 'ExampleFile'},
-                                {extend: 'pdf', title: 'ExampleFile'},
+                                {extend: 'copy'},
+                                {extend: 'csv', title:'Issues Per Category ('+month1+'/'+year1+')'},
+                                {extend: 'excel', title: 'Issues Per Category ('+month1+'/'+year1+')'},
+                                {extend: 'pdf', title: 'Issues Per Category ('+month1+'/'+year1+')'},
 
                                 {extend: 'print',
                                 customize: function (win){
@@ -166,9 +165,49 @@
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [
                                 { extend: 'copy'},
-                                {extend: 'csv'},
-                                {extend: 'excel', title: 'ExampleFile'},
-                                {extend: 'pdf', title: 'ExampleFile'},
+                                {extend: 'csv',  title: 'Issues Logged vs. Resolved ('+start1+'-'+end1+')'},
+                                {extend: 'excel', title: 'Issues Logged vs. Resolved ('+start1+'-'+end1+')'},
+                                {extend: 'pdf',  title: 'Issues Logged vs. Resolved ('+start1+'-'+end1+')'},
+
+                                {extend: 'print',
+                                customize: function (win){
+                                        $(win.document.body).addClass('white-bg');
+                                        $(win.document.body).css('font-size', '10px');
+
+                                        $(win.document.body).find('table')
+                                                .addClass('compact')
+                                                .css('font-size', 'inherit');
+                                }
+                                }
+                            ]
+
+                        });
+               }
+            });
+         }
+
+         function getRDSData(){
+            var start1 = $('#rdstartDate').val();
+            var end1 = $('#rdendDate').val();
+            var store = $('#store').val();
+
+            $.ajax({
+               type:'POST',
+               url: "/reports/genrds",
+               data:{ _token: '{{csrf_token()}}', start:start1, end:end1},
+               success:function(data) {
+                
+                  $('#RDSDATA').html(data.rdsdata);
+                            $('.RDSTable').DataTable({
+                            pageLength: 25,
+                            responsive: true,
+                            "order": [[ 0, "desc" ]],
+                            dom: '<"html5buttons"B>lTfgitp',
+                            buttons: [
+                                { extend: 'copy'},
+                                {extend: 'csv',  title: 'Reported Downtime Per Store ('+start1+'-'+end1+')'},
+                                {extend: 'excel', title: 'Reported Downtime Per Store ('+start1+'-'+end1+')'},
+                                {extend: 'pdf',  title: 'Reported Downtime Per Store ('+start1+'-'+end1+')'},
 
                                 {extend: 'print',
                                 customize: function (win){

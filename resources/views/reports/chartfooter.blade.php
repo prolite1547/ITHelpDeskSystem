@@ -42,6 +42,10 @@
             loadAjaxCatLogsRes();
         });
 
+        $('#crcategory').change(function(){
+            loadAjaxCatLogsRes();
+        });
+
         $('#tryear').change(function(){
             loadAjaxTopResolvers()
         });
@@ -85,11 +89,13 @@
         function loadAjaxCatLogsRes(){
             var cryear =  $('#cryear').val();
             var crmonth = $('#crmonth').val();
+            var crcategory = $('#crcategory').val();
+
             
             $.ajax({
                 method: "POST",
                 url:'/reports/ipcr',
-                data:{ _token: '{{csrf_token()}}', month:crmonth ,year: cryear},
+                data:{ _token: '{{csrf_token()}}', month:crmonth ,year: cryear, category:crcategory},
                 success: function(data){
                     $('#crlogged').html(data.overallLogs);
                     $('#crresolved').html(data.overallResolved);

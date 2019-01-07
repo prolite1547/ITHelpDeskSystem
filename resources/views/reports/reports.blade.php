@@ -17,7 +17,7 @@
 					</div>
 					<div class="panel-body">
 							<h2>  Issue Reports</h2>
-							<div class="tab-base" style="border: 1px solid #c1c1c1;background:#25476a" >
+							<div class="tab-base" style="border: 1px solid #c1c1c1;background:#34383E" >
 
 									<!--Nav Tabs-->
 									<ul class="nav nav-tabs">
@@ -29,6 +29,9 @@
 										</li>
 										<li>
 											<a data-toggle="tab" href="#demo-lft-tab-3">Issues Logged vs. Resolved</a>
+										</li>
+										<li>
+											<a data-toggle="tab" href="#demo-lft-tab-4">Reported Downtime Per Store</a>
 										</li>
 									</ul>
 
@@ -211,6 +214,59 @@
 															</div>
 
 												</div>
+											</div>
+
+											<div id="demo-lft-tab-4" class="tab-pane fade">
+												<div class="row" style="margin-top:30px;">
+													<div class="col-md-4">
+														<div class="form-group" id = "data_5">
+															<label class="control-label">Date range from </label>
+																<div class="input-daterange input-group" id="datepicker">
+																<?php
+																	date_default_timezone_set("Asia/Manila");
+																	$currentDate =  date('m/d/Y');
+																	$newDate = date("m/d/Y", strtotime($currentDate));
+
+																?>
+
+																<input type="text" id = "rdstartDate" class="form-control-sm form-control" name="start" value="<?php echo $newDate ?>"/>
+																<span class="input-group-addon">to</span>
+																<input type="text" id = "rdendDate" class="form-control-sm form-control" name="end" value="<?php echo $newDate ?>" />
+														</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+																<label class="control-label">Store(s)</label>
+																<select data-placeholder="Choose Store." id="store" name="store" class="filter demo-chosen-select" tabindex="2">
+																	<option value="all">All</option>
+																	@foreach ($stores as $store)
+																		<option value="{{ $store->id }} "> {{ $store->store_name }} </option>
+																	@endforeach
+
+																</select>
+
+														</div>
+												</div>
+												</div>
+												<div class="row">
+													<div class="col-md-12">
+															<div class="form-group">
+
+																	<button style="float:right;" onclick="getRDSData()" class="btn btn-primary">Generate Report</button>
+															</div>
+													</div>
+											</div>
+											<hr>
+											<div class="row" style="margin-top: 50px;">
+													<div class="panel">
+
+															<div class="panel-body" id="RDSDATA" >
+																 <p class="text-center">click Generate Report to show data . .</p>
+															</div>
+														</div>
+
+											</div>
 											</div>
 									</div>
 							</div>

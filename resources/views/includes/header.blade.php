@@ -44,6 +44,9 @@
                         <a href="#!" class="nav__a">Requests</a>
                     </li>
                     <li class="nav__li">
+                        <a href="{{route('datacorrections.system')}}"class="nav__a {{in_array(Route::currentRouteName(),$dcRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
+                    </li>
+                    <li class="nav__li">
                         <a href="{{route('reportsPage')}}" class="nav__a {{Route::currentRouteName() == 'reportsPage' ? 'nav__a--active' : ''}}">Reports</a>
                     </li>
                     {{--<li class="nav__li">--}}

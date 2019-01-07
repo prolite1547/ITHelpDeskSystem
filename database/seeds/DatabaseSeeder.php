@@ -65,6 +65,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Hardware','catA_id' => 1,'expiration' => 24],
             ['name' => 'Network/Sync','catA_id' => 1,'expiration' => 24],
             ['name' => 'License(POS)','catA_id' => 1,'expiration' => 24],
+            ['name' => 'License (POS)','catA_id' => 1,'expiration' => 24],
             ['name' => 'Virus/Malwares(POS)','catA_id' => 1,'expiration' => 24],
             ['name' => 'New Terminal','catA_id' => 1,'expiration' => 24],
             ['name' => 'User Access(POS)','catA_id' => 1,'expiration' => 48],
@@ -83,6 +84,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Xampp control panel Issues','catA_id' => 2,'expiration' => 24],
             ['name' => 'BM Server Issues','catA_id' => 2,'expiration' => 24],
             ['name' => 'License(Server)','catA_id' => 2,'expiration' => 24],
+            ['name' => 'License (Server)','catA_id' => 2,'expiration' => 24],
             ['name' => 'Roytec Issues','catA_id' => 2,'expiration' => 24],
             ['name' => 'Server Backup (USB)','catA_id' => 2,'expiration' => 24],
             ['name' => 'EBS(PROD,UAT,DEV)','catA_id' => 4,'expiration' => 24],
@@ -131,12 +133,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-//            ProfPicTableSeeder::class,
-//            ContactsTableSeeder::class,
-//            CallersTableSeeder::class,
-//            ResolveTableSeeder::class,
-//            TicketTableSeeder::class,
-//            MessageTableSeeder::class
+        //    ProfPicTableSeeder::class,
+        //    ContactsTableSeeder::class,
+        //    CallersTableSeeder::class,
+            //    ResolveTableSeeder::class,
+        //    IncidentTableSeeder::class,
+        //    TicketTableSeeder::class,
+        //    MessageTableSeeder::class
         ]);
 
     }

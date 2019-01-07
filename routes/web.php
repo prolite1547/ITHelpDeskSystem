@@ -151,9 +151,17 @@ Route::get('reports/reports', 'ReportsController@reports')->name('reports.report
 Route::post('reports/genipp', 'ReportsController@generateIPP')->name('reports.genipp');
 Route::post('reports/genipc', 'ReportsController@generateIPC')->name('reports.genipc');
 Route::post('reports/genilr', 'ReportsController@generateILR')->name('reports.genilr');
+Route::post('reports/genrds', 'ReportsController@generateRDS')->name('reports.genrds');
 Route::get('reports/charts', 'ReportsController@loadChart')->name('reports.charts');
 Route::post('reports/lvr', 'ReportsController@loadLVR')->name('reports.lvrchart');
 Route::post('reports/ipcr', 'ReportsController@loadIPCR')->name('reports.ipcr');
 Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');
 
 Route::post('get/positions', 'SDCController@getPosition')->name('get.positions');
+
+// Data Corrections Separate Page 
+ Route::get('datacorrections', 'DCController@index')->name('datacorrections');
+ Route::get('datacorrections/systemdc', 'DCController@system')->name('datacorrections.system');
+ Route::get('datacorrections/manualdc', 'DCController@manual')->name('datacorrections.manual');
+ Route::get('datacorrections/sdc','DatatablesController@sdc')->name('datacorrection.sdc');
+ Route::get('datacorrections/mdc','DatatablesController@mdc')->name('datacorrection.mdc');
