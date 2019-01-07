@@ -16,6 +16,8 @@ use App\Role;
 use App\Store;
 use App\Ticket;
 use App\User;
+use App\SystemDataCorrection;
+use App\ManualDataCorrection;
 use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -47,7 +49,8 @@ class ViewServiceProvider extends ServiceProvider
                 'ticketCount' => $ticketCount,
                 'ticketUserTicketsCount' => $ticketUserTicketsCount,
                 'closedID' => $closedID,
-                'ticketRoutes' => ['openTickets','myTickets','ongoingTickets','closedTickets','allTickets']
+                'ticketRoutes' => ['openTickets','myTickets','ongoingTickets','closedTickets','allTickets'],
+                'dcRoutes' => ['datacorrections.system', 'datacorrections.manual']
             ]);
         });
 
@@ -105,6 +108,24 @@ class ViewServiceProvider extends ServiceProvider
             $view->with(compact('categoryFilter','statusFilter','storeFilter'));
         });
 
+        view()->composer('datacorrections.systemdcs',function($view){
+           $sdcCount = SystemDataCorrection::all()->count();
+           $mdcCount = ManualDataCorrection::all()->count();
+           $view->with(['sdcCount'=> $sdcCount, 'mdcCount'=>$mdcCount]);
+        });
+       
+        
+        view()->composer('datacorrections.manualdcs',function($view){
+            $mdcCount = ManualDataCorrection::all()->count();
+            $sdcCount = SystemDataCorrection::all()->count();
+            $view->with(['mdcCount'=>$mdcCount, 'sdcCount'=>$sdcCount]);
+         });
+
+         view()->composer('datacorrections.datacorrections',function($view){
+            $mdcCount = ManualDataCorrection::all()->count();
+            $sdcCount = SystemDataCorrection::all()->count();
+            $view->with(['mdcCount'=>$mdcCount, 'sdcCount'=>$sdcCount]);
+         });
     }
 
     /**

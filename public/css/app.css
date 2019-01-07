@@ -1489,6 +1489,11 @@ body {
   border-radius: 10rem;
 }
 
+.selecteddc--active {
+  background-color: #BEBEBE;
+  border-radius: 10rem;
+}
+
 .right {
   -webkit-box-flex: 1;
       -ms-flex: 1 1;
