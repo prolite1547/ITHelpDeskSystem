@@ -27,4 +27,5 @@ class Resolve extends Model
     public function resolvedBy(){
         return $this->belongsTo('App\User','resolved_by')->withDefault(['name' => 'none']);
     }
+
 }

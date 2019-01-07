@@ -14,7 +14,7 @@
                                     <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                                     <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
                                     @endif
-                                    <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--print">Print</a></li>
+                                    <li class="ticket-content__item"><a href="{{route('ticketPrint',['id' => $ticket->id])}}" target="_blank" class="ticket-content__link ticket-content__link--print">Print</a></li>
                                     <li class="ticket-content__item">
                                         <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                                         <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
@@ -32,7 +32,7 @@
                             {{$ticket->incident->details}}
                         </p>
                         <form class="chat">
-                            <textarea name="reply" id="" rows="5" class="chat__textarea" placeholder="Enter message here..." maxlength="100" minlength="5" required></textarea>
+                            <textarea name="reply" rows="3" class="chat__textarea" placeholder="Enter message here..." maxlength="100" minlength="5" required></textarea>
                             <div class="chat__send">
                                 <button class="chat__button" type="submit">Send</button>
                             </div>
@@ -136,23 +136,13 @@
 
                                                 @if(isset($ticket->SDC->id))
                                                 <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }}
-                                                    <?php
-                                                        if($ticket->SDC->posted){
-                                                              echo " [POSTED]";
-                                                        }
-                                                    ?>
+                                                        @if($ticket->SDC->posted)(POSTED) @endif
                                                 </a>
                                                 @elseif (isset($ticket->MDC->id))
                                                  <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('mdc.printer', ['id'=>$ticket->MDC->id])}}">{{ $ticket->MDC->mdc_no }}
-                                                    <?php
-                                                        if($ticket->MDC->posted){
-                                                              echo " [POSTED]";
-                                                        }
-                                                    ?>
+                                                        @if($ticket->MDC->posted)(POSTED)@endif
                                                 </a>
                                                 @endif
-
-
                                         </span>
                                   </li>
 

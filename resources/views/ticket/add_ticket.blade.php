@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col-1-of-2">
                         <span>Note: The 'number input'  will determine the location/branch of where the ticket was issued.</span>
-                        {!! Form::open(['method' => 'POST','route' => 'addTicket','class' => 'form-addTicket','enctype'=>'multipart/form-data']) !!}
+                        {!! Form::open(['method' => 'POST','route' => 'addTicket','id' => 'form-addTicket','enctype'=>'multipart/form-data']) !!}
                         <div class="form__group">
                             {!! Form::select('contact_id', [], null, ['placeholder' => '(number used)','class' => 'form__input','required','id' => 'contact_id']) !!}
                             {!! Form::select('caller_id', [], null, ['placeholder' => '(caller)','class' => 'form__input','required','id' => 'caller_id']) !!}

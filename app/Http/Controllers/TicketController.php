@@ -260,4 +260,9 @@ class TicketController extends Controller
         };
     }
 
+    public function print($id){
+        $ticket = Ticket::findOrFail($id);
+        return view('layouts.ticketPrint')->with(compact('ticket'));
+    }
+
 }

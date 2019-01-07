@@ -34,7 +34,7 @@ class ResolveController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
 
-        $ticket->status = 13;
+        $ticket->status = 3;
 
         $ticket->save();
 

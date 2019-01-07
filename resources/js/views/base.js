@@ -23,7 +23,7 @@ export const elements = {
     addCallerForm: document.getElementById('addCaller'),
     addBranchForm: document.getElementById('addBranch'),
     addContactForm: document.getElementById('addContact'),
-    addTicketForm: document.querySelector('.form-addTicket'),
+    addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
 
     incidentFormItem: document.getElementById('incidentForm'),
@@ -34,6 +34,7 @@ export const elements = {
 
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),
+    printTicketBtn: document.querySelector('.ticket-content__link--print'),
 
 
     filterTicketsIcon:document.querySelector('#ticketFilter'),

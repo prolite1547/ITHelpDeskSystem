@@ -121,7 +121,6 @@ export const ticketAddController = () => {
        }
     });
 
-
     /*ADD EVENT LISTENER ON ADD TICKET FORM*/
     elements.addTicketForm.addEventListener('submit',(e) => {
         if(e.target.checkValidity()){
@@ -211,7 +210,9 @@ export const ticketViewController = () => {
 
     ticket.fetchOriginalData()
         .done(data => {
-            if(data.status === 13){
+
+            /*TICKET STATUS ID 3 IS == TO CLOSES*/
+            if(data.status === 3){
                 elements.resolveButton.addEventListener('click', editTicketView.getModalWithData.bind(this,data.id));
 
             }else {
@@ -422,5 +423,7 @@ export const ticketViewController = () => {
             });
         }
     });
+
+
 
 };

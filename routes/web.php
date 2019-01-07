@@ -47,6 +47,7 @@ Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/my', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
+//Route::get('/ticket/print/{id}','TicketController@print')->name('ticketPrint');
 
 //////////////////////////
 ////////*RESOLVE*/////////
@@ -121,7 +122,7 @@ Route::get('/search','HomeController@search')->name('search');
 
 Route::get('/test',function (){
 
-   return view('search');
+   return view('layouts.ticketPrint');
 
 });
 

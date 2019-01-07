@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ticket;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -31,6 +32,8 @@ class HomeController extends Controller
     }
 
     public function search(Request $request){
-        dd($request->all());
+        $ticket = Ticket::find($request->q);
+
+        return view('search')->with(compact('ticket'));
     }
 }

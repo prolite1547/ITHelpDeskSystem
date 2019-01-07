@@ -4928,7 +4928,7 @@ var elements = {
     addCallerForm: document.getElementById('addCaller'),
     addBranchForm: document.getElementById('addBranch'),
     addContactForm: document.getElementById('addContact'),
-    addTicketForm: document.querySelector('.form-addTicket'),
+    addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
 
     incidentFormItem: document.getElementById('incidentForm'),
@@ -4939,6 +4939,7 @@ var elements = {
 
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),
+    printTicketBtn: document.querySelector('.ticket-content__link--print'),
 
     filterTicketsIcon: document.querySelector('#ticketFilter'),
     filterContent: document.querySelector('.filter'),
@@ -30611,7 +30612,9 @@ var ticketViewController = function ticketViewController() {
     });
 
     ticket.fetchOriginalData().done(function (data) {
-        if (data.status === 13) {
+
+        /*TICKET STATUS ID 3 IS == TO CLOSES*/
+        if (data.status === 3) {
             __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elements */].resolveButton.addEventListener('click', __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__["e" /* getModalWithData */].bind(_this, data.id));
         } else {
 

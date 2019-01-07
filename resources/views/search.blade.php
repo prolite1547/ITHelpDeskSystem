@@ -7,30 +7,17 @@
         <div class="search">
             <h1 class="search__header">Search Results:</h1>
             <div class="search__results">
-                <div class="search__item">
-                    <div class="search__label">Ticket #12345</div>
-                    <div class="search__details">
-                        GitHub is where asdasd builds software. ... asdasd doesn't have any public repositories yet. 0 contributions in the last year. Jan Feb Mar Apr May Jun Jul Aug ...
-                    </div>
-                </div>
-                <div class="search__item">
-                    <div class="search__label">Ticket #12345</div>
-                    <div class="search__details">
-                        GitHub is where asdasd builds software. ... asdasd doesn't have any public repositories yet. 0 contributions in the last year. Jan Feb Mar Apr May Jun Jul Aug ...
-                    </div>
-                </div>
-                <div class="search__item">
-                    <div class="search__label">Ticket #12345</div>
-                    <div class="search__details">
-                        GitHub is where asdasd builds software. ... asdasd doesn't have any public repositories yet. 0 contributions in the last year. Jan Feb Mar Apr May Jun Jul Aug ...
-                    </div>
-                </div>
-                <div class="search__item">
-                    <div class="search__label">Ticket #12345</div>
-                    <div class="search__details">
-                        GitHub is where asdasd builds software. ... asdasd doesn't have any public repositories yet. 0 contributions in the last year. Jan Feb Mar Apr May Jun Jul Aug ...
-                    </div>
-                </div>
+                @if($ticket)
+                    <a class="search__item" href="{{route('lookupTicketView',['id' => $ticket->id])}}">
+                        <div class="search__label">Ticket #{{$ticket->id}}</div>
+                        <div class="search__details">
+                        {{$ticket->incident->details}}
+                        </div>
+                    </a>
+                @else
+                    <h1 class="search__error">No Search Results Found</h1>
+                @endif
+            </div>
             </div>
         </div>
     </main>

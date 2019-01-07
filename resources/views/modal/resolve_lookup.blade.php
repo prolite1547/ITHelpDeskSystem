@@ -1,4 +1,4 @@
-
+<div class="resolve-details">
 <div class="form__group">
     {!! Form::label('cause','Root Cause:',['class' => 'form__label--block']) !!}
     {!! Form::textarea('cause',$resolve->cause,['class' => 'form__input--textarea','required','id' => 'cause','readonly']) !!}
@@ -15,3 +15,10 @@
     {!! Form::textarea('recommendation',$resolve->recommendation,['class' => 'form__input--textarea','required','id' => 'recommendation','readonly']) !!}
 </div>
 
+    <div class="resolve__group">
+        {{Form::label('resolved_by','Resolved By:',['form__label'])}}
+        {{Form::text('resolved_by',$resolve->resolvedBy->full_name .' - ' .$resolve->resolvedBy->role->role,['class' => 'form__input form__input--readonly','readonly'])}}
+        {{Form::label('created_at','Resovled Date:',['form__label'])}}
+        {{Form::text('created_at',$resolve->created_at,['class' => 'form__input form__input--readonly','readonly'])}}
+    </div>
+</div>

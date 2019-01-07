@@ -64,7 +64,6 @@
                 <i class="fas fa-search form--search__icon"></i>
                 {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID'))}}
             {{Form::close()}}
-            <form action="" class="form form--search">
         </div>
     </div>
 
