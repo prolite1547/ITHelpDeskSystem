@@ -25,4 +25,12 @@ class HomeController extends Controller
     {
         return view('dashboard');
     }
+
+    public function maintenance(){
+        return view('maintenance');
+    }
+
+    public function search(Request $request){
+        dd($request->all());
+    }
 }

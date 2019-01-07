@@ -2,6 +2,7 @@ import {setDisable,displayError} from "./views/base";
 import Caller from './models/Caller';
 import Store from './models/Store';
 import Contact from './models/Contact';
+
 export const sendForm = (button,e) => {
 
 
@@ -44,5 +45,14 @@ export const sendForm = (button,e) => {
                 },2000)
             });
     }
+
+};
+
+export const addData = (url,data) => {
+
+    return $.ajax(url,{
+        type: 'POST',
+        data: data
+    });
 
 };

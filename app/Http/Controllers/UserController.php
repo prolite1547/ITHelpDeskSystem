@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUser;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +14,12 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
+    public function create(StoreUser $request){
+
+        $user = User::create($request->except('_token'));
+
+        $user->profpic()->create();
+    }
 
     public function profile($id){
 

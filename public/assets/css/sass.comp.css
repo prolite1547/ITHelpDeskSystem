@@ -2648,3 +2648,33 @@ main {
           align-items: center;
 }
 
+.search {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.search__header {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.search__item {
+  margin-left: 6rem;
+}
+
+.search__item:not(:last-child) {
+  margin-bottom: 2rem;
+}
+
+.search__label {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #6790ff;
+}
+
+.search__details {
+  width: 80%;
+  font-size: 1.3rem;
+  line-height: 1.4;
+}
+

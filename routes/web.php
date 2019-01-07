@@ -27,6 +27,7 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 //////////////////////////
 Route::get('/user/profile/{id}','UserController@profile')->name('userProfile');
 Route::post('/image','UserController@changeProf')->name('changeProf');
+Route::post('/user/add','UserController@create')->name('addUser');
 
 //////////////////////////
 ////////*TICKETS*/////////
@@ -108,7 +109,15 @@ Route::get('/reports', 'AdminController@report')->name('reportsPage');
 
 Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
 
+//////////////////////////
+////////*MAINTENANCE*//////
+//////////////////////////
+Route::get('/maintenance','HomeController@maintenance')->name('maintenancePage');
 
+//////////////////////////
+////////*SEARCH*//////
+//////////////////////////
+Route::get('/search','HomeController@search')->name('search');
 
 Route::get('/test',function (){
 

@@ -46,6 +46,9 @@
                     <li class="nav__li">
                         <a href="{{route('reportsPage')}}" class="nav__a {{Route::currentRouteName() == 'reportsPage' ? 'nav__a--active' : ''}}">Reports</a>
                     </li>
+                    {{--<li class="nav__li">--}}
+                        {{--<a href="{{route('maintenancePage')}}" class="nav__a {{Route::currentRouteName() == 'maintenancePage' ? 'nav__a--active' : ''}}">Maintenance</a>--}}
+                    {{--</li>--}}
                     @if(Auth::user()->role_id === 4)
                     <li class="nav__li">
                         <a href="{{route('adminPage')}}" class="nav__a {{Route::currentRouteName() == 'adminPage' ? 'nav__a--active' : ''}}">Admin</a>
@@ -57,10 +60,11 @@
 
         <div class="right">
             <a href="{{route('addTicketView')}}" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
-            <form action="" class="form form--search">
+            {{Form::open(['method' => 'GET','url'=>'/search','class' => 'form form--search'])}}
                 <i class="fas fa-search form--search__icon"></i>
-                <input type="text" class="form__search" placeholder="search... (or ticket ID)">
-            </form>
+                {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID'))}}
+            {{Form::close()}}
+            <form action="" class="form form--search">
         </div>
     </div>
 

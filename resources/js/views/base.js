@@ -42,8 +42,8 @@ export const elements = {
     clearFilter: document.querySelector('#clearFilter'),
 
 
-
-    addUserBtn: document.querySelector('[data-action=addUserBtn]')
+    /*ADMIN PAGE*/
+    addUserBtn: document.querySelector('[data-action=addUserBtn]'),
 }
 
 
@@ -60,7 +60,10 @@ export const elementStrings = {
     ticketAddBtn: '#ticketAdd',
 
     /*TICKET ADD*/
-    ticketAddFormActive: 'window__item--active'
+    ticketAddFormActive: 'window__item--active',
+
+    /*ADMIN PAGE*/
+    addUserFrom: 'addUser'
 }
 
 
