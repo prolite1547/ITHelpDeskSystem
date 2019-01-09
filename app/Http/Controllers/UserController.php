@@ -16,9 +16,8 @@ class UserController extends Controller
 
     public function create(StoreUser $request){
 
-        $user = User::create($request->except('_token'));
+         User::create($request->except('_token'));
 
-        $user->profpic()->create();
     }
 
     public function profile($id){
