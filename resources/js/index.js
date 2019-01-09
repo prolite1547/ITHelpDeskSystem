@@ -170,7 +170,6 @@ if(elements.select2elements){
 };
 
 
-
 elements.popupClose.addEventListener('click',() => {
     hideModal();
 });

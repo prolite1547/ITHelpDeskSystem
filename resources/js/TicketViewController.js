@@ -34,7 +34,7 @@ export const ticketAddController = () => {
     })();
 
 
-    elements.addTicketWindow.addEventListener('click',(e) => {
+        elements.addTicketWindow.addEventListener('click',(e) => {
         if(e.target.matches('button')){
 
             e.target.firstElementChild.classList.toggle('fa-plus');
