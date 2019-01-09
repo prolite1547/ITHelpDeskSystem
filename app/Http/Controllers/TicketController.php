@@ -7,6 +7,7 @@ use App\CategoryB;
 use App\File;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
+use App\Mail\PLDTIssue;
 use App\Status;
 use App\Ticket;
 use App\Category;
@@ -16,6 +17,7 @@ use DateInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
@@ -263,6 +265,10 @@ class TicketController extends Controller
     public function print($id){
         $ticket = Ticket::findOrFail($id);
         return view('layouts.ticketPrint')->with(compact('ticket'));
+    }
+
+    public function addPLDTTicket(Request $request){
+        Mail::to($request->to)->send(new PLDTIssue());
     }
 
 }

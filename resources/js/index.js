@@ -169,19 +169,7 @@ if(elements.select2elements){
   elements.select2elements.select2();
 };
 
-if(elements.addTicketWindow){
-    elements.addTicketWindow.addEventListener('click',(e) => {
-   if(e.target.matches('button,button *')){
 
-       if(e.target.matches('i')){
-           e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
-           e.target.classList.toggle('fa-plus');
-           e.target.classList.toggle('fa-minus');
-       }
-   }
-
-});
-}
 
 elements.popupClose.addEventListener('click',() => {
     hideModal();

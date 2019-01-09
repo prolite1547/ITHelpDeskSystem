@@ -68,7 +68,8 @@
                     </div>
                     <div class="col-1-of-2">
                         <div class="form-callerAdd">
-                            <button class="form-callerAdd__button u-margin-l" type="button"><i class="fas fa-plus"></i>
+                            <button class="form-callerAdd__button u-margin-l" type="button">
+                                <i class="fas fa-plus"></i>
                                 Add Caller
                             </button>
 
@@ -145,11 +146,11 @@
 
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
-                {{Form::open(array('class' => 'form-email'))}}
-                    {{Form::text('to',null,array('placeholder' => 'To','class'=> 'form-email__input form-email__input--text'))}}
-                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input form-email__input--text'))}}
-                    {{Form::textarea('details',null,array('class' => 'form-email__input form-email__input--textarea'))}}
-                    {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue'))}}
+                {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue'))}}
+                    {{Form::text('to',null,array('placeholder' => 'To','class'=> 'form-email__input form-email__input--text','required'))}}
+                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input form-email__input--text','required'))}}
+                    {{Form::textarea('details',null,array('class' => 'form-email__input form-email__input--textarea','required'))}}
+                    {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                 {{Form::close()}}
             </div>
         </div>

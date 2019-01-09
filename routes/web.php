@@ -12,6 +12,7 @@
 */
 
 
+use App\Incident;
 use Illuminate\Support\Carbon;
 use Webklex\IMAP\Client;
 
@@ -36,6 +37,7 @@ Route::post('/user/add','UserController@create')->name('addUser');
 Route::get('/ticket/{id}','TicketController@getTicket');
 Route::get('/tickets/add','TicketController@addTicketView')->name('addTicketView');
 Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
+Route::post('/ticket/pldt/add','TicketController@addPLDTTicket')->name('addPLDTTicket');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::patch('/tickets/view/edit/{id}', 'TicketController@edit')->name('editTicket');
 Route::get('/tickets/open', 'TicketController@open')->name('openTickets');
@@ -122,8 +124,15 @@ Route::get('/search','HomeController@search')->name('search');
 
 Route::get('/test',function (){
 
-   return view('layouts.ticketPrint');
+    $incidents = Incident::with('call.contact.store')->whereHas('call.contact.store',function ($query){
+        return $query->whereId(2);
+    })->get();
 
+
+    foreach ($incidents as $incident){
+        echo $incident;
+        echo "<br><br>";
+    }
 });
 
 Route::get('/test2',function (){
@@ -159,7 +168,7 @@ Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');
 
 Route::post('get/positions', 'SDCController@getPosition')->name('get.positions');
 
-// Data Corrections Separate Page 
+// Data Corrections Separate Page
  Route::get('datacorrections', 'DCController@index')->name('datacorrections');
  Route::get('datacorrections/systemdc', 'DCController@system')->name('datacorrections.system');
  Route::get('datacorrections/manualdc', 'DCController@manual')->name('datacorrections.manual');

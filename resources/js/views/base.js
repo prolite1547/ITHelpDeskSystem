@@ -31,6 +31,7 @@ export const elements = {
     incidentFormContainerAdd: document.getElementById('incidentFormContainer'),
     PLDTFormContainerAdd: document.getElementById('PLDTFormContainer'),
     formItems: document.getElementsByClassName('window__item'),
+    PLDTForm: document.querySelector('.form-email'),
 
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),
@@ -62,6 +63,7 @@ export const elementStrings = {
 
     /*TICKET ADD*/
     ticketAddFormActive: 'window__item--active',
+    addPLDTIssueSubmit: 'button[data-action=addPLDTIssue]',
 
     /*ADMIN PAGE*/
     addUserFrom: 'addUser'

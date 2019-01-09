@@ -7,6 +7,7 @@ import Resolve from './models/Resolve';
 import Caller from './models/Caller';
 import Store from './models/Store';
 import Contact from './models/Contact';
+import PLDTMail from './models/PLDTMail'
 import {renderLoader,clearLoader,showModal,insertToModal,hideModal,setDisable} from "./views/base";
 
 
@@ -31,6 +32,24 @@ export const ticketAddController = () => {
         /*DISPLAY THE FORM*/
         addTicketView.displayForm();
     })();
+
+
+    elements.addTicketWindow.addEventListener('click',(e) => {
+        if(e.target.matches('button')){
+
+            e.target.firstElementChild.classList.toggle('fa-plus');
+            e.target.firstElementChild.classList.toggle('fa-minus');
+            e.target.nextElementSibling.classList.toggle('u-display-n');
+
+        }else if(e.target.matches('i')){
+            e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
+            e.target.classList.toggle('fa-plus');
+            e.target.classList.toggle('fa-minus');
+        }
+
+
+
+    });
 
 
     $('#callerBranchSelect,#contactBranchSelect').select2({
@@ -144,7 +163,7 @@ export const ticketAddController = () => {
     elements.addContactForm.addEventListener('submit', sendForm.bind(this,elementStrings.addContactSubmit));
     elements.addCallerForm.addEventListener('submit', sendForm.bind(this,elementStrings.addCallerSubmit));
     elements.addBranchForm.addEventListener('submit', sendForm.bind(this,elementStrings.addBranchSubmit));
-
+    elements.PLDTForm.addEventListener('submit',sendForm.bind(this,elementStrings.addPLDTIssueSubmit));
 
     function sendForm(button,e) {
 
@@ -168,6 +187,8 @@ export const ticketAddController = () => {
                 object = new Store();
             }else if(form.id === 'addContact'){
                 object = new Contact();
+            }else if(form.id === 'addPLDTIssue'){
+                object = new PLDTMail();
             }else {
                 alert('form not found');
             }
