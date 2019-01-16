@@ -24,8 +24,15 @@ class StoreTicket extends FormRequest
     public function rules()
     {
         return [
+            'position' => 'sometimes|required|numeric',
+            'fName' => 'sometimes|required|string|min:2',
+            'mName' => 'sometimes|required|string|min:2',
+            'lName' => 'sometimes|required|string|min:2',
+            'store' => 'sometimes|required|numeric',
+
             'caller_id' =>  'sometimes|required|numeric',
             'contact_id' =>  'sometimes|required|numeric',
+            'fixed_by' =>  'sometimes|required|numeric',
             'subject' =>  'sometimes|required|string|max:255|min:10',
             'details' =>  'sometimes|required|string|max:255|min:10',
             'attachments' => 'sometimes|nullable',

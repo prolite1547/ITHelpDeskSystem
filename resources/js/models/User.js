@@ -1,6 +1,6 @@
 export default class User {
     constructor(){
-
+        this.getUser();
     }
 
     addUser(fname,mname,lname,store_id,role_id,position_id,token){
@@ -34,5 +34,20 @@ export default class User {
         });
 
         return initals;
+    }
+
+    getUser(){
+        $.ajax(`/api/user/${window.authUserID}`,{
+            type: 'GET'
+        }).done(data => {
+            const user = data.data;
+            this.id = user.id;
+            this.fName = user.fName;
+            this.mName = user.mName;
+            this.lName = user.lName;
+            this.role_id = user.role_id;
+        }).fail(() => {
+            alert('failed to get user api');
+        })
     }
 }

@@ -20,12 +20,12 @@ const openTickets = {
     order: [[5, 'desc']],
     columns: [
         {data: 'id'},
-        {data: 'category',name:'cat.name', visible: false},
-        {data: 'priority',name:'prio.name'},
-        {data: 'status',name:'status.name', orderable: false},
+        {data: 'category',name:'cat.name', visible: false,defaultContent: 'Not Set'},
+        {data: 'priority',name:'prio.name',defaultContent: 'Not Set'},
+        {data: 'status',name:'status.name', orderable: false,defaultContent: 'Not Set'},
         {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
-        {data: 'expiration'},
+        {data: 'expiration',defaultContent: 'Not Set'},
         {data: 'id', orderable: false}
     ],
 
@@ -60,6 +60,23 @@ const closedTickets = {
         {data: 'expiration',visible: false},
         {data: 'resolved_date',name:'resolves.created_at'},
         {data: 'resolved_by',name:'resolver.name',visible: true},
+        {data: 'id', orderable: false}
+    ],
+};
+
+const fixedTickets = {
+    ajax: '/tickets/ticket-data/fixedRej',
+    order: [[4, 'desc']],
+    columns: [
+        {data: 'id'},
+        {data: 'category',name:'cat.name', visible: false},
+        {data: 'priority',name:'prio.name'},
+        {data: 'status',name:'status.name', orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
+        {data: 'created_at',visible: true},
+        {data: 'expiration',visible: false},
+        {data: 'fixed_date'},
+        {data: 'assignee',visible: true},
         {data: 'id', orderable: false}
     ],
 };
@@ -110,7 +127,9 @@ export const initDataTables = () => {
         options = ongoingTickets;
     } else if (ticketStatus === 'closed') {
         options = closedTickets;
-    } else {
+    }  else if (ticketStatus === 'fixed') {
+        options = fixedTickets;
+    }else {
         console.log('ticket status not found');
     }
 

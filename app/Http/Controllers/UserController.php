@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUser;
+use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -42,5 +43,9 @@ class UserController extends Controller
 
 
             $user->profpic->update(['image' => $file])->save();
+    }
+
+    public function userAPI($id){
+        return new UserResource(User::find($id));
     }
 }

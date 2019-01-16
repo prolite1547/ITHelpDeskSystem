@@ -17,9 +17,9 @@ class CreateCallsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('caller_id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('contact_id');
+//            $table->unsignedInteger('contact_id');
             $table->foreign('caller_id')->references( 'id')->on('callers')->onDelete('cascade');
-            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
+//            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

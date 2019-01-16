@@ -35,7 +35,7 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo('App\Role');
+        return $this->belongsTo('App\Role')->withDefault(['role' => null]);
     }
 
     public function ticketMessage()
@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function ticketLogged()
     {
-        return $this->hasMany('App\Call');
+        return $this->hasMany('App\Ticket','logged_by');
     }
 
     public function getFullNameAttribute()

@@ -10,7 +10,7 @@ class Caller extends Model
         'fName',
         'mName',
         'lName',
-        'store_id',
+        'position',
     ];
 
     protected $appends = ['full_name'];

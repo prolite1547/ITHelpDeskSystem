@@ -11,26 +11,37 @@ class Ticket extends Model
     use SoftDeletes;
     protected $fillable = [
         'type',
+        'store',
         'incident_id',
         'assignee',
         'priority',
         'status',
         'expiration',
-        'created_at'
+        'created_at',
+        'logged_by',
+        'fixed_date',
     ];
 
 
+public function userLogged(){
+    return $this->belongsTo('App\User','logged_by');
+}
 
+public function getStore(){
+    return $this->belongsTo('App\Store','store','id');
+}
 
 public function incident(){
     return $this->belongsTo('App\Incident');
 }
 
 public function assigneeRelation(){
-    return $this->belongsTo('App\User','assignee');
+    return $this->belongsTo('App\User','assignee')->withDefault(['id' => null]);
 }
 
-
+//public function store(){
+//    return $this->belongsTo('App\Store','store');
+//}
 
 public function priorityRelation(){
     return $this->belongsTo('App\Priority','priority');
@@ -84,4 +95,9 @@ public function SDC(){
 public function MDC(){
     return $this->hasOne('App\ManualDataCorrection', 'ticket_no');
 }
+
+public function rejectData() {
+    return $this->hasMany('App\Reject','ticket_id','id')->latest()->limit(1);
+}
+
 }

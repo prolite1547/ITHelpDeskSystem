@@ -1,0 +1,16 @@
+.fieldset {
+    padding: 1rem;
+    &__legend {
+        font-size: 1.4rem;
+        padding: .5rem;
+    }
+
+    &__flex {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__left {
+        flex: 0 0 30%;
+    }
+}

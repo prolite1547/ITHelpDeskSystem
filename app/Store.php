@@ -10,12 +10,15 @@ class Store extends Model
         'store_name'
     ];
 
-
-    public function contactNumbers(){
-        return $this->hasMany('App\Contact','store_id','id');
-    }
+//    public function tickets(){
+//        return $this->hasMany('App\Ticket','store','id');
+//    }
 
     public function callers(){
         return $this->hasMany('App\Caller');
+    }
+
+    public function contacts(){
+        return $this->hasMany('App\Contact');
     }
 }

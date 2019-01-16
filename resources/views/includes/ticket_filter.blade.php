@@ -14,15 +14,15 @@
                 {!! Form::text(0,null,['placeholder' => 'ticket #','class' => 'form-ticketFilter__input']) !!}
             </div>
             <div class="form-ticketFilter__group">
-                {!! Form::label(0,'Category:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::label(1,'Category:',['class' => 'form-ticketFilter__label']) !!}
                 {!! Form::select(1,$categoryFilter,null,['placeholder' => '(select category...)','class' => 'form-ticketFilter__input']) !!}
             </div>
             <div class="form-ticketFilter__group">
-                {!! Form::label(0,'Priority:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::label(3,'Status:',['class' => 'form-ticketFilter__label']) !!}
                 {!! Form::select(3,$statusFilter,null,['placeholder' => '(select priority...)','class' => 'form-ticketFilter__input']) !!}
             </div>
             <div class="form-ticketFilter__group">
-                {!! Form::label(0,'Store:',['class' => 'form-ticketFilter__label']) !!}
+                {!! Form::label(4,'Store:',['class' => 'form-ticketFilter__label']) !!}
                 {!! Form::select(4,$storeFilter,null,['placeholder' => '(select store...)','class' => 'form-ticketFilter__input']) !!}
             </div>
             <div class="form-ticketFilter__group">
