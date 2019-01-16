@@ -6,7 +6,9 @@ use App\Caller;
 use App\Contact;
 use App\Http\Resources\CallerCollection;
 use App\Http\Resources\ContactCollection;
+use App\Http\Resources\PositionCollection;
 use App\Http\Resources\StoreCollection;
+use App\Position;
 use App\Role;
 use App\Store;
 use Illuminate\Http\Request;
@@ -49,6 +51,17 @@ class SelectController extends Controller
             })->get());
         }else{
             return new ContactCollection(Store::with('contactNumbers')->get());
+        }
+
+
+    }
+
+    public function position(Request $request){
+
+        if($request->query('q')){
+            return new PositionCollection(Position::where('position', 'like', "%{$request->query('q')}%")->get(['id','position as text']));
+        }else{
+            return new PositionCollection(Position::all(['id','position as text']));
         }
 
 

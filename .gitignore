@@ -1,3 +1,6 @@
+/public/css/app.css
+/public/js/app.js
+/public/assets/css/sass.comp.css
 /node_modules
 /public/hot
 /public/storage
@@ -15,4 +18,5 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .env
+.phpunit.result.cache
 .phpunit.result.cache

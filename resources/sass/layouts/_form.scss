@@ -146,7 +146,8 @@
 
 .form-callerAdd,
 .form-contactAdd,
-.form-branchAdd{
+.form-branchAdd,
+.form-positionAdd{
 
     &__button {
         &,
@@ -236,7 +237,32 @@
  }
 
 
-.form-addUser {
+.form-addTicketDetails {
+    &__ticket {
+        font-size: 1.7rem;
+        font-weight: 700;
+        display: block;
+        text-align:left;
+        background-color: rgba($color-grey-dark,.3);
+        padding: .2rem .5rem;
+    }
 
+    &__ticket-value {
+        font: inherit;
+        color: currentColor;
+        display: inline-block;
+        border: none;
+        background-color: transparent;
+        outline: none;
+    }
+}
 
+.reject {
+    padding: 1rem;
+
+    &__reason {
+        width: 100%;
+        resize: none;
+
+    }
 }

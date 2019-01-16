@@ -17,7 +17,9 @@
         @yield('inside_container')
     </div>
 
-    @stack('scripts')
+    <script>
+        window.authUserID = {{ (Auth::id()) }}
+    </script>
     <script src="{{asset('js/app.js')}}"></script>
     <script src="{{asset('js/dcsDatatable.js')}}"></script>
 </body>

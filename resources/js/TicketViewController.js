@@ -33,8 +33,8 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
-
-        elements.addTicketWindow.addEventListener('click',(e) => {
+        /*EVENT LISTENER ON PLUS ICONS*/
+        elements.mentainanceCol.addEventListener('click',(e) => {
         if(e.target.matches('button')){
 
             e.target.firstElementChild.classList.toggle('fa-plus');
@@ -52,7 +52,7 @@ export const ticketAddController = () => {
     });
 
 
-    $('#callerBranchSelect,#contactBranchSelect').select2({
+    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2({
         ajax: {
             url: '/select/store',
             processResults: function (data) {
@@ -63,28 +63,13 @@ export const ticketAddController = () => {
         }
     });
 
-    $('#caller_id').select2({
-        width: '30%',
+    $('#ticketPositionSelect').select2({
+        width: '100%',
         ajax: {
-            url: '/select/caller',
+            url: '/select/position',
             processResults: function (data) {
-
-                if(data.length !== 1){
-                    data = $.map(data.data, (obj) => {
-                        return {
-                            text: obj.store_name,
-                            children: obj.callers.map(obj2 => {
-                                return {
-                                    id: obj2.id,
-                                    text: obj2.full_name
-                                }
-                            })
-                        }
-                    });
-                }
-
                 return {
-                    results: data
+                    results: data.data
                 };
             }
         }
@@ -95,7 +80,7 @@ export const ticketAddController = () => {
         ajax: {
             url: '/select/contact',
             processResults: function (data) {
-                var data = $.map(data.data, (obj) => {
+                 data = $.map(data.data, (obj) => {
                     return {
                         text: obj.store_name,
                         children: obj.contact_numbers.map(obj2 => {
@@ -143,10 +128,26 @@ export const ticketAddController = () => {
     /*ADD EVENT LISTENER ON ADD TICKET FORM*/
     elements.addTicketForm.addEventListener('submit',(e) => {
         if(e.target.checkValidity()){
-            e.target.querySelector(elementStrings.ticketAddBtn).disabled = true;
-            e.submit();
+            e.preventDefault();
+            e.target.classList.toggle('u-display-n');
+            renderLoader(e.target.parentElement);
+
+            $.ajax('/ticket/add',{
+                type: 'POST',
+                data: $(e.target).serialize()
+            })
+                .done((data) => {
+                    elements.addTicketDetailsFormTicketEl.value = data.ticket_id;
+                    elements.addTicketDetailsForm.classList.toggle('u-display-n');
+                    clearLoader();
+                })
+                .fail(() => {
+                    alert('Fail To Add Ticket;');
+                    clearLoader();
+                });
         }
     });
+
 
     $(elementStrings.branchSelectContact).on('select2:select', function (e) {
         let data;
@@ -160,8 +161,8 @@ export const ticketAddController = () => {
 
 
 
-    elements.addContactForm.addEventListener('submit', sendForm.bind(this,elementStrings.addContactSubmit));
-    elements.addCallerForm.addEventListener('submit', sendForm.bind(this,elementStrings.addCallerSubmit));
+    // elements.addContactForm.addEventListener('submit', sendForm.bind(this,elementStrings.addContactSubmit));
+    // elements.addCallerForm.addEventListener('submit', sendForm.bind(this,elementStrings.addCallerSubmit));
     elements.addBranchForm.addEventListener('submit', sendForm.bind(this,elementStrings.addBranchSubmit));
     elements.PLDTForm.addEventListener('submit',sendForm.bind(this,elementStrings.addPLDTIssueSubmit));
 
@@ -195,14 +196,14 @@ export const ticketAddController = () => {
 
 
             object.storeData(formdata)
-                .done(data => {
+                .done(() => {
                     setTimeout(() => {
                         alert('Added Successfully!!');
                         form.reset();
                         setDisable(submitBtn,false);
                     },2000)
                 })
-                .fail((jqXHR, textStatus) => {
+                .fail((jqXHR) => {
                     setTimeout(() => {
                         displayError(jqXHR);
                         setDisable(submitBtn,false);
@@ -211,7 +212,7 @@ export const ticketAddController = () => {
         }
 
     }
-}
+};
 
 ////////////////////////////////
 ////////////////////////////////
@@ -219,10 +220,8 @@ export const ticketAddController = () => {
 ////////////////////////////////
 ////////////////////////////////
 
-export const ticketViewController = () => {
-
+export const ticketViewController = (user) => {
     const ticket = new Ticket(elements.ticketID,elements.ticketSubject,elements.ticketDetails);
-
 
     Echo.private(`chat.${ticket.ID}`)
         .listen('MessageSent', (e) => {
@@ -231,22 +230,18 @@ export const ticketViewController = () => {
 
     ticket.fetchOriginalData()
         .done(data => {
-
             /*TICKET STATUS ID 3 IS == TO CLOSES*/
             if(data.status === 3){
                 elements.resolveButton.addEventListener('click', editTicketView.getModalWithData.bind(this,data.id));
 
             }else {
 
-
                 /*ADD CLICK EVENT LISTENER */
                 elements.ticketContent.addEventListener('click', e => {
-
-
                     /*IF USER CLICK THE EDIT INSIDE THE MORE*/
-                    if(e.target.matches(elementStrings.ticketContentEditIcon)){
-
+                    if (e.target.matches(elementStrings.ticketContentEditIcon)) {
                         /*make elements editable*/
+
                         editTicketView.makeElementsEditable();
 
                         /*show save button*/
@@ -255,19 +250,19 @@ export const ticketViewController = () => {
                     }
 
 
-                    /*IF USER CLICK THE BUTTONS CANCEL AND DONE*/
-                    if(e.target.matches('#contentEditSave')){
+                    /*IF USER CLICK THE BUTTONS CANCEL OR DONE*/
+                    if (e.target.matches('#contentEditSave')) {
 
                         /*PLACE DATA TO THE TICKET OBJECT*/
-                        ticket.storeContentEditTicket(elements.ticketSubject,elements.ticketDetails);
+                        ticket.storeContentEditTicket(elements.ticketSubject, elements.ticketDetails);
 
                         /*XHR TO SAVE EDITED INPUTS*/
                         ticket.saveEdit(ticket.detailsEditData).done(data => {
-                            if(data.success === true){
+                            if (data.success === true) {
                                 editTicketView.makeElementsNotEditable();
                                 editTicketView.hideButtons();
                                 alert('Updated Successfully!');
-                            }else{
+                            } else {
                                 alert('Failed to update...');
                             }
                         }).fail((jqXHR) => {
@@ -275,129 +270,139 @@ export const ticketViewController = () => {
                         });
                     }
 
-                    if(e.target.matches('#contentEditCancel')){
+                    if (e.target.matches('#contentEditCancel')) {
                         /*GET LATEST DETAILS OF THE TICKET*/
                         ticket.fetchOriginalData().done(() => {
-                            editTicketView.restoreElementsTextContent(ticket.originalData); /*RESTORE ORIGINAL INPUT VALUES*/
+                            editTicketView.restoreElementsTextContent(ticket.originalData);
+                            /*RESTORE ORIGINAL INPUT VALUES*/
                         });
-                        editTicketView.makeElementsNotEditable(); /*REMOVE THE EDITABLE MODE*/
-                        editTicketView.hideButtons(); /*HIDE THE CANCEL AND DONE BUTTONS*/
+                        editTicketView.makeElementsNotEditable();
+                        /*REMOVE THE EDITABLE MODE*/
+                        editTicketView.hideButtons();
+                        /*HIDE THE CANCEL AND DONE BUTTONS*/
                     }
                 });
 
                 /*EVENT LISTENER EDIT ICON CLICK*/
-                elements.ticketDetailsEditIcon.addEventListener('click',() => {
+                if(elements.ticketDetailsEditIcon){
+                    elements.ticketDetailsEditIcon.addEventListener('click', () => {
+                        ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
 
-                    ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
+                        showModal(); /*SHOW MODAL*/
+
+                        renderLoader(elements.modalContent);  /*RENDER LOADER*`/
+
+                        /*GET THE MARKUP FOR THE MODAL*/
+                        ticket.getEditModal()
+                            .done(data => {
+                                clearLoader();
+                                insertToModal(data);
+                                editTicketView.addEventListenerToEditInputs(ticket);
+                            })
+                            .fail(error => {
+                                console.log(`Error on making edit modal markup!! Error: ${error}`);
+                            });
+                    });
+
+                    elements.ticketDetailsAddFilesIcon.addEventListener('click', () => {
+                        showModal();
+                        /*SHOW MODAL*/
+                        insertToModal(editTicketView.addFileMarkup);
+
+                        const myDropzone = new Dropzone("#addFiles", {
+                            url: `/file/ticket/${ticket.ID}`,
+                            parallelUploads: 3,
+                            uploadMultiple: true,
+                            autoProcessQueue: false,
+                            addRemoveLinks: true,
+                            dictDefaultMessage: 'Drop files here to be uploaded'
+                        });
+
+                        myDropzone.on("complete", function () {
+                            myDropzone.removeAllFiles();
+                        });
+
+                        document.querySelector('.dropzone__upload').addEventListener('click', () => {
+                            if (myDropzone.files.length !== 0) {
+                                myDropzone.processQueue();
+                            } else {
+                                return alert('No files found to be uploaded!!');
+                            }
+                        })
+
+                    });
+
+                    /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
+                    elements.modal.addEventListener('click', e => {
+                        if (e.target.matches('button')) {
+                            const action = e.target.dataset.action;
+                            if (action === 'cancel') {
+                                hideModal();
+                            } else if (action === 'confirm') {
+                                ticket.saveEdit(ticket.detailsEditData).done(data => {
+                                    if (data.success === true) {
+                                        alert('Updated Successfully!');
+                                        window.location.reload();
+                                    } else {
+                                        alert('Failed to update...');
+                                    }
+                                });
+
+                            }
+                        } else if (e.target.matches('.capsule__close')) {
+
+                            const capsule = e.target.closest('.capsule');
+
+                            const removedFile = capsule.parentNode.removeChild(capsule);
+
+                            const fileID = parseInt(removedFile.dataset.id);
+
+                            ticket.storeToBeDeletedFileID(fileID);
+                        }
+                    });
+                }
 
 
-                    showModal(); /*SHOW MODAL*/
-
-                    renderLoader(elements.modalContent); /*RENDER LOADER*/
-
-                    /*GET THE MARKUP FOR THE MODAL*/
-                    ticket.getEditModal()
-                        .done(data => {
+                if (elements.resolve){
+                /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
+                    elements.resolve.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        showModal();
+                        renderLoader(elements.modalContent);
+                        const resolveRequest = editTicketView.getResolveFormMarkUp();
+                        resolveRequest.done(data => {
                             clearLoader();
                             insertToModal(data);
-                            editTicketView.addEventListenerToEditInputs(ticket);
-                        })
-                        .fail(error => {
-                            console.log(`Error on making edit modal markup!! Error: ${error}`);
-                        });
-                });
 
-                elements.ticketDetailsAddFilesIcon.addEventListener('click', () => {
-                    showModal(); /*SHOW MODAL*/
-                    insertToModal(editTicketView.addFileMarkup);
+                            document.querySelector('button[data-action=resolved]').addEventListener('click', () => {
 
-                    const myDropzone = new Dropzone("#addFiles", {
-                        url: `/file/ticket/${ticket.ID}`,
-                        parallelUploads: 3,
-                        uploadMultiple: true,
-                        autoProcessQueue: false,
-                        addRemoveLinks: true,
-                        dictDefaultMessage: 'Drop files here to be uploaded'
-                    });
-
-                    myDropzone.on("complete", function(file) {
-                        myDropzone.removeAllFiles();
-                    });
-
-                    document.querySelector('.dropzone__upload').addEventListener('click',() => {
-                        if(myDropzone.files.length !== 0){
-                            myDropzone.processQueue();
-                        }else{
-                            return alert('No files found to be uploaded!!');
-                        }
-                    })
-
-                });
-
-                /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
-                elements.modal.addEventListener('click',e => {
-                    if(e.target.matches('button')){
-                        const action = e.target.dataset.action;
-                        if(action === 'cancel') {
-                            hideModal();
-                        }else if(action === 'confirm'){
-                            ticket.saveEdit(ticket.detailsEditData).done(data => {
-                                if(data.success === true){
-                                    alert('Updated Successfully!');
-                                    window.location.reload();
-                                }else{
-                                    alert('Failed to update...');
-                                }
-                            });
-
-                        }
-                    }else if(e.target.matches('.capsule__close')){
-
-                        const capsule  = e.target.closest('.capsule');
-
-                        const removedFile = capsule.parentNode.removeChild(capsule);
-
-                        const fileID = parseInt(removedFile.dataset.id);
-
-                        ticket.storeToBeDeletedFileID(fileID);
-                    }
-                });
-
-
-
-                /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-                elements.resolve.addEventListener('click',(e) => {
-                    e.preventDefault();
-                    showModal();
-                    renderLoader(elements.modalContent);
-                    const resolveRequest = editTicketView.getResolveFormMarkUp();
-                    resolveRequest.done(data => {
-                        clearLoader();
-                        insertToModal(data);
-
-                        document.querySelector('button[data-action=resolved]').addEventListener('click',() => {
-
-                            document.querySelector(elementStrings.resolve_form).addEventListener('submit',e => {
-                                e.preventDefault();
-                            });
-
-                            const formdata = $(elementStrings.resolve_form).serialize();
-
-                            let resolve = new Resolve(ticket.ID,formdata);
-
-                            resolve.createResolve()
-                                .done(() => {
-                                    alert('Ticket marked as resolved successfully!!');
-                                    window.location.reload();
-                                    hideModal();
-                                })
-                                .fail((jqXHR) =>{
-                                    displayError(jqXHR);
+                                document.querySelector(elementStrings.resolve_form).addEventListener('submit', e => {
+                                    e.preventDefault();
                                 });
+
+                                const formdata = $(elementStrings.resolve_form).serialize();
+
+                                let resolve = new Resolve(ticket.ID, formdata);
+
+                                resolve.createResolve()
+                                    .done(() => {
+                                        alert('Ticket marked as resolved successfully!!');
+                                        window.location.reload();
+                                        hideModal();
+                                    })
+                                    .fail((jqXHR) => {
+                                        displayError(jqXHR);
+                                    });
+                            });
                         });
                     });
-                });
 
+
+                }
+
+                if(elements.reject){
+                    elements.reject.addEventListener('click', editTicketView.showRejectModal.bind(null,ticket.ID));
+                }
 
 
             }
@@ -409,7 +414,7 @@ export const ticketViewController = () => {
     elements.chatForm.addEventListener('submit', e => {
         if (e.target.checkValidity()) {
             e.preventDefault();
-            const newMessage = editTicketView.getMessageData()
+            const newMessage = editTicketView.getMessageData();
             if (!newMessage) {
                 return alert(`What's the point of sending a message if its empty!! Message: ${newMessage}`);
             }
@@ -445,6 +450,9 @@ export const ticketViewController = () => {
         }
     });
 
+    elements.ticketDetailStore.addEventListener('click',editTicketView.displayContactNumbers);
 
+    if(elements.fixBtn) elements.fixBtn.addEventListener('click',ticket.markAsFixed.bind(ticket,user));
 
+    if(elements.rejectDetailsBtn) elements.rejectDetailsBtn.addEventListener('click',editTicketView.showRejectDetails.bind(null,ticket.ID))
 };

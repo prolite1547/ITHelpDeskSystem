@@ -1,0 +1,17 @@
+.incomplete {
+
+    &__header-primary {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    &__flex{
+        display: flex;
+        justify-content: center;
+    }
+
+    &__right {
+        padding: 3rem;
+    }
+}

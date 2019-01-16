@@ -1,0 +1,22 @@
+.notif {
+    padding: 3px;
+    width: 13rem;
+    position: absolute;
+    display: block;
+    top: -2.5rem;
+    right: 1.5rem;
+    transform: translateX(13rem);
+    background-color: $color-red;
+    border-radius: 10rem;
+    z-index: 10;
+
+    &__caret {
+        position: absolute;
+        width:3rem;
+        height: 3rem;
+        fill: $color-red;
+        bottom: -1.15rem;
+        left: -1.1rem;
+        transform: rotate(290deg);
+    }
+}

@@ -22,12 +22,10 @@
         min-width: 30%;
         background-color: white;
         transition: all .8s;
-        padding: 5px;
     }
 
 
     &__close {
-
         position: absolute;
         top: -.5rem;
         right: -.5rem;
@@ -42,6 +40,7 @@
         text-align: center;
         color: $color-white;
         cursor: pointer;
+        z-index: 99;
 
         &:active {
             transform: translateY(1px);

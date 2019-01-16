@@ -31,14 +31,14 @@ export const sendForm = (button,e) => {
 
 
         object.storeData(formdata)
-            .done(data => {
+            .done(() => {
                 setTimeout(() => {
                     alert('Added Successfully!!');
                     form.reset();
                     setDisable(submitBtn,false);
                 },2000)
             })
-            .fail((jqXHR, textStatus) => {
+            .fail((jqXHR) => {
                 setTimeout(() => {
                     displayError(jqXHR);
                     setDisable(submitBtn,false);

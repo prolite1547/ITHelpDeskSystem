@@ -1,4 +1,14 @@
-import {clearLoader, elements, elementStrings, insertToModal, renderLoader, showModal} from "./base";
+import {
+    clearLoader,
+    displayError,
+    elements,
+    elementStrings,
+    hideModal,
+    insertToModal,
+    renderLoader,
+    showModal
+} from "./base";
+import Resolve from "../models/Resolve";
 
 export const makeElementsEditable = () => {
 
@@ -52,7 +62,7 @@ export const getResolveFormMarkUp = (lookup = false,ticketID = 0) => {
 
     return ajax;
 
-}
+};
 
 
 export const addEventListenerToEditInputs = (ticket) => {
@@ -61,7 +71,7 @@ export const addEventListenerToEditInputs = (ticket) => {
     inputs.forEach(el => {
         el.addEventListener('input',ticket.storeEditData.bind(ticket));
     });
-}
+};
 
 export const addFileMarkup = `<div class="dropzone" id="addFiles"><button type="button" class="dropzone__upload btn">Upload</button></div>`;
 
@@ -86,11 +96,10 @@ export const getModalWithData = (ticketID) => {
                 clearLoader();
                 insertToModal(data);
             });
-}
+};
 
 export const getMessageMarkup = (e) => {
     let messageMarkup;
-    console.log(authUserID,e.userID);
     /*ADD CLOSE BUTTON IF THE RECIEVED MESSAGE IS EQUAL TO THE AUTHENTICATED USER*/
     if (authUserID === e.userID){
         messageMarkup = `<div class="message" data-id="${e.messageID}">
@@ -121,9 +130,63 @@ export const getMessageMarkup = (e) => {
                                         <span class="message__time">${moment().fromNow()}</span>
                                     </div>
                                  </div>`;
-    };
+    }
 
     return messageMarkup;
 };
 
 
+export const displayContactNumbers = (e) => {
+  e.preventDefault();
+    showModal();
+    renderLoader(elements.modalContent);
+  let store_id = e.target.dataset.store;
+  fetchContactDetails(store_id)
+      .done(data => {
+          clearLoader();
+          insertToModal(data);
+
+      });
+};
+
+
+function fetchContactDetails(store_id) {
+    return $.ajax(`/modal/${store_id}/contacts`,{
+        type: 'GET'
+    }).fail(() => {
+        alert('failed to get branch contacts');
+    });
+}
+
+export const showRejectModal = (ticket_id,e) => {
+    {
+        e.preventDefault();
+        e.target.disabled = true;
+        showModal();
+        renderLoader(elements.modalContent);
+        getRejectForm(ticket_id)
+            .then(response => {
+                clearLoader();
+                insertToModal(response.data);
+            }).catch(() => {
+                e.target.disabled = false;
+                alert('Fail to Get Reject Form');
+        });
+    }
+};
+
+function getRejectForm(ticket_id) {
+    return axios.get(`/modal/form/reject/${ticket_id}`);
+}
+
+export const showRejectDetails = (ticket_id) => {
+        showModal();
+        renderLoader(elements.modalContent);
+    return axios.get(`/modal/lookup/reject/${ticket_id}`)
+        .then(response => {
+            clearLoader();
+            insertToModal(response.data);
+        }).catch(() => {
+            alert('error getting the rejection details');
+        });
+};

@@ -14,6 +14,7 @@ class ContactController extends Controller
     }
 
     public function create(StoreContact $request){
-        $contact = Contact::create($request->except('_token'));
+        Contact::create($request->except('_token'));
     }
+
 }

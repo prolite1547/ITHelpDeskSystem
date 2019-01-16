@@ -25,11 +25,10 @@ export default class Ticket {
     }
 
     saveEdit(data) {
-         return $.ajax(`edit/${this.ID}`,{
+         return $.ajax(`/ticket/edit/${this.ID}`,{
            method:'PATCH',
            data: data,
         });
-
     }
 
     fetchOriginalData() {
@@ -75,5 +74,15 @@ export default class Ticket {
             ticket: {},
             fileID: []
         }
+    }
+
+    markAsFixed(user,e){
+        e.preventDefault();
+         $.ajax(`/tickets/status/fixed/${this.ID}`,{
+             type: 'PATCH',
+             data: {fixed_by: user.id}
+         }).done(() => {
+             window.location.reload();
+         });
     }
 }
