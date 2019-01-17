@@ -29,7 +29,7 @@
         </div>
     </div>
 
-
+@if(Auth::user()->role_id != 5 AND Auth::user()->role_id != 6  AND  Auth::user()->role_id != 7 )
     <div class="row-flex">
         <div class="left">
             <nav class="nav">
@@ -44,7 +44,7 @@
                         <a href="#!" class="nav__a">Requests</a>
                     </li>
                     <li class="nav__li">
-                        <a href="{{route('datacorrections.system')}}"class="nav__a {{in_array(Route::currentRouteName(),$dcRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
+                        <a href="{{route('datacorrectons.sdcApproved')}}"class="nav__a {{in_array(Route::currentRouteName(),$dcRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
                     </li>
                     <li class="nav__li">
                         <a href="{{route('reportsPage')}}" class="nav__a {{Route::currentRouteName() == 'reportsPage' ? 'nav__a--active' : ''}}">Reports</a>
@@ -94,5 +94,38 @@
             </ul>
         @show
     </nav>
+@else
+<div class="row-flex">
+    <div class="left">
+        <nav class="nav">
+            <ul class="nav__ul">
+                @if (Auth::user()->role_id === 5)
+                    <li class="nav__li">
+                        <a href="{{route('datacorrectons.treasuryPENDING')}}"class="nav__a {{in_array(Route::currentRouteName(),$tyRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
+                    </li>
+                @elseif (Auth::user()->role_id === 6)
+                    <li class="nav__li">
+                        <a href="{{route('datacorrectons.govcompPENDING')}}"class="nav__a {{in_array(Route::currentRouteName(),$gcRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
+                    </li>
+                   
+                @elseif (Auth::user()->role_id === 7)
+                     <li class="nav__li">
+                        <a href="{{route('datacorrectons.approverPENDING')}}"class="nav__a {{in_array(Route::currentRouteName(),$appRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
+                    </li>
+                @endif
+                    
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<nav class="submenu">
+    @section('submenu')
+     
+    @show
+</nav>
+
+
+@endif
 
 </header>

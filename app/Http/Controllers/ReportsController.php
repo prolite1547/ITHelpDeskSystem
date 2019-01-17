@@ -13,11 +13,17 @@ use App\Resolve;
 use App\CategoryA;
 use App\CategoryB;
 use App\Store;
-
+use Illuminate\Support\Facades\Auth;
 
 
 class ReportsController extends Controller
-{
+{   
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function reports(){
         return view('reports.reports', ['users'=> User::all(), 'categories'=> CategoryA::all(), 'stores'=> Store::all()]);
     }
@@ -181,7 +187,17 @@ class ReportsController extends Controller
         $resdate = "N/A";
         $resinterval = "N/A";
         $rowdata ="";
-        $incidents = Incident::whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
+        $store = $request->store;
+       
+        if($store == "all"){
+            $incidents = Incident::whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
+        }else{
+            $incidents = Incident::whereHas('call.contact', function ($query) use ($store) {
+                $query->where('store_id',$store); 
+            })->whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
+        }
+            
+        
         
         $data = "<table id='demo-dt-basic' class='table table-striped table-bordered table-hover RDSTable' cellspacing='0' width='100%'>";
         $data .= "<thead style='font-size:14px;'>";
@@ -190,32 +206,35 @@ class ReportsController extends Controller
         $data .= "<tbody style='font-size:12px;'>";
              foreach($incidents  as $incident){
                 if(isset($incident->ticket->id)){
+                     
                         switch($incident->ticket->status){
-                            case 1:
-                                $status = "OPEN";
-                            break;
-                            case 2:
-                                $status = "ON-GOING";
-                            break;
-                            case 3:
-                                $status = "CLOSED";
-                            break;
-                    }
-                    if(isset($incident->ticket->resolve->created_at)){
-                        $resdate = date('m/d/y | H:i:s A', strtotime($incident->ticket->resolve->created_at));
-                        $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
-                        $date2 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->resolve->created_at)));
-                        $diff = date_diff($date1,$date2);
-                    
-                        if((int)$diff->format("%a") == 0){
-                            $resinterval =  $diff->format("%h Hour(s) %i Minute(s) %s Second(s)");
-                        }else{
-                            $resinterval =  $diff->format("%a Day(s)");
+                                case 1:
+                                    $status = "OPEN";
+                                break;
+                                case 2:
+                                    $status = "ON-GOING";
+                                break;
+                                case 3:
+                                    $status = "CLOSED";
+                                break;
                         }
-                    }
-
-                    //  $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".""."</td><td>".$incident->catARelation->name."</td><td>".""."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
-                      
+                        if(isset($incident->ticket->resolve->created_at)){
+                            $resdate = date('m/d/y | H:i:s A', strtotime($incident->ticket->resolve->created_at));
+                            $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
+                            $date2 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->resolve->created_at)));
+                            $diff = date_diff($date1,$date2);
+                        
+                            if((int)$diff->format("%a") == 0){
+                                $resinterval =  $diff->format("%h Hour(s) %i Minute(s) %s Second(s)");
+                            }else{
+                                $resinterval =  $diff->format("%a Day(s)");
+                            }
+                        }
+                       
+                               //  $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".""."</td><td>".$incident->catARelation->name."</td><td>".""."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
+                               $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->call->contact->store->store_name."</td><td>".$incident->catARelation->name."</td><td>".$incident->catBRelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
+                     
+                     
                 }
              }
          $data .= $rowdata;
@@ -336,23 +355,34 @@ public function loadChart(){
 
         $topresolvers = array();
         $solveCount = array();
- 
+        $supports = array();
+         
         $resolvers = User::whereHas('resolved')->withCount(['resolved'=>function($query) use ($year, $month){
             $query->whereYear('created_at', '=', $year)->whereMonth('created_at', '=', $month);
         }])->orderBy('resolved_count', 'desc')->limit(10)->get();
+
+        
+        // User::whereHas('resolved')->withCount(['resolved'=>function($query){
+        //     $query->whereYear('created_at', '=', '2019')->whereMonth('created_at', '=', '1');
+        // }])->orderBy('resolved_count', 'desc')->limit(10)->first();
         
         // $resolvers = User::withCount(['resolved'=>function($query) use ($year, $month){
         //     $query->whereYear('created_at', '=', $year)->whereMonth('created_at', '=', $month);
         // }])->orderBy('resolved_count', 'desc')->limit(10)->get();
 
-
+        
         foreach($resolvers as $resolver){
             $rank = $count+1;
-            array_push($topresolvers,[$count, $rank.". ".$resolver->full_name]);
+            array_push($topresolvers,[$count,  $resolver->full_name]);
             array_push($solveCount,[$count, $resolver->resolved_count]);
+
+            foreach($resolver->resolved as $resolvedTickets){
+                array_push($supports, [$count, $resolvedTickets->ticket->incident->call->loggedBy->id, $resolvedTickets->ticket->incident->call->loggedBy->fullname]);
+            }
+
             $count+=1;
         }
-        return response()->json(array('success'=>true, 'topresolvers'=>$topresolvers, 'solveCount'=>$solveCount), 200);
+        return response()->json(array('success'=>true, 'topresolvers'=>$topresolvers, 'solveCount'=>$solveCount, 'supports'=>$supports), 200);
     }
 
  

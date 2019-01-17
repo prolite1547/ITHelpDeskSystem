@@ -1,8 +1,20 @@
 .container{
     border: 2px solid black;
+}
+
+.border-1{
+    border: 1px solid black;
     
-    
-    
+}
+
+
+.border-bot{
+    border-bottom: 1px solid #c1c1c1;
+ 
+}
+
+.border-right{
+    border: 0px 0px 1px 0px solid black;
 }
 
 .container1{
@@ -83,6 +95,10 @@
     height: 60px;
 }
 
+.remarks{
+    display: block;
+    height: 30px;
+}
 .shouldbe{
     display:block;
     height: 25px;
@@ -132,7 +148,54 @@
     font-size:12px;
 }
 
- 
+.ticket-header{
+    background: lightgray;
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.ticket-number{
+    font-size: 24px;
+    font-weight: 5px;
+     
+}
+
+.ticket-titles{
+    font-weight: bold;
+    display:block;
+}
+
+.ticket-titles::after{
+    content: ':';
+}
+.underline{
+    border-bottom : 1px solid #c1c1c1;
+}
+
+.conversation{
+    padding: 10px;
+    border-bottom: 1px solid #c1c1c1;
+    border-radius:  10px;
+}
+
+.timestamp{
+    float:right;
+    clear: both;
+    font-weight: 2px;
+    font-size: 12px;
+    
+}
+.message{
+    display:block;
+    
+}
+
+.username{
+    
+    font-weight: bold;
+}
 
 @media print {
     .heading {
@@ -141,6 +204,11 @@
     }
     .action-buttons {
         display: none;
+    }
+
+    .ticket-header{
+        background-color: lightgray !important;
+        -webkit-print-color-adjust: exact; 
     }
 }
 

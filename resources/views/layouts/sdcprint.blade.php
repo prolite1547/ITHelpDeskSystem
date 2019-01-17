@@ -110,11 +110,47 @@
                         <span class="data"> {{ $sdc->terminal_name }} </span>
                     </div>
             </div>
+
+            <div class="row ">
+                    <div class="col-md-12 ">
+                        <span class="labels">Attachment(s) : </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 ">
+                           
+                                @if (isset($sdc->attachments))
+                                <ul class="labels" style="list-style: none;">
+                                    @foreach ($sdc->attachments as $attachment)
+                                        <li class="data">{{  $attachment->original_name  }}</li>
+                                    @endforeach
+                                </ul>
+                                @else
+                                    No Attachment
+                                @endif
+                               
+                            
+                    </div>
+            </div>
+
+            <div class="row">
+                    <div class="col-md-12">
+                        <span class="labels">Findings and Recommendations : </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 fandr">
+                            <span class="data"> {{ $sdc->findings_recommendations }}</span>
+                    </div>
+            </div>
+
+
             <div class="row">
                     <div class="col-md-12 subheading text-center wborder">
                         <span> Hard Copy for POS</span>
                     </div>
             </div>
+
             <div class="row">
                     <div class="col-md-2 wborder">
                         <span class="labels"> Last Z Reading : </span>
@@ -190,16 +226,7 @@
                     </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <span class="labels">Findings and Recommendations : </span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 fandr">
-                        <span class="data"> {{ $sdc->findings_recommendations }}</span>
-                </div>
-            </div>
+          
 
             <div class="row">
                     <div class="col-md-12 heading text-center">
@@ -231,6 +258,16 @@
                     </div>
                     <div class="col-md-8 wborder data text-center" style="display:block;height:25px;">
                             {{ $sdc->pre_acc_verified_date }}
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="col-md-12">
+                        <span class="labels">REMARKS : </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 remarks">
+                            <span class="data"> {{ $sdc->ty_remarks }}</span>
                     </div>
             </div>
 
@@ -333,6 +370,16 @@
                     </div>
             </div>
 
+            <div class="row">
+                    <div class="col-md-12">
+                        <span class="labels">REMARKS : </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 remarks">
+                            <span class="data"> {{ $sdc->govcomp_remarks }}</span>
+                    </div>
+            </div>
             <div class="row">
                     <div class="col-md-12 heading text-center">
                         <span>Change Processing</span>

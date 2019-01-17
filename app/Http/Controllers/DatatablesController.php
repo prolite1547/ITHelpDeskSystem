@@ -63,20 +63,155 @@ class DatatablesController extends Controller
 
     }
 
+    // public function sdc(){
+    //    $query = DB::table('system_data_corrections')
+    //    ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+    //    ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
+    //    ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted');
+    //    $datatablesJSON = DataTables::of($query);
+    //    return $datatablesJSON->make(true);
+    // }
+
     public function sdc(){
-       $query = DB::table('system_data_corrections')
-       ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
-       ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-       ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted');
-       $datatablesJSON = DataTables::of($query);
-       return $datatablesJSON->make(true);
-    }
+        $query = DB::table('system_data_corrections')
+        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
+        ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted');
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+     }
+     
+     public function system($status){
+
+       
+        $query = DB::table('system_data_corrections')
+        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
+        ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted, system_data_corrections.status');
+        
+        switch($status){
+            case "approved":
+                $query = $query->where('system_data_corrections.status', '4');
+            break;
+            case "saved":
+                $query = $query->where('system_data_corrections.status', '0');
+            break;
+            case "posted":
+                 $query = $query->where('system_data_corrections.status', '1');
+            break;
+            case "ongoing":
+                 $query = $query->where('system_data_corrections.status', '2');
+            break;
+            case "forapproval":
+                $query = $query->where('system_data_corrections.status', '3');
+            break;
+            case "done":
+                 $query = $query->where('system_data_corrections.status', '5');
+            break;
+
+        }
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+     }
+     
+
 
     public function mdc(){
         $query = DB::table('manual_data_corrections')
         ->join('tickets', 'manual_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
         ->selectRaw('manual_data_corrections.id,manual_data_corrections.mdc_no ,tickets.id as ticket_id ,incidents.subject, manual_data_corrections.requestor_name ,manual_data_corrections.department, manual_data_corrections.position, manual_data_corrections.date_submitted, manual_data_corrections.posted');
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+     }
+
+     public function treasury($status){
+        $query = DB::table('system_data_corrections')
+        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
+        ->selectRaw('system_data_corrections.id,
+        system_data_corrections.sdc_no,
+        tickets.id as ticket_id,
+        incidents.subject, 
+        system_data_corrections.requestor_name,
+        system_data_corrections.dept_supervisor,
+        system_data_corrections.department,
+        system_data_corrections.position,
+        system_data_corrections.date_submitted,
+        system_data_corrections.posted,
+        system_data_corrections.status');
+        
+        if($status != "all"){
+           if($status == "pending"){
+                $query = $query->where('system_data_corrections.status', '1');
+           }elseif($status == "done"){
+                $query = $query->whereIn('system_data_corrections.status', array('2','3','4','5'));
+           }
+        }else{
+            $query = $query->whereIn('system_data_corrections.status', array('1','2','3'));
+        }
+
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+     }
+
+     public function govcomp($status){
+        $query = DB::table('system_data_corrections')
+        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
+        ->selectRaw('system_data_corrections.id,
+        system_data_corrections.sdc_no,
+        tickets.id as ticket_id,
+        incidents.subject, 
+        system_data_corrections.requestor_name,
+        system_data_corrections.dept_supervisor,
+        system_data_corrections.department,
+        system_data_corrections.position,
+        system_data_corrections.date_submitted,
+        system_data_corrections.posted,
+        system_data_corrections.status');
+        
+        if($status != "all"){
+           if($status == "pending"){
+                $query = $query->where('system_data_corrections.status', '2');
+           }elseif($status == "done"){
+                $query = $query->whereIn('system_data_corrections.status',  array('3','4','5'));
+           }
+        }else{
+            $query = $query->whereIn('system_data_corrections.status', array('2','3'));
+        }
+
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+     }
+
+
+     public function approver($status){
+        $query = DB::table('system_data_corrections')
+        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
+        ->selectRaw('system_data_corrections.id,
+        system_data_corrections.sdc_no,
+        tickets.id as ticket_id,
+        incidents.subject, 
+        system_data_corrections.requestor_name,
+        system_data_corrections.dept_supervisor,
+        system_data_corrections.department,
+        system_data_corrections.position,
+        system_data_corrections.date_submitted,
+        system_data_corrections.posted,
+        system_data_corrections.status');
+        
+        if($status != "all"){
+           if($status == "pending"){
+                $query = $query->where('system_data_corrections.status', 3);
+           }elseif($status == "done"){
+                $query = $query->whereIn('system_data_corrections.status',  array(4,5));
+           }
+        }else{
+            $query = $query->whereIn('system_data_corrections.status', array(3,4,5));
+        }
+
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }

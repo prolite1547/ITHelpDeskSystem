@@ -1,6 +1,28 @@
 @extends('layouts.dashboardLayout')
 @section('title','System Data Correction')
-@section('submenu')@endsection
+@section('submenu')
+<ul class="submenu__ul">
+    <li class="submenu__li">
+            <a href="{{route('datacorrectons.sdcApproved')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcApproved' ? 'submenu__a--active' : ''}}">Approved</a>
+    </li>
+    <li class="submenu__li">
+            <a href="{{route('datacorrectons.sdcSave')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcSave' ? 'submenu__a--active' : ''}}">Saved</a>
+    </li>     
+    <li class="submenu__li">
+            <a href="{{route('datacorrectons.sdcPosted')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcPosted' ? 'submenu__a--active' : ''}}">Posted</a>
+    </li>
+    <li class="submenu__li">
+            <a href="{{route('datacorrectons.sdcOngoing')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcOngoing' ? 'submenu__a--active' : ''}}">Ongoing</a>
+    </li>
+    <li class="submenu__li">
+        <a href="{{route('datacorrectons.sdcForApproval')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcForApproval' ? 'submenu__a--active' : ''}}">For Approval</a>
+    </li>
+   
+    <li class="submenu__li">
+        <a href="{{route('datacorrectons.sdcDone')}} " class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcDone' ? 'submenu__a--active' : ''}}">Done</a>
+    </li>
+</ul>
+@endsection
 @section('content')
     <main>
             <div class="row" >
@@ -13,7 +35,7 @@
                         <div class="side__content">
                             <dl class="side__dl" >
                                 <dt class="side__dt">All types</span></dt>
-                                <dd class="side__dd {{Route::currentRouteName() == 'datacorrections.system' ? 'selecteddc--active' : ''}}"><a href="{{ route('datacorrections.system') }}" style="text-decoration:none;color:white;">System Data Correction ({{ $sdcCount }})</a></dd>
+                                <dd class="side__dd {{ in_array(Route::currentRouteName(),$dcRoutes) ? 'selecteddc--active' : ''}}"><a href="{{ route('datacorrectons.sdcApproved') }}" style="text-decoration:none;color:white;">System Data Correction ({{ $sdcCount }})</a></dd>
                                 <dd class="side__dd {{Route::currentRouteName() == 'datacorrections.manual' ? 'selecteddc--active' : ''}}"><a href="{{ route('datacorrections.manual') }}" style="text-decoration:none;color:black;">Manual Data Correction ({{ $mdcCount }})</a></dd>
                             </dl>
                         </div>

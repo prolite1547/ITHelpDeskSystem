@@ -1,7 +1,7 @@
 @include('reports.chartheader')
     
      
-              <div class="container" style="margint-bottom:10px;">
+              <div class="container" style="margin-top:100px;margint-bottom:10px;">
                   {{-- MONTHLY LOGGED VS. RESOLVED --}}
                     <div class="logggedvsresolved">
                             <h2>Logged vs. Resolved (<span class="lvryear1"></span>) </h2>
@@ -124,7 +124,7 @@
                     {{-- END OF MONTHLY CATEGORY VS. RESOLVED --}}
                     <hr>
                     {{-- MONTHLY TOP 10 RESOLVERS --}}
-                    <div class="catresolved" style="margin-top:100px;">
+                    <div class="catresolved" style="margin-top:100px;margin-bottom:100px;">
                             <h2>Top 10 Resolvers (<span id="selectedtryear"></span>) </h2>
                             <hr>
                             <div class="row">
