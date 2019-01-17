@@ -151,23 +151,8 @@ Route::post('/add/department','DepartmentController@create');
 Route::get('/api/user/{id}','UserController@userAPI');
 
 Route::get('/test',function (){
+    return view('emails.PLDTIssue');
 
-
-    $store = Store::whereId(1)->with('contacts')->first();
-//    $contacts = Contact::whereHas('store',function ($query){
-//        $query->whereId(2);
-//    })->get();
-//    foreach ($store as $contact){
-//        echo '<pre>';
-//        echo $store;
-//        echo '</pre>';
-//    }
-
-    foreach ($store->contacts as $contact){
-        echo '<pre>';
-        echo $contact;
-        echo '</pre>';
-    }
 });
 
 Route::get('/test2',function (){
