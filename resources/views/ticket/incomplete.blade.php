@@ -13,10 +13,10 @@
                         <label class="form-addTicketDetails__ticket">Ticket #: <input name="ticket_id" type="text" value="{{$ticket->id}}" readonly class="form-addTicketDetails__ticket-value"></label>
                         <div class="form__group">
                             {!! Form::label('subject','Subject :',['class' => 'form__label form__label--block'])!!}
-                            {!! Form::text('subject',null,['class' => 'form__input form__input--100w','placeholder' => 'Subject','required','minlength' => '5','maxlength' => '100']) !!}
+                            {!! Form::text('subject',null,['class' => 'form__input form__input--100w','placeholder' => 'Subject','required','minlength' => '10','maxlength' => '10']) !!}
                         </div>
                         <div class="form__group">
-                            {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength' => '5','maxlength' => '200']) !!}
+                            {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength' => '10','maxlength' => '150']) !!}
                         </div>
                         <div class="form__group">
 

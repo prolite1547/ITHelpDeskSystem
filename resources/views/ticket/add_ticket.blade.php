@@ -58,10 +58,10 @@
                             <label class="form-addTicketDetails__ticket">Ticket #: <input name="ticket_id" type="text" value="1234" readonly class="form-addTicketDetails__ticket-value"></label>
                             <div class="form__group">
                                 {!! Form::label('subject','Subject :',['class' => 'form__label form__label--block'])!!}
-                                {!! Form::text('subject',old('subject'),['class' => 'form__input form__input--100w','placeholder' => 'Subject','required']) !!}
+                                {!! Form::text('subject',old('subject'),['class' => 'form__input form__input--100w','placeholder' => 'Subject','required','minlength'=>'10','maxlength'=>'100']) !!}
                             </div>
                             <div class="form__group">
-                                {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required']) !!}
+                                {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength'=>'10','maxlength'=>'150']) !!}
                             </div>
                             <div class="form__group">
                                 {{ Form::file('attachments[]', array('multiple'))  }}
