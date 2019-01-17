@@ -1419,6 +1419,7 @@ body {
 
 .header__item {
   padding: 3px 6px 3px 0;
+  text-align: right;
 }
 
 .header__item:hover {
@@ -1482,15 +1483,11 @@ body {
   color: #e5e5e5;
   font-size: 1rem;
   padding: 0 3px;
+  position: relative;
 }
 
 .submenu__a--active {
   background-color: #000;
-  border-radius: 10rem;
-}
-
-.selecteddc--active {
-  background-color: #BEBEBE;
   border-radius: 10rem;
 }
 
@@ -1723,7 +1720,6 @@ body {
   background-color: white;
   -webkit-transition: all .8s;
   transition: all .8s;
-  padding: 5px;
 }
 
 .popup__close {
@@ -1741,6 +1737,7 @@ body {
   text-align: center;
   color: #fff;
   cursor: pointer;
+  z-index: 99;
 }
 
 .popup__close:active {
@@ -1896,6 +1893,55 @@ body {
 
 .tool-section__label:hover {
   text-decoration: underline;
+}
+
+.fieldset {
+  padding: 1rem;
+}
+
+.fieldset__legend {
+  font-size: 1.4rem;
+  padding: .5rem;
+}
+
+.fieldset__flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.fieldset__left {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 30%;
+          flex: 0 0 30%;
+}
+
+.notif {
+  padding: 3px;
+  width: 13rem;
+  position: absolute;
+  display: block;
+  top: -2.5rem;
+  right: 1.5rem;
+  -webkit-transform: translateX(13rem);
+          transform: translateX(13rem);
+  background-color: #ff3b2f;
+  border-radius: 10rem;
+  z-index: 10;
+}
+
+.notif__caret {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  fill: #ff3b2f;
+  bottom: -1.15rem;
+  left: -1.1rem;
+  -webkit-transform: rotate(290deg);
+          transform: rotate(290deg);
 }
 
 .row {
@@ -2094,12 +2140,18 @@ body {
 .form-callerAdd__button,
 .form-callerAdd__button:link,
 .form-callerAdd__button:visited,
+.form-departmentAdd__button,
+.form-departmentAdd__button:link,
+.form-departmentAdd__button:visited,
 .form-contactAdd__button,
 .form-contactAdd__button:link,
 .form-contactAdd__button:visited,
 .form-branchAdd__button,
 .form-branchAdd__button:link,
-.form-branchAdd__button:visited {
+.form-branchAdd__button:visited,
+.form-positionAdd__button,
+.form-positionAdd__button:link,
+.form-positionAdd__button:visited {
   text-transform: uppercase;
   display: inline-block;
   padding: 5.6px 10.5px;
@@ -2115,8 +2167,10 @@ body {
 }
 
 .form-callerAdd__content-box,
+.form-departmentAdd__content-box,
 .form-contactAdd__content-box,
-.form-branchAdd__content-box {
+.form-branchAdd__content-box,
+.form-positionAdd__content-box {
   border: 1px solid #bebebe;
   padding: 1.5rem 1rem 1rem 1rem;
   -webkit-transform: translateY(-1rem);
@@ -2184,6 +2238,33 @@ body {
 }
 
 .form-email__input--textarea {
+  resize: none;
+}
+
+.form-addTicketDetails__ticket {
+  font-size: 1.7rem;
+  font-weight: 700;
+  display: block;
+  text-align: left;
+  background-color: rgba(119, 119, 119, 0.3);
+  padding: .2rem .5rem;
+}
+
+.form-addTicketDetails__ticket-value {
+  font: inherit;
+  color: currentColor;
+  display: inline-block;
+  border: none;
+  background-color: transparent;
+  outline: none;
+}
+
+.reject {
+  padding: 1rem;
+}
+
+.reject__reason {
+  width: 100%;
   resize: none;
 }
 
@@ -2509,6 +2590,7 @@ main {
 
 .message__img {
   width: 100%;
+  height: 100%;
 }
 
 .message__time {
@@ -2517,6 +2599,31 @@ main {
 
 .message:not(:last-child) {
   margin-bottom: 1rem;
+}
+
+/*
+REJECT DETAILS*/
+
+.reject-details {
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+.reject-details__reason {
+  padding: .3rem;
+  background-color: #e5e5e5;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+          box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
+  margin-bottom: .3rem;
+}
+
+.reject-details__name {
+  font-weight: 700;
+}
+
+.reject-details__date {
+  font-style: italic;
 }
 
 .user {
@@ -2550,6 +2657,7 @@ main {
 
 .user__img {
   width: 100%;
+  height: 100%;
 }
 
 .menu {
@@ -2693,5 +2801,33 @@ main {
   text-align: center;
   margin: 0 auto;
   color: rgba(119, 119, 119, 0.6);
+}
+
+.incomplete__header-primary {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.incomplete__flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.incomplete__right {
+  padding: 3rem;
+}
+
+.store-contact__header {
+  background-color: #e5e5e5;
+  padding-left: .5rem;
+}
+
+.store-contact__list {
+  padding: .5rem 2rem;
 }
 

@@ -49,9 +49,9 @@
                     <li class="nav__li">
                         <a href="{{route('reportsPage')}}" class="nav__a {{Route::currentRouteName() == 'reportsPage' ? 'nav__a--active' : ''}}">Reports</a>
                     </li>
-                    {{--<li class="nav__li">--}}
-                        {{--<a href="{{route('maintenancePage')}}" class="nav__a {{Route::currentRouteName() == 'maintenancePage' ? 'nav__a--active' : ''}}">Maintenance</a>--}}
-                    {{--</li>--}}
+                    <li class="nav__li">
+                        <a href="{{route('maintenancePage')}}" class="nav__a {{Route::currentRouteName() == 'maintenancePage' ? 'nav__a--active' : ''}}">Maintenance</a>
+                    </li>
                     @if(Auth::user()->role_id === 4)
                     <li class="nav__li">
                         <a href="{{route('adminPage')}}" class="nav__a {{Route::currentRouteName() == 'adminPage' ? 'nav__a--active' : ''}}">Admin</a>
@@ -62,7 +62,7 @@
         </div>
 
         <div class="right">
-            <a href="{{route('addTicketView')}}" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
+            <a href="{{route('addTicketView')}}" id="addTicketPageBtn" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
             {{Form::open(['method' => 'GET','url'=>'/search','class' => 'form form--search'])}}
                 <i class="fas fa-search form--search__icon"></i>
                 {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID'))}}
@@ -74,7 +74,17 @@
         @section('submenu')
             <ul class="submenu__ul">
                 <li class="submenu__li">
-                    <a href="{{route('myTickets')}}" class="submenu__a {{Route::currentRouteName() == 'myTickets' ? 'submenu__a--active' : ''}}">My Tickets <span>({{$ticketUserTicketsCount}})</span></a>
+                    <a href="{{route('myTickets')}}" class="submenu__a {{Route::currentRouteName() == 'myTickets' ? 'submenu__a--active' : ''}}">
+                        My Tickets <span>({{$ticketUserTicketsCount}})</span>
+                        @if($notificationContent)
+                        <span class="notif">{{$notificationContent}}
+                            <svg class="notif__caret">
+                                <use xlink:href="{{asset('svg/sprite.svg#icon-caret-down')}}">
+                                </use>
+                            </svg>
+                        </span>
+                        @endif
+                    </a>
                 </li>
                 <li class="submenu__li">
                     <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>({{$ticketOpenCount}})</span></a>
@@ -85,9 +95,14 @@
                 {{--<li class="submenu__li">--}}
                     {{--<a href="{{route('verificationTickets')}}" class="submenu__a {{Route::currentRouteName() == 'verificationTickets' ? 'submenu__a--active' : ''}}">For Verification <span>(0)</span></a>--}}
                 {{--</li>--}}
+                @if(in_array(Auth::user()->role_id,[2,4]))
                 <li class="submenu__li">
                     <a href="{{route('closedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'closedTickets' ? 'submenu__a--active' : ''}}">Resolved <span>({{$ticketClosedCount}})</span></a>
                 </li>
+                <li class="submenu__li">
+                    <a href="{{route('fixedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'fixedTickets' ? 'submenu__a--active' : ''}}">To Resolve<span>({{$ticketFixedCount}})</span></a>
+                </li>
+                @endif
                 <li class="submenu__li">
                     <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>({{$ticketCount}})</span></a>
                 </li>

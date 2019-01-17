@@ -10,7 +10,7 @@ class Caller extends Model
         'fName',
         'mName',
         'lName',
-        'store_id',
+        'position',
     ];
 
     protected $appends = ['full_name'];
@@ -32,5 +32,9 @@ class Caller extends Model
 
     public function store(){
         return $this->belongsTo('App\Store');
+    }
+
+    public function positionData(){
+        return $this->belongsTo('App\Position','position');
     }
 }

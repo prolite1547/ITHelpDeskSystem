@@ -1,11 +1,13 @@
-import {elements, elementStrings, hideModal} from "./views/base";
+import {elements, elementStrings, hideModal, toggleFormGroups} from "./views/base";
 import {ticketViewController,ticketAddController} from "./TicketViewController";
 import {ticketPageController} from "./TicketPageController";
 import {profileController} from "./ProfileController";
 import {adminPageController} from  "./AdminPageController";
+import {maintenancePageController} from "./maintenancePageController";
+import User from './models/User';
+
 
 $(document).ready( function(){
-
 
 
 $.extend( true, $.fn.dataTable.defaults, {
@@ -26,12 +28,15 @@ $.extend( true, $.fn.dataTable.defaults, {
         },
         {
             targets: 2, /*CATEGORY*/
+            defaultContent:'Not Set',
             render: (data) => {
-                return `<span class='u-bold u-${data.toLowerCase()}'>${data}</span>`
+                if(data) return `<span class='u-bold u-${data.toLowerCase()}'>${data}</span>`;
+
             }
         },
         {
             targets: 0, /*SUBJECT*/
+            defaultContent:'Not Set',
             createdCell: ( cell, cellData,rowData) => {
                 cell.setAttribute('title',rowData.subject);
             },
@@ -48,26 +53,29 @@ $.extend( true, $.fn.dataTable.defaults, {
             createdCell: ( cell, cellData) => {
                 cell.setAttribute('title',cellData);
             },
-            render: (data, type, row) => {
+            render: (data) => {
                 return moment(data).fromNow();
             }
 
         },
         {
             targets: 6, /*EXPIRATION DATE COLUMN*/
+            defaultContent:'Not Set',
             createdCell: ( cell, cellData) => {
                 cell.setAttribute('title',cellData);
             },
-            render: (data, type, row) => {
-                let now;
+            render: (data) => {
+                if(data){
+                    let now;
+                    now = moment();
 
-                now = moment();
-
-                if(now >= moment(data)){
-                    return `<span class="expired">Expired</span>`;
-                }else {
-                    return moment(data).fromNow();
+                    if(now >= moment(data)){
+                        return `<span class="expired">Expired</span>`;
+                    }else {
+                        return moment(data).fromNow();
+                    }
                 }
+
             }
 
         }
@@ -90,7 +98,6 @@ $.extend( $.fn.dataTable.ext.classes, {
     "sNoFooter": "no-footer",
 
     /* Paging buttons */
-    "sPageButton": "paginate_button",
     "sPageButton": "paginate_button",
     "sPageButtonActive": "current",
     "sPageButtonDisabled": "disabled",
@@ -158,30 +165,19 @@ if(elements.table) {
 
 
             //show the menu
-            e.target.closest('tr').classList.toggle('selected-row')
+            e.target.closest('tr').classList.toggle('selected-row');
             console.log(e.target.parentNode.childNodes['1'].classList.toggle('u-display-n'));
         }
     });
-};
+}
 
 /*ADDED SELECT2 PLUGIN*/
 if(elements.select2elements){
   elements.select2elements.select2();
-};
-
-if(elements.addTicketWindow){
-    elements.addTicketWindow.addEventListener('click',(e) => {
-   if(e.target.matches('button,button *')){
-
-       if(e.target.matches('i')){
-           e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
-           e.target.classList.toggle('fa-plus');
-           e.target.classList.toggle('fa-minus');
-       }
-   }
-
-});
 }
+
+
+
 
 elements.popupClose.addEventListener('click',() => {
     hideModal();
@@ -190,15 +186,18 @@ elements.popupClose.addEventListener('click',() => {
     const ticketView_route  = new RegExp("\/tickets\/view\/\\d+",'gm');
     const ticketAdd_route  = new RegExp("\/tickets\/add",'gm');
     const userProfile_route  = new RegExp("\/user\/profile\/\\d+",'gm');
-    const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all)",'gm');
+    const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all|fixed)",'gm');
     const adminPage_route  = new RegExp("\/admin",'gm');
+    const maintenancePage_route  = new RegExp("\/maintenance",'gm');
     const pathName = window.location.pathname;
 
     switch (true){
         case ticketView_route.test(pathName):
-            ticketViewController();
+            const user = new User();
+            ticketViewController(user);
             break;
         case ticketAdd_route.test(pathName):
+            elements.maintenanceCol.addEventListener('click',toggleFormGroups); /*EVENT LISTENER ON PLUS ICONS*/
             ticketAddController();
             break;
         case userProfile_route.test(pathName):
@@ -209,6 +208,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case adminPage_route.test(pathName):
             adminPageController();
+            break;
+        case maintenancePage_route.test(pathName):
+            maintenancePageController();
             break;
         default:
             console.log('route not set');

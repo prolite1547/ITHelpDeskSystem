@@ -2,22 +2,19 @@ import {setDisable,displayError} from "./views/base";
 import Caller from './models/Caller';
 import Store from './models/Store';
 import Contact from './models/Contact';
+import PLDTMail from "./models/PLDTMail";
+import Position from "./models/Position";
+import Department from "./models/Department";
 
-export const sendForm = (button,e) => {
-
-
+export const sendForm = (e) => {
     if(e.target.checkValidity()){
         e.preventDefault();
 
-        let submitBtn,formdata,form,object;
+        let formdata,form,object,formSbmtBtn;
         form = e.target;
-        submitBtn = form.querySelector(button);
+        formSbmtBtn = form.querySelector('button[data-action]');
 
-        setDisable(submitBtn);
-
-
-        /*SERIALIZE FORM DATA*/
-        formdata = $(form).serialize();
+        setDisable(formSbmtBtn);
 
         if(form.id === 'addCaller'){
             object =  new Caller();
@@ -25,25 +22,31 @@ export const sendForm = (button,e) => {
             object = new Store();
         }else if(form.id === 'addContact'){
             object = new Contact();
+        }else if(form.id === 'addPLDTIssue'){
+            object = new PLDTMail();
+        }else if(form.id === 'addPosition'){
+            object = new Position();
+        }else if(form.id === 'addDepartment'){
+            object = new Department();
         }else {
             alert('form not found');
         }
 
+        /*SERIALIZE FORM DATA*/
+        formdata = $(form).serialize();
 
-        object.storeData(formdata)
-            .done(data => {
-                setTimeout(() => {
-                    alert('Added Successfully!!');
-                    form.reset();
-                    setDisable(submitBtn,false);
-                },2000)
-            })
-            .fail((jqXHR, textStatus) => {
-                setTimeout(() => {
-                    displayError(jqXHR);
-                    setDisable(submitBtn,false);
-                },2000)
-            });
+        if(object){
+            object.storeData(formdata)
+                .done(() => {
+                        alert('Added Successfully!!');
+                        form.reset();
+                        setDisable(formSbmtBtn,false);
+                })
+                .fail((jqXHR) => {
+                        setDisable(formSbmtBtn,false);
+                        displayError(jqXHR);
+                });
+        }
     }
 
 };
@@ -55,4 +58,17 @@ export const addData = (url,data) => {
         data: data
     });
 
+};
+
+export const toggleHiddenGroup = (e) => {
+    let data,form,hiddenGroup;
+    data = e.params.data;
+    form = e.delegateTarget.form;
+    hiddenGroup = form.querySelector('.u-display-n');
+    if(data.id !== ""){
+        // addTicketView.showContactFormGroup();
+        hiddenGroup.classList.toggle('u-display-n');
+    }else{
+        // addTicketView.hideContactFormGroup();
+    }
 };

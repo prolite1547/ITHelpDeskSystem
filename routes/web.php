@@ -12,6 +12,11 @@
 */
 
 
+use App\Caller;
+use App\Contact;
+use App\Incident;
+use App\Store;
+use App\User;
 use Illuminate\Support\Carbon;
 use Webklex\IMAP\Client;
 
@@ -33,21 +38,26 @@ Route::post('/user/add','UserController@create')->name('addUser');
 ////////*TICKETS*/////////
 //////////////////////////
 
+Route::get('/ticket/incomplete/{id}','TicketController@incompleteTicket')->name('incompleteTicket');
 Route::get('/ticket/{id}','TicketController@getTicket');
 Route::get('/tickets/add','TicketController@addTicketView')->name('addTicketView');
 Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
+Route::patch('/ticket/add/details','TicketController@addTicketDetails')->name('addTicketDetails');
+Route::post('/ticket/pldt/add','TicketController@addPLDTTicket')->name('addPLDTTicket');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
-Route::patch('/tickets/view/edit/{id}', 'TicketController@edit')->name('editTicket');
+Route::patch('/ticket/edit/{id}', 'TicketController@edit')->name('editTicket');
+Route::patch('/tickets/status/fixed/{id}', 'TicketController@editStatus')->name('editStatus');
 Route::get('/tickets/open', 'TicketController@open')->name('openTickets');
 Route::get('/tickets/ongoing', 'TicketController@ongoing')->name('ongoingTickets');
 Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
+Route::get('/tickets/fixed', 'TicketController@fixed')->name('fixedTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::get('/tickets/verification', 'TicketController@forVerifcation')->name('verificationTickets');
 Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/my', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
-//Route::get('/ticket/print/{id}','TicketController@print')->name('ticketPrint');
+Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
 
 //////////////////////////
 ////////*RESOLVE*/////////
@@ -62,10 +72,15 @@ Route::post('/file/ticket/{id}','TicketController@addFile');
 //////////////////////////
 ////////*MODAL*////////////
 //////////////////////////
+//Route::get('/modal/ticketEdit/{id}','StoreController@contacts')->name('modalTicketEdit');
 Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
-Route::view('/modal/form/resolve','modal.resolve_form')->name('modalResolveForm');
+Route::get('/modal/form/reject/{ticket_id}','TicketController@rejectForm');
+Route::get('/modal/lookup/reject/{ticket_id}','TicketController@rejectFormDetails');
+Route::view('/modal/form/resolve','modal.resolve_form');
 Route::view('/modal/form/userAdd','modal.user_add');
 Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalResolveView');
+Route::get('/modal/{store_id}/contacts','StoreController@storeContacts')->name('storeContacts');
+
 //////////////////////////
 ////////*MESSAGE*/////////
 //////////////////////////
@@ -98,6 +113,8 @@ Route::get('/admin','AdminController@index')->name('adminPage');
 Route::get('/select/store', 'SelectController@branch');
 Route::get('/select/caller', 'SelectController@caller');
 Route::get('/select/contact', 'SelectController@contact');
+Route::get('/select/position', 'SelectController@position');
+Route::get('/select/department', 'SelectController@department');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -108,7 +125,7 @@ Route::get('/reports', 'AdminController@report')->name('reportsPage');
 ////////*DATATABLES*//////
 //////////////////////////
 
-Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets')->name('datatables.tickets');
+Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets');
 
 //////////////////////////
 ////////*MAINTENANCE*//////
@@ -120,9 +137,21 @@ Route::get('/maintenance','HomeController@maintenance')->name('maintenancePage')
 //////////////////////////
 Route::get('/search','HomeController@search')->name('search');
 
-Route::get('/test',function (){
+//////////////////////////
+////////*POSITION*//////
+//////////////////////////
+Route::post('/add/position','PositionController@create');
+//////////////////////////
+////////*DEPARTMENT*//////
+//////////////////////////
+Route::post('/add/department','DepartmentController@create');
+//////////////////////////
+////////*API*//////
+//////////////////////////
+Route::get('/api/user/{id}','UserController@userAPI');
 
-   return view('layouts.ticketPrint');
+Route::get('/test',function (){
+    return view('emails.PLDTIssue');
 
 });
 
@@ -159,7 +188,7 @@ Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');
 
 Route::post('get/positions', 'SDCController@getPosition')->name('get.positions');
 
-// Data Corrections Separate Page 
+// Data Corrections Separate Page
  Route::get('datacorrections', 'DCController@index')->name('datacorrections');
  
  
@@ -168,6 +197,7 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
 
  Route::get('datacorrections/sdc','DatatablesController@sdc')->name('datacorrection.sdc');
  Route::get('datacorrections/mdc','DatatablesController@mdc')->name('datacorrection.mdc');
+<<<<<<< HEAD
 
 
  Route::get('datacorrections/sdc-data/{status}', 'DatatablesController@system')->name('datacorrections.system');
@@ -200,3 +230,5 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
  
 
  Route::get('print/{id}/ticket', 'TicketController@print')->name('print.ticket');
+=======
+>>>>>>> bfed0abae0f1040039a2ae9d7b947171fa7e0200

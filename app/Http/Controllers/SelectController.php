@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Caller;
 use App\Contact;
+use App\Department;
 use App\Http\Resources\CallerCollection;
 use App\Http\Resources\ContactCollection;
+use App\Http\Resources\DepartmentCollection;
+use App\Http\Resources\PositionCollection;
 use App\Http\Resources\StoreCollection;
+use App\Position;
 use App\Role;
 use App\Store;
 use Illuminate\Http\Request;
@@ -52,5 +56,25 @@ class SelectController extends Controller
         }
 
 
+    }
+
+    public function position(Request $request){
+
+        if($request->query('q')){
+            return new PositionCollection(Position::where('position', 'like', "%{$request->query('q')}%")->get(['id','position as text']));
+        }else{
+            return new PositionCollection(Position::all(['id','position as text']));
+        }
+
+
+    }
+
+    public function department(Request $request){
+
+        if($request->query('q')){
+            return new DepartmentCollection(Department::where('department', 'like', "%{$request->query('q')}%")->get(['id','department as text']));
+        }else{
+            return new DepartmentCollection(Department::all(['id','department as text']));
+        }
     }
 }

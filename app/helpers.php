@@ -1,8 +1,10 @@
 <?php
 
-    use App\Category;
+use App\Caller;
+use App\Category;
 use App\Ticket;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 if (! function_exists('selectArray')) {
         function selectArray($group = '',$model,$id,$name){
@@ -84,4 +86,47 @@ if (! function_exists('ticketTypeCount')) {
         return compact('incident','request','ticketCount');
     }
 }
+
+if (! function_exists('addCaller')) {
+    function addCaller($data){
+        $caller = $caller = "{$data['fName']} {$data['mName']} {$data['lName']}";
+
+        $fetchedCaller = Caller::where(DB::raw('CONCAT_WS(" ",fName,mName,lName)'),'like',$caller)->first();
+        if($fetchedCaller === null){
+            return $caller_id = Caller::create($data)->id;
+        }else {
+            return $caller_id = $fetchedCaller->id;
+        }
+    }
+}
+
+if (! function_exists('validateLoggersTicketStatus')) {
+    function validateLoggersTicketStatus($user_id){
+        $user_tickets = DB::table('users as u')
+            ->where('u.id',$user_id)
+            ->whereNotNull('t.id')
+            ->where(function ($query){
+                $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null]);
+            })
+            ->leftJoin('tickets as t','u.id','t.logged_by')
+            ->leftJoin('incidents as i','t.incident_id','i.id')
+            ->select('t.id','t.incident_id','t.priority','t.expiration','i.subject','i.details','i.category','i.catA','i.catB')
+            ->first();
+
+        return $user_tickets;
+    }
+}
+
+if (! function_exists('getNotificationContent')) {
+    function getNotificationContent($userID){
+        $userRejectedTickets = Ticket::whereStatus(5)->whereAssignee($userID)->count();
+
+        if($userRejectedTickets !== 0){
+            return $userRejectedTickets > 1 ?  "You have {$userRejectedTickets} rejected tickets!" : "You have {$userRejectedTickets} rejected ticket!";
+        }else{
+            return false;
+        }
+    }
+}
+
 ?>

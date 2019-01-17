@@ -17,4 +17,11 @@ class StoreController extends Controller
 
         $store = Store::create($request->except('_token'));
     }
+
+
+    public function storeContacts($id){
+        $store = $store = Store::whereId($id)->with('contacts')->first();;
+
+        return view('modal.storeContacts',compact('store'));
+    }
 }

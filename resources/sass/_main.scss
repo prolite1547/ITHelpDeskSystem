@@ -22,6 +22,8 @@
 @import "components/alert";
 @import "components/icon";
 @import "components/tool";
+@import "components/fieldset";
+@import "components/notif-box";
 
 
 @import "layouts/grid";
@@ -36,3 +38,5 @@
 @import "pages/ticket";
 @import "pages/adminPage";
 @import "pages/search";
+@import "pages/incompleteTicket";
+@import "pages/storeContactMdl";

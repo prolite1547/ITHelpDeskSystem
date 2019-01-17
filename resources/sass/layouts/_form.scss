@@ -145,8 +145,10 @@
 
 
 .form-callerAdd,
+.form-departmentAdd,
 .form-contactAdd,
-.form-branchAdd{
+.form-branchAdd,
+.form-positionAdd{
 
     &__button {
         &,
@@ -212,7 +214,7 @@
 .form-email {
    width: 100%;
 
-    &__input {
+    &__input-text {
         display: block;
         border: none;
         font-size: 1.5rem;
@@ -220,23 +222,62 @@
         width: 100%;
         outline: none;
 
-        &:last-child {
-            background-color: red;
-            padding: 1000px;
-        }
 
         &:not(:last-child) {
             border-bottom: 1px solid rgba($color-grey-light-2,.8);
         }
+    }
 
-        &--textarea {
-            resize: none;
+    &__input-textarea{
+        display: block;
+        border: none;
+        font-size: 1.5rem;
+        padding: .5rem;
+        width: 100%;
+        outline: none;
+        resize: none;
+    }
+
+    &__input-select {
+        border: none;
+        background-color: $color-grey-light-2;
+        color: $color-grey-dark-3;
+        font-size: 1.4rem;
+        padding: .5rem;
+
+        &:not(:last-child) {
+            margin-right: 1rem;
         }
     }
  }
 
 
-.form-addUser {
+.form-addTicketDetails {
+    &__ticket {
+        font-size: 1.7rem;
+        font-weight: 700;
+        display: block;
+        text-align:left;
+        background-color: rgba($color-grey-dark,.3);
+        padding: .2rem .5rem;
+    }
 
+    &__ticket-value {
+        font: inherit;
+        color: currentColor;
+        display: inline-block;
+        border: none;
+        background-color: transparent;
+        outline: none;
+    }
+}
 
+.reject {
+    padding: 1rem;
+
+    &__reason {
+        width: 100%;
+        resize: none;
+
+    }
 }
