@@ -197,7 +197,6 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
 
  Route::get('datacorrections/sdc','DatatablesController@sdc')->name('datacorrection.sdc');
  Route::get('datacorrections/mdc','DatatablesController@mdc')->name('datacorrection.mdc');
-<<<<<<< HEAD
 
 
  Route::get('datacorrections/sdc-data/{status}', 'DatatablesController@system')->name('datacorrections.system');
@@ -230,5 +229,3 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
  
 
  Route::get('print/{id}/ticket', 'TicketController@print')->name('print.ticket');
-=======
->>>>>>> bfed0abae0f1040039a2ae9d7b947171fa7e0200
