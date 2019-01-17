@@ -1,8 +1,9 @@
-import {elements, elementStrings, hideModal} from "./views/base";
+import {elements, elementStrings, hideModal, toggleFormGroups} from "./views/base";
 import {ticketViewController,ticketAddController} from "./TicketViewController";
 import {ticketPageController} from "./TicketPageController";
 import {profileController} from "./ProfileController";
 import {adminPageController} from  "./AdminPageController";
+import {maintenancePageController} from "./maintenancePageController";
 import User from './models/User';
 
 
@@ -176,6 +177,8 @@ if(elements.select2elements){
 }
 
 
+
+
 elements.popupClose.addEventListener('click',() => {
     hideModal();
 });
@@ -185,6 +188,7 @@ elements.popupClose.addEventListener('click',() => {
     const userProfile_route  = new RegExp("\/user\/profile\/\\d+",'gm');
     const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all|fixed)",'gm');
     const adminPage_route  = new RegExp("\/admin",'gm');
+    const maintenancePage_route  = new RegExp("\/maintenance",'gm');
     const pathName = window.location.pathname;
 
     switch (true){
@@ -193,6 +197,7 @@ elements.popupClose.addEventListener('click',() => {
             ticketViewController(user);
             break;
         case ticketAdd_route.test(pathName):
+            elements.maintenanceCol.addEventListener('click',toggleFormGroups); /*EVENT LISTENER ON PLUS ICONS*/
             ticketAddController();
             break;
         case userProfile_route.test(pathName):
@@ -203,6 +208,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case adminPage_route.test(pathName):
             adminPageController();
+            break;
+        case maintenancePage_route.test(pathName):
+            maintenancePageController();
             break;
         default:
             console.log('route not set');

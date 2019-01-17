@@ -33,4 +33,8 @@ class Caller extends Model
     public function store(){
         return $this->belongsTo('App\Store');
     }
+
+    public function positionData(){
+        return $this->belongsTo('App\Position','position');
+    }
 }

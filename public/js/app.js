@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 144);
+/******/ 	return __webpack_require__(__webpack_require__.s = 142);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1902,7 +1902,7 @@
             try {
                 oldLocale = globalLocale._abbr;
                 var aliasedRequire = require;
-                __webpack_require__(173)("./" + name);
+                __webpack_require__(171)("./" + name);
                 getSetGlobalLocale(oldLocale);
             } catch (e) {}
         }
@@ -4584,7 +4584,7 @@
 
 
 var bind = __webpack_require__(8);
-var isBuffer = __webpack_require__(152);
+var isBuffer = __webpack_require__(150);
 
 /*global toString:true*/
 
@@ -4901,6 +4901,7 @@ module.exports = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return displayError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return setDisable; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return clearFormInputs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return toggleFormGroups; });
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var elements = {
@@ -4928,7 +4929,9 @@ var elements = {
     ticketAddSubmitBtn: document.getElementById('ticketAdd'),
     addCallerForm: document.getElementById('addCaller'),
     addBranchForm: document.getElementById('addBranch'),
+    addPositionForm: document.getElementById('addPosition'),
     addContactForm: document.getElementById('addContact'),
+    addDepartmentForm: document.getElementById('addDepartment'),
     addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
 
@@ -4938,7 +4941,7 @@ var elements = {
     PLDTFormContainerAdd: document.getElementById('PLDTFormContainer'),
     formItems: document.getElementsByClassName('window__item'),
     PLDTForm: document.querySelector('.form-email'),
-    mentainanceCol: document.querySelector('.maintenance-column'),
+    maintenanceCol: document.querySelector('.plusToggleContainer'),
     addTicketDetailsForm: document.querySelector('.form-addTicketDetails'),
     addTicketDetailsFormTicketEl: document.querySelector('.form-addTicketDetails__ticket-value'),
 
@@ -4968,6 +4971,7 @@ var elementStrings = {
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
     branchSelectContact: 'select[data-select=contact]',
+    depSelectpos: 'select[data-select=position]',
     ticketAddBtn: '#ticketAdd',
 
     /*TICKET ADD*/
@@ -5031,6 +5035,19 @@ var setDisable = function setDisable(el) {
 
 var clearFormInputs = function clearFormInputs(form) {
     form.reset();
+};
+
+var toggleFormGroups = function toggleFormGroups(e) {
+    /*FOR ELEMENTS THAT HAVE + ICON AND HIDDEN FORM GROUP*/
+    if (e.target.matches('button')) {
+        e.target.firstElementChild.classList.toggle('fa-plus');
+        e.target.firstElementChild.classList.toggle('fa-minus');
+        e.target.nextElementSibling.classList.toggle('u-display-n');
+    } else if (e.target.matches('i')) {
+        e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
+        e.target.classList.toggle('fa-plus');
+        e.target.classList.toggle('fa-minus');
+    }
 };
 
 /***/ }),
@@ -15440,7 +15457,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(1);
-var normalizeHeaderName = __webpack_require__(155);
+var normalizeHeaderName = __webpack_require__(153);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -15534,7 +15551,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(154)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(152)))
 
 /***/ }),
 /* 6 */
@@ -18130,12 +18147,12 @@ module.exports = function bind(fn, thisArg) {
 
 
 var utils = __webpack_require__(1);
-var settle = __webpack_require__(156);
-var buildURL = __webpack_require__(158);
-var parseHeaders = __webpack_require__(159);
-var isURLSameOrigin = __webpack_require__(160);
+var settle = __webpack_require__(154);
+var buildURL = __webpack_require__(156);
+var parseHeaders = __webpack_require__(157);
+var isURLSameOrigin = __webpack_require__(158);
 var createError = __webpack_require__(10);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(161);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(159);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -18232,7 +18249,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(162);
+      var cookies = __webpack_require__(160);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -18316,7 +18333,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(157);
+var enhanceError = __webpack_require__(155);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -30226,18 +30243,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketAddController", function() { return ticketAddController; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketViewController", function() { return ticketViewController; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__ = __webpack_require__(176);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__ = __webpack_require__(177);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Ticket__ = __webpack_require__(178);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Message__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_editIicketView__ = __webpack_require__(174);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Ticket__ = __webpack_require__(176);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_Message__ = __webpack_require__(177);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_Resolve__ = __webpack_require__(137);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_Caller__ = __webpack_require__(138);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__models_Store__ = __webpack_require__(139);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__models_Contact__ = __webpack_require__(140);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__models_PLDTMail__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__select2__ = __webpack_require__(194);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__global__ = __webpack_require__(138);
 var _this = this;
-
-
 
 
 
@@ -30268,66 +30281,13 @@ var ticketAddController = function ticketAddController() {
         __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["a" /* displayForm */]();
     })();
 
-    /*EVENT LISTENER ON PLUS ICONS*/
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].mentainanceCol.addEventListener('click', function (e) {
-        if (e.target.matches('button')) {
+    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2(__WEBPACK_IMPORTED_MODULE_6__select2__["a" /* branchSelect2 */]);
 
-            e.target.firstElementChild.classList.toggle('fa-plus');
-            e.target.firstElementChild.classList.toggle('fa-minus');
-            e.target.nextElementSibling.classList.toggle('u-display-n');
-        } else if (e.target.matches('i')) {
-            e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
-            e.target.classList.toggle('fa-plus');
-            e.target.classList.toggle('fa-minus');
-        }
-    });
+    $('#ticketPositionSelect').select2(__WEBPACK_IMPORTED_MODULE_6__select2__["d" /* psitionSelect2 */]);
 
-    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2({
-        ajax: {
-            url: '/select/store',
-            processResults: function processResults(data) {
-                return {
-                    results: data.data
-                };
-            }
-        }
-    });
+    $('#positionDepSelect').select2(__WEBPACK_IMPORTED_MODULE_6__select2__["c" /* deptSelect2 */]);
 
-    $('#ticketPositionSelect').select2({
-        width: '100%',
-        ajax: {
-            url: '/select/position',
-            processResults: function processResults(data) {
-                return {
-                    results: data.data
-                };
-            }
-        }
-    });
-
-    $('#contact_id').select2({
-        width: '30%',
-        ajax: {
-            url: '/select/contact',
-            processResults: function processResults(data) {
-                data = $.map(data.data, function (obj) {
-                    return {
-                        text: obj.store_name,
-                        children: obj.contact_numbers.map(function (obj2) {
-                            return {
-                                id: obj2.id,
-                                text: obj2.number
-                            };
-                        })
-                    };
-                });
-
-                return {
-                    results: data
-                };
-            }
-        }
-    });
+    $('#contact_id').select2(__WEBPACK_IMPORTED_MODULE_6__select2__["b" /* cntctSelect2 */]);
 
     $('#assigneeSelect').select2({
         width: '30%'
@@ -30375,64 +30335,13 @@ var ticketAddController = function ticketAddController() {
         }
     });
 
-    $(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elementStrings */].branchSelectContact).on('select2:select', function (e) {
-        var data = void 0;
-        data = e.params.data;
-        if (data.id !== "") {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["c" /* showContactFormGroup */]();
-        } else {
-            __WEBPACK_IMPORTED_MODULE_2__views_ticket_add__["b" /* hideContactFormGroup */]();
-        }
-    });
+    $(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elementStrings */].depSelectpos).on('select2:select', __WEBPACK_IMPORTED_MODULE_7__global__["c" /* toggleHiddenGroup */]);
 
-    // elements.addContactForm.addEventListener('submit', sendForm.bind(this,elementStrings.addContactSubmit));
     // elements.addCallerForm.addEventListener('submit', sendForm.bind(this,elementStrings.addCallerSubmit));
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].addBranchForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elementStrings */].addBranchSubmit));
-    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].PLDTForm.addEventListener('submit', sendForm.bind(_this, __WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elementStrings */].addPLDTIssueSubmit));
-
-    function sendForm(button, e) {
-
-        if (e.target.checkValidity()) {
-            e.preventDefault();
-
-            var submitBtn = void 0,
-                formdata = void 0,
-                form = void 0,
-                object = void 0;
-            form = e.target;
-            submitBtn = form.querySelector(button);
-
-            Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(submitBtn);
-
-            /*SERIALIZE FORM DATA*/
-            formdata = $(form).serialize();
-
-            if (form.id === 'addCaller') {
-                object = new __WEBPACK_IMPORTED_MODULE_6__models_Caller__["a" /* default */]();
-            } else if (form.id === 'addBranch') {
-                object = new __WEBPACK_IMPORTED_MODULE_7__models_Store__["a" /* default */]();
-            } else if (form.id === 'addContact') {
-                object = new __WEBPACK_IMPORTED_MODULE_8__models_Contact__["a" /* default */]();
-            } else if (form.id === 'addPLDTIssue') {
-                object = new __WEBPACK_IMPORTED_MODULE_9__models_PLDTMail__["a" /* default */]();
-            } else {
-                alert('form not found');
-            }
-
-            object.storeData(formdata).done(function () {
-                setTimeout(function () {
-                    alert('Added Successfully!!');
-                    form.reset();
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(submitBtn, false);
-                }, 2000);
-            }).fail(function (jqXHR) {
-                setTimeout(function () {
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* displayError */])(jqXHR);
-                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(submitBtn, false);
-                }, 2000);
-            });
-        }
-    }
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].addPositionForm.addEventListener('submit', __WEBPACK_IMPORTED_MODULE_7__global__["b" /* sendForm */]);
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].addDepartmentForm.addEventListener('submit', __WEBPACK_IMPORTED_MODULE_7__global__["b" /* sendForm */]);
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].addBranchForm.addEventListener('submit', __WEBPACK_IMPORTED_MODULE_7__global__["b" /* sendForm */]);
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].PLDTForm.addEventListener('submit', __WEBPACK_IMPORTED_MODULE_7__global__["b" /* sendForm */]);
 };
 
 ////////////////////////////////
@@ -30695,109 +30604,101 @@ var Resolve = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return sendForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return toggleHiddenGroup; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_Caller__ = __webpack_require__(178);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_Store__ = __webpack_require__(179);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Contact__ = __webpack_require__(180);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_PLDTMail__ = __webpack_require__(181);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_Position__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_Department__ = __webpack_require__(183);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Caller = function () {
-    function Caller() {
-        _classCallCheck(this, Caller);
-    }
 
-    _createClass(Caller, [{
-        key: 'storeData',
-        value: function storeData(data) {
 
-            return $.ajax('/caller/save', {
-                type: 'POST',
-                data: data
+
+
+
+
+var sendForm = function sendForm(e) {
+    if (e.target.checkValidity()) {
+        e.preventDefault();
+
+        var formdata = void 0,
+            form = void 0,
+            object = void 0,
+            formSbmtBtn = void 0;
+        form = e.target;
+        formSbmtBtn = form.querySelector('button[data-action]');
+
+        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(formSbmtBtn);
+
+        if (form.id === 'addCaller') {
+            object = new __WEBPACK_IMPORTED_MODULE_1__models_Caller__["a" /* default */]();
+        } else if (form.id === 'addBranch') {
+            object = new __WEBPACK_IMPORTED_MODULE_2__models_Store__["a" /* default */]();
+        } else if (form.id === 'addContact') {
+            object = new __WEBPACK_IMPORTED_MODULE_3__models_Contact__["a" /* default */]();
+        } else if (form.id === 'addPLDTIssue') {
+            object = new __WEBPACK_IMPORTED_MODULE_4__models_PLDTMail__["a" /* default */]();
+        } else if (form.id === 'addPosition') {
+            object = new __WEBPACK_IMPORTED_MODULE_5__models_Position__["a" /* default */]();
+        } else if (form.id === 'addDepartment') {
+            object = new __WEBPACK_IMPORTED_MODULE_6__models_Department__["a" /* default */]();
+        } else {
+            alert('form not found');
+        }
+
+        /*SERIALIZE FORM DATA*/
+        formdata = $(form).serialize();
+
+        if (object) {
+            object.storeData(formdata).done(function () {
+                alert('Added Successfully!!');
+                form.reset();
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(formSbmtBtn, false);
+            }).fail(function (jqXHR) {
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(formSbmtBtn, false);
+                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* displayError */])(jqXHR);
             });
         }
-    }]);
+    }
+};
 
-    return Caller;
-}();
+var addData = function addData(url, data) {
 
-/* harmony default export */ __webpack_exports__["a"] = (Caller);
+    return $.ajax(url, {
+        type: 'POST',
+        data: data
+    });
+};
+
+var toggleHiddenGroup = function toggleHiddenGroup(e) {
+    var data = void 0,
+        form = void 0,
+        hiddenGroup = void 0;
+    data = e.params.data;
+    form = e.delegateTarget.form;
+    hiddenGroup = form.querySelector('.u-display-n');
+    if (data.id !== "") {
+        // addTicketView.showContactFormGroup();
+        hiddenGroup.classList.toggle('u-display-n');
+    } else {
+        // addTicketView.hideContactFormGroup();
+    }
+};
 
 /***/ }),
 /* 139 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Store = function () {
-    function Store(store_name) {
-        _classCallCheck(this, Store);
-
-        this.stoer_name = store_name;
-    }
-
-    _createClass(Store, [{
-        key: 'storeData',
-        value: function storeData(data) {
-
-            return $.ajax('/store/save', {
-                type: 'POST',
-                data: data
-            });
-        }
-    }, {
-        key: 'getStoreResource',
-        value: function getStoreResource() {
-            return $.ajax('/select/store', {
-                type: 'GET'
-            });
-        }
-    }]);
-
-    return Store;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Store);
-
-/***/ }),
-/* 140 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Contact = function () {
-    function Contact() {
-        _classCallCheck(this, Contact);
-    }
-
-    _createClass(Contact, [{
-        key: 'storeData',
-        value: function storeData(data) {
-
-            return $.ajax('/contact/save', {
-                type: 'POST',
-                data: data
-            });
-        }
-    }]);
-
-    return Contact;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Contact);
-
-/***/ }),
-/* 141 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ticketPageController", function() { return ticketPageController; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_datatablesOptions__ = __webpack_require__(181);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_datatablesOptions__ = __webpack_require__(184);
 
 
 
@@ -30831,14 +30732,14 @@ var ticketPageController = function ticketPageController() {
 };
 
 /***/ }),
-/* 142 */
+/* 140 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "profileController", function() { return profileController; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_ProfPic__ = __webpack_require__(182);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_ProfPic__ = __webpack_require__(185);
 
 
 
@@ -30858,7 +30759,7 @@ var profileController = function profileController() {
 };
 
 /***/ }),
-/* 143 */
+/* 141 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -30937,15 +30838,15 @@ var User = function () {
 /* harmony default export */ __webpack_exports__["a"] = (User);
 
 /***/ }),
-/* 144 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(145);
-module.exports = __webpack_require__(186);
+__webpack_require__(143);
+module.exports = __webpack_require__(188);
 
 
 /***/ }),
-/* 145 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -30955,25 +30856,25 @@ module.exports = __webpack_require__(186);
  * application frontend using useful Laravel and JavaScript libraries.
  */
 
-__webpack_require__(146);
+__webpack_require__(144);
 // window.Vue = require('vue');
-window.Dropzone = __webpack_require__(172);
+window.Dropzone = __webpack_require__(170);
 window.moment = __webpack_require__(0);
-__webpack_require__(174);
-__webpack_require__(175);
-__webpack_require__(142);
-__webpack_require__(141);
+__webpack_require__(172);
+__webpack_require__(173);
+__webpack_require__(140);
+__webpack_require__(139);
 __webpack_require__(136);
 
 /***/ }),
-/* 146 */
+/* 144 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(170);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(168);
 
-window._ = __webpack_require__(147);
+window._ = __webpack_require__(145);
 window.Popper = __webpack_require__(7).default;
 
 /**
@@ -30984,8 +30885,8 @@ window.Popper = __webpack_require__(7).default;
 
 try {
   window.$ = window.jQuery = __webpack_require__(3);
-  window.dt = __webpack_require__(148)();
-  __webpack_require__(149);
+  window.dt = __webpack_require__(146)();
+  __webpack_require__(147);
 } catch (e) {}
 
 /**
@@ -30994,7 +30895,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(150);
+window.axios = __webpack_require__(148);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -31020,7 +30921,7 @@ if (token) {
 
 
 
-window.Pusher = __webpack_require__(171);
+window.Pusher = __webpack_require__(169);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */]({
   broadcaster: 'pusher',
@@ -31030,7 +30931,7 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */](
 });
 
 /***/ }),
-/* 147 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -48145,7 +48046,7 @@ window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */](
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(4)(module)))
 
 /***/ }),
-/* 148 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1.10.19
@@ -63448,7 +63349,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 
 /***/ }),
-/* 149 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -67398,13 +67299,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 
 /***/ }),
-/* 150 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(151);
+module.exports = __webpack_require__(149);
 
 /***/ }),
-/* 151 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67412,7 +67313,7 @@ module.exports = __webpack_require__(151);
 
 var utils = __webpack_require__(1);
 var bind = __webpack_require__(8);
-var Axios = __webpack_require__(153);
+var Axios = __webpack_require__(151);
 var defaults = __webpack_require__(5);
 
 /**
@@ -67447,14 +67348,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(12);
-axios.CancelToken = __webpack_require__(168);
+axios.CancelToken = __webpack_require__(166);
 axios.isCancel = __webpack_require__(11);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(169);
+axios.spread = __webpack_require__(167);
 
 module.exports = axios;
 
@@ -67463,7 +67364,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 152 */
+/* 150 */
 /***/ (function(module, exports) {
 
 /*!
@@ -67490,7 +67391,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 153 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67498,8 +67399,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(5);
 var utils = __webpack_require__(1);
-var InterceptorManager = __webpack_require__(163);
-var dispatchRequest = __webpack_require__(164);
+var InterceptorManager = __webpack_require__(161);
+var dispatchRequest = __webpack_require__(162);
 
 /**
  * Create a new instance of Axios
@@ -67576,7 +67477,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 154 */
+/* 152 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -67766,7 +67667,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 155 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67785,7 +67686,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 156 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67818,7 +67719,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 157 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67846,7 +67747,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 158 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67919,7 +67820,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 159 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67979,7 +67880,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 160 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68054,7 +67955,7 @@ module.exports = (
 
 
 /***/ }),
-/* 161 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68097,7 +67998,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 162 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68157,7 +68058,7 @@ module.exports = (
 
 
 /***/ }),
-/* 163 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68216,18 +68117,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 164 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(1);
-var transformData = __webpack_require__(165);
+var transformData = __webpack_require__(163);
 var isCancel = __webpack_require__(11);
 var defaults = __webpack_require__(5);
-var isAbsoluteURL = __webpack_require__(166);
-var combineURLs = __webpack_require__(167);
+var isAbsoluteURL = __webpack_require__(164);
+var combineURLs = __webpack_require__(165);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -68309,7 +68210,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 165 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68336,7 +68237,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 166 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68357,7 +68258,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 167 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68378,7 +68279,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 168 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68442,7 +68343,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 169 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68476,7 +68377,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 170 */
+/* 168 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69694,7 +69595,7 @@ var Echo = function () {
 
 
 /***/ }),
-/* 171 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -78540,7 +78441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 ;
 
 /***/ }),
-/* 172 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82078,7 +81979,7 @@ function __guardMethod__(obj, methodName, transform) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }),
-/* 173 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -82343,10 +82244,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 173;
+webpackContext.id = 171;
 
 /***/ }),
-/* 174 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var require;var require;/*!
@@ -88202,17 +88103,19 @@ S2.define('jquery.select2',[
 
 
 /***/ }),
-/* 175 */
+/* 173 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__TicketViewController__ = __webpack_require__(136);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TicketPageController__ = __webpack_require__(141);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ProfileController__ = __webpack_require__(142);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__AdminPageController__ = __webpack_require__(183);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_User__ = __webpack_require__(143);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__TicketPageController__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ProfileController__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__AdminPageController__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__maintenancePageController__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_User__ = __webpack_require__(141);
+
 
 
 
@@ -88378,14 +88281,16 @@ $(document).ready(function () {
     var userProfile_route = new RegExp("\/user\/profile\/\\d+", 'gm');
     var tikcketPages_route = new RegExp("\/tickets\/(open|my|ongoing|closed|all|fixed)", 'gm');
     var adminPage_route = new RegExp("\/admin", 'gm');
+    var maintenancePage_route = new RegExp("\/maintenance", 'gm');
     var pathName = window.location.pathname;
 
     switch (true) {
         case ticketView_route.test(pathName):
-            var user = new __WEBPACK_IMPORTED_MODULE_5__models_User__["a" /* default */]();
+            var user = new __WEBPACK_IMPORTED_MODULE_6__models_User__["a" /* default */]();
             Object(__WEBPACK_IMPORTED_MODULE_1__TicketViewController__["ticketViewController"])(user);
             break;
         case ticketAdd_route.test(pathName):
+            __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].maintenanceCol.addEventListener('click', __WEBPACK_IMPORTED_MODULE_0__views_base__["k" /* toggleFormGroups */]); /*EVENT LISTENER ON PLUS ICONS*/
             Object(__WEBPACK_IMPORTED_MODULE_1__TicketViewController__["ticketAddController"])();
             break;
         case userProfile_route.test(pathName):
@@ -88397,13 +88302,16 @@ $(document).ready(function () {
         case adminPage_route.test(pathName):
             Object(__WEBPACK_IMPORTED_MODULE_4__AdminPageController__["a" /* adminPageController */])();
             break;
+        case maintenancePage_route.test(pathName):
+            Object(__WEBPACK_IMPORTED_MODULE_5__maintenancePageController__["a" /* maintenancePageController */])();
+            break;
         default:
             console.log('route not set');
     }
 });
 
 /***/ }),
-/* 176 */
+/* 174 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88574,13 +88482,13 @@ var showRejectDetails = function showRejectDetails(ticket_id) {
 };
 
 /***/ }),
-/* 177 */
+/* 175 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export generateExpirationInputMarkup */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return showContactFormGroup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return hideContactFormGroup; });
+/* unused harmony export showContactFormGroup */
+/* unused harmony export hideContactFormGroup */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return displayForm; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
 
@@ -88635,7 +88543,7 @@ function showForm(id) {
 }
 
 /***/ }),
-/* 178 */
+/* 176 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88747,7 +88655,7 @@ var Ticket = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Ticket);
 
 /***/ }),
-/* 179 */
+/* 177 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88780,7 +88688,106 @@ var Message = function () {
 /* harmony default export */ __webpack_exports__["a"] = (Message);
 
 /***/ }),
+/* 178 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Caller = function () {
+    function Caller() {
+        _classCallCheck(this, Caller);
+    }
+
+    _createClass(Caller, [{
+        key: 'storeData',
+        value: function storeData(data) {
+
+            return $.ajax('/caller/save', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }]);
+
+    return Caller;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Caller);
+
+/***/ }),
+/* 179 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Store = function () {
+    function Store(store_name) {
+        _classCallCheck(this, Store);
+
+        this.stoer_name = store_name;
+    }
+
+    _createClass(Store, [{
+        key: 'storeData',
+        value: function storeData(data) {
+
+            return $.ajax('/store/save', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }, {
+        key: 'getStoreResource',
+        value: function getStoreResource() {
+            return $.ajax('/select/store', {
+                type: 'GET'
+            });
+        }
+    }]);
+
+    return Store;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Store);
+
+/***/ }),
 /* 180 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Contact = function () {
+    function Contact() {
+        _classCallCheck(this, Contact);
+    }
+
+    _createClass(Contact, [{
+        key: 'storeData',
+        value: function storeData(data) {
+
+            return $.ajax('/contact/save', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }]);
+
+    return Contact;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Contact);
+
+/***/ }),
+/* 181 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88810,7 +88817,65 @@ var PLDTMail = function () {
 /* harmony default export */ __webpack_exports__["a"] = (PLDTMail);
 
 /***/ }),
-/* 181 */
+/* 182 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Position = function () {
+    function Position() {
+        _classCallCheck(this, Position);
+    }
+
+    _createClass(Position, [{
+        key: 'storeData',
+        value: function storeData(data) {
+            return $.ajax('/add/position', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }]);
+
+    return Position;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Position);
+
+/***/ }),
+/* 183 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Department = function () {
+    function Department() {
+        _classCallCheck(this, Department);
+    }
+
+    _createClass(Department, [{
+        key: 'storeData',
+        value: function storeData(data) {
+            return $.ajax('/add/department', {
+                type: 'POST',
+                data: data
+            });
+        }
+    }]);
+
+    return Department;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Department);
+
+/***/ }),
+/* 184 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88887,7 +88952,7 @@ var initDataTables = function initDataTables() {
 };
 
 /***/ }),
-/* 182 */
+/* 185 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88962,13 +89027,13 @@ var ProfPic = function () {
 /* harmony default export */ __webpack_exports__["a"] = (ProfPic);
 
 /***/ }),
-/* 183 */
+/* 186 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return adminPageController; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_adminPageView__ = __webpack_require__(184);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_adminPageView__ = __webpack_require__(187);
 
 
 
@@ -88983,14 +89048,14 @@ var adminPageController = function adminPageController() {
 };
 
 /***/ }),
-/* 184 */
+/* 187 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return showAddUserForm; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_User__ = __webpack_require__(143);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_User__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__global__ = __webpack_require__(138);
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 
@@ -89038,76 +89103,103 @@ var showAddUserForm = function showAddUserForm() {
 };
 
 /***/ }),
-/* 185 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export sendForm */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addData; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_Caller__ = __webpack_require__(138);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_Store__ = __webpack_require__(139);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_Contact__ = __webpack_require__(140);
-
-
-
-
-
-var sendForm = function sendForm(button, e) {
-
-    if (e.target.checkValidity()) {
-        e.preventDefault();
-
-        var submitBtn = void 0,
-            formdata = void 0,
-            form = void 0,
-            object = void 0;
-        form = e.target;
-        submitBtn = form.querySelector(button);
-
-        Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(submitBtn);
-
-        /*SERIALIZE FORM DATA*/
-        formdata = $(form).serialize();
-
-        if (form.id === 'addCaller') {
-            object = new __WEBPACK_IMPORTED_MODULE_1__models_Caller__["a" /* default */]();
-        } else if (form.id === 'addBranch') {
-            object = new __WEBPACK_IMPORTED_MODULE_2__models_Store__["a" /* default */]();
-        } else if (form.id === 'addContact') {
-            object = new __WEBPACK_IMPORTED_MODULE_3__models_Contact__["a" /* default */]();
-        } else {
-            alert('form not found');
-        }
-
-        object.storeData(formdata).done(function () {
-            setTimeout(function () {
-                alert('Added Successfully!!');
-                form.reset();
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(submitBtn, false);
-            }, 2000);
-        }).fail(function (jqXHR) {
-            setTimeout(function () {
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* displayError */])(jqXHR);
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(submitBtn, false);
-            }, 2000);
-        });
-    }
-};
-
-var addData = function addData(url, data) {
-
-    return $.ajax(url, {
-        type: 'POST',
-        data: data
-    });
-};
-
-/***/ }),
-/* 186 */
+/* 188 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return branchSelect2; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return psitionSelect2; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return deptSelect2; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return cntctSelect2; });
+var branchSelect2 = {
+    ajax: {
+        url: '/select/store',
+        processResults: function processResults(data) {
+            return {
+                results: data.data
+            };
+        }
+    }
+};
+
+var psitionSelect2 = {
+    width: '100%',
+    ajax: {
+        url: '/select/position',
+        processResults: function processResults(data) {
+            return {
+                results: data.data
+            };
+        }
+    }
+};
+
+var deptSelect2 = {
+    width: 'auto',
+    ajax: {
+        url: '/select/department',
+        processResults: function processResults(data) {
+            return {
+                results: data.data
+            };
+        }
+    }
+};
+
+var cntctSelect2 = {
+    width: '30%',
+    ajax: {
+        url: '/select/contact',
+        processResults: function processResults(data) {
+            data = $.map(data.data, function (obj) {
+                return {
+                    text: obj.store_name,
+                    children: obj.contact_numbers.map(function (obj2) {
+                        return {
+                            id: obj2.id,
+                            text: obj2.number
+                        };
+                    })
+                };
+            });
+
+            return {
+                results: data
+            };
+        }
+    }
+};
+
+/***/ }),
+/* 195 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return maintenancePageController; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__views_base__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__global__ = __webpack_require__(138);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__select2__ = __webpack_require__(194);
+
+
+
+
+var maintenancePageController = function maintenancePageController() {
+    $(__WEBPACK_IMPORTED_MODULE_0__views_base__["d" /* elementStrings */].branchSelectContact).on('select2:select', __WEBPACK_IMPORTED_MODULE_1__global__["c" /* toggleHiddenGroup */]);
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].addContactForm.addEventListener('submit', __WEBPACK_IMPORTED_MODULE_1__global__["b" /* sendForm */]);
+    $('#contactBranchSelect').select2(__WEBPACK_IMPORTED_MODULE_2__select2__["a" /* branchSelect2 */]);
+    __WEBPACK_IMPORTED_MODULE_0__views_base__["e" /* elements */].maintenanceCol.addEventListener('click', __WEBPACK_IMPORTED_MODULE_0__views_base__["k" /* toggleFormGroups */]); /*EVENT LISTENER ON PLUS ICONS*/
+};
 
 /***/ })
 /******/ ]);

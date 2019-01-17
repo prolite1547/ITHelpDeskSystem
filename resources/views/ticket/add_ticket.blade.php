@@ -87,7 +87,7 @@
                             {!! Form::close() !!}
                         </div>
                     </div>
-                    <div class="col-1-of-2 maintenance-column">
+                    <div class="col-1-of-2 plusToggleContainer">
                         <div class="form-branchAdd">
                             <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
                                 Add Branch
@@ -103,18 +103,37 @@
                                 {!! Form::close() !!}
                             </div>
                         </div>
+                        <div class="form-departmentAdd">
+                            <button class="form-departmentAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                Add Department
+                            </button>
+
+                            <div class="form-departmentAdd__content-box u-display-n">
+                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addDepartment']) !!}
+                                <div class="form__group">
+                                    {!! Form::label('department','Department:',['class' => 'form__label'])!!}
+                                    {!! Form::text('department',null,['class' => 'form__input','placeholder' => 'department','required']) !!}
+                                </div>
+                                {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addDepartment']) !!}
+                                {!! Form::close() !!}
+                            </div>
+                        </div>
                         <div class="form-positionAdd">
                             <button class="form-positionAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
                                 Add Position
                             </button>
-
                             <div class="form-positionAdd__content-box u-display-n">
-                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addBranch']) !!}
+                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addPosition']) !!}
                                 <div class="form__group">
-                                    {!! Form::label('name','Position:',['class' => 'form__label'])!!}
-                                    {!! Form::text('name',null,['class' => 'form__input','placeholder' => 'position','required']) !!}
+                                    {!! Form::label('department_id','Department:',['class' => 'form__label']) !!}
+                                    {!! Form::select('department_id',[] ,null, ['placeholder' => '(Choose department..)','class' => 'form__input form__input--select2','data-select' => 'position','id' => 'positionDepSelect','required']) !!}
                                 </div>
-                                {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addBranch']) !!}
+                                <div class="form__group u-display-n" id="positionFormGroup">
+                                    {!! Form::label('position','Position:',['class' => 'form__label']) !!}
+                                    {!! Form::text('position',null, ['placeholder' => 'position','class' => 'form__input','required']) !!}
+                                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addPosition']) !!}
+                                </div>
+
                                 {!! Form::close() !!}
                             </div>
                         </div>

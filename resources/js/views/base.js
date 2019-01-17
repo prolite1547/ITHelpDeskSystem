@@ -23,7 +23,9 @@ export const elements = {
     ticketAddSubmitBtn: document.getElementById('ticketAdd'),
     addCallerForm: document.getElementById('addCaller'),
     addBranchForm: document.getElementById('addBranch'),
+    addPositionForm: document.getElementById('addPosition'),
     addContactForm: document.getElementById('addContact'),
+    addDepartmentForm: document.getElementById('addDepartment'),
     addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
 
@@ -33,7 +35,7 @@ export const elements = {
     PLDTFormContainerAdd: document.getElementById('PLDTFormContainer'),
     formItems: document.getElementsByClassName('window__item'),
     PLDTForm: document.querySelector('.form-email'),
-    mentainanceCol: document.querySelector('.maintenance-column'),
+    maintenanceCol: document.querySelector('.plusToggleContainer'),
     addTicketDetailsForm: document.querySelector('.form-addTicketDetails'),
     addTicketDetailsFormTicketEl: document.querySelector('.form-addTicketDetails__ticket-value'),
 
@@ -66,6 +68,7 @@ export const elementStrings = {
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
     branchSelectContact: 'select[data-select=contact]',
+    depSelectpos: 'select[data-select=position]',
     ticketAddBtn: '#ticketAdd',
 
     /*TICKET ADD*/
@@ -126,4 +129,18 @@ export const setDisable = (el,bool = true) => {
 
 export const clearFormInputs = (form) => {
     form.reset();
+};
+
+
+export const toggleFormGroups = (e) => { /*FOR ELEMENTS THAT HAVE + ICON AND HIDDEN FORM GROUP*/
+        if(e.target.matches('button')){
+            e.target.firstElementChild.classList.toggle('fa-plus');
+            e.target.firstElementChild.classList.toggle('fa-minus');
+            e.target.nextElementSibling.classList.toggle('u-display-n');
+
+        }else if(e.target.matches('i')){
+            e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
+            e.target.classList.toggle('fa-plus');
+            e.target.classList.toggle('fa-minus');
+        }
 };
