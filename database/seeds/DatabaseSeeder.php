@@ -134,7 +134,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
         //    ProfPicTableSeeder::class,
-            ContactsTableSeeder::class,
+         //   ContactsTableSeeder::class,
         //    CallersTableSeeder::class,
             //    ResolveTableSeeder::class,
         //    IncidentTableSeeder::class,
