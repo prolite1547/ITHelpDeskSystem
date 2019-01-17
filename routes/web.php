@@ -114,6 +114,7 @@ Route::get('/select/store', 'SelectController@branch');
 Route::get('/select/caller', 'SelectController@caller');
 Route::get('/select/contact', 'SelectController@contact');
 Route::get('/select/position', 'SelectController@position');
+Route::get('/select/department', 'SelectController@department');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -136,6 +137,14 @@ Route::get('/maintenance','HomeController@maintenance')->name('maintenancePage')
 //////////////////////////
 Route::get('/search','HomeController@search')->name('search');
 
+//////////////////////////
+////////*POSITION*//////
+//////////////////////////
+Route::post('/add/position','PositionController@create');
+//////////////////////////
+////////*DEPARTMENT*//////
+//////////////////////////
+Route::post('/add/department','DepartmentController@create');
 //////////////////////////
 ////////*API*//////
 //////////////////////////

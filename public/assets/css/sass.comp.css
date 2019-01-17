@@ -2140,6 +2140,9 @@ body {
 .form-callerAdd__button,
 .form-callerAdd__button:link,
 .form-callerAdd__button:visited,
+.form-departmentAdd__button,
+.form-departmentAdd__button:link,
+.form-departmentAdd__button:visited,
 .form-contactAdd__button,
 .form-contactAdd__button:link,
 .form-contactAdd__button:visited,
@@ -2164,6 +2167,7 @@ body {
 }
 
 .form-callerAdd__content-box,
+.form-departmentAdd__content-box,
 .form-contactAdd__content-box,
 .form-branchAdd__content-box,
 .form-positionAdd__content-box {

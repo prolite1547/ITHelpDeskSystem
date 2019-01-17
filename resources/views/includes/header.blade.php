@@ -49,9 +49,9 @@
                     <li class="nav__li">
                         <a href="{{route('reportsPage')}}" class="nav__a {{Route::currentRouteName() == 'reportsPage' ? 'nav__a--active' : ''}}">Reports</a>
                     </li>
-                    {{--<li class="nav__li">--}}
-                        {{--<a href="{{route('maintenancePage')}}" class="nav__a {{Route::currentRouteName() == 'maintenancePage' ? 'nav__a--active' : ''}}">Maintenance</a>--}}
-                    {{--</li>--}}
+                    <li class="nav__li">
+                        <a href="{{route('maintenancePage')}}" class="nav__a {{Route::currentRouteName() == 'maintenancePage' ? 'nav__a--active' : ''}}">Maintenance</a>
+                    </li>
                     @if(Auth::user()->role_id === 4)
                     <li class="nav__li">
                         <a href="{{route('adminPage')}}" class="nav__a {{Route::currentRouteName() == 'adminPage' ? 'nav__a--active' : ''}}">Admin</a>

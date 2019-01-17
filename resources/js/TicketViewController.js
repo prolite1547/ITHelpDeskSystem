@@ -1,14 +1,12 @@
-import {elements,elementStrings,displayError} from "./views/base";
+import {elements,elementStrings,displayError,toggleFormGroups} from "./views/base";
 import * as editTicketView from './views/editIicketView';
 import * as addTicketView from './views/ticket_add';
 import Ticket from './models/Ticket';
 import Message from './models/Message';
 import Resolve from './models/Resolve';
-import Caller from './models/Caller';
-import Store from './models/Store';
-import Contact from './models/Contact';
-import PLDTMail from './models/PLDTMail'
-import {renderLoader,clearLoader,showModal,insertToModal,hideModal,setDisable} from "./views/base";
+import {branchSelect2, cntctSelect2, deptSelect2, psitionSelect2} from "./select2";
+import * as glboalScript from './global';
+import {renderLoader,clearLoader,showModal,insertToModal,hideModal} from "./views/base";
 
 
 
@@ -33,77 +31,17 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
-        /*EVENT LISTENER ON PLUS ICONS*/
-        elements.mentainanceCol.addEventListener('click',(e) => {
-        if(e.target.matches('button')){
+    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2(branchSelect2);
 
-            e.target.firstElementChild.classList.toggle('fa-plus');
-            e.target.firstElementChild.classList.toggle('fa-minus');
-            e.target.nextElementSibling.classList.toggle('u-display-n');
+    $('#ticketPositionSelect').select2(psitionSelect2);
 
-        }else if(e.target.matches('i')){
-            e.target.parentNode.nextElementSibling.classList.toggle('u-display-n');
-            e.target.classList.toggle('fa-plus');
-            e.target.classList.toggle('fa-minus');
-        }
+    $('#positionDepSelect').select2(deptSelect2);
 
-
-
-    });
-
-
-    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2({
-        ajax: {
-            url: '/select/store',
-            processResults: function (data) {
-                return {
-                    results: data.data
-                };
-            }
-        }
-    });
-
-    $('#ticketPositionSelect').select2({
-        width: '100%',
-        ajax: {
-            url: '/select/position',
-            processResults: function (data) {
-                return {
-                    results: data.data
-                };
-            }
-        }
-    });
-
-    $('#contact_id').select2({
-        width: '30%',
-        ajax: {
-            url: '/select/contact',
-            processResults: function (data) {
-                 data = $.map(data.data, (obj) => {
-                    return {
-                        text: obj.store_name,
-                        children: obj.contact_numbers.map(obj2 => {
-                          return {
-                              id: obj2.id,
-                              text: obj2.number
-                          }
-                        })
-                    }
-                });
-
-                return {
-                    results: data
-                };
-            }
-        }
-    });
+    $('#contact_id').select2(cntctSelect2);
 
     $('#assigneeSelect').select2({
         width: '30%',
     });
-
-
 
     /*DYNAMIC FORM*/
     document.querySelector('.window').addEventListener('click',e => {
@@ -149,69 +87,14 @@ export const ticketAddController = () => {
     });
 
 
-    $(elementStrings.branchSelectContact).on('select2:select', function (e) {
-        let data;
-        data = e.params.data;
-        if(data.id !== ""){
-            addTicketView.showContactFormGroup();
-        }else{
-            addTicketView.hideContactFormGroup();
-        }
-    });
+    $(elementStrings.depSelectpos).on('select2:select', glboalScript.toggleHiddenGroup);
 
 
-
-    // elements.addContactForm.addEventListener('submit', sendForm.bind(this,elementStrings.addContactSubmit));
     // elements.addCallerForm.addEventListener('submit', sendForm.bind(this,elementStrings.addCallerSubmit));
-    elements.addBranchForm.addEventListener('submit', sendForm.bind(this,elementStrings.addBranchSubmit));
-    elements.PLDTForm.addEventListener('submit',sendForm.bind(this,elementStrings.addPLDTIssueSubmit));
-
-    function sendForm(button,e) {
-
-
-        if(e.target.checkValidity()){
-            e.preventDefault();
-
-            let submitBtn,formdata,form,object;
-            form = e.target;
-            submitBtn = form.querySelector(button);
-
-            setDisable(submitBtn);
-
-
-            /*SERIALIZE FORM DATA*/
-            formdata = $(form).serialize();
-
-            if(form.id === 'addCaller'){
-                object =  new Caller();
-            }else if(form.id === 'addBranch'){
-                object = new Store();
-            }else if(form.id === 'addContact'){
-                object = new Contact();
-            }else if(form.id === 'addPLDTIssue'){
-                object = new PLDTMail();
-            }else {
-                alert('form not found');
-            }
-
-
-            object.storeData(formdata)
-                .done(() => {
-                    setTimeout(() => {
-                        alert('Added Successfully!!');
-                        form.reset();
-                        setDisable(submitBtn,false);
-                    },2000)
-                })
-                .fail((jqXHR) => {
-                    setTimeout(() => {
-                        displayError(jqXHR);
-                        setDisable(submitBtn,false);
-                    },2000)
-                });
-        }
-
-    }
+    elements.addPositionForm.addEventListener('submit', glboalScript.sendForm);
+    elements.addDepartmentForm.addEventListener('submit', glboalScript.sendForm);
+    elements.addBranchForm.addEventListener('submit', glboalScript.sendForm);
+    elements.PLDTForm.addEventListener('submit',glboalScript.sendForm);
 };
 
 ////////////////////////////////
