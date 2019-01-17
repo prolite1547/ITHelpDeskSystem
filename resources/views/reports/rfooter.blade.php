@@ -194,7 +194,7 @@
             $.ajax({
                type:'POST',
                url: "/reports/genrds",
-               data:{ _token: '{{csrf_token()}}', start:start1, end:end1},
+               data:{ _token: '{{csrf_token()}}', store ,start:start1, end:end1},
                success:function(data) {
                 
                   $('#RDSDATA').html(data.rdsdata);
@@ -204,7 +204,7 @@
                             "order": [[ 0, "desc" ]],
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [
-                                { extend: 'copy'},
+                                {extend: 'copy'},
                                 {extend: 'csv',  title: 'Reported Downtime Per Store ('+start1+'-'+end1+')'},
                                 {extend: 'excel', title: 'Reported Downtime Per Store ('+start1+'-'+end1+')'},
                                 {extend: 'pdf',  title: 'Reported Downtime Per Store ('+start1+'-'+end1+')'},

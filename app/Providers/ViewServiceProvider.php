@@ -55,6 +55,11 @@ class ViewServiceProvider extends ServiceProvider
             $ticketFixedCount = Ticket::whereStatus(4)->count();
             $ticketUserTicketsCount = Ticket::whereAssignee($userID)->count();
             $ticketCount = Ticket::all()->count();
+            $dcRoutes = ['datacorrections.system', 'datacorrections.manual', 'datacorrectons.sdcSave', 'datacorrectons.sdcPosted', 'datacorrectons.sdcOngoing', 'datacorrectons.sdcForApproval', 'datacorrectons.sdcApproved', 'datacorrectons.sdcDone'];
+            $tyRoutes = ['datacorrectons.treasuryALL', 'datacorrectons.treasuryDONE', 'datacorrectons.treasuryPENDING'];
+            $gcRoutes =['datacorrectons.govcompALL', 'datacorrectons.govcompDONE', 'datacorrectons.govcompPENDING'];
+            $appRoutes = ['datacorrectons.approverALL', 'datacorrectons.approverDONE', 'datacorrectons.approverPENDING'];
+
             $view->with(compact(
                 'ticketOpenCount',
                 'ticketOngoingCount',
@@ -64,7 +69,11 @@ class ViewServiceProvider extends ServiceProvider
                 'ticketUserTicketsCount',
                 'ticketRoutes',
                 'dcRoutes',
-                'notificationContent'
+                'notificationContent',
+                'tyRoutes',
+                'dcRoutes',
+                'gcRoutes',
+                'appRoutes'
             ));
         });
 
@@ -123,6 +132,7 @@ class ViewServiceProvider extends ServiceProvider
             $view->with(compact('categoryFilter', 'statusFilter', 'storeFilter'));
         });
 
+
         view()->composer('datacorrections.systemdcs', function ($view) {
             $sdcCount = SystemDataCorrection::all()->count();
             $mdcCount = ManualDataCorrection::all()->count();
@@ -139,8 +149,25 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('datacorrections.datacorrections', function ($view) {
             $mdcCount = ManualDataCorrection::all()->count();
             $sdcCount = SystemDataCorrection::all()->count();
-            $view->with(['mdcCount' => $mdcCount, 'sdcCount' => $sdcCount]);
-        });
+            $view->with(['mdcCount'=>$mdcCount, 'sdcCount'=>$sdcCount]);
+         });
+
+
+
+         view()->composer('datacorrections.govcomp',function($view){
+            $pendingCount = SystemDataCorrection::where('status',2)->count();
+            $doneCount = SystemDataCorrection::whereIn('status', array(3,4,5))->count();
+            $allCount = SystemDataCorrection::whereIn('status', array(2,3,4,5))->count();
+            $view->with(['pendingCount'=>$pendingCount, 'doneCount'=>$doneCount, 'allCount'=> $allCount]);
+         });
+
+
+         view()->composer('datacorrections.approver',function($view){
+            $pendingCount = SystemDataCorrection::where('status',3)->count();
+            $doneCount = SystemDataCorrection::whereIn('status', array(4,5))->count();
+            $allCount = SystemDataCorrection::whereIn('status', array(3,4,5))->count();
+            $view->with(['pendingCount'=>$pendingCount, 'doneCount'=>$doneCount, 'allCount'=> $allCount]);
+         });
     }
 
     /**

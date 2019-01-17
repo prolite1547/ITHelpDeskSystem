@@ -117,7 +117,7 @@
                 data:{ _token: '{{csrf_token()}}', month:trmonth , year: tryear},
                 success: function(data){
                     $('#selectedtryear').html(tryear);
-                    generateTopResolvers(data.topresolvers,data.solveCount);
+                    generateTopResolvers(data.topresolvers,data.solveCount, data.supports);
                   
                 }
             });
@@ -174,8 +174,6 @@
                     ticks:  [[0, "JANUARY"], [1, "FEBRUARY"], [2, "MARCH"], [3, "APRIL"], [4,"MAY"], [5,"JUNE"], [6,"JULY"], [7,"AUGUST"], [8,"SEPTEMBER"]
                     , [9,"OCTOBER"], [10,"NOVEMBER"] ,[11,"DECEMBER"] ],
                     tickColor: 'transparent',
-                    
-                    
                 },
                 tooltip: {
                     show: true,
@@ -226,7 +224,7 @@
             });
     } 
 
-    function generateTopResolvers(topresolvers,solveCount){
+    function generateTopResolvers(topresolvers,solveCount,supports){
         
         $.plot("#topresolvers", [
                 {
@@ -250,17 +248,71 @@
                     clickable: true
                 },
                 yaxis: {
-                    ticks: 4, tickColor: 'rgba(0,0,0,.02)'
+                    ticks: 3, tickColor: 'rgba(0,0,0,.02)'
                 },
                 xaxis: {
-                    ticks: topresolvers,
+                    ticks: [[0,"Top 1"],[1,"Top 2"],[2,"Top 3"],[3,"Top 4"],[4,"Top 5"],[5,"Top 6"],[6,"Top 7"],[7,"Top 8"],[8,"Top 9"],[9,"Top 10"]],
                     tickColor: 'transparent'
-                },
-                tooltip: {
-                    show: true,
-                    content: "<div class='flot-tooltip text-center'><h5 class='text-main'>%s</h5>%y.0 </div>"
                 }
+                // tooltip: {
+                //     show: true,
+                //     content: "<div class='flot-tooltip text-center'><h5 class='text-main'>%s</h5>%y.0 </div>"
+                // }
             });
+
+           
+            $("#topresolvers").bind("plothover", function (event, pos, item) {
+                    $("#tooltip").remove();
+                    if (item) {
+                      var tooltip =  "<b>"+topresolvers[item.dataIndex][1]+"</b> ("+solveCount[item.dataIndex][1]+" tickets resolved) "+ "<br><br> <b>Supports :</b> <br>" ;
+                      var sid = "";
+                      var count = 0;
+                      var newSupports = [];
+                      var name = "";
+                        
+                       
+                       for (let index = 0; index < supports.length; index++) {
+                           if(supports[index][0] == item.dataIndex){    
+                                sid = supports[index][1];
+                            for (let index1 = 0; index1 < supports.length; index1++) {
+                                if(supports[index1][0] == item.dataIndex){
+                                    if(sid ==  supports[index1][1] ){
+                                        count+=1;
+                                    }
+                                }
+                            }
+                            newSupports.push([item.dataIndex,supports[index][2] +" ("+count+" tickets)"+"<br>"]);
+                            count = 0;
+                           }
+                       }
+
+
+                       for(var i = 0; i < newSupports.length; i++) {
+                            for(var j = i + 1; j < newSupports.length; ) {
+                                if(newSupports[i][0] == newSupports[j][0] && newSupports[i][1] == newSupports[j][1])
+                                    newSupports.splice(j, 1);
+                                else
+                                    j++;
+                            }    
+                        }
+
+                        for (let index = 0; index < newSupports.length; index++) {
+                           
+                            tooltip += newSupports[index][1];
+                        }
+
+                        $('<div id="tooltip">' + tooltip + '</div>')
+                            .css({
+                                position: 'absolute',
+                                display: 'none',
+                                top: item.pageY,
+                                left: item.pageX + 15,
+                                border: '2px solid #c1c1c1', 
+                                padding: '2px',
+                                'background-color': 'white' })
+                            .appendTo("body").fadeIn(200);
+                    }
+                });
     }
     // END OF POPULATE DATA TO CHARTS   
  

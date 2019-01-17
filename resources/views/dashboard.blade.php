@@ -1,3 +1,11 @@
+@if(Auth::user()->role_id === 5)
+    <script>window.location = "/datacorrections/ty/sdc/pending";</script>
+@elseif(Auth::user()->role_id === 6)
+    <script>window.location = "/datacorrections/gc/sdc/pending";</script>
+@elseif(Auth::user()->role_id === 7)
+    <script>window.location = "/datacorrections/app/sdc/pending";</script>
+@endif
+
 @extends('layouts.dashboardLayout')
 @section('title','Dashboard')
 @section('submenu')@endsection

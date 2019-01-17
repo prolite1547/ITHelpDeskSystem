@@ -190,7 +190,42 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
 
 // Data Corrections Separate Page
  Route::get('datacorrections', 'DCController@index')->name('datacorrections');
- Route::get('datacorrections/systemdc', 'DCController@system')->name('datacorrections.system');
+ 
+ 
  Route::get('datacorrections/manualdc', 'DCController@manual')->name('datacorrections.manual');
+
+
  Route::get('datacorrections/sdc','DatatablesController@sdc')->name('datacorrection.sdc');
  Route::get('datacorrections/mdc','DatatablesController@mdc')->name('datacorrection.mdc');
+
+
+ Route::get('datacorrections/sdc-data/{status}', 'DatatablesController@system')->name('datacorrections.system');
+ Route::get('datacorrections/ty-data/{status}', 'DatatablesController@treasury')->name('datacorrections.dataty');
+ Route::get('datacorrections/gc-data/{status}', 'DatatablesController@govcomp')->name('datacorrections.datagc');
+ Route::get('datacorrections/app-data/{status}', 'DatatablesController@approver')->name('datacorrections.dataapp');
+ 
+ Route::get('datacorrections/sdc/saved', 'DCController@sdc_route')->name('datacorrectons.sdcSave');
+ Route::get('datacorrections/sdc/posted', 'DCController@sdc_route')->name('datacorrectons.sdcPosted');
+ Route::get('datacorrections/sdc/ongoing', 'DCController@sdc_route')->name('datacorrectons.sdcOngoing');
+ Route::get('datacorrections/sdc/forapproval', 'DCController@sdc_route')->name('datacorrectons.sdcForApproval');
+ Route::get('datacorrections/sdc/approved', 'DCController@sdc_route')->name('datacorrectons.sdcApproved');
+ Route::get('datacorrections/sdc/done', 'DCController@sdc_route')->name('datacorrectons.sdcDone');
+ 
+
+
+ Route::get('datacorrections/ty/sdc/all', 'DCController@treasury_all')->name('datacorrectons.treasuryALL');
+ Route::get('datacorrections/ty/sdc/pending', 'DCController@treasury_pending')->name('datacorrectons.treasuryPENDING');
+ Route::get('datacorrections/ty/sdc/done', 'DCController@treasury_done')->name('datacorrectons.treasuryDONE');
+ 
+ Route::get('datacorrections/gc/sdc/all', 'DCController@govcomp_all')->name('datacorrectons.govcompALL');
+ Route::get('datacorrections/gc/sdc/pending', 'DCController@govcomp_pending')->name('datacorrectons.govcompPENDING');
+ Route::get('datacorrections/gc/sdc/done', 'DCController@govcomp_done')->name('datacorrectons.govcompDONE');
+ 
+
+ Route::get('datacorrections/app/sdc/all', 'DCController@approver_all')->name('datacorrectons.approverALL');
+ Route::get('datacorrections/app/sdc/pending', 'DCController@approver_pending')->name('datacorrectons.approverPENDING');
+ Route::get('datacorrections/app/sdc/done', 'DCController@approver_done')->name('datacorrectons.approverDONE');
+ 
+ 
+
+ Route::get('print/{id}/ticket', 'TicketController@print')->name('print.ticket');

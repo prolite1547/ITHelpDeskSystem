@@ -48,7 +48,11 @@ class SystemDataCorrection extends Model
         'dc_reviewed_by',
         'dc_date_reviewed',
         'post_verified_by',
-        'post_date_verified'
+        'post_date_verified',
+        'status',
+        'posted',
+        'ty_remarks',
+        'govcomp_remarks'
     ];
 
 
@@ -56,5 +60,8 @@ class SystemDataCorrection extends Model
         return $this->belongsTo('App\Ticket','ticket_no');
     }
 
+    public function attachments(){
+        return $this->hasMany('App\SDCAttachment', 'sdc_no');
+    }
    
 }

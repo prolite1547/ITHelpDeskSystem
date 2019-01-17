@@ -153,9 +153,19 @@
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
                 {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue'))}}
-                    {{Form::text('to',null,array('placeholder' => 'To','class'=> 'form-email__input form-email__input--text','required'))}}
-                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input form-email__input--text','required'))}}
-                    {{Form::textarea('details',null,array('class' => 'form-email__input form-email__input--textarea','required'))}}
+                    {{Form::text('to',null,array('placeholder' => 'To','class'=> 'form-email__input-text','required'))}}
+                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text','required'))}}
+                    {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','required'))}}
+                    <div class="form__group">
+                        {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('account',[],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('pid',[],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('concern',[],null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select'])}}
+                    </div>
+                    <div class="form__group">
+                        {{Form::label('contact','Contact #:')}}
+                        {{Form::text('contact',null,['placeholder' => '####','class' => 'form-email__input-text'])}}
+                    </div>
                     {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                 {{Form::close()}}
             </div>

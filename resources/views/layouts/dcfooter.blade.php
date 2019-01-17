@@ -5,6 +5,7 @@
 
 
 <script>
+      
         $('#department').on('change',function(){
           var depID =  $(this).find(':selected').data('id');
             $.ajax({
@@ -19,7 +20,6 @@
         });
 
         
-
         $('.date1').datepicker({
           multidate: true
       });
