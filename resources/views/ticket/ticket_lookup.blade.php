@@ -10,11 +10,17 @@
                             <div class="ticket-content__more-dropdown">
                                 <span class="ticket-content__more">More...</span>
                                 <ul class="ticket-content__list">
-                                    @if($ticket->status !== $closedID)
-                                    <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
-                                    <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
+                                    @if((!in_array($ticket->status,[$ticket_status_arr['fixed'],$ticket_status_arr['closed']]) && $ticket->assigneeRelation->id === Auth::id()) || $ticket->status === $ticket_status_arr['open'])
+                                        <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                                     @endif
-                                    <li class="ticket-content__item"><a href="{{route('ticketPrint',['id' => $ticket->id])}}" target="_blank" class="ticket-content__link ticket-content__link--print">Print</a></li>
+                                    @if((in_array(Auth::user()->role_id,[$user_roles['tower'],$user_roles['admin']]) && in_array($ticket->status,[$ticket_status_arr['fixed']])) && $ticket->status !== $ticket_status_arr['open'])
+                                        <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
+                                        <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--reject">Reject</a></li>
+                                    @endif
+                                    @if(!in_array($ticket->status,[$ticket_status_arr['fixed'],$ticket_status_arr['closed']]) && $ticket->assigneeRelation->id === Auth::id())
+                                        <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
+                                    @endif
+                                    <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--print">Print</a></li>
                                     <li class="ticket-content__item">
                                         <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                                         <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
@@ -76,7 +82,7 @@
                                 <div class="ticket-details__title">
                                     <h4 class="heading-quaternary">Details</h4>
                                 </div>
-                                @if($ticket->status !== $closedID)
+                                @if((!in_array($ticket->status,[$ticket_status_arr['fixed'],$ticket_status_arr['closed']]) && $ticket->assigneeRelation->id === Auth::id()) || $ticket->status === $ticket_status_arr['open'])
                                 <div class="ticket-details__icon-box">
                                     <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
                                     <i class="far fa-edit ticket-details__icon ticket-details__icon--edit" title="Edit Details"></i>
@@ -89,20 +95,17 @@
                                     <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
                                         <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
                                     </li>
-                                    <li class="ticket-details__item"><span class="ticket-details__field">Contact #:</span>
-                                        <span href="#!" class="ticket-details__value">{{$ticket->incident->call->contact->number}}</span>
-                                    </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
-                                        <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}</a>
+                                        <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}} ({{$ticket->incident->call->callerRelation->positionData->position}})</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
                                         <span class="ticket-details__value"> {{$ticket->created_at}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Expiration date:</span>
-                                        <span class="ticket-details__value">{{$ticket->expiration}}</span>
+                                        <span class="ticket-details__value">{{$ticket->getOriginal('expiration')}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->loggedBy->full_name}}</a> <span>({{$ticket->incident->call->loggedBy->role->role}})</span>
+                                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->userLogged->full_name}}</a> <span>({{$ticket->userLogged->role->role}})</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
                                         <span class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</span>
@@ -111,7 +114,7 @@
                                         <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                                        <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
+                                        <a href="#!" data-store="{{$ticket->getStore->id}}" class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->getStore->store_name}}</a>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
                                         @if($ticket->assigneeRelation)
@@ -159,11 +162,11 @@
                                         @endif
                                     </li>
                                 </ul>
-                                    <button class="btn u-margin-top-xsmall {{$ticket->status !== $closedID ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
-                                {{--{!! Form::button('Resolve Details',['class' => "btn u-margin-top-xsmall u-display-n",'data-action' => 'viewRslveDtls']) !!}--}}
+                                    <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['closed'] ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
+                                    <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['reject'] ? 'u-display-n' : ''}}" data-action="viewRjctDtls">Reject Details</button>
                             </div>
 
-                            @if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $closedID)
+                            @if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $ticket_status_arr['closed'])
                                 <div class="ticket-details__title-box">
                                         <div class="ticket-details__title">
                                             <h4 class="heading-quaternary">Create/Add Data Correction</h4>
@@ -182,8 +185,4 @@
     </main>
 @endsection
 
-@push('scripts')
-    <script>
-        window.authUserID = {{ (Auth::id()) }}
-    </script>
-@endpush
+
