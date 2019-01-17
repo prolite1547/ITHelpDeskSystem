@@ -130,6 +130,9 @@ class TicketController extends Controller
         /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
         $ticket_id = $request->ticket_id;
 
+        /*INCIDENT_ID OF THE TICKET THE DETAILS WILL BE INSERTED TO*/
+        $incident_id = Ticket::findOrFail($ticket_id)->incident_id;
+
         /*FETCH THE EXPIRATION HOURS COLUMN*/
         $expiration_hours = CategoryB::findOrFail($request->catB)->expiration;
         $catA = CategoryB::findOrFail($request->catB)->group->id;
@@ -148,9 +151,9 @@ class TicketController extends Controller
             $request->request->add(['status' => $ongoingID]);
         }
 
-         DB::transaction(function () use ($request, $ticket_id) {
+         DB::transaction(function () use ($request, $incident_id,$ticket_id) {
 
-             Incident::findOrFail($ticket_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
+             Incident::findOrFail($incident_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
              $ticket = Ticket::findOrFail($ticket_id);
              $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status'));
 
@@ -166,7 +169,7 @@ class TicketController extends Controller
                     $original_ext = $attachment->getClientOriginalExtension();
                     $path = $attachment->store("$ticketDirectoryName", 'ticket');
 
-                    File::create(['incident_id' => $ticket_id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
+                    File::create(['incident_id' => $incident_id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
                 };
             }
 

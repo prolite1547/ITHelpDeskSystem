@@ -214,7 +214,7 @@
 .form-email {
    width: 100%;
 
-    &__input {
+    &__input-text {
         display: block;
         border: none;
         font-size: 1.5rem;
@@ -222,17 +222,31 @@
         width: 100%;
         outline: none;
 
-        &:last-child {
-            background-color: red;
-            padding: 1000px;
-        }
 
         &:not(:last-child) {
             border-bottom: 1px solid rgba($color-grey-light-2,.8);
         }
+    }
 
-        &--textarea {
-            resize: none;
+    &__input-textarea{
+        display: block;
+        border: none;
+        font-size: 1.5rem;
+        padding: .5rem;
+        width: 100%;
+        outline: none;
+        resize: none;
+    }
+
+    &__input-select {
+        border: none;
+        background-color: $color-grey-light-2;
+        color: $color-grey-dark-3;
+        font-size: 1.4rem;
+        padding: .5rem;
+
+        &:not(:last-child) {
+            margin-right: 1rem;
         }
     }
  }
