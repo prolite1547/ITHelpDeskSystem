@@ -10,7 +10,7 @@
                             <div class="ticket-content__more-dropdown">
                                 <span class="ticket-content__more">More...</span>
                                 <ul class="ticket-content__list">
-                                    @if($ticket->status !== $closedID)
+                                    @if($ticket->status !==  0)
                                     <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                                     <li class="ticket-content__item"><a href="" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
                                     @endif
@@ -76,7 +76,7 @@
                                 <div class="ticket-details__title">
                                     <h4 class="heading-quaternary">Details</h4>
                                 </div>
-                                @if($ticket->status !== $closedID)
+                                @if($ticket->status !== 0)
                                 <div class="ticket-details__icon-box">
                                     <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
                                     <i class="far fa-edit ticket-details__icon ticket-details__icon--edit" title="Edit Details"></i>
@@ -90,7 +90,7 @@
                                         <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Contact #:</span>
-                                        <span href="#!" class="ticket-details__value">{{$ticket->incident->call->contact->number}}</span>
+                                        {{-- <span href="#!" class="ticket-details__value">{{$ticket->incident->call->contact->number}}</span> --}}
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
                                         <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}</a>
@@ -111,7 +111,7 @@
                                         <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                                        <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a>
+                                        {{-- <a href="#!" class="ticket-details__value ticket-details__value--link">{{$ticket->incident->call->contact->store->store_name}}</a> --}}
                                     </li>
                                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
                                         @if($ticket->assigneeRelation)
@@ -136,7 +136,22 @@
 
                                                 @if(isset($ticket->SDC->id))
                                                 <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }}
-                                                        @if($ticket->SDC->posted)(POSTED) @endif
+                                                         <?php
+                                                                $status = $ticket->SDC->status;
+                                                                if($status == 1){
+                                                                     echo "(POSTED)";
+                                                                }else if($status == 2){
+                                                                     echo "(ON GOING)";
+                                                                }else if($status == 3){
+                                                                     echo "(FOR APPROVAL)";
+                                                                }else if($status == 4){
+                                                                     echo "(APPROVED)";
+                                                                }else if($status == 5){
+                                                                      echo "(DONE)";
+                                                                }else{
+                                                                     echo "(SAVED)";
+                                                                }
+                                                         ?>
                                                 </a>
                                                 @elseif (isset($ticket->MDC->id))
                                                  <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('mdc.printer', ['id'=>$ticket->MDC->id])}}">{{ $ticket->MDC->mdc_no }}
@@ -159,11 +174,11 @@
                                         @endif
                                     </li>
                                 </ul>
-                                    <button class="btn u-margin-top-xsmall {{$ticket->status !== $closedID ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
+                                    <button class="btn u-margin-top-xsmall {{$ticket->status !==  0 ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
                                 {{--{!! Form::button('Resolve Details',['class' => "btn u-margin-top-xsmall u-display-n",'data-action' => 'viewRslveDtls']) !!}--}}
                             </div>
 
-                            @if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $closedID)
+                            @if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !==  0 )
                                 <div class="ticket-details__title-box">
                                         <div class="ticket-details__title">
                                             <h4 class="heading-quaternary">Create/Add Data Correction</h4>

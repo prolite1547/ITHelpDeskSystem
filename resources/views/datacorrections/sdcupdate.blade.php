@@ -8,7 +8,7 @@
         // }
 ?>
 <div class="form-group" style="padding:30px;">
-<form class="needs-validation" action="{{ route('sdc.update', ['id'=>$sdc->id]) }}" method="post" novalidate>
+<form class="needs-validation" action="{{ route('sdc.update', ['id'=>$sdc->id]) }}" enctype="multipart/form-data" method="post" novalidate>
    
 {{ csrf_field() }}
 {{ method_field('PUT') }}
@@ -29,6 +29,14 @@
                         <span id="sdcno">SDC{{ $sdc->id }}</span>
                       
                 </div> 
+
+                <input type="hidden" name="sdc_id" value="<?php 
+                        if(isset($sdc->id)){
+                                echo $sdc->id;
+                        }else{
+                                echo 1;
+                        }
+                      ?>">
             </div>
         
     </div>
@@ -119,7 +127,12 @@
                             <div class="col-md-6 mb-3 ">
                                     <label for="affected">Affected Store/Server : </label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="affected" value="{{ $sdc->affected_ss }}" id="affected"  @if (Auth::user()->role_id  != 1 OR Auth::user()->role_id  != 2 OR Auth::user()->role_id  != 3 OR Auth::user()->role_id  != 4 ) disabled @endif>
+                                        <input type="text" class="form-control" name="affected" value="{{ $sdc->affected_ss }}" id="affected"  
+                                        @if (Auth::user()->role_id  != 1 OR Auth::user()->role_id  != 2 OR Auth::user()->role_id  != 3 OR Auth::user()->role_id  != 4)  
+                                              @if ($sdc->status == 4)
+                                                 disabled 
+                                              @endif
+                                        @endif>
                                         <div class="invalid-tooltip " style="width: 100%;">
                                             Valid affected store/server is required
                                         </div>
@@ -129,7 +142,12 @@
                             <div class="col-md-6">
                                     <label for="terminalname">Terminal Name (For POS) : </label>
                                     <div class="input-group">
-                                     <input type="text" class="form-control" name="terminalname" value="{{ $sdc->terminal_name }}" id="terminalname" @if (Auth::user()->role_id  != 1 OR Auth::user()->role_id  != 2 OR Auth::user()->role_id  != 3 OR Auth::user()->role_id  != 4 ) disabled @endif >
+                                     <input type="text" class="form-control" name="terminalname" value="{{ $sdc->terminal_name }}" id="terminalname" 
+                                     @if (Auth::user()->role_id  != 1 OR Auth::user()->role_id  != 2 OR Auth::user()->role_id  != 3 OR Auth::user()->role_id  != 4 )
+                                     @if ($sdc->status == 4)   
+                                         disabled
+                                     @endif
+                                     @endif >
                                         {{-- <div class="invalid-feedback" style="width: 100%;">
                                             Valid affected store/server required
                                         </div> --}}
@@ -140,6 +158,16 @@
 {{-- END --}}
 
 {{-- ATTACHMENTS HERE (DOWNLOADABLE BY ALL USERS) --}}
+@if ($sdc->status == 0)
+     <div class="row mb-3">
+                <div class="col-md-12">
+                        <label for="upfile">Upload Attachment(s) :</label>
+                        <div class="input-group">
+                                <input id="upfile" name="upfile[]" type="file" multiple> 
+                        </div>   
+                </div>
+     </div>
+@endif
 
 <div class="row mb-3">
                 <div class="col-md-12">
@@ -159,7 +187,12 @@
                         <div class="col-md-12">
                               <label for="dfindings">Findings and Recommendations :</label>
                           <div class="input-group">
-                              <textarea type="text" class="form-control" name="dfindings" cols="5" rows="5" id="dfindings" @if (Auth::user()->role_id  != 1 OR Auth::user()->role_id  != 2 OR Auth::user()->role_id  != 3 OR Auth::user()->role_id  != 4 ) disabled @endif >{{ $sdc->findings_recommendations }}</textarea>
+                              <textarea type="text" class="form-control" name="dfindings" cols="5" rows="5" id="dfindings" 
+                              @if (Auth::user()->role_id  != 1 OR Auth::user()->role_id  != 2 OR Auth::user()->role_id  != 3 OR Auth::user()->role_id  != 4 )
+                              @if ($sdc->status == 4)   
+                                 disabled
+                              @endif
+                              @endif >{{ $sdc->findings_recommendations }}</textarea>
                               <div class="invalid-tooltip " style="width: 100%;">
                                   Findings and recommendations is required
                               </div>
@@ -333,6 +366,7 @@
                  
 @endif   
  
+
 {{-- VIEWABLE BY GOV.COMPLIANCE/APPROVER USERS --}}
 @if (Auth::user()->role_id === 5 OR Auth::user()->role_id === 6 OR Auth::user()->role_id === 7 OR $sdc->status == 4)
                       <hr>
@@ -395,67 +429,20 @@
 
 {{-- END OF VIEW --}}
 
-{{-- FORM VIEW FOR GOV. COMPLIANCE USERS --}}
-@if (Auth::user()->role_id === 6 OR Auth::user()->role_id === 7 OR $sdc->status == 4)
 
-        <div class="row mb-3">
-                <div class="col-md-12">
-                  <label for="preaccumulatorverifiedby">Accumulator verified by :</label> 
-                     
-                  <div class="input-group">
-                  <input type="text" class="form-control" name="preaccumulatorverifiedby" value="<?php echo strtoupper(Auth::user()->full_name); ?>" id="preaccumulatorverifiedby" readonly >
-                        <div class="invalid-tooltip " style="width: 100%;">
-                                Valid accumulator verified by is required
-                        </div>
-                     
-                  </div>   
-                </div>
-          </div>
-
-          <div class="row mb-3">
-                <div class="col-md-12">
-                        <label for="predateaccumulator">Date : </label>
-                           
-                                <input type="text" id="predateaccumulator" name="predateaccumulator" value="<?php 
-                                         date_default_timezone_set("Asia/Manila");
-                                                        $currentDate =  date('m/d/Y');
-                                                        $newDate = date("m/d/Y", strtotime($currentDate));    
-
-                                                        echo $newDate;
-                                ?>" class="form-control" readonly>
-                                <div class="input-group-addon invalid-tooltip ">
-                                        Valid date is required.
-                                </div>             
-                          
-                </div>
-          </div>
-{{-- REMARKS HERE --}}
-        <div class="row mb-3">
-                <div class="col-md-12">
-                        <label for="tyremarks">Remarks :</label>
-                        <div class="input-group">
-                        <textarea type="text" class="form-control" name="govcompremarks" cols="5" rows="5" id="govcompremarks" required @if (Auth::user()->role_id === 7 OR $sdc->status == 4)
-                                        disabled
-                                    @endif >{{ $sdc->govcomp_remarks }}</textarea>
-                        <div class="invalid-tooltip " style="width: 100%;">
-                                 Remarks field is required
-                        </div>
-                        </div>   
-                </div>
-        </div>
-        
-{{-- END --}}
-    
-@endif
-
-{{-- END OF GOV. COMPLIANCE FORM --}}
 @if (Auth::user()->role_id === 5 OR Auth::user()->role_id === 7 OR $sdc->status == 4)
                       <div class="row mb-3">
                             <div class="col-md-12">
                                   <label for="preverifiedby">Verified by :</label>
                                   
                               <div class="input-group">
-                                    <input type="text" class="form-control" name="preverifiedby"  value="<?php echo strtoupper(Auth::user()->full_name ); ?>" id="preverifiedby"  readonly >
+                                    <input type="text" class="form-control" name="preverifiedby"  value="<?php 
+                                        if(isset($sdc->pre_verified_by)){
+                                                echo strtoupper($sdc->pre_verified_by);
+                                        }else{
+                                                echo strtoupper(Auth::user()->full_name );
+                                        }   
+                                     ?>" id="preverifiedby"  readonly >
                                     <div class="invalid-tooltip " style="width: 100%;">
                                             Valid verified by is required
                                     </div>
@@ -472,11 +459,15 @@
                                     <label for="preverifieddate">Date : </label>
                                         
                                            <input type="text" class="form-control" name="preverifieddate"  value="<?php
-                                                  date_default_timezone_set("Asia/Manila");
+                                                if(isset($sdc->pre_date_verified)){
+                                                        echo $sdc->pre_date_verified;
+                                                }else{
+                                                        date_default_timezone_set("Asia/Manila");
                                                         $currentDate =  date('m/d/Y');
                                                         $newDate = date("m/d/Y", strtotime($currentDate));    
 
                                                         echo $newDate;
+                                                }
                                             ?>" id="preverifieddate"  readonly >
                                   
                                             <div class="input-group-addon invalid-tooltip ">
@@ -508,6 +499,70 @@
 @endif
 {{-- TREASURY FORM END  --}}
 
+{{-- FORM VIEW FOR GOV. COMPLIANCE USERS --}}
+@if (Auth::user()->role_id === 6 OR Auth::user()->role_id === 7 OR $sdc->status == 4)
+
+        <div class="row mb-3">
+                <div class="col-md-12">
+                  <label for="preaccumulatorverifiedby">Accumulator verified by :</label> 
+                     
+                  <div class="input-group">
+                  <input type="text" class="form-control" name="preaccumulatorverifiedby" value="<?php 
+                        if(isset($sdc->pre_acc_verified_by)){
+                                echo strtoupper($sdc->pre_acc_verified_by);
+                        }else{
+                                echo strtoupper(Auth::user()->full_name);
+                        }    
+                        ?>" id="preaccumulatorverifiedby" readonly >
+                        <div class="invalid-tooltip " style="width: 100%;">
+                                Valid accumulator verified by is required
+                        </div>
+                     
+                  </div>   
+                </div>
+          </div>
+
+          <div class="row mb-3">
+                <div class="col-md-12">
+                        <label for="predateaccumulator">Date : </label>
+                           
+                                <input type="text" id="predateaccumulator" name="predateaccumulator" value="<?php 
+                                        if(isset($sdc->pre_acc_verified_date)){
+                                                echo $sdc->pre_acc_verified_date;
+                                        }else{
+                                                date_default_timezone_set("Asia/Manila");
+                                                        $currentDate =  date('m/d/Y');
+                                                        $newDate = date("m/d/Y", strtotime($currentDate));    
+
+                                                        echo $newDate;
+                                        }
+                                ?>" class="form-control" readonly>
+                                <div class="input-group-addon invalid-tooltip ">
+                                        Valid date is required.
+                                </div>             
+                          
+                </div>
+          </div>
+{{-- REMARKS HERE --}}
+        <div class="row mb-3">
+                <div class="col-md-12">
+                        <label for="tyremarks">Remarks :</label>
+                        <div class="input-group">
+                        <textarea type="text" class="form-control" name="govcompremarks" cols="5" rows="5" id="govcompremarks" required @if (Auth::user()->role_id === 7 OR $sdc->status == 4)
+                                        disabled
+                                    @endif >{{ $sdc->govcomp_remarks }}</textarea>
+                        <div class="invalid-tooltip " style="width: 100%;">
+                                 Remarks field is required
+                        </div>
+                        </div>   
+                </div>
+        </div>
+        
+{{-- END --}}
+    
+@endif
+
+{{-- END OF GOV. COMPLIANCE FORM --}}
 {{-- APPROVER FORM --}}
 @if (Auth::user()->role_id === 7 OR $sdc->status == 4)
                       <hr>
@@ -521,7 +576,11 @@
                                  
                               <div class="input-group">
                               <input type="text" class="form-control" name="acrapprovedby" value="<?php
-                                        echo strtoupper(Auth::user()->full_name);
+                                       if(isset($sdc->app_approved_by)){
+                                            echo $sdc->app_approved_by;    
+                                       }else{
+                                            echo strtoupper(Auth::user()->full_name);
+                                       }
                                 ?>" id="acrapprovedby" readonly >
                                     <div class="invalid-tooltip " style="width: 100%;">
                                             Valid verified by is required
@@ -534,11 +593,15 @@
                                     <label for="acrdate">Date : </label>
                                        
                                             <input type="text" id="acrdate" name="acrdate" value="<?php
-                                                  date_default_timezone_set("Asia/Manila");
+                                                if(isset($sdc->app_date_approved)){
+                                                        echo $sdc->app_date_approved;
+                                                }else{
+                                                        date_default_timezone_set("Asia/Manila");
                                                         $currentDate =  date('m/d/Y');
                                                         $newDate = date("m/d/Y", strtotime($currentDate));    
 
-                                                        echo $newDate;
+                                                        echo $newDate;  
+                                                }
                                             ?>" class="form-control" readonly >
                                             <div class="input-group-addon invalid-tooltip ">
                                                     Valid date is required.
@@ -550,8 +613,9 @@
 {{-- END OF APPROVER FORM --}}
 
 {{-- SUPPORTS VIEWABLE FORM AFTER APPROVER IS DONE --}}
-@if(Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4  AND $sdc->status == 4)
- 
+@if(Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4)
+@if ($sdc->status == 4)
+
                       <hr>
                       <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
                               <h4>CHANGE PROCESSING</h4>
@@ -713,6 +777,7 @@
                                           </div>
                                       </div>
                       </div>
+@endif                      
 @endif
 {{-- END OF FORM --}}
 
@@ -723,6 +788,9 @@
                     
                  @if ($sdc->status == 4)
                         <button class="btn btn-danger btn-lg btn-block" value="SUBMIT" name="action" type="submit">Submit Data Correction</button>
+                 @elseif($sdc->status == 0)
+                        <button class="btn btn-primary btn-lg btn-block" value="SAVE" name="action" type="submit">Save Changes</button>
+                        <button class="btn btn-danger btn-lg btn-block" value="POST" name="action" type="submit">Post Data Correction</button>
                  @else
                         <button class="btn btn-danger btn-lg btn-block" value="SUBMIT" name="action" type="submit">Approve Data Correction</button>
                  @endif

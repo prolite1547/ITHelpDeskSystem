@@ -51,6 +51,7 @@ class SystemDataCorrection extends Model
         'post_date_verified',
         'status',
         'posted',
+        'posted_by',
         'ty_remarks',
         'govcomp_remarks'
     ];

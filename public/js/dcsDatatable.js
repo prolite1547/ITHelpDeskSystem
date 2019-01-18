@@ -542,6 +542,8 @@ $(function() {
          ]
     };
 // END OF APPROVER TABLE OPTIONS
+try {
+    
 
     let dcUser,dcStatus;
     let dcURegex = new RegExp('\/datacorrections\/([a-z]+)', 'gm');
@@ -599,7 +601,9 @@ $(function() {
         break;
     }
 
-
+} catch (error) {
+    
+}
 
 //  SUPPORTS DATATABLE
 

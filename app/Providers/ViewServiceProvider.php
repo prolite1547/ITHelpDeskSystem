@@ -40,36 +40,21 @@ class ViewServiceProvider extends ServiceProvider
             );
         });
 
-
         view()->composer(['includes.header', 'ticket.ticket_lookup'], function ($view) {
-
-
-
             $userID = Auth::id();
             $notificationContent = getNotificationContent($userID);
-            $dcRoutes = ['datacorrections.system', 'datacorrections.manual'];
+            $dcRoutes = ['datacorrections.system', 'datacorrections.manual', 'datacorrectons.sdcSave', 'datacorrectons.sdcPosted', 'datacorrectons.sdcOngoing', 'datacorrectons.sdcForApproval', 'datacorrectons.sdcApproved', 'datacorrectons.sdcDone'];
             $ticketRoutes = ['openTickets', 'myTickets', 'ongoingTickets', 'closedTickets', 'allTickets'];
+            $tyRoutes = ['datacorrectons.treasuryALL', 'datacorrectons.treasuryDONE', 'datacorrectons.treasuryPENDING'];
+            $gcRoutes = ['datacorrectons.govcompALL', 'datacorrectons.govcompDONE', 'datacorrectons.govcompPENDING'];
+            $appRoutes = ['datacorrectons.approverALL', 'datacorrectons.approverDONE', 'datacorrectons.approverPENDING'];
+
             $ticketOpenCount = Ticket::whereStatus(1)->count();
             $ticketOngoingCount = Ticket::whereStatus(2)->count();
             $ticketClosedCount = Ticket::whereStatus(3)->count();
             $ticketFixedCount = Ticket::whereStatus(4)->count();
             $ticketUserTicketsCount = Ticket::whereAssignee($userID)->count();
             $ticketCount = Ticket::all()->count();
-<<<<<<< HEAD
-            $view->with([
-                'ticketOpenCount' => $ticketOpenCount,
-                'ticketOngoingCount' => $ticketOngoingCount,
-                'ticketClosedCount' => $ticketClosedCount,
-                'ticketCount' => $ticketCount,
-                'ticketUserTicketsCount' => $ticketUserTicketsCount,
-                'closedID' => $closedID,
-                'ticketRoutes' => ['openTickets','myTickets','ongoingTickets','closedTickets','allTickets'],
-                'dcRoutes' => ['datacorrections.system', 'datacorrections.manual', 'datacorrectons.sdcSave', 'datacorrectons.sdcPosted', 'datacorrectons.sdcOngoing', 'datacorrectons.sdcForApproval', 'datacorrectons.sdcApproved', 'datacorrectons.sdcDone'],
-                'tyRoutes' => ['datacorrectons.treasuryALL', 'datacorrectons.treasuryDONE', 'datacorrectons.treasuryPENDING'],
-                'gcRoutes' => ['datacorrectons.govcompALL', 'datacorrectons.govcompDONE', 'datacorrectons.govcompPENDING'],
-                'appRoutes' => ['datacorrectons.approverALL', 'datacorrectons.approverDONE', 'datacorrectons.approverPENDING']
-            ]);
-=======
             $view->with(compact(
                 'ticketOpenCount',
                 'ticketOngoingCount',
@@ -79,9 +64,11 @@ class ViewServiceProvider extends ServiceProvider
                 'ticketUserTicketsCount',
                 'ticketRoutes',
                 'dcRoutes',
+                'tyRoutes',
+                'gcRoutes',
+                'appRoutes',
                 'notificationContent'
             ));
->>>>>>> bfed0abae0f1040039a2ae9d7b947171fa7e0200
         });
 
 
@@ -139,20 +126,20 @@ class ViewServiceProvider extends ServiceProvider
             $view->with(compact('categoryFilter', 'statusFilter', 'storeFilter'));
         });
 
-<<<<<<< HEAD
         view()->composer('datacorrections.systemdcs',function($view){
            $sdcCount = SystemDataCorrection::all()->count();
            $mdcCount = ManualDataCorrection::all()->count();
+           $savedCount = SystemDataCorrection::where('status','=',0)->count();
+           $postedCount = SystemDataCorrection::where('status','=',1)->count();
+           $ongoingCount = SystemDataCorrection::where('status', '=', 2)->count();
+           $forApprovalCount = SystemDataCorrection::where('status', '=', 3)->count();
+           $approvedCount = SystemDataCorrection::where('status', '=', 4)->count();
+           $doneCount = SystemDataCorrection::where('status', '=', 5)->count();
+           
 
-           $view->with(['sdcCount'=> $sdcCount, 'mdcCount'=>$mdcCount, 
+           $view->with(['sdcCount'=> $sdcCount, 'mdcCount'=>$mdcCount, 'savedCount'=>$savedCount ,'postedCount'=>$postedCount, 'ongoingCount'=>$ongoingCount, 'forApprovalCount'=>$forApprovalCount, 'approvedCount'=>$approvedCount, 'doneCount'=>$doneCount,
            'dcRoutes' => ['datacorrections.system','datacorrectons.sdcSave', 'datacorrectons.sdcPosted', 'datacorrectons.sdcOngoing', 'datacorrectons.sdcForApproval', 'datacorrectons.sdcApproved', 'datacorrectons.sdcDone']
            ]);
-=======
-        view()->composer('datacorrections.systemdcs', function ($view) {
-            $sdcCount = SystemDataCorrection::all()->count();
-            $mdcCount = ManualDataCorrection::all()->count();
-            $view->with(['sdcCount' => $sdcCount, 'mdcCount' => $mdcCount]);
->>>>>>> bfed0abae0f1040039a2ae9d7b947171fa7e0200
         });
 
 
@@ -165,7 +152,6 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('datacorrections.datacorrections', function ($view) {
             $mdcCount = ManualDataCorrection::all()->count();
             $sdcCount = SystemDataCorrection::all()->count();
-<<<<<<< HEAD
             $view->with(['mdcCount'=>$mdcCount, 'sdcCount'=>$sdcCount]);
          });
 
@@ -190,10 +176,6 @@ class ViewServiceProvider extends ServiceProvider
             $allCount = SystemDataCorrection::whereIn('status', array(3,4,5))->count();
             $view->with(['pendingCount'=>$pendingCount, 'doneCount'=>$doneCount, 'allCount'=> $allCount]);
          });
-=======
-            $view->with(['mdcCount' => $mdcCount, 'sdcCount' => $sdcCount]);
-        });
->>>>>>> bfed0abae0f1040039a2ae9d7b947171fa7e0200
     }
 
     /**

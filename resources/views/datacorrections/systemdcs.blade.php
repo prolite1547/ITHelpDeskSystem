@@ -3,23 +3,23 @@
 @section('submenu')
 <ul class="submenu__ul">
     <li class="submenu__li">
-            <a href="{{route('datacorrectons.sdcApproved')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcApproved' ? 'submenu__a--active' : ''}}">Approved</a>
+            <a href="{{route('datacorrectons.sdcApproved')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcApproved' ? 'submenu__a--active' : ''}}">Approved  ({{ $approvedCount }}) </a>
     </li>
     <li class="submenu__li">
-            <a href="{{route('datacorrectons.sdcSave')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcSave' ? 'submenu__a--active' : ''}}">Saved</a>
+            <a href="{{route('datacorrectons.sdcSave')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcSave' ? 'submenu__a--active' : ''}}">Saved  ({{ $savedCount }})</a>
     </li>     
     <li class="submenu__li">
-            <a href="{{route('datacorrectons.sdcPosted')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcPosted' ? 'submenu__a--active' : ''}}">Posted</a>
+    <a href="{{route('datacorrectons.sdcPosted')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcPosted' ? 'submenu__a--active' : ''}}">Posted ({{ $postedCount }})</a>
     </li>
     <li class="submenu__li">
-            <a href="{{route('datacorrectons.sdcOngoing')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcOngoing' ? 'submenu__a--active' : ''}}">Ongoing</a>
+            <a href="{{route('datacorrectons.sdcOngoing')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcOngoing' ? 'submenu__a--active' : ''}}">Ongoing  ({{ $ongoingCount }})</a>
     </li>
     <li class="submenu__li">
-        <a href="{{route('datacorrectons.sdcForApproval')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcForApproval' ? 'submenu__a--active' : ''}}">For Approval</a>
+        <a href="{{route('datacorrectons.sdcForApproval')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcForApproval' ? 'submenu__a--active' : ''}}">For Approval  ({{ $forApprovalCount }})</a>
     </li>
    
     <li class="submenu__li">
-        <a href="{{route('datacorrectons.sdcDone')}} " class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcDone' ? 'submenu__a--active' : ''}}">Done</a>
+        <a href="{{route('datacorrectons.sdcDone')}} " class="submenu__a {{Route::currentRouteName() == 'datacorrectons.sdcDone' ? 'submenu__a--active' : ''}}">Done  ({{ $doneCount }})</a>
     </li>
 </ul>
 @endsection
@@ -35,8 +35,8 @@
                         <div class="side__content">
                             <dl class="side__dl" >
                                 <dt class="side__dt">All types</span></dt>
-                                <dd class="side__dd {{ in_array(Route::currentRouteName(),$dcRoutes) ? 'selecteddc--active' : ''}}"><a href="{{ route('datacorrectons.sdcApproved') }}" style="text-decoration:none;color:white;">System Data Correction ({{ $sdcCount }})</a></dd>
-                                <dd class="side__dd {{Route::currentRouteName() == 'datacorrections.manual' ? 'selecteddc--active' : ''}}"><a href="{{ route('datacorrections.manual') }}" style="text-decoration:none;color:black;">Manual Data Correction ({{ $mdcCount }})</a></dd>
+                                <dd class="side__dd {{ in_array(Route::currentRouteName(),$dcRoutes) ? 'submenu__a--active' : ''}}"><a href="{{ route('datacorrectons.sdcApproved') }}" style="text-decoration:none;color:white;">System Data Correction ({{ $sdcCount }})</a></dd>
+                                <dd class="side__dd {{Route::currentRouteName() == 'datacorrections.manual' ? 'submenu__a--active' : ''}}"><a href="{{ route('datacorrections.manual') }}" style="text-decoration:none;color:black;">Manual Data Correction ({{ $mdcCount }})</a></dd>
                             </dl>
                         </div>
                     </aside>
