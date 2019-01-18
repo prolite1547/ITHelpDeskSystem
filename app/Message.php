@@ -23,4 +23,9 @@ class Message extends Model
     public function getCreatedAtAttribute($value){
         return Carbon::parse($value)->diffForHumans();
     }
+
+    public function getMessageAttribute($value)
+    {
+        return nl2br($value);
+    }
 }

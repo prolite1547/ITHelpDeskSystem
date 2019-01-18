@@ -35,10 +35,10 @@
                             <h3 class="heading-tertiary ticket-content__subject">{{$ticket->incident->subject}}</h3>
                         </div>
                         <p class="ticket-content__details">
-                            {{$ticket->incident->details}}
+                            {!!$ticket->incident->details!!}
                         </p>
                         <form class="chat">
-                            <textarea name="reply" rows="3" class="chat__textarea" placeholder="Enter message here..." maxlength="100" minlength="5" required></textarea>
+                            <textarea name="reply" rows="3" class="chat__textarea" placeholder="Enter message here..." maxlength="1000" minlength="5" required></textarea>
                             <div class="chat__send">
                                 <button class="chat__button" type="submit">Send</button>
                             </div>
@@ -67,7 +67,7 @@
                                         </span>
                                         @endif
                                         <div class="message__name">{{$message->user->full_name}}</div>
-                                        <div class="message__message">{{$message->message}}</div>
+                                        <div class="message__message">{!! $message->message !!}</div>
                                     </div>
                                     <span class="message__time">{{$message->created_at}}</span>
                                 </div>

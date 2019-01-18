@@ -16,8 +16,8 @@ class CreateIncidentTable extends Migration
         Schema::create('incidents', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('call_id')->unique();
-            $table->string('subject')->nullable();
-            $table->string('details')->nullable();
+            $table->mediumText('subject')->nullable();
+            $table->mediumText('details')->nullable();
             $table->unsignedInteger('category')->nullable();
             $table->unsignedInteger('catA')->nullable();
             $table->unsignedInteger('catB')->nullable();
