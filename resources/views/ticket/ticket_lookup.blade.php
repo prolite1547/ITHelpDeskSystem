@@ -138,8 +138,23 @@
                                 <span class="ticket-details__value">
 
                                                 @if(isset($ticket->SDC->id))
-                                        <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }}
-                                            @if($ticket->SDC->posted)(POSTED) @endif
+                                                <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }}
+                                                         <?php
+                                                                $status = $ticket->SDC->status;
+                                                                if($status == 1){
+                                                                     echo "(POSTED)";
+                                                                }else if($status == 2){
+                                                                     echo "(ON GOING)";
+                                                                }else if($status == 3){
+                                                                     echo "(FOR APPROVAL)";
+                                                                }else if($status == 4){
+                                                                     echo "(APPROVED)";
+                                                                }else if($status == 5){
+                                                                      echo "(DONE)";
+                                                                }else{
+                                                                     echo "(SAVED)";
+                                                                }
+                                                         ?>
                                                 </a>
                                     @elseif (isset($ticket->MDC->id))
                                         <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('mdc.printer', ['id'=>$ticket->MDC->id])}}">{{ $ticket->MDC->mdc_no }}

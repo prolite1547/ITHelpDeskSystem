@@ -30,7 +30,10 @@ class DatabaseSeeder extends Seeder
             ['role' => '1st Level Support'],
             ['role' => 'Tower'],
             ['role' => 'User'],
-            ['role' => 'Admin']
+            ['role' => 'Admin'],
+            ['role' => 'Treasury'],
+            ['role' => 'Gov. Compliance'],
+            ['role' => 'Approver']
         ]);
 
         DB::table('ticket_types')->insert([
@@ -133,13 +136,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-        //    ProfPicTableSeeder::class,
-         //   ContactsTableSeeder::class,
-        //    CallersTableSeeder::class,
+            //    ProfPicTableSeeder::class,
+            //  ContactsTableSeeder::class,
+            //    CallersTableSeeder::class,
             //    ResolveTableSeeder::class,
-        //    IncidentTableSeeder::class,
-        //    TicketTableSeeder::class,
-        //    MessageTableSeeder::class
+            //    IncidentTableSeeder::class,
+            //    TicketTableSeeder::class,
+            //    MessageTableSeeder::class
         ]);
 
     }

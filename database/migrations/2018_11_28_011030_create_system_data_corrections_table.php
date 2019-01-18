@@ -94,7 +94,7 @@ class CreateSystemDataCorrectionsTable extends Migration
             $table->integer('status')->nullable();
             $table->text('ty_remarks')->nullable();
             $table->text('govcomp_remarks')->nullable();
-            
+            $table->integer('posted_by')->nullable();
             $table->timestamps();
         });
     }
