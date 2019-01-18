@@ -58,10 +58,10 @@
                             <label class="form-addTicketDetails__ticket">Ticket #: <input name="ticket_id" type="text" value="1234" readonly class="form-addTicketDetails__ticket-value"></label>
                             <div class="form__group">
                                 {!! Form::label('subject','Subject :',['class' => 'form__label form__label--block'])!!}
-                                {!! Form::text('subject',old('subject'),['class' => 'form__input form__input--100w','placeholder' => 'Subject','required','minlength'=>'10','maxlength'=>'100']) !!}
+                                {!! Form::text('subject',old('subject'),['class' => 'form__input form__input--100w','placeholder' => 'Subject','required','minlength'=>'10']) !!}
                             </div>
                             <div class="form__group">
-                                {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength'=>'10','maxlength'=>'150']) !!}
+                                {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength'=>'10']) !!}
                             </div>
                             <div class="form__group">
                                 {{ Form::file('attachments[]', array('multiple'))  }}
@@ -88,55 +88,57 @@
                         </div>
                     </div>
                     <div class="col-1-of-2 plusToggleContainer">
-                        <div class="form-branchAdd">
-                            <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
-                                Add Branch
-                            </button>
+                        @if(in_array(Auth::user()->role_id,[$user_roles['admin'],$user_roles['tower']]))
+                            <div class="form-branchAdd">
+                                <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                    Add Branch
+                                </button>
 
-                            <div class="form-branchAdd__content-box u-display-n">
-                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addBranch']) !!}
-                                <div class="form__group">
-                                    {!! Form::label('store_name','Name :',['class' => 'form__label'])!!}
-                                    {!! Form::text('store_name',null,['class' => 'form__input','placeholder' => 'branch name','required']) !!}
+                                <div class="form-branchAdd__content-box u-display-n">
+                                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addBranch']) !!}
+                                    <div class="form__group">
+                                        {!! Form::label('store_name','Name :',['class' => 'form__label'])!!}
+                                        {!! Form::text('store_name',null,['class' => 'form__input','placeholder' => 'branch name','required']) !!}
+                                    </div>
+                                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addBranch']) !!}
+                                    {!! Form::close() !!}
                                 </div>
-                                {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addBranch']) !!}
-                                {!! Form::close() !!}
                             </div>
-                        </div>
-                        <div class="form-departmentAdd">
-                            <button class="form-departmentAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
-                                Add Department
-                            </button>
+                            <div class="form-departmentAdd">
+                                <button class="form-departmentAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                    Add Department
+                                </button>
 
-                            <div class="form-departmentAdd__content-box u-display-n">
-                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addDepartment']) !!}
-                                <div class="form__group">
-                                    {!! Form::label('department','Department:',['class' => 'form__label'])!!}
-                                    {!! Form::text('department',null,['class' => 'form__input','placeholder' => 'department','required']) !!}
+                                <div class="form-departmentAdd__content-box u-display-n">
+                                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addDepartment']) !!}
+                                    <div class="form__group">
+                                        {!! Form::label('department','Department:',['class' => 'form__label'])!!}
+                                        {!! Form::text('department',null,['class' => 'form__input','placeholder' => 'department','required']) !!}
+                                    </div>
+                                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addDepartment']) !!}
+                                    {!! Form::close() !!}
                                 </div>
-                                {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addDepartment']) !!}
-                                {!! Form::close() !!}
                             </div>
-                        </div>
-                        <div class="form-positionAdd">
-                            <button class="form-positionAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
-                                Add Position
-                            </button>
-                            <div class="form-positionAdd__content-box u-display-n">
-                                {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addPosition']) !!}
-                                <div class="form__group">
-                                    {!! Form::label('department_id','Department:',['class' => 'form__label']) !!}
-                                    {!! Form::select('department_id',[] ,null, ['placeholder' => '(Choose department..)','class' => 'form__input form__input--select2','data-select' => 'position','id' => 'positionDepSelect','required']) !!}
-                                </div>
-                                <div class="form__group u-display-n" id="positionFormGroup">
-                                    {!! Form::label('position','Position:',['class' => 'form__label']) !!}
-                                    {!! Form::text('position',null, ['placeholder' => 'position','class' => 'form__input','required']) !!}
-                                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addPosition']) !!}
-                                </div>
+                            <div class="form-positionAdd">
+                                <button class="form-positionAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                    Add Position
+                                </button>
+                                <div class="form-positionAdd__content-box u-display-n">
+                                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addPosition']) !!}
+                                    <div class="form__group">
+                                        {!! Form::label('department_id','Department:',['class' => 'form__label']) !!}
+                                        {!! Form::select('department_id',[] ,null, ['placeholder' => '(Choose department..)','class' => 'form__input form__input--select2','data-select' => 'position','id' => 'positionDepSelect','required']) !!}
+                                    </div>
+                                    <div class="form__group u-display-n" id="positionFormGroup">
+                                        {!! Form::label('position','Position:',['class' => 'form__label']) !!}
+                                        {!! Form::text('position',null, ['placeholder' => 'position','class' => 'form__input','required']) !!}
+                                        {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addPosition']) !!}
+                                    </div>
 
-                                {!! Form::close() !!}
+                                    {!! Form::close() !!}
+                                </div>
                             </div>
-                        </div>
+                        @endif
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -157,10 +159,10 @@
                     {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text','required'))}}
                     {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','required'))}}
                     <div class="form__group">
-                        {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('account',[],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('pid',[],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('concern',[],null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('branch',['Pagadian' => 'Pagadian'],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select','required'])}}
+                        {{Form::select('account',['account' => 'account'],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('pid',['PID' => 'PID'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('concern',['concern'=>'concern'],null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select','required'])}}
                     </div>
                     <div class="form__group">
                         {{Form::label('contact','Contact #:')}}

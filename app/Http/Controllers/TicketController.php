@@ -322,7 +322,7 @@ class TicketController extends Controller
 
     public function addPLDTTicket(Request $request)
     {
-        Mail::to($request->to)->send(new PLDTIssue());
+        Mail::to($request->to)->send(new PLDTIssue($request));
     }
 
     public function editStatus(StoreTicket $request,$id){

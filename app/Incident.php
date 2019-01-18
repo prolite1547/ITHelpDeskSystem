@@ -43,5 +43,10 @@ class Incident extends Model
         return $this->hasMany('App\File');
     }
 
+    public function getDetailsAttribute($value)
+    {
+        return nl2br($value);
+    }
+
 
 }

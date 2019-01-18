@@ -18,7 +18,7 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('ticket_id');
             $table->unsignedInteger('user_id');
-            $table->string('message');
+            $table->mediumText('message');
             $table->timestamps();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');;
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
