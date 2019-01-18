@@ -15,6 +15,19 @@ class Caller extends Model
 
     protected $appends = ['full_name'];
 
+
+    public function setfNameAttribute($value){
+        return $this->attributes['fName'] = cleanInputs($value);
+    }
+
+    public function setmNameAttribute($value){
+        return $this->attributes['mName'] = cleanInputs($value);
+    }
+
+    public function setlNameAttribute($value){
+        return $this->attributes['lName'] = cleanInputs($value);
+    }
+
     public function getFullNameAttribute()
     {
         $middle_name = $this->mName;

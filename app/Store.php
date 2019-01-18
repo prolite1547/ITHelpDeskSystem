@@ -21,4 +21,8 @@ class Store extends Model
     public function contacts(){
         return $this->hasMany('App\Contact');
     }
+
+    public function setStoreNameAttribute($value){
+        return $this->attributes['store_name'] = cleanInputs($value);
+    }
 }
