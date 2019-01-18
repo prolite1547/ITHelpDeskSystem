@@ -228,48 +228,8 @@
 
           
 
-            <div class="row">
-                    <div class="col-md-12 heading text-center">
-                        <span>Pre-Correction Verification</span>
-                    </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 wborder pt-2">
-                    <span class="labels"> Accumulator Verified By : </span>
-                </div>
-                <div class="col-md-8 wborder text-center pt-2  row-height">
-                   
-
-                    <div class="mt-2 wunderline">
-                        <span class="data"> {{ strtoupper($sdc->pre_acc_verified_by) }} </span>
-                         @if ($sdc->pre_acc_verified_signed)
-                            <span class="signed"> [Signed]</span>
-                         @endif
-                    </div>
-                    <span class="labels2">Signature over printed name</span>
-                    
-                </div>
-            </div>
-
-            <div class="row ">
-                    <div class="col-md-4 wborder">
-                        <span class="labels"> Date : </span>
-                    </div>
-                    <div class="col-md-8 wborder data text-center" style="display:block;height:25px;">
-                            {{ $sdc->pre_acc_verified_date }}
-                    </div>
-            </div>
-            <div class="row">
-                    <div class="col-md-12">
-                        <span class="labels">REMARKS : </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 remarks">
-                            <span class="data"> {{ $sdc->ty_remarks }}</span>
-                    </div>
-            </div>
+          
+          
 
             <div class="row">
                     <div class="col-md-12 heading text-center">
@@ -340,6 +300,61 @@
             </div>
 
             <div class="row">
+                <div class="col-md-12">
+                    <span class="labels">REMARKS : </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 remarks">
+                        <span class="data"> {{ $sdc->ty_remarks }}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 heading text-center">
+                    <span>Pre-Correction Verification</span>
+                </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 wborder pt-2">
+                <span class="labels"> Accumulator Verified By : </span>
+            </div>
+            <div class="col-md-8 wborder text-center pt-2  row-height">
+               
+
+                <div class="mt-2 wunderline">
+                    <span class="data"> {{ strtoupper($sdc->pre_acc_verified_by) }} </span>
+                     @if ($sdc->pre_acc_verified_signed)
+                        <span class="signed"> [Signed]</span>
+                     @endif
+                </div>
+                <span class="labels2">Signature over printed name</span>
+                
+            </div>
+        </div>
+
+        <div class="row ">
+                <div class="col-md-4 wborder">
+                    <span class="labels"> Date : </span>
+                </div>
+                <div class="col-md-8 wborder data text-center" style="display:block;height:25px;">
+                        {{ $sdc->pre_acc_verified_date }}
+                </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <span class="labels">REMARKS : </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 remarks">
+                    <span class="data"> {{ $sdc->govcomp_remarks }}</span>
+            </div>
+    </div>
+
+            <div class="row">
                     <div class="col-md-12 heading text-center">
                         <span>Approval of the Change Request</span>
                     </div>
@@ -370,16 +385,7 @@
                     </div>
             </div>
 
-            <div class="row">
-                    <div class="col-md-12">
-                        <span class="labels">REMARKS : </span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 remarks">
-                            <span class="data"> {{ $sdc->govcomp_remarks }}</span>
-                    </div>
-            </div>
+            
             <div class="row">
                     <div class="col-md-12 heading text-center">
                         <span>Change Processing</span>

@@ -39,7 +39,9 @@ class SDCController extends Controller
 
     
     public function store(Request $request)
-    {      
+    {   
+        $user_id = 0;
+
         $action = $request->action;
         $status;
         $posted;
@@ -52,9 +54,11 @@ class SDCController extends Controller
         }else{
             $status = 1;
             $posted = 1;
+            $user_id = Auth::user()->id;
         }
 
        
+ 
        
  
         SystemDataCorrection::create([
@@ -118,7 +122,8 @@ class SDCController extends Controller
              'post_verified_by' => $request->pcvverifiedby,
              'post_date_verified' => $request->pcvdate,
              'status' => $status,
-             'posted' => $posted
+             'posted' => $posted,
+             'posted_by' => $user_id
         ]);
 
 
@@ -316,6 +321,19 @@ class SDCController extends Controller
            $sdc->status = $status;
            
            $sdc->save();
+
+           if(isset($request->upfile)){
+            foreach($request->upfile as $file){
+                    $fileNamewithExtension = $file->getClientOriginalName();
+                    $fileName = pathinfo($fileNamewithExtension, PATHINFO_FILENAME);
+                    $fileExtension = $file->getClientOriginalExtension();
+                    $fileNametoStore = $fileName . '_'. time() .'.'.$fileExtension;
+                    $mime_type = $file->getMimeType();
+                    $path = $file->storeAs('public/sdc_attachments',$fileNametoStore);
+
+                    SDCAttachment::create(['sdc_no' => $request->sdc_id,'path' => $path,'original_name' => $fileNametoStore,'mime_type' => $mime_type,'extension' => $fileExtension]);
+            }
+       }
 
            if($role_id < 5){
                 if($status != 5){

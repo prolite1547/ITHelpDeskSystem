@@ -79,6 +79,7 @@ class DatatablesController extends Controller
         ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
         ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted');
+        $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }
@@ -112,6 +113,7 @@ class DatatablesController extends Controller
             break;
 
         }
+        $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }
@@ -123,6 +125,7 @@ class DatatablesController extends Controller
         ->join('tickets', 'manual_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
         ->selectRaw('manual_data_corrections.id,manual_data_corrections.mdc_no ,tickets.id as ticket_id ,incidents.subject, manual_data_corrections.requestor_name ,manual_data_corrections.department, manual_data_corrections.position, manual_data_corrections.date_submitted, manual_data_corrections.posted');
+        $query = $query->orderBy('manual_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }
