@@ -10,4 +10,8 @@ class Position extends Model
         'position',
         'department_id'
     ];
+
+    public function setPositionAttribute($value){
+        return $this->attributes['position'] = cleanInputs($value);
+    }
 }

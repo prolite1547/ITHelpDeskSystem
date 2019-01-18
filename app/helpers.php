@@ -128,5 +128,16 @@ if (! function_exists('getNotificationContent')) {
         }
     }
 }
+if (! function_exists('cleanInputs')) { /*uppercase words and remove extra white spaces*/
+    function cleanInputs($string){
+
+        if($string !== ''){
+            return $cleanString = ucwords(preg_replace('/\s+/', ' ', strtolower($string)));
+        }else {
+            return $string;
+        }
+    }
+}
+
 
 ?>

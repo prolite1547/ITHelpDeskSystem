@@ -81,4 +81,16 @@ class User extends Authenticatable
 
     }
 
+    public function setfNameAttribute($value){
+        return $this->attributes['fName'] = cleanInputs($value);
+    }
+
+    public function setmNameAttribute($value){
+        return $this->attributes['mName'] = cleanInputs($value);
+    }
+
+    public function setlNameAttribute($value){
+        return $this->attributes['lName'] = cleanInputs($value);
+    }
+
 }
