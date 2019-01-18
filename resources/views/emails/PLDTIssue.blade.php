@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        :root{--var-border:1px solid #000}.mail{font-family:Sans-serif}.mail__greeting{margin-bottom:2rem}.mail__table{border:var(--var-border);border-collapse:collapse;margin:1rem 0;text-transform:uppercase}.mail__table td,.mail__table th{border:var(--var-border);padding:1rem}.mail__table tbody th{text-align:left}.mail__email{text-transform:lowercase}.mail__footer{font-style:italic;font-size:.8rem}.mail__sender-name{color:#162da1}.mail__sender-position{font-size:1rem;font-weight:700;font-style:normal;margin-bottom:1rem}.mail__mobile{color:#0a6aa1}.mail__info{margin-top:1rem;font-style:normal}
+        .mail{font-family:Sans-serif}.mail__greeting{margin-bottom:2rem}.mail__table{border:1px solid #000;border-collapse:collapse;margin:1rem 0;text-transform:uppercase}.mail__table td,.mail__table th{border:1px solid #000;padding:1rem}.mail__table tbody th{text-align:left}.mail__email{text-transform:lowercase}.mail__footer{font-style:italic;font-size:.8rem}.mail__sender-name{color:#162da1}.mail__sender-position{font-size:1rem;font-weight:700;font-style:normal;margin-bottom:1rem}.mail__mobile{color:#0a6aa1}.mail__info{margin-top:1rem;font-style:normal}
     </style>
 </head>
 <body>
@@ -26,7 +26,7 @@
             <tbody>
                 <tr>
                     <th>Name</th>
-                    <td>CITIHARDWARE GENSAN</td>
+                    <td>CITIHARDWARE {{$data->branch}}</td>
                 </tr>
                 <tr>
                     <th>Account#</th>
@@ -58,7 +58,7 @@
 
     <div class="mail__footer">
             <div>Regards,</div>
-            <div class="mail__sender-name">Ivan Duduaco</div>
+            <div class="mail__sender-name">{{$user}}</div>
             <div class="mail__sender-position">IT Support Staff</div>
             <div>CitiHardware Inc.</div>
             <div>Quimpo Boulevard</div>

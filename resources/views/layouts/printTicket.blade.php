@@ -52,10 +52,6 @@
                     </div>
             </div>
             <div class="row mb-1 border-bot">
-                    <div class="col-md-6  border-right">
-                            <span class="ticket-titles">Contact #  </span>
-                    <span class="ticket-detail ">{{ $tcket->incident->call->contact->number }}</span>
-                    </div>
                     <div class="col-md-6">
                             <span class="ticket-titles">Type  </span>
                     <span class="ticket-detail"> {{ $tcket->typeRelation->name }}</span>

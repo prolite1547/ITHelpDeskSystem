@@ -2219,7 +2219,7 @@ body {
   width: 100%;
 }
 
-.form-email__input {
+.form-email__input-text {
   display: block;
   border: none;
   font-size: 1.5rem;
@@ -2228,17 +2228,30 @@ body {
   outline: none;
 }
 
-.form-email__input:last-child {
-  background-color: red;
-  padding: 1000px;
-}
-
-.form-email__input:not(:last-child) {
+.form-email__input-text:not(:last-child) {
   border-bottom: 1px solid rgba(229, 229, 229, 0.8);
 }
 
-.form-email__input--textarea {
+.form-email__input-textarea {
+  display: block;
+  border: none;
+  font-size: 1.5rem;
+  padding: .5rem;
+  width: 100%;
+  outline: none;
   resize: none;
+}
+
+.form-email__input-select {
+  border: none;
+  background-color: #e5e5e5;
+  color: #333;
+  font-size: 1.4rem;
+  padding: .5rem;
+}
+
+.form-email__input-select:not(:last-child) {
+  margin-right: 1rem;
 }
 
 .form-addTicketDetails__ticket {
