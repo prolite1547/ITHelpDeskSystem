@@ -21,7 +21,7 @@ class Resolve extends Model
     }
 
     public function resolveCategory(){
-        return $this->belongsTo('App\Category','res_category');
+        return $this->belongsTo('App\ResolveCategory','res_category');
     }
 
     public function resolvedBy(){

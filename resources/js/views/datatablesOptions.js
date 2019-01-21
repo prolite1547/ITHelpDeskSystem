@@ -52,14 +52,15 @@ const closedTickets = {
     order: [[4, 'desc']],
     columns: [
         {data: 'id'},
-        {data: 'category',name:'cat.name', visible: false},
-        {data: 'priority',name:'prio.name'},
-        {data: 'status',name:'status.name', orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: 'category',visible: false},
+        {data: 'priority'},
+        {data: 'status', orderable: false},
+        {data: 'store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
-        {data: 'resolved_date',name:'resolves.created_at'},
-        {data: 'resolved_by',name:'resolver.name',visible: true},
+        {data: 'resolved_date'},
+        {data: 'assignee',visible: true},
+        {data: 'resolved_by',visible: true},
         {data: 'id', orderable: false}
     ],
 };
