@@ -53,7 +53,7 @@ class ViewServiceProvider extends ServiceProvider
             $ticketOngoingCount = Ticket::whereStatus(2)->count();
             $ticketClosedCount = Ticket::whereStatus(3)->count();
             $ticketFixedCount = Ticket::whereStatus(4)->count();
-            $ticketUserTicketsCount = Ticket::whereAssignee($userID)->count();
+            $ticketUserTicketsCount = Ticket::whereAssignee($userID)->where('status','!=',3)->count();
             $ticketCount = Ticket::all()->count();
             $view->with(compact(
                 'ticketOpenCount',
