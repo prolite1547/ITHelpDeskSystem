@@ -35,7 +35,7 @@ class DatatablesController extends Controller
                 return $query->whereStatus($get_status->id);
             })
             ->when($status === 'user',function ($query){
-                return $query->where('assignee',Auth::user()->id);
+                return $query->where('assignee',Auth::user()->id)->where('status','!=',3);
             })
             ->when($status === 'fixedRej',function ($query){
                 return $query->whereStatus(4);

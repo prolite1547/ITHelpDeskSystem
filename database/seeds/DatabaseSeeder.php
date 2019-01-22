@@ -136,13 +136,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-        //    ProfPicTableSeeder::class,
-            ContactsTableSeeder::class
-        //    CallersTableSeeder::class,
+            //    ProfPicTableSeeder::class,
+            //  ContactsTableSeeder::class,
+            //    CallersTableSeeder::class,
             //    ResolveTableSeeder::class,
-        //    IncidentTableSeeder::class,
-        //    TicketTableSeeder::class,
-        //    MessageTableSeeder::class
+            //    IncidentTableSeeder::class,
+            //    TicketTableSeeder::class,
+            //    MessageTableSeeder::class
         ]);
 
     }
