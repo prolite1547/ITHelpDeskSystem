@@ -154,10 +154,13 @@
 
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
-                {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue'))}}
-                    {{Form::text('to',null,array('placeholder' => 'To','class'=> 'form-email__input-text','required'))}}
+                {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue','files' => true))}}
+                    {{Form::email('to',null,array('placeholder' => 'To','class'=> 'form-email__input-text','required'))}}
                     {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text','required'))}}
                     {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','required'))}}
+                    <div class="form__group">
+                        {{Form::file('attachments[]',['multiple'])}}
+                    </div>
                     <div class="form__group">
                         {{Form::select('branch',['Pagadian' => 'Pagadian'],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select','required'])}}
                         {{Form::select('account',['account' => 'account'],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}

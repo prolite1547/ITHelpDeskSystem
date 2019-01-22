@@ -132,12 +132,10 @@ if (! function_exists('cleanInputs')) { /*uppercase words and remove extra white
     function cleanInputs($string){
 
         if($string !== ''){
-            return $cleanString = ucwords(preg_replace('/\s+/', ' ', strtolower($string)));
+            return $cleanString = ucwords(preg_replace('/\s+/', ' ', rtrim(ltrim(strtolower($string)))));
         }else {
             return $string;
         }
     }
 }
-
-
 ?>

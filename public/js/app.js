@@ -15589,6 +15589,9 @@ var sendForm = function sendForm(e) {
 
         Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(formSbmtBtn);
 
+        /*SERIALIZE FORM DATA*/
+        formdata = $(form).serialize();
+
         if (form.id === 'addCaller') {
             object = new __WEBPACK_IMPORTED_MODULE_1__models_Caller__["a" /* default */]();
         } else if (form.id === 'addBranch') {
@@ -15597,6 +15600,7 @@ var sendForm = function sendForm(e) {
             object = new __WEBPACK_IMPORTED_MODULE_3__models_Contact__["a" /* default */]();
         } else if (form.id === 'addPLDTIssue') {
             object = new __WEBPACK_IMPORTED_MODULE_4__models_PLDTMail__["a" /* default */]();
+            formdata = new FormData(form);
         } else if (form.id === 'addPosition') {
             object = new __WEBPACK_IMPORTED_MODULE_5__models_Position__["a" /* default */]();
         } else if (form.id === 'addDepartment') {
@@ -15605,17 +15609,20 @@ var sendForm = function sendForm(e) {
             alert('form not found');
         }
 
-        /*SERIALIZE FORM DATA*/
-        formdata = $(form).serialize();
-
         if (object) {
             object.storeData(formdata).done(function () {
                 alert('Added Successfully!!');
                 form.reset();
                 Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(formSbmtBtn, false);
-            }).fail(function (jqXHR) {
+            }).fail(function (jqXHR, textStatus, errorThrown) {
                 Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["i" /* setDisable */])(formSbmtBtn, false);
-                Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* displayError */])(jqXHR);
+                if (jqXHR) {
+                    Object(__WEBPACK_IMPORTED_MODULE_0__views_base__["c" /* displayError */])(jqXHR);
+                } else if (errorThrown) {
+                    alert(errorThrown);
+                } else {
+                    alert(textStatus);
+                }
             });
         }
     }
@@ -88874,7 +88881,9 @@ var PLDTMail = function () {
 
             return $.ajax('/ticket/pldt/add', {
                 type: 'POST',
-                data: data
+                data: data,
+                processData: false,
+                contentType: false
             });
         }
     }]);

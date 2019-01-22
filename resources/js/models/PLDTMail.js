@@ -4,6 +4,8 @@ export default class PLDTMail {
         return $.ajax('/ticket/pldt/add',{
             type: 'POST',
             data: data,
+            processData: false,
+            contentType: false,
         })
     }
 }

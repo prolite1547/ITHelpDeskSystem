@@ -13,6 +13,7 @@ class PLDTIssue extends Mailable
     use Queueable, SerializesModels;
     public $data;
     public $user;
+    public $myAttachments;
     /**
      * Create a new message instance.
      *
@@ -22,6 +23,7 @@ class PLDTIssue extends Mailable
     {
         $this->data = $request;
         $this->user = $request->user()->fName;
+        $this->myAttachments = $request->attachments;
     }
 
     /**
@@ -31,6 +33,13 @@ class PLDTIssue extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.PLDTIssue');
+         $mail = $this->view('emails.PLDTIssue');
+
+         foreach ($this->myAttachments as $attachment){
+             $originalFileName = $attachment->getClientOriginalName();
+             $fileMimeType = $attachment->getMimeType();
+             $mail->attach($attachment->path(),['as'=>$originalFileName,'mime'=>$fileMimeType]);
+         }
+         return $mail;
     }
 }
