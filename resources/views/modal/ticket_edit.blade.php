@@ -33,7 +33,7 @@
             {!! Form::select('category', $typeSelect, $ticket->incident->categoryRelation->id, ['placeholder' => '(select category)','class' => 'ticket-details__select','required']) !!}
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>
-            {!! Form::select('catA', $incBSelect, $ticket->incident->catARelation->id, ['placeholder' => '(select sub-A)','class' => 'ticket-details__select','required']) !!}
+            {!! Form::select('catB', $incBSelect, $ticket->incident->catBRelation->id, ['placeholder' => '(select sub-B)','class' => 'ticket-details__select','required']) !!}
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
             @if(!$ticket->incident->getFiles->isEmpty())

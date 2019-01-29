@@ -90,7 +90,7 @@ const allTickets = {
         {data: 'category', visible: false},
         {data: 'priority'},
         {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},

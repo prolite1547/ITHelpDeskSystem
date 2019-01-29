@@ -269,8 +269,8 @@ class TicketController extends Controller
             }
 
             DB::commit();
-        } catch (\Exception $e) {
-            $bool = false;
+        } catch (\Throwable $e) {
+            $bool = $e;
             DB::rollback();
         }
 
