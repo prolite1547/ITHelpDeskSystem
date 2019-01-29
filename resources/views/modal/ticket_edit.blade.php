@@ -1,7 +1,9 @@
 <div class="ticket-details__content">
     <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
     {{--{!! Form::open(['route' => ['editTicket', $user]]) !!}--}}
+
     <ul class="ticket-details__list">
+        @if($ticket->assigneeRelation->id === Auth::id())
         <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
             {!! Form::select('status', $statusSelect, $ticket->statusRelation->id, ['placeholder' => '(select priority)','class' => 'ticket-details__select','required']) !!}
         </li>
@@ -48,6 +50,11 @@
             @endif
         </li>
     </ul>
+    @else
+        <li class="ticket-details__item"><span class="ticket-details__field">Assigne to:</span>
+            {!! Form::select('assignee',$assigneeSelect, $ticket->assigneeRelation->id, ['placeholder' => '(assign to)','class' => 'ticket-details__select','required']) !!}
+        </li>
+    @endif
     {!! Form::close() !!}
     <div class="">
         <div class="ticket-content__buttons u-float-r">

@@ -17,4 +17,8 @@ class CategoryB extends Model
     public function group() {
         return $this->belongsTo('App\CategoryA','catA_id','id');
     }
+
+    public function getExpiration(){
+        return $this->belongsTo('App\Expiration','expiration');
+    }
 }

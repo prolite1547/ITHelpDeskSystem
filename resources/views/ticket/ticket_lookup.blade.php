@@ -10,17 +10,21 @@
                             <div class="ticket-content__more-dropdown">
                                 <span class="ticket-content__more">More...</span>
                                 <ul class="ticket-content__list">
-                                    @if((!in_array($ticket->status,[$ticket_status_arr['fixed'],$ticket_status_arr['closed']]) && $ticket->assigneeRelation->id === Auth::id()) || $ticket->status === $ticket_status_arr['open'])
+                                    @if($ticket->status === $ticket_status_arr['Expired'] &&  in_array(Auth::user()->role_id,$higherUserGroup))
+                                        <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--extend">Extend</a></li>
+                                    @endif
+                                    @if((!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && $ticket->assigneeRelation->id === Auth::id()) || $ticket->status === $ticket_status_arr['Open'])
                                         <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                                     @endif
-                                    @if((in_array(Auth::user()->role_id,[$user_roles['tower'],$user_roles['admin']]) && in_array($ticket->status,[$ticket_status_arr['fixed']])) && $ticket->status !== $ticket_status_arr['open'])
+                                    @if((in_array(Auth::user()->role_id,[$user_roles['tower'],$user_roles['admin']]) && in_array($ticket->status,[$ticket_status_arr['Fixed']])) && $ticket->status !== $ticket_status_arr['Open'])
                                         <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
                                         <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--reject">Reject</a></li>
                                     @endif
-                                    @if(!in_array($ticket->status,[$ticket_status_arr['fixed'],$ticket_status_arr['closed']]) && $ticket->assigneeRelation->id === Auth::id())
+                                    @if(!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && $ticket->assigneeRelation->id === Auth::id())
                                         <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
                                     @endif
                                     <li class="ticket-content__item"><a href="{{route('print.ticket',['id' => $ticket->id])}}" target="_blank" class="ticket-content__link ticket-content__link--print">Print</a></li>
+                                    @if(in_array(Auth::user()->role_id,$higherUserGroup))
                                     <li class="ticket-content__item">
                                         <a href="#!" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                                         <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
@@ -28,6 +32,7 @@
                                             <input type="hidden" name="_method" value="DELETE" >
                                         </form>
                                     </li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -82,9 +87,11 @@
                         <div class="ticket-details__title">
                             <h4 class="heading-quaternary">Details</h4>
                         </div>
-                        @if((!in_array($ticket->status,[$ticket_status_arr['fixed'],$ticket_status_arr['closed']]) && $ticket->assigneeRelation->id === Auth::id()) || $ticket->status === $ticket_status_arr['open'])
+                        @if((!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && ($ticket->assigneeRelation->id === Auth::id()) || in_array(Auth::user()->role->id,$higherUserGroup)))
                             <div class="ticket-details__icon-box">
-                                <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
+                                @if($ticket->assigneeRelation->id === Auth::id())
+                                    <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
+                                @endif
                                 <i class="far fa-edit ticket-details__icon ticket-details__icon--edit" title="Edit Details"></i>
                             </div>
                         @endif
@@ -138,23 +145,23 @@
                                 <span class="ticket-details__value">
 
                                                 @if(isset($ticket->SDC->id))
-                                                <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }}
-                                                         <?php
-                                                                $status = $ticket->SDC->status;
-                                                                if($status == 1){
-                                                                     echo "(POSTED)";
-                                                                }else if($status == 2){
-                                                                     echo "(ON GOING)";
-                                                                }else if($status == 3){
-                                                                     echo "(FOR APPROVAL)";
-                                                                }else if($status == 4){
-                                                                     echo "(APPROVED)";
-                                                                }else if($status == 5){
-                                                                      echo "(DONE)";
-                                                                }else{
-                                                                     echo "(SAVED)";
-                                                                }
-                                                         ?>
+                                        <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('sdc.printer', ['id'=>$ticket->SDC->id])}}">{{ $ticket->SDC->sdc_no }}
+                                            <?php
+                                            $status = $ticket->SDC->status;
+                                            if($status == 1){
+                                                echo "(POSTED)";
+                                            }else if($status == 2){
+                                                echo "(ON GOING)";
+                                            }else if($status == 3){
+                                                echo "(FOR APPROVAL)";
+                                            }else if($status == 4){
+                                                echo "(APPROVED)";
+                                            }else if($status == 5){
+                                                echo "(DONE)";
+                                            }else{
+                                                echo "(SAVED)";
+                                            }
+                                            ?>
                                                 </a>
                                     @elseif (isset($ticket->MDC->id))
                                         <a target="_blank" class="ticket-details__value ticket-details__value--link" href="{{route('mdc.printer', ['id'=>$ticket->MDC->id])}}">{{ $ticket->MDC->mdc_no }}
@@ -177,11 +184,11 @@
                                 @endif
                             </li>
                         </ul>
-                        <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['closed'] ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
-                        <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['reject'] ? 'u-display-n' : ''}}" data-action="viewRjctDtls">Reject Details</button>
+                        <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['Closed'] ? 'u-display-n' : ''}}" data-action="viewRslveDtls">Resolve Details</button>
+                        <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['Rejected'] ? 'u-display-n' : ''}}" data-action="viewRjctDtls">Reject Details</button>
                     </div>
 
-                    @if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $ticket_status_arr['closed'])
+                    @if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $ticket_status_arr['Closed'])
                         <div class="ticket-details__title-box">
                             <div class="ticket-details__title">
                                 <h4 class="heading-quaternary">Create/Add Data Correction</h4>

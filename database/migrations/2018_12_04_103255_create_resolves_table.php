@@ -19,7 +19,7 @@ class CreateResolvesTable extends Migration
             $table->string('resolution');
             $table->string('recommendation');
             $table->integer('res_category');
-            $table->unsignedInteger('ticket_id');
+            $table->unsignedInteger('ticket_id')->unique();
             $table->unsignedInteger('resolved_by')->nullable();
             $table->foreign('resolved_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');

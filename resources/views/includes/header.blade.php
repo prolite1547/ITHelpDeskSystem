@@ -89,24 +89,27 @@
                     </a>
                 </li>
                 <li class="submenu__li">
-                    <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>({{$ticketOpenCount}})</span></a>
+                    <a href="{{route('openTickets')}}" class="submenu__a {{Route::currentRouteName() == 'openTickets' ? 'submenu__a--active' : ''}}">Open <span>({{$ticketCounts['Open']}})</span></a>
                 </li>
                 <li class="submenu__li">
-                    <a href="{{route('ongoingTickets')}}" class="submenu__a {{Route::currentRouteName() == 'ongoingTickets' ? 'submenu__a--active' : ''}}">Ongoing <span>({{$ticketOngoingCount}})</span></a>
+                    <a href="{{route('ongoingTickets')}}" class="submenu__a {{Route::currentRouteName() == 'ongoingTickets' ? 'submenu__a--active' : ''}}">Ongoing <span>({{$ticketCounts['Ongoing']}})</span></a>
+                </li>
+                <li class="submenu__li">
+                    <a href="{{route('expiredTickets')}}" class="submenu__a {{Route::currentRouteName() == 'expiredTickets' ? 'submenu__a--active' : ''}}">Expired <span>({{$ticketCounts['Expired']}})</span></a>
                 </li>
                 {{--<li class="submenu__li">--}}
                     {{--<a href="{{route('verificationTickets')}}" class="submenu__a {{Route::currentRouteName() == 'verificationTickets' ? 'submenu__a--active' : ''}}">For Verification <span>(0)</span></a>--}}
                 {{--</li>--}}
                 @if(in_array(Auth::user()->role_id,[2,4]))
                 <li class="submenu__li">
-                    <a href="{{route('closedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'closedTickets' ? 'submenu__a--active' : ''}}">Resolved <span>({{$ticketClosedCount}})</span></a>
+                    <a href="{{route('closedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'closedTickets' ? 'submenu__a--active' : ''}}">Resolved <span>({{$ticketCounts['Closed']}})</span></a>
                 </li>
                 <li class="submenu__li">
-                    <a href="{{route('fixedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'fixedTickets' ? 'submenu__a--active' : ''}}">To Resolve<span>({{$ticketFixedCount}})</span></a>
+                    <a href="{{route('fixedTickets')}}" class="submenu__a {{Route::currentRouteName() == 'fixedTickets' ? 'submenu__a--active' : ''}}">To Resolve<span>({{$ticketCounts['Fixed']}})</span></a>
                 </li>
                 @endif
                 <li class="submenu__li">
-                    <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>({{$ticketCount}})</span></a>
+                    <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>({{$ticketCounts['All']}})</span></a>
                 </li>
             </ul>
         @show

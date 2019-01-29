@@ -67,8 +67,7 @@ class TicketController extends Controller
         ])
             ->findOrFail($id);
 
-//            dd($ticket->incident->id);
-        return view('ticket.ticket_lookup', ['ticket' => $ticket]);
+        return view("ticket.ticket_lookup", ['ticket' => $ticket]);
     }
 
     public function addTicketView(Request $request)
@@ -134,7 +133,7 @@ class TicketController extends Controller
         $incident_id = Ticket::findOrFail($ticket_id)->incident_id;
 
         /*FETCH THE EXPIRATION HOURS COLUMN*/
-        $expiration_hours = CategoryB::findOrFail($request->catB)->expiration;
+        $expiration_hours = CategoryB::findOrFail($request->catB)->getExpiration->expiration;
         $catA = CategoryB::findOrFail($request->catB)->group->id;
 
         /*GENERATE TE EXPIRATION DATE*/
@@ -194,6 +193,13 @@ class TicketController extends Controller
 
         $ticketTotals = ticketTypeCount('status', 2);
         return view('ticket.ongoingTickets', $ticketTotals);
+    }
+
+    public function expired()
+    {
+
+        $ticketTotals = ticketTypeCount('status', 6);
+        return view('ticket.expiredTickets', $ticketTotals);
     }
 
     public function closed()
@@ -342,6 +348,10 @@ class TicketController extends Controller
         return redirect()->route('lookupTicketView',['id' => $id]);
     }
 
+    public function extend(Request $request){
+        dd($request->all());
+    }
+
     public function rejectForm($id){
         return view('modal.rejectForm',['id' => $id]);
     }
@@ -350,5 +360,9 @@ class TicketController extends Controller
         $ticket = Ticket::findOrFail($id);
         $rejectData = $ticket->rejectData->first();
         return view('modal.reject_lookup',compact('ticket','rejectData'));
+    }
+
+    public function getExtendForm($id){
+        return view('modal.extendForm',['id' => $id]);
     }
 }

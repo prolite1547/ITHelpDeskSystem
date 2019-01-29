@@ -15,7 +15,7 @@
     <div class="mail__greeting">Hi PLDT,</div>
     <div class="mail__content">
         <div class="mail__intro">
-            We would like to report that <strong>CITIHARDWARE PANGI</strong> is Currently experiencing <strong>NO VPN CONNECTION</strong>. We need your immediate assistance.
+            {{$data->details}}
         </div>
         <table class="mail__table">
             <thead>
@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <th>Account#</th>
-                    <td>083-554-7450</td>
+                    <td>{{$data->}}</td>
                 </tr>
                 <tr>
                     <th>Dial#</th>

@@ -31,6 +31,22 @@ const openTickets = {
 
 };
 
+const expiredTickets = {
+    ajax: '/tickets/ticket-data/expired',
+    order: [[4, 'desc']],
+    columns: [
+        {data: 'id'},
+        {data: 'category', visible: false},
+        {data: 'priority'},
+        {data: 'status', orderable: false},
+        {data: 'store_name'},
+        {data: 'created_at',visible: true},
+        {data: 'expiration'},
+        {data: 'assignee',visible: true},
+        {data: 'id', orderable: false}
+    ],
+};
+
 const ongoingTickets = {
     ajax: '/tickets/ticket-data/ongoing',
     order: [[5, 'desc']],
@@ -130,6 +146,8 @@ export const initDataTables = () => {
         options = closedTickets;
     }  else if (ticketStatus === 'fixed') {
         options = fixedTickets;
+    }else if (ticketStatus === 'expired') {
+        options = expiredTickets;
     }else {
         console.log('ticket status not found');
     }
