@@ -100,4 +100,8 @@ public function rejectData() {
     return $this->hasMany('App\Reject','ticket_id','id')->latest()->limit(1);
 }
 
+public function extended(){
+    return $this->hasMany('App\Extend');
+}
+
 }

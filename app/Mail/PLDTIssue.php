@@ -14,6 +14,7 @@ class PLDTIssue extends Mailable
     public $data;
     public $user;
     public $myAttachments;
+    public $incidentSubject;
     /**
      * Create a new message instance.
      *
@@ -24,6 +25,7 @@ class PLDTIssue extends Mailable
         $this->data = $request;
         $this->user = $request->user()->fName;
         $this->myAttachments = $request->attachments;
+        $this->incidentSubject = $request->subject;
     }
 
     /**
@@ -33,7 +35,8 @@ class PLDTIssue extends Mailable
      */
     public function build()
     {
-         $mail = $this->view('emails.PLDTIssue');
+         $mail = $this->subject($this->incidentSubject)
+             ->view('emails.PLDTIssue');
 
          foreach ($this->myAttachments as $attachment){
              $originalFileName = $attachment->getClientOriginalName();

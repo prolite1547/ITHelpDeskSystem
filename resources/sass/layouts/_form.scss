@@ -1,7 +1,16 @@
 
 .form{
-
+    padding: 1rem;
     font-size: 1.3rem;
+
+    &__radio {
+        margin-right: .5rem;
+    }
+
+    &__textarea {
+        width: 100%;
+    }
+
     &__group {
         position: relative;
 
@@ -16,6 +25,11 @@
         &:not(:last-child){
             margin-bottom: 1.5rem;
         }
+    }
+
+    &__group--flex {
+        display: flex;
+        align-items: center;
     }
 
 
@@ -249,6 +263,7 @@
             margin-right: 1rem;
         }
     }
+
  }
 
 
@@ -280,4 +295,8 @@
         resize: none;
 
     }
+}
+
+.extend-form {
+    padding: 1rem;
 }

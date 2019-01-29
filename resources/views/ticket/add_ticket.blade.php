@@ -28,7 +28,7 @@
                             <div class="form__group">
                                 <fieldset class="fieldset">
                                     <legend class="fieldset__legend">Caller Details</legend>
-                                    <div class="fieldset__flex">
+                                    <div class="fieldset__flex fieldset__flex--sb">
                                         <div class="fieldset__left">
                                             {!! Form::select('position', [], null, ['placeholder' => '(position)','class' => 'form__input','required','id' => 'ticketPositionSelect']) !!}
                                         </div>
@@ -163,13 +163,28 @@
                     </div>
                     <div class="form__group">
                         {{Form::select('branch',['Pagadian' => 'Pagadian'],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select','required'])}}
-                        {{Form::select('account',['account' => 'account'],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('pid',['PID' => 'PID'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('concern',['concern'=>'concern'],null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select','required'])}}
+                        {{Form::select('account',['905217453' => '905217453'],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('pid',['PID#578070' => 'PID#578070'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('concern',['No Vpn Connection'=>'No Vpn Connection'],null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select','required'])}}
                     </div>
                     <div class="form__group">
                         {{Form::label('contact','Contact #:')}}
-                        {{Form::text('contact',null,['placeholder' => '####','class' => 'form-email__input-text'])}}
+                        {{Form::tel('contact',null,['placeholder' => '####','class' => 'form-email__input-text'])}}
+                    </div>
+                    <div class="form__group">
+                        <fieldset class="fieldset">
+                            <legend class="fieldset__legend">Type</legend>
+                            <div class="fieldset__flex">
+                                <div class="form__group--flex u-mr-s">
+                                    {{Form::radio('type','vpn',true,['id' => 'vpn','class' => 'form__radio'])}}
+                                    {{Form::label('vpn','VPN')}}
+                                </div>
+                                <div class="form__group--flex">
+                                    {{Form::radio('type','tele',false,['id' => 'tele','class' => 'form__radio'])}}
+                                    {{Form::label('tele','Telephone')}}
+                                </div>
+                            </div>
+                        </fieldset>
                     </div>
                     {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                 {{Form::close()}}

@@ -17,9 +17,10 @@ class CreateCategoryBTable extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->unsignedInteger('catA_id');
-            $table->string('expiration')->default('24');
+            $table->unsignedInteger('expiration')->default(1);
             $table->timestamps();
             $table->foreign('catA_id')->references('id')->on('category_a');
+            $table->foreign('expiration')->references('id')->on('expirations');
         });
     }
 

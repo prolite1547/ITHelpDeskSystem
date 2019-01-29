@@ -16,4 +16,8 @@ class Status extends Model
     public function openIncidents(){
         return $this->hasMany('App\Incident','status','id');
     }
+
+    public function tickets(){
+        return $this->hasMany('App\Ticket','status','id');
+    }
 }

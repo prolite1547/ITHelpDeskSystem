@@ -2,6 +2,7 @@
 
 use App\Caller;
 use App\Category;
+use App\Status;
 use App\Ticket;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -136,6 +137,21 @@ if (! function_exists('cleanInputs')) { /*uppercase words and remove extra white
         }else {
             return $string;
         }
+    }
+}
+
+if (! function_exists('getNumberOfTicketsOnASpecStatus')) { /*uppercase words and remove extra white spaces*/
+    function getNumberOfTicketsOnASpecStatus(){
+
+        $ticketStatuses = Status::all()->pluck('name','id')->toArray();
+        $ticketCounts = array();
+        $ticketCounts['All'] =  Status::all()->count();
+        foreach ($ticketStatuses as $key => $value){
+            $count = Status::findOrFail($key)->tickets->count();
+            $ticketCounts[$value] = $count;
+        }
+
+        return $ticketCounts;
     }
 }
 ?>

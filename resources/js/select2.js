@@ -33,6 +33,29 @@ export const deptSelect2 = {
     }
 };
 
+export const exprtionSelect2 = {
+    width: 'auto',
+    ajax: {
+        url: '/select/expiration',
+        processResults: function (data) {
+
+
+            let reformattedArray  = data.data.map(obj => {
+                let rObj,day;
+                rObj = {};
+                rObj.text = `${obj.text} hours`;
+                rObj.id = obj.id;
+               return rObj;
+            });
+
+
+            return {
+                results: reformattedArray
+            };
+        }
+    }
+};
+
 export const cntctSelect2 = {
     width: '30%',
     ajax: {

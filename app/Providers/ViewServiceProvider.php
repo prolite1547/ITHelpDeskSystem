@@ -31,12 +31,17 @@ class ViewServiceProvider extends ServiceProvider
     {
 
         view()->composer('*',function($view){
-            $ticket_status_arr = array('open'=> 1,'ongoing'=> 2,'closed'=> 3,'fixed'=> 4,'reject'=> 5);
-            $user_roles = array('admin'=> 4,'user'=> 3,'1support'=> 1,'tower'=> 2);
 
+            $ticket_status_arr = Status::all(['id','name'])->pluck('id','name')->toArray();
+
+
+            $user_roles = array('admin'=> 4,'user'=> 3,'1support'=> 1,'tower'=> 2);
+            $higherUserGroup = array($user_roles['admin'],$user_roles['tower']);
             $view->with(compact(
                 'ticket_status_arr',
-                'user_roles')
+                'user_roles',
+                    'higherUserGroup'
+                )
             );
         });
 
@@ -49,18 +54,10 @@ class ViewServiceProvider extends ServiceProvider
             $gcRoutes = ['datacorrectons.govcompALL', 'datacorrectons.govcompDONE', 'datacorrectons.govcompPENDING'];
             $appRoutes = ['datacorrectons.approverALL', 'datacorrectons.approverDONE', 'datacorrectons.approverPENDING'];
 
-            $ticketOpenCount = Ticket::whereStatus(1)->count();
-            $ticketOngoingCount = Ticket::whereStatus(2)->count();
-            $ticketClosedCount = Ticket::whereStatus(3)->count();
-            $ticketFixedCount = Ticket::whereStatus(4)->count();
+            $ticketCounts = getNumberOfTicketsOnASpecStatus();
             $ticketUserTicketsCount = Ticket::whereAssignee($userID)->where('status','!=',3)->count();
-            $ticketCount = Ticket::all()->count();
             $view->with(compact(
-                'ticketOpenCount',
-                'ticketOngoingCount',
-                'ticketClosedCount',
-                'ticketFixedCount',
-                'ticketCount',
+                'ticketCounts',
                 'ticketUserTicketsCount',
                 'ticketRoutes',
                 'dcRoutes',
@@ -101,13 +98,10 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with(compact(
                 'statusSelect',
-//                'issueSelect' ,
                 'prioSelect',
                 'typeSelect',
-//                'incASelect' ,
                 'incBSelect',
                 'callerSelect',
-                // 'branchGroupSelect',
                 'branchSelect',
                 'assigneeSelect',
                 'rolesSelect',

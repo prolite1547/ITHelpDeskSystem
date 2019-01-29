@@ -49,6 +49,7 @@ Route::patch('/ticket/edit/{id}', 'TicketController@edit')->name('editTicket');
 Route::patch('/tickets/status/fixed/{id}', 'TicketController@editStatus')->name('editStatus');
 Route::get('/tickets/open', 'TicketController@open')->name('openTickets');
 Route::get('/tickets/ongoing', 'TicketController@ongoing')->name('ongoingTickets');
+Route::get('/tickets/expired', 'TicketController@expired')->name('expiredTickets');
 Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/fixed', 'TicketController@fixed')->name('fixedTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
@@ -58,6 +59,7 @@ Route::get('/tickets/my', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
 Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
+Route::post('/ticket/extend/{id}', 'TicketController@extend')->name('ticketExtend');
 
 //////////////////////////
 ////////*RESOLVE*/////////
@@ -78,6 +80,7 @@ Route::get('/modal/form/reject/{ticket_id}','TicketController@rejectForm');
 Route::get('/modal/lookup/reject/{ticket_id}','TicketController@rejectFormDetails');
 Route::view('/modal/form/resolve','modal.resolve_form');
 Route::view('/modal/form/userAdd','modal.user_add');
+Route::get('/modal/form/extend/{id}','TicketController@getExtendForm');
 Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalResolveView');
 Route::get('/modal/{store_id}/contacts','StoreController@storeContacts')->name('storeContacts');
 
@@ -115,6 +118,7 @@ Route::get('/select/caller', 'SelectController@caller');
 Route::get('/select/contact', 'SelectController@contact');
 Route::get('/select/position', 'SelectController@position');
 Route::get('/select/department', 'SelectController@department');
+Route::get('/select/expiration', 'SelectController@expiration');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -141,14 +145,21 @@ Route::get('/search','HomeController@search')->name('search');
 ////////*POSITION*//////
 //////////////////////////
 Route::post('/add/position','PositionController@create');
+
 //////////////////////////
 ////////*DEPARTMENT*//////
 //////////////////////////
 Route::post('/add/department','DepartmentController@create');
+
 //////////////////////////
 ////////*API*//////
 //////////////////////////
 Route::get('/api/user/{id}','UserController@userAPI');
+
+//////////////////////////
+////////*EXTENDED*//////
+//////////////////////////
+Route::post('/add/extend/{id}','ExtendController@create')->name('addExtend');
 
 Route::get('/test',function (){
     return view('emails.PLDTIssue');

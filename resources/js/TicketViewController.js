@@ -186,7 +186,7 @@ export const ticketViewController = (user) => {
                                 console.log(`Error on making edit modal markup!! Error: ${error}`);
                             });
                     });
-
+                if(elements.ticketDetailsAddFilesIcon){
                     elements.ticketDetailsAddFilesIcon.addEventListener('click', () => {
                         showModal();
                         /*SHOW MODAL*/
@@ -214,7 +214,7 @@ export const ticketViewController = (user) => {
                         })
 
                     });
-
+                }
                     /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
                     elements.modal.addEventListener('click', e => {
                         if (e.target.matches('button')) {
@@ -332,6 +332,10 @@ export const ticketViewController = (user) => {
             });
         }
     });
+
+
+    /*EXTEND*/
+    if(elements.extendFormBtn) elements.extendFormBtn.addEventListener('click',editTicketView.showExtendFormModal.bind(null,ticket.ID));
 
     elements.ticketDetailStore.addEventListener('click',editTicketView.displayContactNumbers);
 
