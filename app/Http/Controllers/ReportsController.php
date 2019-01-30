@@ -130,6 +130,7 @@ class ReportsController extends Controller
         $start = date('Y-m-d', strtotime($request->start)) . " 00:00:00";
         $end = date('Y-m-d', strtotime($request->end)). " 23:59:59";
         $resdate = "N/A";
+        $pendingDuration = "Resolved";
         $resinterval = "N/A";
       
         if($category != "all"){
@@ -141,7 +142,7 @@ class ReportsController extends Controller
         $rowdata ="";
         $data = "<table id='demo-dt-basic' class='table table-striped table-bordered table-hover ILRTable' cellspacing='0' width='100%'>";
             $data .= "<thead style='font-size:14px;'>";
-                $data .= "<tr><th>Ticket ID</th><th>Description</th><th>Category</th><th>Logged Date</th><th>Resolved Date</th><th>No. of Days/ Hrs. Resolved</th><th>Status</th></tr>";
+                $data .= "<tr><th>Ticket ID</th><th>Subject</th><th>Category</th><th>Logged Date</th><th>No. of Days/Hrs Pending</th><th>Resolved Date</th><th>No. of Days/ Hrs. Resolved</th><th>Assigned to</th><th>Status</th></tr>";
             $data .= "</thead>";
             $data .= "<tbody style='font-size:12px;'>";
                     foreach($incidents  as $incident){
@@ -168,8 +169,23 @@ class ReportsController extends Controller
                                     }else{
                                         $resinterval =  $diff->format("%a Day(s)");
                                     }
+                                    $pendingDuration = "Resolved";
+                            }else{
+                                date_default_timezone_set("Asia/Manila");
+                                $currentDate =  date('Y-m-d H:i:s');
+    
+                                $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
+                                $date2 = date_create(date("Y-m-d H:i:s", strtotime($currentDate)));
+                                $diff = date_diff($date1,$date2);
+
+                                if((int)$diff->format("%a") == 0){
+                                    $pendingDuration =  $diff->format("%h Hour(s) %i Minute(s) %s Second(s)");
+                                }else{
+                                    $pendingDuration =  $diff->format("%a Day(s)");
+                                }
+
                             }
-                            $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
+                            $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                             $resdate = "N/A";
                             $resinterval = "N/A";
                             }

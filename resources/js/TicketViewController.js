@@ -294,24 +294,26 @@ export const ticketViewController = (user) => {
 
 
     // /*EVENT LISTENER ON SEND BUTTON*/
-    elements.chatForm.addEventListener('submit', e => {
-        if (e.target.checkValidity()) {
-            e.preventDefault();
-            const newMessage = editTicketView.getMessageData();
-            if (!newMessage) {
-                return alert(`What's the point of sending a message if its empty!! Message: ${newMessage}`);
+    if(elements.chatForm){
+        elements.chatForm.addEventListener('submit', e => {
+            if (e.target.checkValidity()) {
+                e.preventDefault();
+                const newMessage = editTicketView.getMessageData();
+                if (!newMessage) {
+                    return alert(`What's the point of sending a message if its empty!! Message: ${newMessage}`);
+                }
+                editTicketView.resetReply();
+                const newMessageObject = new Message(ticket.ID, newMessage);
+                newMessageObject.saveMessage(newMessageObject)
+                    .done(() => {
+                        alert('Message Sent Successfull!')
+                    })
+                    .fail((jqXHR) => {
+                        displayError(jqXHR);
+                        });
             }
-            editTicketView.resetReply();
-            const newMessageObject = new Message(ticket.ID, newMessage);
-            newMessageObject.saveMessage(newMessageObject)
-                .done(() => {
-                    alert('Message Sent Successfull!')
-                })
-                .fail((jqXHR) => {
-                    displayError(jqXHR);
-                    });
-        }
-    });
+        });
+    }
 
 
     /*DELETE MESSAGE*/
