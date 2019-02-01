@@ -12,7 +12,7 @@
                         Incident
                     </label>
                     <label id="PLDTForm" class="window__item">
-                        PLDT
+                        Connection
                     </label>
                     {{--<li class="window__item window__item--active"><a href="#!" class="window__link">Incident</a></li>--}}
                     {{--<li class="window__item"><a href="#!" class="window__link">PLDT</a></li>--}}
@@ -23,7 +23,7 @@
                         <div class="formColumn">
                             {!! Form::open(['method' => 'POST','route' => 'addTicket','id' => 'form-addTicket']) !!}
                             <div class="form__group">
-                                {!! Form::select('store', [], null, ['placeholder' => '(reported by)','class' => 'form__input','required','id' => 'ticketBranchSelect']) !!}
+                                {!! Form::select('store', [], null, ['placeholder' => '(reported by)','class' => 'form__input branchSelect','required','id' => 'ticketBranchSelect']) !!}
                             </div>
                             <div class="form__group">
                                 <fieldset class="fieldset">
@@ -35,15 +35,15 @@
                                         <div class="fieldset__right">
                                             <div class="form__group">
                                                 {!! Form::label('fName','First Name :',['class' => 'form__label'])!!}
-                                                {!! Form::text('fName',null,['class' => 'form__input','placeholder' => 'first','required']) !!}
+                                                {!! Form::text('fName',null,['class' => 'form__input','placeholder' => 'first','required','minlength' => 2]) !!}
                                             </div>
                                             <div class="form__group">
                                                 {!! Form::label('mName','Middle Name :',['class' => 'form__label'])!!}
-                                                {!! Form::text('mName',null,['class' => 'form__input','placeholder' => 'middle','required']) !!}
+                                                {!! Form::text('mName',null,['class' => 'form__input','placeholder' => 'middle','required','minlength' => 2]) !!}
                                             </div>
                                             <div class="form__group">
                                                 {!! Form::label('lName','Last Name :',['class' => 'form__label'])!!}
-                                                {!! Form::text('lName',null,['class' => 'form__input','placeholder' => 'last','required']) !!}
+                                                {!! Form::text('lName',null,['class' => 'form__input','placeholder' => 'last','required','minlength' => 2]) !!}
                                             </div>
                                         </div>
                                     </div>
@@ -75,8 +75,8 @@
                             </div>
                             <div class="form__group">
                                 {!! Form::select('category', $typeSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
-                                {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input','required']) !!}
-                                {!! Form::text('expiration', null, ['hidden','class' => 'form__input']) !!}
+                                {!! Form::select('group', $groupSelect, null, ['placeholder' => '(select group)','class' => 'form__input','required']) !!}
+                                {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input categoryBSelect','required']) !!}
 
                             </div>
                             <div class="form__group">
@@ -162,30 +162,30 @@
                         {{Form::file('attachments[]',['multiple'])}}
                     </div>
                     <div class="form__group">
-                        {{Form::select('branch',['Pagadian' => 'Pagadian'],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select','required'])}}
+                        {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select branchSelect','required'])}}
                         {{Form::select('account',['905217453' => '905217453'],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
                         {{Form::select('pid',['PID#578070' => 'PID#578070'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('concern',['No Vpn Connection'=>'No Vpn Connection'],null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select','required'])}}
+                        {{Form::select('concern',$categoryCGroupSelect,null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select','required'])}}
                     </div>
                     <div class="form__group">
                         {{Form::label('contact','Contact #:')}}
                         {{Form::tel('contact',null,['placeholder' => '####','class' => 'form-email__input-text'])}}
                     </div>
-                    <div class="form__group">
-                        <fieldset class="fieldset">
-                            <legend class="fieldset__legend">Type</legend>
-                            <div class="fieldset__flex">
-                                <div class="form__group--flex u-mr-s">
-                                    {{Form::radio('type','vpn',true,['id' => 'vpn','class' => 'form__radio'])}}
-                                    {{Form::label('vpn','VPN')}}
-                                </div>
-                                <div class="form__group--flex">
-                                    {{Form::radio('type','tele',false,['id' => 'tele','class' => 'form__radio'])}}
-                                    {{Form::label('tele','Telephone')}}
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+                    {{--<div class="form__group">--}}
+                        {{--<fieldset class="fieldset">--}}
+                            {{--<legend class="fieldset__legend">Type</legend>--}}
+                            {{--<div class="fieldset__flex">--}}
+                                {{--<div class="form__group--flex u-mr-s">--}}
+                                    {{--{{Form::radio('type','vpn',true,['id' => 'vpn','class' => 'form__radio'])}}--}}
+                                    {{--{{Form::label('vpn','VPN')}}--}}
+                                {{--</div>--}}
+                                {{--<div class="form__group--flex">--}}
+                                    {{--{{Form::radio('type','tele',false,['id' => 'tele','class' => 'form__radio'])}}--}}
+                                    {{--{{Form::label('tele','Telephone')}}--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</fieldset>--}}
+                    {{--</div>--}}
                     {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                 {{Form::close()}}
             </div>

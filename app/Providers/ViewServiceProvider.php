@@ -82,19 +82,17 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer(['ticket.add_ticket', 'modal.ticket_edit', 'modal.user_add', 'ticket.incomplete'], function ($view) {
             $selfOption = [null => 'None', Auth::id() => 'Self'];
             $statusSelect = DB::table('ticket_status')->pluck('name', 'id')->toArray();  /*Status*/
-            /*$issueSelect = selectArray(1,CategoryGroup::class,'id','name');*/  /*Ticket*/
             $prioSelect = DB::table('priorities')->pluck('name', 'id')->toArray();   /*Priority*/
             $typeSelect = DB::table('categories')->pluck('name', 'id')->toArray();   /*Incident category*/
             $incBSelect = DB::table('category_b')->pluck('name', 'id')->toArray(); /*A Sub category for incident*/
-//            $incBSelect = selectArray('',CategoryGroup::class,'id','name'); /*B Sub category for incident*/
+            $groupSelect = DB::table('ticket_groups')->pluck('name', 'id')->toArray(); /*TICKET_GROUP*/
             $rolesSelect = selectArray('', Role::class, 'id', 'role'); /*Roles*/
             $positionsSelect = selectArray('', Position::class, 'id', 'position'); /*Roles*/
             $callerSelect = Caller::get()->pluck('name', 'id');
-//            $branchGroupSelect = groupListSelectArray(Store::class,'store_name','contactNumbers','id','number');
+            $categoryCGroupSelect = groupListSelectArray(CategoryB::class, 'name', 'subCategories', 'id', 'name');
             $categoryBGroupSelect = groupListSelectArray(CategoryA::class, 'name', 'subCategories', 'id', 'name');
             $branchSelect = Store::all()->pluck('store_name', 'id')->toArray();
             $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
-
 
             $view->with(compact(
                 'statusSelect',
@@ -107,7 +105,9 @@ class ViewServiceProvider extends ServiceProvider
                 'rolesSelect',
                 'positionsSelect',
                 'categoryBGroupSelect',
-                'selfOption'
+                'selfOption',
+                'groupSelect',
+                'categoryCGroupSelect'
             ));
         });
 

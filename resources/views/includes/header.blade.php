@@ -67,7 +67,7 @@
             <a href="{{route('addTicketView')}}" id="addTicketPageBtn" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
             {{Form::open(['method' => 'GET','url'=>'/search','class' => 'form form--search'])}}
                 <i class="fas fa-search form--search__icon"></i>
-                {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID'))}}
+                {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID)'))}}
             {{Form::close()}}
         </div>
     </div>

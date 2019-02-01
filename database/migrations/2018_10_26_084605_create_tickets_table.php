@@ -22,6 +22,7 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('priority')->nullable();
             $table->unsignedInteger('status');
             $table->unsignedInteger('store');
+            $table->unsignedInteger('group')->nullable();;
             $table->dateTime('expiration')->nullable();;
             $table->dateTime('fixed_date')->nullable();;
             $table->foreign('store')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
@@ -31,6 +32,7 @@ class CreateTicketsTable extends Migration
             $table->foreign('status')->references('id')->on('ticket_status')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('type')->references('id')->on('ticket_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('priority')->references('id')->on('priorities')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('group')->references('id')->on('ticket_groups')->onDelete('cascade')->onUpdate('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

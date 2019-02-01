@@ -5,6 +5,7 @@ use App\Category;
 use App\Status;
 use App\Ticket;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 if (! function_exists('selectArray')) {
@@ -49,12 +50,12 @@ if (! function_exists('selectArray')) {
         function groupListSelectArray($model,$groupName,$relationship,$value,$name){
 
             $records = $model::with($relationship)->get();
-
             $dataArray = [];
             foreach ($records as $row){
-                $dataArray[$row->$groupName] = $row->$relationship->pluck($name,$value)->toArray();
+                if($row->$relationship->count() !== 0){
+                    $dataArray[$row->$groupName] = $row->$relationship->pluck($name,$value)->toArray();
+                }
             }
-
             return $dataArray;
         }
 
@@ -107,7 +108,7 @@ if (! function_exists('validateLoggersTicketStatus')) {
             ->where('u.id',$user_id)
             ->whereNotNull('t.id')
             ->where(function ($query){
-                $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null]);
+                $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null,'t.group' => null]);
             })
             ->leftJoin('tickets as t','u.id','t.logged_by')
             ->leftJoin('incidents as i','t.incident_id','i.id')
@@ -145,13 +146,41 @@ if (! function_exists('getNumberOfTicketsOnASpecStatus')) { /*uppercase words an
 
         $ticketStatuses = Status::all()->pluck('name','id')->toArray();
         $ticketCounts = array();
-        $ticketCounts['All'] =  Status::all()->count();
+        $ticketCounts['All'] =  Ticket::all()->count();
         foreach ($ticketStatuses as $key => $value){
-            $count = Status::findOrFail($key)->tickets->count();
+            if($value === 'Fixed'){
+                $count = Status::findOrFail($key)->tickets->whereIn('group',getGroupIDDependingOnUser())->count();
+            }else{
+                $count = Status::findOrFail($key)->tickets->count();
+            }
             $ticketCounts[$value] = $count;
         }
 
         return $ticketCounts;
     }
 }
+
+if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remove extra white spaces*/
+    function getGroupIDDependingOnUser(){
+
+        $authRoleID = Auth::user()->role->id;
+        $authPositionID = Auth::user()->position->id;
+
+
+        $group = [4 => [1],5 => [2],'all' => [1,2]];
+
+
+        /*4 is equivalent to admin user*/
+        if($authRoleID !== 4){
+             $groupID = $group[$authPositionID];
+        }else {
+            $groupID = $group['all'];
+        }
+
+
+        return $groupID;
+    }
+}
+
+
 ?>

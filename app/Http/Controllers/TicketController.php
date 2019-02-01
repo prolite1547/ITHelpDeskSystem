@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Call;
 use App\Caller;
 use App\CategoryB;
+use App\CategoryC;
 use App\File;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
@@ -154,7 +155,7 @@ class TicketController extends Controller
 
              Incident::findOrFail($incident_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
              $ticket = Ticket::findOrFail($ticket_id);
-             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status'));
+             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status','group'));
 
             /*CREATE DIRECTORY NAME*/
             $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $ticket->created_at)) . '_' . $ticket_id;
@@ -328,6 +329,37 @@ class TicketController extends Controller
 
     public function addPLDTTicket(Request $request)
     {
+        $validation = [
+            'to' => 'required|email',
+            'subject' => 'required|string|min:5',
+            'details' => 'required|string|min:5',
+            'branch' => 'required|numeric',
+            'contact' => 'required|string|min:5',
+            'type' => 'required|string'
+        ];
+
+        $voice =  ['dial' => 'required|string|min:5'];
+
+
+        $data = ['pid' => 'required|string|min:5'];
+
+        /*GET CATEGORY B id*/
+        $catB = CategoryC::findOrFail($request->concern)->catB;
+
+        /*16 IS THE ID OF THE CATEGORY B VOICE*/
+        if($catB === 16){
+            $validation = $validation + $voice;
+            $request->request->add(['type' => 'voice']);
+        }elseif ($catB === 17){
+            $validation = $validation + $data;
+            $request->request->add(['type' => 'data']);
+        }else{
+            $request->request->add(['type' => 'both']);
+            $validation = $validation + $data + $voice;
+        }
+
+        $request->validate($validation);
+
         Mail::to($request->to)->send(new PLDTIssue($request));
     }
 

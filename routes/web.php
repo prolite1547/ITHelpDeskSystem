@@ -166,16 +166,59 @@ Route::get('/test',function (){
 
 });
 
+Route::get('/test2.1',function (){
+    $nntp = imap_open('{imap.gmail.com:993/imap/ssl}Ticketing', 'it.support@citihardware.com', 'citihardware2020');
+    $threads = imap_thread($nntp);
+
+
+    foreach ($threads as $key => $val) {
+        $tree = explode('.', $key);
+        if ($tree[1] == 'num') {
+            $header = imap_headerinfo($nntp, $val);
+            echo "<ul>\n\t<li>" . $header->subject . "\n";
+        } elseif ($tree[1] == 'branch') {
+            echo "\t</li>\n</ul>\n";
+        }
+    }
+
+    imap_close($nntp);
+
+    dd($threads);
+});
+
 Route::get('/test2',function (){
     $oClient = new Client();
     $oClient->connect();
-    $aFolder = $oClient->getFolder('INBOX');
-    $aMessage = $aFolder->query()->UNSEEN()->get();
+
+//    dd($aFolder = $oClient->getFolders());
+    $aFolder = $oClient->getFolder('Ticketing');
+    dd($aFolder);
+    dd(imap_thread($oClient->connection));
+    $aMessage = $aFolder
+        ->query()
+        ->setFetchFlags(false)
+        ->setFetchBody(false)
+        ->setFetchAttachment(false)
+        ->get();
 
     foreach ($aMessage as $message){
-        echo $message->getHTMLBody(true);
+        echo $message->getUid();
     }
     dd($aMessage);
+});
+
+Route::get('/test3',function (){
+    $mailbox = new PhpImap\Mailbox('{imap.gmail.com:993/imap/ssl}INBOX', 'jeruyeraslabor@gmail.com', 'Dr@mstick24', __DIR__);
+
+    $mailsIds = $mailbox->searchMailbox('ALL');
+    if(!$mailsIds) {
+        die('Mailbox is empty');
+    }
+
+    $mail = $mailbox->getMail($mailsIds[0]);
+
+    print_r($mail);
+
 });
 
 Auth::routes();

@@ -26,22 +26,25 @@ class DatatablesController extends Controller
         return Datatables::of(User::query())->make(true);
     }
 
-    public function tickets(Request $request,$status){
-        $statuses = Status::whereNotIn('name',['all','user','fixedRej'])->pluck('name')->toArray();
+    public function tickets($status){
+        $group = getGroupIDDependingOnUser();
+        $statuses = Status::whereNotIn('name',['all','user','fixed'])->pluck('name')->toArray();
         $query = DB::table('tickets')
+        ->whereNull('deleted_at')
         ->join('incidents','tickets.incident_id','incidents.id')
-            ->when(in_array(strtolower($status),array_map('strtolower',$statuses),true),function ($query) use ($status){
+            ->when(in_array(strtolower($status),array_map('strtolower',$statuses),true),function ($query) use ($status,$group){
                 $get_status = Status::where('name',$status)->firstOrFail();
                 return $query->whereStatus($get_status->id);
             })
             ->when($status === 'user',function ($query){
                 return $query->where('assignee',Auth::user()->id)->where('status','!=',3);
             })
-            ->when($status === 'fixedRej',function ($query){
-                return $query->whereStatus(4);
+            ->when($status === 'fixed',function ($query) use($group){
+                return $query->whereStatus(4)->whereIn('group',$group);
 
             })
             ->leftJoin('stores','tickets.store','stores.id')
+            ->leftJoin('ticket_groups','ticket_groups.id','tickets.group')
             ->leftJoin('calls','incidents.call_id','calls.id')
             ->leftJoin('resolves','tickets.id','resolves.ticket_id')
             ->leftJoin('categories as cat','incidents.category','cat.id')
@@ -54,7 +57,8 @@ class DatatablesController extends Controller
                 incidents.created_at as incident_created,incidents.subject,incidents.details,cat.name as category,
                 CONCAT(assignee.fName," ",assignee.lName) as assignee,
                 stores.store_name,
-                CONCAT(resolver.fName," ",resolver.lName) as resolved_by,resolves.created_at as resolved_date'
+                CONCAT(resolver.fName," ",resolver.lName) as resolved_by,resolves.created_at as resolved_date,
+                ticket_groups.name as ticket_group'
             );
 
         $datatablesJSON = DataTables::of($query);

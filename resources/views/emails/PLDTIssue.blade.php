@@ -26,19 +26,19 @@
             <tbody>
                 <tr>
                     <th>Name</th>
-                    <td>CITIHARDWARE {{$data->branch}}</td>
+                    <td>CITIHARDWARE {{$branch}}</td>
                 </tr>
                 <tr>
                     <th>Account#</th>
-                    <td>{{$data->}}</td>
+                    <td>{{$data->dial ?? ''}}</td>
                 </tr>
                 <tr>
-                    <th>Dial#</th>
-                    <td>Concern</td>
+                    <th>{{$data->type}}#</th>
+                    <td>{{$data->pid}}</td>
                 </tr>
                 <tr>
                     <th>Concern</th>
-                    <td>No Dial Tone</td>
+                    <td>{{$concern}}</td>
                 </tr>
                 <tr>
                     <th>Contact Person</th>
@@ -46,7 +46,7 @@
                 </tr>
                 <tr>
                     <th>Contact Number</th>
-                    <td>09237187997/09212173224</td>
+                    <td>{{$data->contact}}</td>
                 </tr>
                 <tr>
                     <th>E-mail</th>

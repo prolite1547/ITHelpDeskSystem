@@ -20,8 +20,10 @@ class Ticket extends Model
         'created_at',
         'logged_by',
         'fixed_date',
+        'group'
     ];
 
+protected $dates = ['deleted_at'];
 
 public function userLogged(){
     return $this->belongsTo('App\User','logged_by');

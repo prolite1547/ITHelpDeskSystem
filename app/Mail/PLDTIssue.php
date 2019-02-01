@@ -2,11 +2,13 @@
 
 namespace App\Mail;
 
+use App\CategoryC;
 use http\Env\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Store;
 
 class PLDTIssue extends Mailable
 {
@@ -15,6 +17,8 @@ class PLDTIssue extends Mailable
     public $user;
     public $myAttachments;
     public $incidentSubject;
+    public $branch;
+    public $concern;
     /**
      * Create a new message instance.
      *
@@ -26,6 +30,8 @@ class PLDTIssue extends Mailable
         $this->user = $request->user()->fName;
         $this->myAttachments = $request->attachments;
         $this->incidentSubject = $request->subject;
+        $this->branch = $this->getBranchName($request->branch);
+        $this->concern = $this->getConcernName($request->concern);
     }
 
     /**
@@ -38,11 +44,23 @@ class PLDTIssue extends Mailable
          $mail = $this->subject($this->incidentSubject)
              ->view('emails.PLDTIssue');
 
-         foreach ($this->myAttachments as $attachment){
-             $originalFileName = $attachment->getClientOriginalName();
-             $fileMimeType = $attachment->getMimeType();
-             $mail->attach($attachment->path(),['as'=>$originalFileName,'mime'=>$fileMimeType]);
-         }
+        if($this->data->has('attachments')){
+            if ($this->data->file('attachments')->isValid()) {
+                foreach ($this->myAttachments as $attachment) {
+                    $originalFileName = $attachment->getClientOriginalName();
+                    $fileMimeType = $attachment->getMimeType();
+                    $mail->attach($attachment->path(), ['as' => $originalFileName, 'mime' => $fileMimeType]);
+                }
+            }
+        }
          return $mail;
+    }
+
+    private function getBranchName($id){
+        return Store::findOrFail($id)->store_name;
+    }
+
+    private function getConcernName($id){
+        return CategoryC::findOrFail($id)->name;
     }
 }

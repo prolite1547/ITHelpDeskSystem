@@ -41,6 +41,7 @@ class StoreTicket extends FormRequest
             'category' => 'sometimes|required|numeric',
             'catA' =>  'sometimes|required|numeric',
             'catB' =>  'sometimes|nullable|numeric',
+            'group' =>  'sometimes|nullable|numeric',
             'assignee' =>'sometimes|nullable',
             'incident.subject' =>  'sometimes|required|string|max:255|min:10',
             'incident.details' =>  'sometimes|required|string|max:255|min:10',

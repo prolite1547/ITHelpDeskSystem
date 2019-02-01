@@ -31,11 +31,13 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
-    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2(branchSelect2);
+    $('#callerBranchSelect,#contactBranchSelect,.branchSelect').select2(branchSelect2);
 
     $('#ticketPositionSelect').select2(psitionSelect2);
 
     $('#positionDepSelect').select2(deptSelect2);
+
+
 
     $('#contact_id').select2(cntctSelect2);
 

@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
             ['department' => 'Engineering']
         ]);
 
+        DB::table('ticket_groups')->insert([
+            ['name' => 'Support'],
+            ['name' => 'Technical'],
+        ]);
+
         DB::table('positions')->insert([
             ['position' => 'Web Developer','department_id' => 1],
             ['position' => 'Accountant','department_id' => 2],
@@ -117,6 +122,17 @@ class DatabaseSeeder extends Seeder
             ['name' => 'LCM','catA_id' => 5,'expiration' => 1],
             ['name' => 'User Access(EBS)','catA_id' => 5,'expiration' => 2],
         ]);
+
+        DB::table('category_c')->insert([
+            ['name' => 'No dial tone','catB' => '16'],
+            ['name' => 'Humming tone','catB' => '16'],
+            ['name' => 'Damage telephone','catB' => '16'],
+            ['name' => 'No VPN connection','catB' => '17'],
+            ['name' => 'Intermittent connection','catB' => '17'],
+            ['name' => 'no internet connection','catB' => '17'],
+            ['name' => 'No dial tone and no VPN connection','catB' => '18'],
+        ]);
+
 
         DB::table('resolve_categories')->insert([
             ['name' => 'Patches/Software Update'],

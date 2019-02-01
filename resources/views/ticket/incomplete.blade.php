@@ -30,11 +30,8 @@
                         </div>
                         <div class="form__group">
                             {!! Form::select('category', $typeSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
-
-                            {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input','required']) !!}
-
-                            {!! Form::text('expiration', null, ['hidden','class' => 'form__input']) !!}
-
+                            {!! Form::select('group', $groupSelect, null, ['placeholder' => '(select group)','class' => 'form__input','required']) !!}
+                            {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input categoryBSelect','required']) !!}
                         </div>
                         <div class="form__group">
                             {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}

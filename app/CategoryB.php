@@ -21,4 +21,8 @@ class CategoryB extends Model
     public function getExpiration(){
         return $this->belongsTo('App\Expiration','expiration');
     }
+
+    public function subCategories(){
+        return $this->hasMany('App\CategoryC','catB');
+    }
 }
