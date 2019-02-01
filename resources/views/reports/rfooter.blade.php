@@ -152,15 +152,18 @@
             var categ = $('#category1').val();
             var start1 = $('#ilrstartDate').val();
             var end1 = $('#ilrendDate').val();
+            var status = $('#status').val();
+
             $.ajax({
                type:'POST',
                url: "/reports/genilr",
-               data:{ _token: '{{csrf_token()}}', category:categ, start:start1, end:end1},
+               data:{ _token: '{{csrf_token()}}', category:categ, start:start1, end:end1, status :status},
                success:function(data) {
                   $('#ILRDATA').html(data.ilrdata);
                             $('.ILRTable').DataTable({
                             pageLength: 25,
                             responsive: true,
+                            "autoWidth": true,
                             "order": [[ 3, "desc" ]],
                             dom: '<"html5buttons"B>lTfgitp',
                             buttons: [
@@ -169,10 +172,11 @@
                                 {extend: 'excel', title: 'Issues Logged vs. Resolved ('+start1+'-'+end1+')'},
                                 {extend: 'pdf',  title: 'Issues Logged vs. Resolved ('+start1+'-'+end1+')'},
 
-                                {extend: 'print',
+                                {extend: 'print', title: 'Issues Logged vs. Resolved ('+start1+'-'+end1+')',
                                 customize: function (win){
                                         $(win.document.body).addClass('white-bg');
                                         $(win.document.body).css('font-size', '10px');
+                                        $(win.document.body).find('h1').css('font-size', '14px');
 
                                         $(win.document.body).find('table')
                                                 .addClass('compact')
@@ -194,7 +198,7 @@
             $.ajax({
                type:'POST',
                url: "/reports/genrds",
-               data:{ _token: '{{csrf_token()}}', store ,start:start1, end:end1},
+               data:{ _token: '{{csrf_token()}}', store:store ,start:start1, end:end1},
                success:function(data) {
                 
                   $('#RDSDATA').html(data.rdsdata);

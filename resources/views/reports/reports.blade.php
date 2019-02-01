@@ -194,6 +194,20 @@
 															</div>
 													</div>
 
+													<div class="col-sm-4">
+														<div class="form-group">
+																<label class="control-label">Status</label>
+																<select data-placeholder="Choose Category." id="status" name="status" class="filter demo-chosen-select" tabindex="2">
+																	<option value="all">All</option>
+																	<option value="resolved">Resolved</option>
+																	<option value="unresolved">Unresolved</option>
+																 
+
+																</select>
+
+														</div>
+												</div>
+
 												</div>
 
 												<div class="row">

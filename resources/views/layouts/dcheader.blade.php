@@ -7,10 +7,10 @@
          <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'ITMonitoring') }}</title>
+        <title>@yield('title')</title>
         
       
-     
+        <link rel="icon" href="{{asset('images/tab-logo.png')}}" type="image/png">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="{{ asset('css/app_2.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">

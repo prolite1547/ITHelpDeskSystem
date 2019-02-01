@@ -50,9 +50,11 @@ class SystemDataCorrection extends Model
         'post_verified_by',
         'post_date_verified',
         'status',
-        'posted',
+        'forward_status',
         'posted_by',
-        'ty_remarks',
+        'ty1_fullname',
+        'ty1_remarks',
+        'ty2_remarks',
         'govcomp_remarks'
     ];
 

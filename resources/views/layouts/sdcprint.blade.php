@@ -3,7 +3,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>System Data Correction</title>
+        <link rel="icon" href="{{asset('images/tab-logo.png')}}" type="image/png">
+        <title>System Data Correction (SDC{{ $sdc->id }})</title>
         <link rel="stylesheet" href="{{ asset('css/app_2.css') }}">
         <link rel="stylesheet" href="{{ asset('css/sdcprint.css') }} ">
     
@@ -22,7 +23,7 @@
                  </div>
                  <div class="col-md-3">
                      <a class="btn btn-success action-buttons" onclick="window.print();" style="color:white;">Print Data</a>
-                     @if (!$sdc->posted)
+                     @if ($sdc->status < 0)
                      <a href="{{ route('sdc.edit', ['id'=> $sdc->id ]) }}" class="btn btn-primary action-buttons" style="color:white;">Update Data</a>
                      @endif
                  </div>
@@ -112,19 +113,19 @@
             </div>
 
             <div class="row ">
-                    <div class="col-md-12 ">
+                    <div class="col-md-12 mt-2">
                         <span class="labels">Attachment(s) : </span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 ">
+                    <div class="col-md-12 mt-1">
                            
                                 @if (isset($sdc->attachments))
-                                <ul class="labels" style="list-style: none;">
+                                <ol class="labels" style=" ">
                                     @foreach ($sdc->attachments as $attachment)
                                         <li class="data">{{  $attachment->original_name  }}</li>
                                     @endforeach
-                                </ul>
+                                </ol>
                                 @else
                                     No Attachment
                                 @endif
@@ -138,9 +139,9 @@
                         <span class="labels">Findings and Recommendations : </span>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-md-12 fandr">
-                            <span class="data"> {{ $sdc->findings_recommendations }}</span>
+                            <span class="data">  {!!  nl2br($sdc->findings_recommendations)  !!}</span>
                     </div>
             </div>
 
@@ -226,10 +227,6 @@
                     </div>
             </div>
 
-          
-
-          
-          
 
             <div class="row">
                     <div class="col-md-12 heading text-center">
@@ -306,7 +303,9 @@
             </div>
             <div class="row">
                 <div class="col-md-12 remarks">
-                        <span class="data"> {{ $sdc->ty_remarks }}</span>
+                        <span class="data"> 
+                            {!! nl2br($sdc->ty_remarks) !!}
+                        </span>
                 </div>
             </div>
 
@@ -350,7 +349,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 remarks">
-                    <span class="data"> {{ $sdc->govcomp_remarks }}</span>
+                    <span class="data"> {!! nl2br($sdc->govcomp_remarks) !!}</span>
             </div>
     </div>
 
@@ -429,7 +428,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 fandr">
-                            <span class="data">{{ $sdc->cp_table_fields_affected }}</span>
+                            <span class="data">{!! nl2br($sdc->cp_table_fields_affected) !!}</span>
                     </div>
                 </div>
             

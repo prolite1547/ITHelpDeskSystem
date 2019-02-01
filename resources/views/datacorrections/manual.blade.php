@@ -1,5 +1,5 @@
 @extends('datacorrections.index')
-
+@section('title', 'Manual Data Correction')
 @section('content')
 
 <div class="form-group" style="padding:30px;">

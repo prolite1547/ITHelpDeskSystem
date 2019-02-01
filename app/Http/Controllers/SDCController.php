@@ -10,7 +10,7 @@ use App\Department;
 use App\Position;
 use App\SDCAttachment;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 
 class SDCController extends Controller
@@ -43,8 +43,8 @@ class SDCController extends Controller
         $user_id = 0;
 
         $action = $request->action;
+        $forward_status = 1;
         $status;
-        $posted;
         $files = "";
 
 
@@ -53,7 +53,7 @@ class SDCController extends Controller
             $posted = 0;
         }else{
             $status = 1;
-            $posted = 1;
+            $forward_status =  $request->forwardto;
             $user_id = Auth::user()->id;
         }
 
@@ -75,54 +75,10 @@ class SDCController extends Controller
             'affected_ss' => $request->affected,
             'terminal_name' => $request->terminalname,
 
-            //HARD COPY FOR POS
-            'hc_last_z_reading' => $request->hclastzreading,
-            'hc_last_dcr' => $request->hclastdcr,
-            'hc_last_transaction_id' => $request->hclasttransactionid,
-            'hc_last_accumulator' => $request->hctally,
-            'hc_last_or_no' => $request->hclastorno,
-
-            //SOFT COPY FOR POS
-            'sc_last_z_reading' => $request->sclastzreading,
-            'sc_last_transaction_id'=> $request->sclasttransactionid,
-            'sc_last_accumulator' => $request->sctally,
-            'sc_last_or_no' => $request->sclastorno,
-
             'findings_recommendations' => $request->dfindings,
 
-            //PRE-CORRECTION VERIFICATION
-            'pre_acc_verified_by' => $request->preaccumulatorverifiedby,
-            'pre_acc_verified_date' => $request->predateaccumulator,
-            'pre_next_z_reading' => $request->prezreadingno,
-            'pre_next_or_no' => $request->prenextorno,
-            'pre_last_transaction_id' => $request->prelasttransactionid,
-            'pre_last_acc' => $request->prelastacc,
-            'pre_last_or_no' => $request->prelastorno,
-            'pre_verified_by'=> $request->preverifiedby,
-            'pre_date_verified' => $request->preverifieddate,
-        
-            //APPROVAL OF THE CHANGE REQUEST
-            'app_approved_by' => $request->acrapprovedby,
-            'app_date_approved'=> $request->acrdate,
-
-            //CHANGE PROCESSING 
-            'cp_request_assigned_to' => $request->cprassignedto,
-            'cp_date_completed' => $request->cprassigneddate,
-            'cp_request_reviewed_by'=> $request->cprreviewedby,
-            'cp_date_reviewed'=> $request->cpdatereviewed,
-            'cp_table_fields_affected' => $request->tfaffected,
-            
-             //DEPLOYMENT CONFIRMATION
-             'dc_deployed_by' => $request->dcdeployedby,
-             'dc_date_deployed' => $request->dcdeployeddate,
-             'dc_reviewed_by' => $request->dcrreviewedby,
-             'dc_date_reviewed' => $request->dcrdate,
-             
-             //POST-CORRECTION VERIFICATION
-             'post_verified_by' => $request->pcvverifiedby,
-             'post_date_verified' => $request->pcvdate,
              'status' => $status,
-             'posted' => $posted,
+             'forward_status' => $forward_status,
              'posted_by' => $user_id
         ]);
 
@@ -181,27 +137,39 @@ class SDCController extends Controller
           $status = 0;
           $action = $request->action;
           $role_id = $request->role_id;
+          $user_id = 0;
+          $forward_status;
 
-
+            if(isset($request->forwardto)){
+                $forward_status = $request->forwardto;
+            }
+         
           switch($action){
                 case "SUBMIT":
-                    if($role_id == 5){
-                        $status = 2;
-                    }elseif($role_id == 6){
-                        $status = 3;
-                    }elseif($role_id == 7){
-                        $status = 4;
-                    }else{
-                        $status = 5;
-                    }
+                    // if($role_id == 5){
+                    //     $status = 2;
+                    // }elseif($role_id == 6){
+                    //     $status = 3;
+                    // }elseif($role_id == 7){
+                    //     $status = 4;
+                    // }else{
+                    //     $status = 5;
+                    // }
                 break;
                 case "SAVE":
-                    $post = 0;
                     $status = 0;
                 break;
                 case "POST":
                      $status = 1;
+                     $user_id = Auth::user()->id;
                 break;
+                case "REJECT":
+                     $status = 2;
+                break;
+                default:
+                     $status = 1;
+                break;
+                
           }
 
         
@@ -220,6 +188,10 @@ class SDCController extends Controller
                 $sdc->affected_ss = $request->affected;
                 $sdc->terminal_name = $request->terminalname;
                 $sdc->findings_recommendations = $request->dfindings;
+
+                if($user_id != 0){
+                    $sdc->posted_by = $user_id;
+                }
           }
           //  END
          
@@ -248,8 +220,13 @@ class SDCController extends Controller
 
                 $sdc->pre_verified_by = $request->preverifiedby;
                 $sdc->pre_date_verified = $request->preverifieddate;
-                $sdc->ty_remarks = $request->tyremarks;
+                $sdc->ty1_remarks = $request->ty1remarks;
+                $sdc->ty1_fullname = $request->checkedby;
             
+        }
+
+        if($role_id == 6){
+            $sdc->ty2_remarks = $request->ty2remarks;
         }
         // END
 
@@ -317,7 +294,10 @@ class SDCController extends Controller
             $sdc->post_date_verified = $request->pcvdate;
         }
 
-           $sdc->posted = $post;
+           if($action == "APPROVED & FORWARD" OR $action == "SUBMIT FOR APPROVAL"){
+                $sdc->forward_status = $forward_status;
+           }
+
            $sdc->status = $status;
            
            $sdc->save();
@@ -329,7 +309,7 @@ class SDCController extends Controller
                     $fileExtension = $file->getClientOriginalExtension();
                     $fileNametoStore = $fileName . '_'. time() .'.'.$fileExtension;
                     $mime_type = $file->getMimeType();
-                    $path = $file->storeAs('public/sdc_attachments',$fileNametoStore);
+                    $path = $file->storeAs('public/sdc_attachments',strtolower($fileNametoStore));
 
                     SDCAttachment::create(['sdc_no' => $request->sdc_id,'path' => $path,'original_name' => $fileNametoStore,'mime_type' => $mime_type,'extension' => $fileExtension]);
             }
@@ -369,6 +349,13 @@ class SDCController extends Controller
 
         return response()->json(array('success'=>true, 'data'=>"$data"), 200);
     }
+
+  public function rmvattachment(Request $request){
+        $id = $request->id; 
+        $attachment = SDCAttachment::findorfail($id);
+        $attachment->delete();
+        Storage::disk('sdc_attach')->delete($request->original_name);
+  }
 
 
    

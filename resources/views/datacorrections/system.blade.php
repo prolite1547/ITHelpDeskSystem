@@ -1,5 +1,5 @@
 @extends('datacorrections.index')
-
+@section('title', 'System Data Correction')
 @section('content')
 
 <div class="form-group" style="padding:30px;">
@@ -75,7 +75,7 @@
                         <div class="col-md-5 mb-3">
                             <label for="supervisor">Dept. Supervisor : </label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="supervisor" id="supervisor" required>
+                                <input type="text" class="form-control" name="supervisor"  id="supervisor" required>
                                 <div class="invalid-tooltip " style="width: 100%;">
                                     Valid dept. supervisor is required
                                 </div>
@@ -103,7 +103,7 @@
                                                 <option value="{{ $position->position }}">{{ $position->position }}</option>
                                         @endforeach --}}
                                 </select>
-                                <div class="invalid-tooltip "  >
+                                <div class="invalid-tooltip">
                                          Valid position is required
                                 </div>
                         </div>
@@ -149,8 +149,14 @@
                 <div class="col-md-12">
                         <label for="upfile">Upload Attachment(s) :</label>
                         <div class="input-group">
-                                <input id="upfile" name="upfile[]" type="file" multiple> 
-                        </div>   
+                                <input id="upfile" name="upfile[]" type="file" multiple hidden>
+                                <label class="btn btn-danger btn-sm" onclick="document.getElementById('upfile').click()">Choose File(s)</label>
+                                
+                        </div>
+                     
+                        <ol class="mt-2" id="selectedFiles">
+
+                        </ol>
                 </div>
 </div>
 
@@ -472,200 +478,33 @@
                                         </div>
                                     </div>
                       </div>
-@endif
-{{-- END OF APPROVER FORM --}}
-
-{{-- SUPPORTS VIEWABLE FORM AFTER APPROVER IS DONE --}}
-                      {{-- <hr>
-                      <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
-                              <h4>CHANGE PROCESSING</h4>
-                      </div>
-
-                      <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
-                                  <label for="cprassignedto">Request Assigned To :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" name="cprassignedto" id="cprassignedto" readonly >
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid request assigned to is required
-                                    </div>
-                                 
-                              </div>   
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                    <label for="cprassigneddate">Date Completed :</label>
-                                <div class="input-group">
-                                        <div class="input-group date" data-provide="datepicker">
-                                                <input type="text" id="cprassigneddate" name="cprassigneddate" class="form-control" readonly>
-                                                <div class="input-group-addon invalid-tooltip ">
-                                                        Valid date is required.
-                                                </div>             
-                                        </div>
-                                   
-                                </div>   
-                              </div>
-                      </div>
-
-                      <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
-                                  <label for="cprreviewedby">Request Reviewed By :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" name="cprreviewedby" id="cprreviewedby" readonly>
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid request reviewed by is required
-                                    </div>
-                                 
-                              </div>   
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="cpdatereviewed">Date Reviewed :</label>
-                                <div class="input-group">
-                                        <div class="input-group date" data-provide="datepicker">
-                                                <input type="text" id="cpdatereviewed" name="cpdatereviewed" class="form-control" readonly >
-                                                <div class="input-group-addon invalid-tooltip ">
-                                                        Valid date is required.
-                                                </div>             
-                                        </div>
-                                   
-                                </div>   
-                              </div>
-                      </div>
-
-                    <div class="row mb-3">
+        @endif         
+                    <hr class="mb-4">
+ 
+                  <div class="row">
+                       
                         <div class="col-md-12">
-                                <label for="tfaffected">Tables and Fields Affected :</label>
-                            <div class="input-group">
-                                <textarea type="text" class="form-control" cols="5" rows="5" name="tfaffected" id="tfaffected" readonly></textarea>
-                                <div class="invalid-tooltip " style="width: 100%;">
-                                      Tables and Fields Affected is required
-                                </div>
-                            </div>   
+                                <input class="btn btn-primary btn-md btn-block" type="submit" name="action" value="SAVE"> 
+                        </div>
+                          
+                  </div>
+                  <hr>
+                     <div class="row  mb-5">
+                            <div class="col-md-6">
+                                <input class="btn btn-success btn-md btn-block" type="submit" name="action" value="APPROVED & FORWARD" > 
+                            </div>
+                            <div class="col-md-6">
+                                <select class="custom-select d-block w-100" name="forwardto" id="forwardto">
+                                        <option value="1">Treasury 1</option> 
+                                        <option value="2">Treasury 2</option> 
+                                        <option value="3">Gov. Compliance</option>
+                                        <option value="4">Final Approver</option> 
+                                </select>
+                                <div class="input-group-addon invalid-tooltip">
+                                        This field is required
+                                </div>    
                             </div>
                     </div>
-
-                    <hr>
-                    <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
-                            <h4>DEPLOYMENT CONFIRMATION</h4>
-                    </div>
-
-                    <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
-                                  <label for="dcdeployedby">Deployed By :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" id="dcdeployedby" name="dcdeployedby" readonly>
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid request reviewed by is required
-                                    </div>
-                                 
-                              </div>   
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="dcdeployeddate">Date :</label>
-                                <div class="input-group">
-                                        <div class="input-group date" data-provide="datepicker">
-                                                <input type="text" id="dcdeployeddate" name="dcdeployeddate" class="form-control" readonly >
-                                                <div class="input-group-addon invalid-tooltip ">
-                                                        Valid date is required.
-                                                </div>             
-                                        </div>
-                                   
-                                </div>   
-                              </div>
-                      </div>
-
-                      <div class="row mb-3">
-                            <div class="col-md-6 mb-3">
-                                  <label for="dcrreviewedby">Reviewed By :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" name="dcrreviewedby" id="dcrreviewedby" readonly>
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid request reviewed by is required
-                                    </div>
-                                 
-                              </div>   
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="dcrdate">Date :</label>
-                                <div class="input-group">
-                                        <div class="input-group date" data-provide="datepicker">
-                                                <input type="text" id="dcrdate" name="dcrdate" class="form-control"  readonly>
-                                                <div class="input-group-addon invalid-tooltip ">
-                                                        Valid date is required.
-                                                </div>             
-                                        </div>
-                                   
-                                </div>   
-                              </div>
-                      </div>
-
-                      <hr>
-                      <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
-                              <h4>POST CORRECTION VERIFICATION</h4>
-                      </div>
-
-                      <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="pcvverifiedby">Verified by :</label>
-                                <div class="input-group">
-                                      <input type="text" class="form-control" name="pcvverifiedby" id="pcvverifiedby" readonly >
-                                      <div class="invalid-tooltip " style="width: 100%;">
-                                              Valid verified by is required
-                                      </div>
-                                   
-                                </div>   
-                              </div>
-  
-                              <div class="col-md-12">
-                                      <label for="pcvdate">Date : </label>
-                                          <div class="input-group date" data-provide="datepicker">
-                                                
-                                              <input type="text" name="pcvdate" id="pcvdate" class="form-control" readonly>
-                                             
-                                              <div class="input-group-addon invalid-tooltip ">
-                                                      Valid date is required.
-                                              </div>             
-                                          </div>
-                                      </div>
-                      </div> --}}
-{{-- END OF FORM --}}
-
-
-
-                    {{-- <hr class="mb-4">
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="same-address">
-                      <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="save-info">
-                      <label class="custom-control-label" for="save-info">Save this information for next time</label>
-                    </div>
-                    <hr class="mb-4">
-        
-                    <h4 class="mb-3">Payment</h4>
-        
-                    <div class="d-block my-3">
-                      <div class="custom-control custom-radio">
-                        <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-                        <label class="custom-control-label" for="credit">Credit card</label>
-                      </div>
-                      <div class="custom-control custom-radio">
-                        <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
-                        <label class="custom-control-label" for="debit">Debit card</label>
-                      </div>
-                      <div class="custom-control custom-radio">
-                        <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
-                        <label class="custom-control-label" for="paypal">PayPal</label>
-                      </div>
-                    </div> --}}
-                    
-                    <hr class="mb-4">
-                     <input class="btn btn-success btn-lg btn-block" type="submit" name="action" value="SAVE"> 
-                     <input class="btn btn-primary btn-lg btn-block" type="submit" name="action" value="POST" > 
                    
             </form>
             

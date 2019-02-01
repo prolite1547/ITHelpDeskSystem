@@ -1,5 +1,5 @@
 @extends('datacorrections.index')
-
+@section('title', 'Manual Data Correction ('.$mdc->id.')')
 @section('content')
 
 <?php 

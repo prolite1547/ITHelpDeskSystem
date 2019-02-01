@@ -159,14 +159,14 @@ $(function() {
                     orderable: false,
                     render: (data, type, row) => {
                         var status = "PENDING";
-                        if(row.status == 1){
+                        if(row.forward_status == 1){
                             status = "PENDING";
                             return `<a href='/sdc/${row.id}/edit/' class='table__subject'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>
                             <span class='table__info'>SDC #: ${row.id}</span>\t
                             <span class='table__info'>${status} </span>
                              `
-                        }else if(row.status >= 2){
+                        }else if(row.forward_status >= 2){
                             status = "DONE";
                             return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>

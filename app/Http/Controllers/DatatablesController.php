@@ -17,6 +17,8 @@ use App\SystemDataCorrection;
 use App\ManualDataCorrection;
 
 
+
+
 class DatatablesController extends Controller
 {
 
@@ -143,17 +145,17 @@ class DatatablesController extends Controller
         system_data_corrections.department,
         system_data_corrections.position,
         system_data_corrections.date_submitted,
-        system_data_corrections.posted,
-        system_data_corrections.status');
+        system_data_corrections.status,
+        system_data_corrections.forward_status');
         
         if($status != "all"){
            if($status == "pending"){
-                $query = $query->where('system_data_corrections.status', '1');
+                $query = $query->where('system_data_corrections.status', '1')->where('system_data_corrections.forward_status', '1');
            }elseif($status == "done"){
-                $query = $query->whereIn('system_data_corrections.status', array('2','3','4','5'));
+                $query = $query->where('system_data_corrections.status','1')->whereIn('system_data_corrections.forward_status', array('2','3','4','5'));
            }
         }else{
-            $query = $query->whereIn('system_data_corrections.status', array('1','2','3'));
+            $query = $query->where('system_data_corrections.status', '1')->whereIn('system_data_corrections.forward_status', array('1','2','3','4','5'));
         }
 
         $datatablesJSON = DataTables::of($query);

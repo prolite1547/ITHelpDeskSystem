@@ -52,9 +52,13 @@
                     </div>
             </div>
             <div class="row mb-1 border-bot">
-                    <div class="col-md-6">
+                    <div class="col-md-6 border-right">
                             <span class="ticket-titles">Type  </span>
                     <span class="ticket-detail"> {{ $tcket->typeRelation->name }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="ticket-titles">Store  </span>
+                        <span class="ticket-detail"> {{ $tcket->getStore->store_name }}</span>
                     </div>
             </div>
             <div class="row mb-1 border-bot">
@@ -89,11 +93,27 @@
                     <span class="ticket-detail">    
                         @if(isset($tcket->SDC->id))
                                     {{ $tcket->SDC->sdc_no }}
-                                    @if($tcket->SDC->posted) (POSTED) @endif
-                            
+                                     <?php 
+                                        $status = $tcket->SDC->status;
+                                                if($status == 1){
+                                                        echo "(POSTED)";
+                                                }else if($status == 2){
+                                                        echo "(ON GOING)";
+                                                }else if($status == 3){
+                                                        echo "(FOR APPROVAL)";
+                                                }else if($status == 4){
+                                                        echo "(APPROVED)";
+                                                }else if($status == 5){
+                                                        echo "(DONE)";
+                                                }else{
+                                                        echo "(SAVED)";
+                                                }
+                                     ?>
                         @elseif (isset($tcket->MDC->id))
                                     {{ $tcket->MDC->mdc_no }}
                                       @if($tcket->MDC->posted) (POSTED)@endif
+                        @else
+                         N/A
                         @endif
                     </span>
             </div>
@@ -139,7 +159,7 @@
                              {{ $message->getOriginal('created_at')  }} 
                         </span>
                         <span class="message">
-                            "{{ $message->message }}"
+                            {!! $message->message !!}
                         </span>
                     </div>
             </div>

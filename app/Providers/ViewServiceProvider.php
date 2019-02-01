@@ -172,6 +172,13 @@ class ViewServiceProvider extends ServiceProvider
             $allCount = SystemDataCorrection::whereIn('status', array(3,4,5))->count();
             $view->with(['pendingCount'=>$pendingCount, 'doneCount'=>$doneCount, 'allCount'=> $allCount]);
          });
+
+         view()->composer('datacorrections.treasury',function($view){
+            $pendingCount = SystemDataCorrection::where('status',1)->count();
+            $doneCount = SystemDataCorrection::whereIn('status', array(2,3,4,5))->count();
+            $allCount = SystemDataCorrection::whereIn('status', array(1,2,3,4,5))->count();
+            $view->with(['pendingCount'=>$pendingCount, 'doneCount'=>$doneCount, 'allCount'=> $allCount]);
+         });
     }
 
     /**

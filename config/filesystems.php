@@ -97,6 +97,12 @@ return [
             'url' => env('APP_URL').'/storage/public/profpic',
             'visibility' => 'public',
         ],
+        'sdc_attach' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/sdc_attachments'),
+            'url' => env('APP_URL').'/storage/public/sdc_attachments',
+            'visibility' => 'public',
+        ]
 
     ],
 

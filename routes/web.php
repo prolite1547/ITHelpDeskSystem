@@ -229,3 +229,4 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
  
 
  Route::get('print/{id}/ticket', 'TicketController@print')->name('print.ticket');
+ Route::post('rmv/attachment', 'SDCController@rmvattachment')->name('rmv.attachment');

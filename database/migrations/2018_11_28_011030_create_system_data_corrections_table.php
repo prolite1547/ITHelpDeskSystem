@@ -89,12 +89,16 @@ class CreateSystemDataCorrectionsTable extends Migration
             $table->string('post_verified_by')->nullable();
             $table->boolean('post_verified_signed')->default(0);
             $table->string('post_date_verified')->nullable();
-
-            $table->boolean('posted')->default(0);
-            $table->integer('status')->nullable();
-            $table->text('ty_remarks')->nullable();
+            $table->text('ty1_fullname')->nullable();
+            $table->text('ty1_remarks')->nullable();
+            $table->text('ty2_remarks')->nullable();
             $table->text('govcomp_remarks')->nullable();
             $table->integer('posted_by')->nullable();
+            $table->boolean('forward_status')->default(0);
+            $table->integer('status')->nullable();
+            $table->text('rejection')->nullable();
+            
+         
             $table->timestamps();
         });
     }

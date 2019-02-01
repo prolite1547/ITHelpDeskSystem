@@ -1,5 +1,6 @@
 .container{
     border: 2px solid black;
+    margin-top: 20px;
 }
 
 .border-1{
@@ -92,12 +93,12 @@
 
 .fandr{
     display:block;
-    height: 60px;
+    
 }
 
 .remarks{
     display: block;
-    height: 30px;
+    
 }
 .shouldbe{
     display:block;
