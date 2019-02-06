@@ -335,6 +335,10 @@ export const ticketViewController = (user) => {
         }
     });
 
+    if(elements.btnShwExtndDtails){
+        elements.btnShwExtndDtails.addEventListener('click',editTicketView.showExtndMdl.bind(null,ticket.ID));
+    }
+
 
     /*EXTEND*/
     if(elements.extendFormBtn) elements.extendFormBtn.addEventListener('click',editTicketView.showExtendFormModal.bind(null,ticket.ID));

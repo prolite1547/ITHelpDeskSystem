@@ -169,7 +169,6 @@ if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remo
 
         $group = [4 => [1],5 => [2],'all' => [1,2]];
 
-
         /*4 is equivalent to admin user*/
         if($authRoleID !== 4){
              $groupID = $group[$authPositionID];

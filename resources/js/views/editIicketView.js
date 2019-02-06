@@ -205,3 +205,19 @@ export const showExtendFormModal = (ticket_id,e) => {
     });
 
 };
+
+/*show the extend details form*/
+export const showExtndMdl = (ticket_id,e) => {
+    e.preventDefault();
+    showModal();
+    renderLoader(elements.modalContent);
+
+    $.ajax(`/modal/form/ticketExtendDetails/${ticket_id}`,{
+        type: 'GET'
+    }).done(detailsMarkup => {
+        clearLoader();
+        insertToModal(detailsMarkup);
+    }).fail(() => {
+        alert('fail to get extend form');
+    });
+};

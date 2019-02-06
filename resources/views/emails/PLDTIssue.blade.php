@@ -60,6 +60,8 @@
             <div>Regards,</div>
             <div class="mail__sender-name">{{$user}}</div>
             <div class="mail__sender-position">IT Support Staff</div>
+
+            <div>Ticket ID: 12345</div>
             <div>CitiHardware Inc.</div>
             <div>Quimpo Boulevard</div>
             <div>Matina, Davao City</div>

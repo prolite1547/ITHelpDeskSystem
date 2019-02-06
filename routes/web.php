@@ -60,6 +60,7 @@ Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
 Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
 Route::post('/ticket/extend/{id}', 'TicketController@extend')->name('ticketExtend');
+Route::get('/modal/form/ticketExtendDetails/{id}', 'TicketController@ticketExtendDetails')->name('ticketExtendDetails');
 
 //////////////////////////
 ////////*RESOLVE*/////////
@@ -191,33 +192,33 @@ Route::get('/test2',function (){
     $oClient->connect();
 
 //    dd($aFolder = $oClient->getFolders());
-    $aFolder = $oClient->getFolder('Ticketing');
-    dd($aFolder);
-    dd(imap_thread($oClient->connection));
+    $aFolder = $oClient
+        ->getFolder('INBOX');
+
+
     $aMessage = $aFolder
         ->query()
+//        ->since('5.02.2019')
+        ->subject('CITIHARDWARE KIDAPAWAN is currently experiencing NO VPN CONNECTION')
+        ->body('Ticket ID: 12345')
         ->setFetchFlags(false)
-        ->setFetchBody(false)
+        ->setFetchBody(true)
         ->setFetchAttachment(false)
         ->get();
 
-    foreach ($aMessage as $message){
-        echo $message->getUid();
+
+    $test = $aMessage->first();
+    dd($test);
+    if($test->hasHTMLBody()){
+        echo $test->getHTMLBody();
+    }else{
+        echo $test->getTextBody();
     }
-    dd($aMessage);
+
 });
 
 Route::get('/test3',function (){
-    $mailbox = new PhpImap\Mailbox('{imap.gmail.com:993/imap/ssl}INBOX', 'jeruyeraslabor@gmail.com', 'Dr@mstick24', __DIR__);
-
-    $mailsIds = $mailbox->searchMailbox('ALL');
-    if(!$mailsIds) {
-        die('Mailbox is empty');
-    }
-
-    $mail = $mailbox->getMail($mailsIds[0]);
-
-    print_r($mail);
+    return view('ticketExtendDetails');
 
 });
 

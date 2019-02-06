@@ -1143,6 +1143,10 @@ body {
   display: inline-block;
 }
 
+.u-display-b {
+  display: block;
+}
+
 .u-display-n {
   display: none !important;
 }
@@ -1507,7 +1511,7 @@ body {
 }
 
 .window {
-  width: 70%;
+  width: 50%;
   background-color: #fff;
   -webkit-box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
           box-shadow: 0 0 1rem rgba(0, 0, 0, 0.4);
@@ -2253,11 +2257,9 @@ body {
 }
 
 .form-email__input-text {
-  display: block;
   border: none;
   font-size: 1.5rem;
   padding: .5rem;
-  width: 100%;
   outline: none;
 }
 

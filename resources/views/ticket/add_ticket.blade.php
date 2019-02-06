@@ -155,37 +155,27 @@
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
                 {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue','files' => true))}}
-                    {{Form::email('to',null,array('placeholder' => 'To','class'=> 'form-email__input-text','required'))}}
-                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text','required'))}}
-                    {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','required'))}}
+                    {{Form::email('to',null,array('placeholder' => 'To','class'=> 'form-email__input-text u-display-b','required'))}}
+                    {{Form::email('cc',null,array('placeholder' => 'Cc','class'=> 'form-email__input-text u-display-b'))}}
+                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text u-display-b','required'))}}
+                    {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','placeholder' => 'Details','required'))}}
                     <div class="form__group">
                         {{Form::file('attachments[]',['multiple'])}}
                     </div>
                     <div class="form__group">
                         {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select branchSelect','required'])}}
-                        {{Form::select('account',['905217453' => '905217453'],null,['placeholder' => '(choose account...)','class' => 'form-email__input-select'])}}
-                        {{Form::select('pid',['PID#578070' => 'PID#578070'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
                         {{Form::select('concern',$categoryCGroupSelect,null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select','required'])}}
                     </div>
                     <div class="form__group">
-                        {{Form::label('contact','Contact #:')}}
-                        {{Form::tel('contact',null,['placeholder' => '####','class' => 'form-email__input-text'])}}
+                        {{Form::select('tel',['083-554-7450' => '083-554-7450'],null,['placeholder' => '(choose telephone...)','class' => 'form-email__input-select'])}}
+                        {{Form::select('pid',['PID#578070' => 'PID#578070'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select'])}}
                     </div>
-                    {{--<div class="form__group">--}}
-                        {{--<fieldset class="fieldset">--}}
-                            {{--<legend class="fieldset__legend">Type</legend>--}}
-                            {{--<div class="fieldset__flex">--}}
-                                {{--<div class="form__group--flex u-mr-s">--}}
-                                    {{--{{Form::radio('type','vpn',true,['id' => 'vpn','class' => 'form__radio'])}}--}}
-                                    {{--{{Form::label('vpn','VPN')}}--}}
-                                {{--</div>--}}
-                                {{--<div class="form__group--flex">--}}
-                                    {{--{{Form::radio('type','tele',false,['id' => 'tele','class' => 'form__radio'])}}--}}
-                                    {{--{{Form::label('tele','Telephone')}}--}}
-                                {{--</div>--}}
-                            {{--</div>--}}
-                        {{--</fieldset>--}}
-                    {{--</div>--}}
+                    <div class="form__group">
+                        {{Form::label('contact_person','Contact Person:','form-email__label')}}
+                        {{Form::tel('contact_person',null,['placeholder' => 'enter contact','class' => 'form-email__input-text','required'])}}
+                        {{Form::label('contact_number','Contact #:','form-email__label')}}
+                        {{Form::tel('contact_number',null,['placeholder' => 'enter person','class' => 'form-email__input-text','required'])}}
+                    </div>
                     {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                 {{Form::close()}}
             </div>

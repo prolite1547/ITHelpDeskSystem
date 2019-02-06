@@ -39,6 +39,7 @@ export const elements = {
     maintenanceCol: document.querySelector('.plusToggleContainer'),
     addTicketDetailsForm: document.querySelector('.form-addTicketDetails'),
     addTicketDetailsFormTicketEl: document.querySelector('.form-addTicketDetails__ticket-value'),
+    btnShwExtndDtails: document.querySelector('.ticket-details__value--extend'),
 
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),

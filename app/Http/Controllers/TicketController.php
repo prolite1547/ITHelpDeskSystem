@@ -330,7 +330,7 @@ class TicketController extends Controller
     public function addPLDTTicket(Request $request)
     {
         $validation = [
-            'to' => 'required|email',
+            'to' => 'required|string',
             'subject' => 'required|string|min:5',
             'details' => 'required|string|min:5',
             'branch' => 'required|numeric',
@@ -360,7 +360,8 @@ class TicketController extends Controller
 
         $request->validate($validation);
 
-        Mail::to($request->to)->send(new PLDTIssue($request));
+        $to = explode(',',$request->to);
+        Mail::to($to)->send(new PLDTIssue($request));
     }
 
     public function editStatus(StoreTicket $request,$id){
@@ -396,5 +397,9 @@ class TicketController extends Controller
 
     public function getExtendForm($id){
         return view('modal.extendForm',['id' => $id]);
+    }
+
+    public function ticketExtendDetails($id){
+        return view('ticketExtendDetails');
     }
 }
