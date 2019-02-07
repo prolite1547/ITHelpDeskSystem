@@ -1,10 +1,12 @@
 <div class="extend-details">
+    @foreach($ticket_extensions as $extend)
     <div class="extend-details__item">
         <div class="extend-details__header">
-            Extended by <strong class="extend-details__person">Ivan P. Duduaco</strong> on <i class="extend-details__date">2019-07-02 11:24:41</i>
+            Extended by <strong class="extend-details__person">{{$extend->extendedBy->full_name}}</strong> on <i class="extend-details__date">{{$extend->created_at}}</i>
         </div>
         <div class="extend-details__details">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. At consectetur consequatur cumque dolore ex fuga nihil nulla, sapiente sit soluta!
+            {{$extend->details}}
         </div>
     </div>
+    @endforeach
 </div>

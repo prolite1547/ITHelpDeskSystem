@@ -101,9 +101,11 @@
                     <div class="ticket-details__content">
                         <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
                         <ul class="ticket-details__list">
+                            @if($ticket->extended->count() > 0)
                             <li class="ticket-details__item"><span class="ticket-details__field">Times Extended:</span>
                                 <a href="" class="ticket-details__value ticket-details__value--link ticket-details__value--extend">{{$ticket->extended->count()}} - Click for details!</a>
                             </li>
+                            @endif
                             <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
                                 <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
                             </li>

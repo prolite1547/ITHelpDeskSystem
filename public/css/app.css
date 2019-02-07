@@ -2884,7 +2884,16 @@ REJECT DETAILS*/
 }
 
 .extend-details {
-  padding: 3rem;
+  padding: 2rem;
+}
+
+.extend-details__details {
+  background-color: #e5e5e5;
+  padding: 3px;
+}
+
+.extend-details__item:not(:last-child) {
+  margin-bottom: 1rem;
 }
 
 

@@ -105,11 +105,7 @@ const allTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-<<<<<<< HEAD
         {data: 'status', name:'status.name',orderable: false},
-=======
-        {data: 'status', orderable: false},
->>>>>>> 5569d51a4d7ec9ad315bb9cc55d8061eeb5ed5f5
         {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration'},

@@ -400,6 +400,7 @@ class TicketController extends Controller
     }
 
     public function ticketExtendDetails($id){
-        return view('ticketExtendDetails');
+        $ticket_extensions = Ticket::findOrFail($id)->extended()->latest()->get();
+        return view('ticketExtendDetails',['ticket_extensions' => $ticket_extensions]);
     }
 }
