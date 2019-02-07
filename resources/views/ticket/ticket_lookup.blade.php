@@ -42,12 +42,14 @@
                         <p class="ticket-content__details">
                             {!!$ticket->incident->details!!}
                         </p>
+                        @if($ticket->status !== $ticket_status_arr['Expired'])
                         <form class="chat">
                             <textarea name="reply" rows="3" class="chat__textarea" placeholder="Enter message here..." maxlength="1000" minlength="5" required></textarea>
                             <div class="chat__send">
                                 <button class="chat__button" type="submit">Send</button>
                             </div>
                         </form>
+                        @endif
                         <div class="ticket-content__updateBtns">
                             <div class="ticket-content__buttons u-float-r">
                                 <button class="btn btn--red" data-action="cancel" id="contentEditCancel">Cancel</button>
