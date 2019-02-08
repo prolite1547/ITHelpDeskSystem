@@ -55,7 +55,7 @@ export const setDataTablesConf = () => {
                 <span class='table__info'>Ticket #: ${data.id}</span>
                 <span class='table__info'>Category: ${row.category}</span>
                 <span class='table__info'>Group: ${data.ticket_group}</span>
-                ${(data.extend_count > 0) ? '<span class=\'table__info table__info--red\'>Extended</span>' : ''}`
+                ${(data.extend_count > 0) ? `<span class='table__info table__info--red'>Extended (${data.extend_count})</span>` : ''}`
                 }
 
             },
