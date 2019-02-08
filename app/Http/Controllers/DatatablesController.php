@@ -28,7 +28,11 @@ class DatatablesController extends Controller
 
     public function tickets($status){
         $group = getGroupIDDependingOnUser();
-        $statuses = Status::whereNotIn('name',['all','user','fixed'])->pluck('name')->toArray();
+        $statuses = Status::whereNotIn('name',['user','fixed'])->pluck('name')->toArray();
+
+        $extends_count = DB::table('extends')->selectRaw('ticket_id,count(ticket_id) as extend_count')->groupBy('ticket_id');
+
+        /*DATATABLES PLUGIN INIT*/
         $query = DB::table('tickets')
         ->whereNull('deleted_at')
         ->join('incidents','tickets.incident_id','incidents.id')
@@ -43,6 +47,9 @@ class DatatablesController extends Controller
                 return $query->whereStatus(4)->whereIn('group',$group);
 
             })
+            ->leftJoinSub($extends_count,'extends_count',function($join){
+                $join->on('tickets.id','=','extends_count.ticket_id');
+            })
             ->leftJoin('stores','tickets.store','stores.id')
             ->leftJoin('ticket_groups','ticket_groups.id','tickets.group')
             ->leftJoin('calls','incidents.call_id','calls.id')
@@ -53,13 +60,15 @@ class DatatablesController extends Controller
             ->leftJoin('users as assignee','tickets.assignee','assignee.id')
             ->leftJoin('users as resolver','resolves.resolved_by','resolver.id')
             ->selectRaw(
-                'tickets.id,tickets.assignee,prio.name as priority,status.name as status,tickets.expiration,tickets.fixed_date,tickets.created_at,
-                incidents.created_at as incident_created,incidents.subject,incidents.details,cat.name as category,
-                CONCAT(assignee.fName," ",assignee.lName) as assignee,
-                stores.store_name,
-                CONCAT(resolver.fName," ",resolver.lName) as resolved_by,resolves.created_at as resolved_date,
-                ticket_groups.name as ticket_group'
+                'tickets.id,prio.name as priority,status.name as status,tickets.expiration,tickets.fixed_date,tickets.created_at,
+            incidents.created_at as incident_created,incidents.subject,incidents.details,cat.name as category,
+            CONCAT(assignee.fName," ",assignee.lName) as assignee,
+            stores.store_name,
+            CONCAT(resolver.fName," ",resolver.lName) as resolved_by,resolves.created_at as resolved_date,
+            ticket_groups.name as ticket_group,
+            extend_count'
             );
+
 
         $datatablesJSON = DataTables::of($query);
 
