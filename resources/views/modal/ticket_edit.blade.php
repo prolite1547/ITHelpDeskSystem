@@ -4,9 +4,9 @@
 
     <ul class="ticket-details__list">
         @if($ticket->assigneeRelation->id === Auth::id())
-        <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
-            {!! Form::select('status', $statusSelect, $ticket->statusRelation->id, ['placeholder' => '(select priority)','class' => 'ticket-details__select','required']) !!}
-        </li>
+        {{--<li class="ticket-details__item"><span class="ticket-details__field">Status:</span>--}}
+            {{--{!! Form::select('status', $statusSelect, $ticket->statusRelation->id, ['placeholder' => '(select priority)','class' => 'ticket-details__select','required']) !!}--}}
+        {{--</li>--}}
         <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
             <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}</a>
         </li>

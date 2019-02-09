@@ -10,8 +10,9 @@ window.Popper = require('popper.js').default;
 
 try {
     window.$ = window.jQuery = require('jquery');
-    window.dt = require( 'datatables.net' )();
-    require('bootstrap');
+    require( 'datatables.net' )(window,$);
+    // require( 'datatables.net-responsive' )( window,$);
+    // require( 'datatables.net-responsive-dt' )( window,$);
 } catch (e) {}
 
 /**
@@ -47,8 +48,8 @@ if (token) {
 import Echo from 'laravel-echo'
 
 window.Pusher = require('pusher-js');
-console.log(process.env.MIX_PUSHER_APP_KEY);
-console.log(process.env.MIX_PUSHER_APP_CLUSTER);
+process.env.MIX_PUSHER_APP_KEY;
+process.env.MIX_PUSHER_APP_CLUSTER;
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,

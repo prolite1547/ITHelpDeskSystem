@@ -20,6 +20,7 @@ export const checkBoxListen = () => {
 
 export const setDataTablesConf = () => {
     $.extend( true, $.fn.dataTable.defaults, {
+        autoWidth: false,
         searching: true,
         columnDefs: [
             {

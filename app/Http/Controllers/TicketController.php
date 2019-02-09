@@ -123,9 +123,7 @@ class TicketController extends Controller
     public function addTicketDetails(StoreTicket $request)
     {
 
-        /*GET ID'S OF THE OPEN AND ONGOING CATEGORY IN THE CATEGORY TABLE*/
-        $openID = 1;
-        $ongoingID = 2;
+
 
         /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
         $ticket_id = $request->ticket_id;
@@ -145,11 +143,7 @@ class TicketController extends Controller
         $request->request->add(array('expiration' => $expiration_date, 'catA' => $catA));
 
         /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
-        if (!$request->assignee) {
-            $request->request->add(['status' => $openID]);
-        } else {
-            $request->request->add(['status' => $ongoingID]);
-        }
+        $request->request->add(self::assignStatus($request->assignee));
 
          DB::transaction(function () use ($request, $incident_id,$ticket_id) {
 
@@ -180,6 +174,9 @@ class TicketController extends Controller
 
 
     }
+
+
+
 
     public function open()
     {
@@ -265,6 +262,10 @@ class TicketController extends Controller
                 foreach ($request->ticket as $key => $value) {
                     $ticket->$key = $value;
                 }
+
+                /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
+                $status = self::assignStatus($request->ticket['assignee']);
+                $ticket->status = $status['status'];
                 $ticket->save();
             }
 
@@ -402,5 +403,19 @@ class TicketController extends Controller
     public function ticketExtendDetails($id){
         $ticket_extensions = Ticket::findOrFail($id)->extended()->latest()->get();
         return view('ticketExtendDetails',['ticket_extensions' => $ticket_extensions]);
+    }
+
+    private static function assignStatus($assignee){
+        /*GET ID'S OF THE OPEN AND ONGOING CATEGORY IN THE CATEGORY TABLE*/
+        $openID = 1;
+        $ongoingID = 2;
+
+        if (!$assignee) {
+            $status = ['status' => $openID];
+        } else {
+            $status = ['status' => $ongoingID];
+        }
+
+        return $status;
     }
 }
