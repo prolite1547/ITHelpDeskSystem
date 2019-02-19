@@ -13,6 +13,7 @@
         "laravelcollective/html": "^5.4.0",
         "pusher/pusher-php-server": "~3.0",
         "webklex/laravel-imap": "^1.2",
+        "willdurand/email-reply-parser": "^2.8",
         "yajra/laravel-datatables-oracle": "~8.0"
     },
     "require-dev": {

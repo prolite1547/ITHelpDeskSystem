@@ -171,7 +171,13 @@ if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remo
 
         /*4 is equivalent to admin user*/
         if($authRoleID !== 4){
-             $groupID = $group[$authPositionID];
+
+            if($authPositionID !== 1 && $authPositionID !== 2){
+                $groupID = $group[$authPositionID];
+            }else{
+                $groupID = $group[4];
+            }
+
         }else {
             $groupID = $group['all'];
         }
@@ -181,5 +187,56 @@ if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remo
     }
 }
 
+
+if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*uppercase words and remove extra white spaces*/
+     function fetchNewConnectionIssueEmailReplies(int $ticketID,string $subject,$latest_reply){
+        $date = \Carbon\Carbon::now()->format('d.m.Y');
+        $email_unique = "tid#$ticketID";
+        $oClient = new \Webklex\IMAP\Client;
+        $oClient->connect();
+
+        $inboxFolder = $oClient
+            ->getFolder('INBOX');
+
+        $inboxMessages = $inboxFolder
+            ->query()
+            ->since($date)
+            ->subject($subject)
+            ->body($email_unique)
+            ->setFetchFlags(false)
+            ->setFetchBody(true)
+            ->setFetchAttachment(true)
+            ->get();
+
+
+        $latestInboxMessage = $inboxMessages->first();
+
+
+        if($latestInboxMessage !== null){
+            $plain_text = $latestInboxMessage->getTextBody();
+            $html_body = $latestInboxMessage->getHTMLBody();
+            $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($latestInboxMessage->getTextBody())->getVisibleText();
+            $hasAttachments = $latestInboxMessage->getAttachments()->count();
+            $subject = $latestInboxMessage->getSubject();
+            $from = json_encode($latestInboxMessage->getFrom());
+            $to = json_encode($latestInboxMessage->getTo());
+            $cc = json_encode($latestInboxMessage->getCC());
+            $reply_to = $latestInboxMessage->getInReplyTo();
+            $reply_date = $latestInboxMessage->getDate();
+            $ticket_id = $ticketID;
+
+            $connection_issue = new \App\ConnectionIssueReply;
+            $connection_issue_fillable = $connection_issue->getFillable();
+
+
+            if (is_null($latest_reply)) { /*IF MAIL HAS NO REPLY YET THEN INSERT*/
+                $connection_issue->create(compact($connection_issue_fillable));
+            } else if (($latest_reply->reply !== $reply && !$latest_reply->reply_date->equalTo($reply_date))) {
+                $connection_issue->create(compact($connection_issue_fillable));
+            }
+
+        }
+    }
+}
 
 ?>

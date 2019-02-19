@@ -1,8 +1,8 @@
-import {setDisable,displayError} from "./views/base";
+import {setDisable, displayError, showModal, renderLoader, elements, clearLoader, hideModal} from "./views/base";
 import Caller from './models/Caller';
 import Store from './models/Store';
 import Contact from './models/Contact';
-import PLDTMail from "./models/PLDTMail";
+import ConnectionIssue from "./models/ConnectionIssue";
 import Position from "./models/Position";
 import Department from "./models/Department";
 
@@ -26,7 +26,9 @@ export const sendForm = (e) => {
         }else if(form.id === 'addContact'){
             object = new Contact();
         }else if(form.id === 'addPLDTIssue'){
-            object = new PLDTMail();
+            showModal(false,false);
+            renderLoader(elements.modalContent);
+            object = new ConnectionIssue();
             formdata = new FormData(form);
         }else if(form.id === 'addPosition'){
             object = new Position();
@@ -39,19 +41,31 @@ export const sendForm = (e) => {
 
         if(object){
             object.storeData(formdata)
-                .done(() => {
+                .done((data) => {
                         alert('Added Successfully!!');
+                        clearLoader();
+                        hideModal();
                         form.reset();
                         setDisable(formSbmtBtn,false);
+
+                        if(data.response){
+                            if(data.response === 'emailConIssueSentSuccess'){
+                                window.location = `/tickets/view/${data.data.ticket_id}`;
+                            }
+                        }
                 })
                 .fail((jqXHR,textStatus,errorThrown) => {
+                        clearLoader();
+                        hideModal();
                         setDisable(formSbmtBtn,false);
                         if(jqXHR){
-                            displayError(jqXHR);
+                            displayError(jqXHR)
                         }else if(errorThrown) {
                             alert(errorThrown);
-                        }else{
+                        }else if(textStatus){
                             alert(textStatus);
+                        }else{
+                            alert('Unable to process the request!')
                         }
                 });
         }

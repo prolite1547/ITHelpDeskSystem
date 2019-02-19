@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Caller;
 use App\Http\Requests\StoreCaller;
-use Illuminate\Http\Request;
+
 
 class CallerController extends Controller
 {
@@ -15,6 +15,6 @@ class CallerController extends Controller
 
     public function create(StoreCaller $request){
 
-        $caller = Caller::create($request->except('_token'));
+        Caller::create($request->except('_token'));
     }
 }

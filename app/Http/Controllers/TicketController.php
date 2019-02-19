@@ -3,19 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Call;
-use App\Caller;
 use App\CategoryB;
 use App\CategoryC;
+use App\ConnectionIssue;
 use App\File;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
 use App\Mail\PLDTIssue;
-use App\Status;
 use App\Ticket;
-use App\Category;
-use App\Message;
 use Carbon\Carbon;
-use DateInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -54,24 +50,46 @@ class TicketController extends Controller
     public function lookupView($id)
     {
 
-        $ticket = Ticket::with([
-            'incident.call.loggedBy',
-            'statusRelation',
-            'incident.call.callerRelation',
-            'typeRelation',
-            'incident.call.contact.store',
-            'assigneeRelation',
-            'incident.categoryRelation',
-            'incident.catARelation',
-            'incident',
-            'incident.getFiles'
-        ])
+        /*CHECK IF TICKET IS CREATED THROUGH CALL OR EMAIL*/
+
+        if(Ticket::findOrFail($id)->incident->call_id){
+            $relationArray = [
+                'incident.call.loggedBy',
+                'statusRelation',
+                'incident.call.callerRelation',
+                'typeRelation',
+                'incident.call.contact.store',
+                'assigneeRelation',
+                'incident.categoryRelation',
+                'incident.catARelation',
+                'incident',
+                'incident.getFiles'
+            ];
+
+            $view = '';
+        }else{
+            $relationArray = [
+                'userLogged',
+                'statusRelation',
+                'typeRelation',
+                'assigneeRelation',
+                'incident.categoryRelation',
+                'incident.catARelation',
+                'incident',
+                'incident.getMailData',
+                'incident.getFiles'
+            ];
+            $view = '_mail';
+        }
+
+        $ticket = Ticket::with($relationArray)
             ->findOrFail($id);
 
-        return view("ticket.ticket_lookup", ['ticket' => $ticket]);
+
+        return view("ticket.ticket_lookup{$view}", ['ticket' => $ticket]);
     }
 
-    public function addTicketView(Request $request)
+    public function addTicketView()
     {
         $userID = Auth::user()->id;
 
@@ -236,8 +254,8 @@ class TicketController extends Controller
     public function delete($id)
     {
 
-        $ticket = Ticket::findOrFail($id)->delete();
-//        $ticket = Ticket::findOrFail($id)->incident->call->delete();
+        Ticket::findOrFail($id)->delete();
+
 
         return redirect()->route('openTickets');
     }
@@ -328,41 +346,81 @@ class TicketController extends Controller
         return  view('layouts.printTicket')->with('ticket',$ticket);
     }
 
-    public function addPLDTTicket(Request $request)
+    public function addConnectionIssue(Request $request)
     {
+
         $validation = [
             'to' => 'required|string',
             'subject' => 'required|string|min:5',
+            'cc' => 'string|nullable',
             'details' => 'required|string|min:5',
             'branch' => 'required|numeric',
-            'contact' => 'required|string|min:5',
-            'type' => 'required|string'
+            'contact_number' => 'required|string|min:5',
+            'contact_person' => 'required|string|min:5',
         ];
-
-        $voice =  ['dial' => 'required|string|min:5'];
-
-
+        $voice =  ['tel' => 'required|string|min:5'];
         $data = ['pid' => 'required|string|min:5'];
 
+        $catC = $request->concern;
         /*GET CATEGORY B id*/
-        $catB = CategoryC::findOrFail($request->concern)->catB;
+        $catB = CategoryC::findOrFail($catC)->catB;
+        /*GET CATEGORY A id*/
+        $catB_relations = CategoryB::with('group:id','getExpiration:id,expiration')->findOrFail($catB);
+
+        /*ADD TO REQUEST PARAMETER BAG*/
+        $request->request->add(['catC' => $catC,'category' => 3,'catB' => $catB,'catA' => $catB_relations->group->id]);
 
         /*16 IS THE ID OF THE CATEGORY B VOICE*/
         if($catB === 16){
             $validation = $validation + $voice;
-            $request->request->add(['type' => 'voice']);
+
         }elseif ($catB === 17){
             $validation = $validation + $data;
-            $request->request->add(['type' => 'data']);
         }else{
-            $request->request->add(['type' => 'both']);
             $validation = $validation + $data + $voice;
         }
 
         $request->validate($validation);
+        $expiration = Carbon::now()->addHours($catB_relations->getExpiration->expiration);
 
-        $to = explode(',',$request->to);
-        Mail::to($to)->send(new PLDTIssue($request));
+        if($catB_relations->name === 'Both'){
+            $td_header = 'PID/TEL';
+        }elseif($catB_relations->name === 'Data'){
+            $td_header = 'PID';
+        }elseif($catB_relations->name === 'Voice'){
+            $td_header = 'TEL';
+        }else{
+            $td_header = 'UNKNOWN';
+        }
+
+
+//        $result = null;
+
+        $ticket_id = DB::transaction(function ()  use(&$result,$expiration,$request,$td_header){
+            /*INSERT TO DATABASE*/
+            $ticket_id = ConnectionIssue::create($request->only(['cc','to','account','pid','tel','contact_person','contact_number']))
+                ->incident()->create($request->only(['subject','details','catC','catB','catA','category']))
+                ->ticket()->create(['assignee' => $request->user()->id,'logged_by' => $request->user()->id,'type' => 1,'priority' => 4,'status' => 2,'store' => $request->branch,'group' => 1,'expiration' => $expiration])->id;
+
+            /*SEND MAIL*/
+            $to = explode(',',$request->to);
+
+            $mail = new Mail;
+
+            if(!is_null($request->cc)){
+                $cc = explode(',',$request->cc);
+                $mail = $mail::cc($cc);
+            }
+
+            $mail->to($to)->send(new PLDTIssue($request,$ticket_id,$td_header));
+            return $ticket_id;
+
+        });
+
+        if(!is_null($ticket_id)){
+            return response()->json(['response' => 'emailConIssueSentSuccess','data' => ['ticket_id' => $ticket_id]]);
+        }
+
     }
 
     public function editStatus(StoreTicket $request,$id){

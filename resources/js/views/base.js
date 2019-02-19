@@ -41,6 +41,10 @@ export const elements = {
     addTicketDetailsFormTicketEl: document.querySelector('.form-addTicketDetails__ticket-value'),
     btnShwExtndDtails: document.querySelector('.ticket-details__value--extend'),
 
+    selectPID: document.querySelector('.form-email__input-select--pid'),
+    selectTel: document.querySelector('.form-email__input-select--tel'),
+    selectConcern: document.querySelector('.form-email__input-select--concern'),
+
     resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
     chatForm: document.querySelector('.chat'),
     printTicketBtn: document.querySelector('.ticket-content__link--print'),
@@ -98,7 +102,11 @@ export const clearLoader = () => {
     if (loader) loader.parentElement.removeChild(loader);
 };
 
-export const showModal= (markup = false) => {
+export const showModal= (markup = false,close = true) => {
+    const popup__close = elements.modal.querySelector('.popup__close');
+
+    close === true ? popup__close.classList.remove('u-display-n') : popup__close.classList.add('u-display-n');
+
     if(markup){
         elements.modalContent.innerHTML = markup;
     }else{
@@ -106,7 +114,9 @@ export const showModal= (markup = false) => {
     }
     elements.container.style.filter = 'blur(1px)';
     elements.modal.style.visibility = 'visible';
+
     elements.modal.style.opacity = '1';
+
 };
 
 export const insertToModal = (markup) => {

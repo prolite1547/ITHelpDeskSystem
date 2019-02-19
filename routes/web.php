@@ -13,11 +13,13 @@
 
 
 use App\Caller;
+use App\ConnectionIssueReply;
 use App\Contact;
 use App\Incident;
 use App\Store;
 use App\User;
 use Illuminate\Support\Carbon;
+use App\Ticket;
 use Webklex\IMAP\Client;
 
 
@@ -43,7 +45,7 @@ Route::get('/ticket/{id}','TicketController@getTicket');
 Route::get('/tickets/add','TicketController@addTicketView')->name('addTicketView');
 Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
 Route::patch('/ticket/add/details','TicketController@addTicketDetails')->name('addTicketDetails');
-Route::post('/ticket/pldt/add','TicketController@addPLDTTicket')->name('addPLDTTicket');
+Route::post('/ticket/pldt/add','TicketController@addConnectionIssue')->name('addConnectionIssue');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::patch('/ticket/edit/{id}', 'TicketController@edit')->name('editTicket');
 Route::patch('/tickets/status/fixed/{id}', 'TicketController@editStatus')->name('editStatus');
@@ -191,35 +193,67 @@ Route::get('/test2',function (){
     $oClient = new Client();
     $oClient->connect();
 
-//    dd($aFolder = $oClient->getFolders());
-    $aFolder = $oClient
+
+
+    $inboxFolder = $oClient
         ->getFolder('INBOX');
 
 
-    $aMessage = $aFolder
+    $inboxMessages = $inboxFolder
         ->query()
-//        ->since('5.02.2019')
-        ->subject('CITIHARDWARE KIDAPAWAN is currently experiencing NO VPN CONNECTION')
-        ->body('Ticket ID: 12345')
+        ->since('18.02.2019')
+        ->subject('Praesent metus tellus elementum eu')
+        ->body('tid#24')
         ->setFetchFlags(false)
         ->setFetchBody(true)
-        ->setFetchAttachment(false)
+        ->setFetchAttachment(true)
         ->get();
 
 
-    $test = $aMessage->first();
-    dd($test);
-    if($test->hasHTMLBody()){
-        echo $test->getHTMLBody();
-    }else{
-        echo $test->getTextBody();
+    $latestInboxMessage = $inboxMessages->first();
+    if($latestInboxMessage !== null){
+    $plain_text = $latestInboxMessage->getTextBody();
+    $html_body = $latestInboxMessage->getHTMLBody();
+    $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($latestInboxMessage->getTextBody())->getVisibleText();
+    $hasAttachments = $latestInboxMessage->getAttachments()->count();
+    $subject = $latestInboxMessage->getSubject();
+    $from = json_encode($latestInboxMessage->getFrom());
+    $to = json_encode($latestInboxMessage->getTo());
+    $cc = json_encode($latestInboxMessage->getCC());
+    $reply_to = $latestInboxMessage->getInReplyTo();
+    $reply_date = $latestInboxMessage->getDate();
+    $ticket_id = 1;
+    $connection_issue = new ConnectionIssueReply;
+    $connection_issue_fillable = $connection_issue->getFillable();
+    dd($hasAttachments);
+//    $connection_issue->create(compact($connection_issue_fillable));
     }
+});
+
+Route::get('/test5',function (){
+
+    $ticket = Ticket::findOrFail(1)->tae;
+
+    dd($ticket);
 
 });
 
-Route::get('/test3',function (){
-    return view('ticketExtendDetails');
+Route::get('/ongoingMail',function (){
 
+    $ongoingMailInc = Ticket::whereHas('incident' , function($query){
+        $query->whereNotNull('connection_id');
+    })->with(['connectionIssueMailReplies' => function($query){
+        $query->latest('reply_date');
+    },'incident:id,subject'])->get();
+
+
+    foreach ($ongoingMailInc as $ticket){
+        $ticketID =  $ticket->id;
+        $subject = $ticket->incident->subject;
+        $latest_reply = $ticket->connectionIssueMailReplies->first();
+
+        fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
+    }
 });
 
 Auth::routes();

@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -105,5 +106,11 @@ public function rejectData() {
 public function extended(){
     return $this->hasMany('App\Extend');
 }
+
+
+public function connectionIssueMailReplies(){
+    return $this->hasMany('App\ConnectionIssueReply','ticket_id','id');
+}
+
 
 }

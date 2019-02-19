@@ -15,10 +15,11 @@ class CreateConnectionIssuesTable extends Migration
     {
         Schema::create('connection_issues', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('to');
+            $table->string('cc')->nullable();
             $table->string('account')->nullable();
             $table->string('pid')->nullable();
             $table->string('tel')->nullable();
-            $table->unsignedInteger('branch');
             $table->string('contact_person');
             $table->string('contact_number');
             $table->timestamps();

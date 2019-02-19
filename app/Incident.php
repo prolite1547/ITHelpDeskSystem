@@ -39,8 +39,17 @@ class Incident extends Model
         return $this->belongsTo('App\CategoryB','catB')->withDefault(['name' => 'none','id' => 'none']);;
     }
 
+    public function catCRelation(){
+        return $this->belongsTo('App\CategoryC','catC')->withDefault(['name' => 'none','id' => 'none']);
+    }
+
+
     public function getFiles(){
         return $this->hasMany('App\File');
+    }
+
+    public function getMailData(){
+        return $this->belongsTo('App\ConnectionIssue','connection_id');
     }
 
     public function getDetailsAttribute($value)

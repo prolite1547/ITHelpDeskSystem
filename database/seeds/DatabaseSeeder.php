@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->insert([
             ['name' => 'Hardware'],
             ['name' => 'Software'],
+            ['name' => 'Connection']
         ]);
 
         DB::table('category_a')->insert([

@@ -221,3 +221,30 @@ export const showExtndMdl = (ticket_id,e) => {
         alert('fail to get extend form');
     });
 };
+
+export const showSelects = (e) => {
+    const selectElement = e.target;
+
+    if(selectElement.value){
+        const option_group = selectElement.options[selectElement.selectedIndex].parentElement.getAttribute('label');
+
+        if(option_group === 'Both'){
+            elements.selectPID.classList.remove('u-display-n');
+            elements.selectTel.classList.remove('u-display-n');
+        }else if(option_group === 'Data'){
+            elements.selectPID.classList.remove('u-display-n');
+            elements.selectTel.classList.add('u-display-n');
+        }else if(option_group === 'Voice'){
+            elements.selectTel.classList.remove('u-display-n');
+            elements.selectPID.classList.add('u-display-n');
+        }else{
+            elements.selectPID.classList.add('u-display-n');
+            elements.selectTel.classList.add('u-display-n');
+        }
+
+    }else{
+        elements.selectPID.classList.add('u-display-n');
+        elements.selectTel.classList.add('u-display-n');
+    }
+
+};

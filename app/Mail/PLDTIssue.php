@@ -19,12 +19,14 @@ class PLDTIssue extends Mailable
     public $incidentSubject;
     public $branch;
     public $concern;
+    public $ticket_id;
+    public $td_header;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($request,$ticket_id,$td_header)
     {
         $this->data = $request;
         $this->user = $request->user()->fName;
@@ -32,6 +34,8 @@ class PLDTIssue extends Mailable
         $this->incidentSubject = $request->subject;
         $this->branch = $this->getBranchName($request->branch);
         $this->concern = $this->getConcernName($request->concern);
+        $this->ticket_id = $ticket_id;
+        $this->td_header = $td_header;
     }
 
     /**

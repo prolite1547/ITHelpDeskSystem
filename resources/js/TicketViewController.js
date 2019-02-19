@@ -97,6 +97,10 @@ export const ticketAddController = () => {
     elements.addDepartmentForm.addEventListener('submit', glboalScript.sendForm);
     elements.addBranchForm.addEventListener('submit', glboalScript.sendForm);
     elements.PLDTForm.addEventListener('submit',glboalScript.sendForm);
+
+
+    /*get concern element*/
+    elements.selectConcern.addEventListener('change',editTicketView.showSelects);
 };
 
 ////////////////////////////////
