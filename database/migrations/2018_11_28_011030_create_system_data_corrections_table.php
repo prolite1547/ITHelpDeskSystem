@@ -17,7 +17,8 @@ class CreateSystemDataCorrectionsTable extends Migration
 
             $table->increments('id');
             $table->text('ticket_no');
-            $table->text('sdc_no');
+            $table->string('ticket_created');
+            $table->text('sdc_no')->nullable();
             $table->string('date_submitted');
             $table->string('requestor_name');
             $table->string('dept_supervisor');
@@ -43,12 +44,16 @@ class CreateSystemDataCorrectionsTable extends Migration
              $table->text('sc_last_or_no')->nullable();
 
              $table->text('findings_recommendations')->nullable();
+
+             $table->text('h_group')->nullable();
+             $table->text('hierarchy')->nullable();
+ 
              //-- DETAILS
 
 
             //PRE-CORRECTION VERIFICATION
             $table->string('pre_acc_verified_by')->nullable();
-            $table->boolean('pre_acc_verified_signed')->default(0);
+            // $table->boolean('pre_acc_verified_signed')->default(0);
             $table->string('pre_acc_verified_date')->nullable();
             $table->text('pre_next_z_reading')->nullable();
             $table->text('pre_next_or_no')->nullable();
@@ -57,14 +62,14 @@ class CreateSystemDataCorrectionsTable extends Migration
             $table->text('pre_last_or_no')->nullable();
             $table->string('pre_verified_by')->nullable();
             
-            $table->boolean('pre_verified_signed')->default(0);
+            // $table->boolean('pre_verified_signed')->default(0);
 
             $table->string('pre_date_verified')->nullable();
 
             
             //APPROVAL OF THE CHANGE REQUEST
             $table->string('app_approved_by')->nullable();
-            $table->boolean('app_approved_signed')->default(0);
+            // $table->boolean('app_approved_signed')->default(0);
             $table->string('app_date_approved')->nullable();
 
             //CHANGE PROCESSING
@@ -79,25 +84,30 @@ class CreateSystemDataCorrectionsTable extends Migration
             //DEPLOYMENT CONFIRMATION
 
             $table->string('dc_deployed_by')->nullable();
-            $table->boolean('dc_deployed_signed')->default(0);
+            // $table->boolean('dc_deployed_signed')->default(0);
             $table->string('dc_date_deployed')->nullable();
             $table->string('dc_reviewed_by')->nullable();
-            $table->boolean('dc_reviewed_signed')->default(0);
+            // $table->boolean('dc_reviewed_signed')->default(0);
             $table->string('dc_date_reviewed')->nullable();
 
             //POST-CORRECTION VERIFICATION
             $table->string('post_verified_by')->nullable();
-            $table->boolean('post_verified_signed')->default(0);
+            // $table->boolean('post_verified_signed')->default(0);
             $table->string('post_date_verified')->nullable();
             $table->text('ty1_fullname')->nullable();
             $table->text('ty1_remarks')->nullable();
             $table->text('ty2_remarks')->nullable();
+            $table->integer('accum_id')->default(0);
             $table->text('govcomp_remarks')->nullable();
             $table->integer('posted_by')->nullable();
             $table->boolean('forward_status')->default(0);
             $table->integer('status')->nullable();
             $table->text('rejection')->nullable();
             
+            $table->text('t1_datetime_apprvd')->nullable();
+            $table->text('t2_datetime_apprvd')->nullable();
+            $table->text('govcomp_datetime_apprvd')->nullable();
+            $table->text('app_datetime_apprvd')->nullable();
          
             $table->timestamps();
         });

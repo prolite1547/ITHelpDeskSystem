@@ -48,10 +48,10 @@ $(function() {
     
     try{
         let dcStats;
-        let dcStatsRegex = new RegExp('\/datacorrections\/sdc\/([a-z]+)', 'gm');
+        let dcStatsRegex = new RegExp('\/datacorrections\/sdc\/([a-z0-9]+)', 'gm');
         dcStats = dcStatsRegex.exec(window.location.pathname)[1];
         
-        $('#sdc-table').DataTable({
+       var table =  $('#sdc-table').DataTable({
             processing: true,
             serverSide: true,
             order: [[5, 'desc']],
@@ -67,7 +67,7 @@ $(function() {
                 { data: 'date_submitted', name: 'date_submitted' },
                 { data: 'ticket_id', name: 'ticket_id', visible: false},
                 { data: 'sdc_no', name: 'sdc_no', visible: false},
-                { data: 'posted', name: 'posted', visible: false}
+                { data: 'forward_status', name: 'forward_status', visible: false}
             ],
             columnDefs: [
                     { 
@@ -82,20 +82,24 @@ $(function() {
                         orderable: false,
                         render: (data, type, row) => {
                             var status = "";    
-                            if(row.status == 1){
-                                status = "POSTED";
-                            }else if(row.status == 2){
-                                status = "ON GOING";
-                            }else if(row.status == 3){
-                                status = "FOR APPROVAL";
+                            if(row.forward_status == 1 && row.status == 1){
+                                status = "TREASURY 1";
+                            }else if(row.forward_status == 2  && row.status == 1){
+                                status = "TREASURY 2";
+                            }else if(row.forward_status == 3  && row.status == 1){
+                                status = "GOV. COMPLIANCE";
+                            }else if(row.forward_status == 4  && row.status == 1){
+                                status = "FINAL APPROVER";
+                            }else if(row.forward_status == 5  && row.status == 3){
+                                status = "FOR DEPLOYMENT";
                             }else if(row.status == 4){
-                                status = "APPROVED";
-                            }else if(row.status == 5){
                                 status = "DONE";
-                            }else{
-                                status = "SAVED";
+                            }else if(row.status == 2){
+                                status = "REJECTED";
+                            }else if(row.status == 0){
+                                status = "DRAFT";
                             }
-                            if(row.status < 4 || row.status == 5 ){
+                            if((row.forward_status >= 1 || row.forward_status == 5) && (row.status == 1 || row.status == 4)){
                                 return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
                                 <span class='table__info'>Ticket #: ${row.ticket_id}</span>
                                 <span class='table__info'>SDC #: ${row.id}</span>\t
@@ -115,9 +119,20 @@ $(function() {
             ]
 
         });
+        var timer = null;
 
+        $('#search').on('keyup', function () {
+            clearTimeout(timer); 
+            timer = setTimeout(function(){
+                var inputValue = $("#search").val();
+                table.column(0).search(inputValue, true, false).draw();     
+        }, 500)
+        });
+
+      
+        $.fn.dataTable.ext.errMode = 'throw';
     }catch(err){
-         
+         console.log(err);
     }
         
    
@@ -167,6 +182,61 @@ $(function() {
                             <span class='table__info'>${status} </span>
                              `
                         }else if(row.forward_status >= 2){
+                            status = "DONE";
+                            return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
+                            <span class='table__info'>Ticket #: ${row.ticket_id}</span>
+                            <span class='table__info'>SDC #: ${row.id}</span>\t
+                            <span class='table__info'>${status} </span>
+                             `
+                        }
+
+                    
+                      
+                    }
+
+                 }  
+         ]
+    };
+
+
+    
+    const allTreasury2 = {
+        processing: true,
+        serverSide: true,
+        order: [[4, 'desc']],
+        "bPaginate": true,
+        "sPaginationType": "full_numbers",
+        ajax: '/datacorrections/ty-data/all',
+        columns: [
+            { data: 'subject', name: 'subject' },
+            { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'department', name: 'department' },
+            { data: 'position', name: 'position' },
+            { data: 'date_submitted', name: 'date_submitted' },
+            { data: 'ticket_id', name: 'ticket_id', visible: false},
+            { data: 'sdc_no', name: 'sdc_no', visible: false}
+        ],
+         columnDefs: [
+                { 
+                  orderable: false, 
+                  targets: [0,1,2,3]
+                },
+                {
+                    targets: 0, /*SUBJECT*/
+                    createdCell: ( cell, cellData,rowData) => {
+                        cell.setAttribute('title',rowData.subject);
+                    },
+                    orderable: false,
+                    render: (data, type, row) => {
+                        var status = "PENDING";
+                        if(row.forward_status == 2){
+                            status = "PENDING";
+                            return `<a href='/sdc/${row.id}/edit/' class='table__subject'>${row.subject}</a><br>
+                            <span class='table__info'>Ticket #: ${row.ticket_id}</span>
+                            <span class='table__info'>SDC #: ${row.id}</span>\t
+                            <span class='table__info'>${status} </span>
+                             `
+                        }else if(row.forward_status >= 3){
                             status = "DONE";
                             return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>
@@ -297,10 +367,8 @@ $(function() {
                     },
                     orderable: false,
                     render: (data, type, row) => {
-                        var status = "";
-                        if(row.status == 2){
-                            status = "PENDING";
-                        } 
+                        var status = "PENDING";
+                      
                         return `<a href='/sdc/${row.id}/edit/' class='table__subject'>${row.subject}</a><br>
                         <span class='table__info'>Ticket #: ${row.ticket_id}</span>
                         <span class='table__info'>SDC #: ${row.id}</span>\t
@@ -340,10 +408,8 @@ $(function() {
                     },
                     orderable: false,
                     render: (data, type, row) => {
-                        var status = "";
-                        if(row.status == 3){
-                            status = "DONE"
-                        }
+                        var status = "DONE";
+                      
                         return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
                         <span class='table__info'>Ticket #: ${row.ticket_id}</span>
                         <span class='table__info'>SDC #: ${row.id}</span>\t
@@ -384,7 +450,7 @@ $(function() {
                     orderable: false,
                     render: (data, type, row) => {
                         var status = "PENDING";
-                        if(row.status == 2){
+                        if(row.forward_status == 3){
                             status = "PENDING";
                             return `<a href='/sdc/${row.id}/edit/' class='table__subject'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>
@@ -392,7 +458,7 @@ $(function() {
                             <span class='table__info'>${status} </span>
                              `
 
-                        }else if(row.status >= 3){
+                        }else if(row.forward_status >= 4){
                             status = "DONE"
                             return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>
@@ -520,14 +586,14 @@ $(function() {
                     orderable: false,
                     render: (data, type, row) => {
                         var status = "";
-                        if(row.status == 3){
+                        if(row.forward_status == 4){
                             status = "PENDING";
                             return `<a href='/sdc/${row.id}/edit/' class='table__subject'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>
                             <span class='table__info'>SDC #: ${row.id}</span>\t
                             <span class='table__info'>${status} </span>
                              `
-                        }else if(row.status >= 4){
+                        }else if(row.forward_status = 5){
                             status = "DONE";
                             return `<a href='/system/${row.id}/print/' class='table__subject' target='_blank'>${row.subject}</a><br>
                             <span class='table__info'>Ticket #: ${row.ticket_id}</span>
@@ -546,7 +612,7 @@ try {
     
 
     let dcUser,dcStatus;
-    let dcURegex = new RegExp('\/datacorrections\/([a-z]+)', 'gm');
+    let dcURegex = new RegExp('\/datacorrections\/([a-z0-9]+)', 'gm');
     dcUser = dcURegex.exec(window.location.pathname)[1];
 
     switch(dcUser){
@@ -565,6 +631,23 @@ try {
                     $('#treasury-table').DataTable(allTreasury);
                 break;
             }
+        break;
+        case 'ty2':
+            dcRegex = new RegExp('\/datacorrections\/ty2\/sdc\/([a-z]+)', 'gm');
+            dcStatus = dcRegex.exec(window.location.pathname)[1];
+
+            switch(dcStatus){
+                case "pending":
+                    $('#treasury2-table').DataTable(pendingTreasury);
+                break;
+                case "done":
+                    $('#treasury2-table').DataTable(doneTreasury);
+                break;
+                case "all":
+                    $('#treasury2-table').DataTable(allTreasury2);
+                break;
+            }
+          
         break;
         case 'gc':
             dcRegex = new RegExp('\/datacorrections\/gc\/sdc\/([a-z]+)', 'gm');
@@ -602,7 +685,7 @@ try {
     }
 
 } catch (error) {
-    
+    console.log(error);
 }
 
 //  SUPPORTS DATATABLE
@@ -617,6 +700,7 @@ try {
 //     break;
 
 // }
-    
+
+ 
     
 });

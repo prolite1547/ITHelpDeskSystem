@@ -49,6 +49,7 @@ Route::patch('/ticket/edit/{id}', 'TicketController@edit')->name('editTicket');
 Route::patch('/tickets/status/fixed/{id}', 'TicketController@editStatus')->name('editStatus');
 Route::get('/tickets/open', 'TicketController@open')->name('openTickets');
 Route::get('/tickets/ongoing', 'TicketController@ongoing')->name('ongoingTickets');
+Route::get('/tickets/expired', 'TicketController@expired')->name('expiredTickets');
 Route::get('/tickets/closed', 'TicketController@closed')->name('closedTickets');
 Route::get('/tickets/fixed', 'TicketController@fixed')->name('fixedTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
@@ -58,6 +59,7 @@ Route::get('/tickets/my', 'TicketController@userTickets')->name('myTickets');
 Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
 Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
+Route::post('/ticket/extend/{id}', 'TicketController@extend')->name('ticketExtend');
 
 //////////////////////////
 ////////*RESOLVE*/////////
@@ -78,6 +80,7 @@ Route::get('/modal/form/reject/{ticket_id}','TicketController@rejectForm');
 Route::get('/modal/lookup/reject/{ticket_id}','TicketController@rejectFormDetails');
 Route::view('/modal/form/resolve','modal.resolve_form');
 Route::view('/modal/form/userAdd','modal.user_add');
+Route::get('/modal/form/extend/{id}','TicketController@getExtendForm');
 Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalResolveView');
 Route::get('/modal/{store_id}/contacts','StoreController@storeContacts')->name('storeContacts');
 
@@ -115,6 +118,7 @@ Route::get('/select/caller', 'SelectController@caller');
 Route::get('/select/contact', 'SelectController@contact');
 Route::get('/select/position', 'SelectController@position');
 Route::get('/select/department', 'SelectController@department');
+Route::get('/select/expiration', 'SelectController@expiration');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -141,14 +145,21 @@ Route::get('/search','HomeController@search')->name('search');
 ////////*POSITION*//////
 //////////////////////////
 Route::post('/add/position','PositionController@create');
+
 //////////////////////////
 ////////*DEPARTMENT*//////
 //////////////////////////
 Route::post('/add/department','DepartmentController@create');
+
 //////////////////////////
 ////////*API*//////
 //////////////////////////
 Route::get('/api/user/{id}','UserController@userAPI');
+
+//////////////////////////
+////////*EXTENDED*//////
+//////////////////////////
+Route::post('/add/extend/{id}','ExtendController@create')->name('addExtend');
 
 Route::get('/test',function (){
     return view('emails.PLDTIssue');
@@ -204,18 +215,25 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
  Route::get('datacorrections/gc-data/{status}', 'DatatablesController@govcomp')->name('datacorrections.datagc');
  Route::get('datacorrections/app-data/{status}', 'DatatablesController@approver')->name('datacorrections.dataapp');
  
- Route::get('datacorrections/sdc/saved', 'DCController@sdc_route')->name('datacorrectons.sdcSave');
- Route::get('datacorrections/sdc/posted', 'DCController@sdc_route')->name('datacorrectons.sdcPosted');
- Route::get('datacorrections/sdc/ongoing', 'DCController@sdc_route')->name('datacorrectons.sdcOngoing');
- Route::get('datacorrections/sdc/forapproval', 'DCController@sdc_route')->name('datacorrectons.sdcForApproval');
- Route::get('datacorrections/sdc/approved', 'DCController@sdc_route')->name('datacorrectons.sdcApproved');
+ Route::get('datacorrections/sdc/fordeployment', 'DCController@sdc_route')->name('datacorrectons.sdcDeployment');
+ Route::get('datacorrections/sdc/ty1', 'DCController@sdc_route')->name('datacorrectons.sdcTreasury1');
+ Route::get('datacorrections/sdc/ty2', 'DCController@sdc_route')->name('datacorrectons.sdcTreasury2');
+ Route::get('datacorrections/sdc/govcomp', 'DCController@sdc_route')->name('datacorrectons.sdcGovComp');
+ Route::get('datacorrections/sdc/finalapp', 'DCController@sdc_route')->name('datacorrectons.sdcFinalApp');
+
+ Route::get('datacorrections/sdc/draft', 'DCController@sdc_route')->name('datacorrectons.sdcDraft');
  Route::get('datacorrections/sdc/done', 'DCController@sdc_route')->name('datacorrectons.sdcDone');
- 
+ Route::get('datacorrections/sdc/rejected', 'DCController@sdc_route')->name('datacorrectons.sdcRejected');
+ Route::get('datacorrections/sdc/all', 'DCController@sdc_route')->name('datacorrectons.sdcAll');
 
 
  Route::get('datacorrections/ty/sdc/all', 'DCController@treasury_all')->name('datacorrectons.treasuryALL');
  Route::get('datacorrections/ty/sdc/pending', 'DCController@treasury_pending')->name('datacorrectons.treasuryPENDING');
  Route::get('datacorrections/ty/sdc/done', 'DCController@treasury_done')->name('datacorrectons.treasuryDONE');
+
+ Route::get('datacorrections/ty2/sdc/all', 'DCController@treasury2_all')->name('datacorrectons.treasury2ALL');
+ Route::get('datacorrections/ty2/sdc/pending', 'DCController@treasury2_pending')->name('datacorrectons.treasury2PENDING');
+ Route::get('datacorrections/ty2/sdc/done', 'DCController@treasury2_done')->name('datacorrectons.treasury2DONE');
  
  Route::get('datacorrections/gc/sdc/all', 'DCController@govcomp_all')->name('datacorrectons.govcompALL');
  Route::get('datacorrections/gc/sdc/pending', 'DCController@govcomp_pending')->name('datacorrectons.govcompPENDING');
@@ -230,3 +248,12 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
 
  Route::get('print/{id}/ticket', 'TicketController@print')->name('print.ticket');
  Route::post('rmv/attachment', 'SDCController@rmvattachment')->name('rmv.attachment');
+
+ Route::post('reject/sdc', 'SDCController@rejectDataCorrect')->name('reject.sdc');
+
+ Route::get('search/sdc', 'SDCController@search')->name('search.sdc');
+ 
+ Route::post('group/selection', 'SDCController@selectGroup')->name('select.group');
+ Route::post('group/selection2', 'SDCController@selectGroup2')->name('select.group2');
+ 
+ Route::post('assign/group', 'SDCController@ChangeGroupData')->name('assign.group');

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Caller;
 use App\Contact;
 use App\Department;
+use App\Expiration;
 use App\Http\Resources\CallerCollection;
 use App\Http\Resources\ContactCollection;
 use App\Http\Resources\DepartmentCollection;
+use App\Http\Resources\ExpirationCollection;
 use App\Http\Resources\PositionCollection;
 use App\Http\Resources\StoreCollection;
 use App\Position;
@@ -76,5 +78,9 @@ class SelectController extends Controller
         }else{
             return new DepartmentCollection(Department::all(['id','department as text']));
         }
+    }
+
+    public function expiration(Request $request){
+        return new ExpirationCollection(Expiration::all(['id','expiration as text']));
     }
 }

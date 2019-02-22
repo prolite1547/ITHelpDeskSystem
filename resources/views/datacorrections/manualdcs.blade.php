@@ -13,7 +13,7 @@
                         <div class="side__content">
                             <dl class="side__dl" >
                                 <dt class="side__dt">All types</span></dt>
-                                <dd class="side__dd {{Route::currentRouteName() == 'datacorrectons.sdcApproved' ? 'submenu__a--active' : ''}}"><a href="{{ route('datacorrectons.sdcApproved') }}" style="text-decoration:none;color:black;">System Data Correction ({{ $sdcCount }})</a></dd>
+                                <dd class="side__dd {{Route::currentRouteName() == 'datacorrectons.sdcDeployment' ? 'submenu__a--active' : ''}}"><a href="{{ route('datacorrectons.sdcDeployment') }}" style="text-decoration:none;color:black;">System Data Correction ({{ $sdcCount }})</a></dd>
                                 <dd class="side__dd {{Route::currentRouteName() == 'datacorrections.manual' ? 'submenu__a--active' : ''}}"><a href="{{ route('datacorrections.manual') }}" style="text-decoration:none;color:white;">Manual Data Correction ({{ $mdcCount }})</a></dd>
                             </dl>
                         </div>

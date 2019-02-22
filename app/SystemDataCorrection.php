@@ -9,6 +9,7 @@ class SystemDataCorrection extends Model
      
     protected $fillable = [
         'ticket_no',
+        'ticket_created',
         'sdc_no',
         'date_submitted',
         'requestor_name',
@@ -55,7 +56,14 @@ class SystemDataCorrection extends Model
         'ty1_fullname',
         'ty1_remarks',
         'ty2_remarks',
-        'govcomp_remarks'
+        'accum_id',
+        'govcomp_remarks',
+        'h_group',
+        'hierarchy',
+        't1_datetime_apprvd',
+        't2_datetime_apprvd',
+        'govcomp_datetime_apprvd',
+        'app_datetime_apprvd'
     ];
 
 
@@ -65,6 +73,10 @@ class SystemDataCorrection extends Model
 
     public function attachments(){
         return $this->hasMany('App\SDCAttachment', 'sdc_no');
+    }
+
+    public function accumulators(){
+        return $this->hasOne('App\Accumulators', 'sdc_id');
     }
    
 }

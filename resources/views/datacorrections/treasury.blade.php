@@ -3,14 +3,19 @@
 @section('submenu')
 <ul class="submenu__ul"> 
     <li class="submenu__li">
-    <a href="{{route('datacorrectons.treasuryPENDING')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.treasuryPENDING' ? 'submenu__a--active' : ''}}">Pending <span>  ({{ $pendingCount }} )</span></a>
+    <a href="{{route('datacorrectons.treasuryPENDING')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.treasuryPENDING' ? 'submenu__a--active' : ''}}">Pending <span>  ({{ $pendingCount }})</span></a>
     </li>
     <li class="submenu__li">
     <a href="{{route('datacorrectons.treasuryDONE')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.treasuryDONE' ? 'submenu__a--active' : ''}}">Done <span>  ({{ $doneCount }})</span></a>
     </li>
+        {{-- <li class="submenu__li">
+            <a href="{{route('datacorrectons.treasuryALL')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.treasuryALL' ? 'submenu__a--active' : ''}}">Rejected <span>  ({{ $allCount }})</span></a>
+        </li> --}}
     <li class="submenu__li">
     <a href="{{route('datacorrectons.treasuryALL')}}" class="submenu__a {{Route::currentRouteName() == 'datacorrectons.treasuryALL' ? 'submenu__a--active' : ''}}">All <span>  ({{ $allCount }})</span></a>
     </li>
+    
+    
 </ul>
 @endsection
 @section('content')

@@ -103,17 +103,7 @@ class ReportsController extends Controller
             $data .= "<tbody style='font-size:12px;'>";
                     foreach($incidents as $incident){
                         if(isset($incident->ticket->id)){
-                            switch($incident->ticket->status){
-                                case 1:
-                                    $status = "OPEN";
-                                break;
-                                case 2:
-                                    $status = "ON-GOING";
-                                break;
-                                case 3:
-                                    $status = "CLOSED";
-                                break;
-                            }
+                            $status = strtoupper($incident->ticket->statusRelation->name);
                          $rowdata .= "<tr><td>".$incident->catARelation->name."</td><td>"."TID".$incident->ticket->id."</td><td>".$status."</td></tr>"; 
                         }       
                     }
@@ -133,6 +123,9 @@ class ReportsController extends Controller
         $resdate = "N/A";
         $pendingDuration = "Resolved";
         $resinterval = "N/A";
+        $countRow = 0;
+        $countResolved = 0;
+
       
         if($category != "all"){
             $incidents = Incident::whereBetween('created_at', [$start, $end])->where('catA', $category)->get();
@@ -155,17 +148,8 @@ class ReportsController extends Controller
             $data .= "<tbody style='font-size:12px;'>";
                     foreach($incidents  as $incident){
                        if(isset($incident->ticket->id)){
-                                    switch($incident->ticket->status){
-                                        case 1:
-                                            $status = "OPEN";
-                                        break;
-                                        case 2:
-                                            $status = "ON-GOING";
-                                        break;
-                                        case 3:
-                                            $status = "CLOSED";
-                                        break;
-                                  }
+                           $status = strtoupper($incident->ticket->statusRelation->name);
+                           
                                 if(isset($incident->ticket->resolve->created_at)){
                                     $resdate = date('m/d/y | H:i:s A', strtotime($incident->ticket->resolve->created_at));
                                     $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
@@ -196,11 +180,19 @@ class ReportsController extends Controller
                            
                             if($status1 == "all"){
                                 $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
+                                $countRow +=1;
+                                if(isset($incident->ticket->resolve->created_at)){
+                                    $countResolved +=1;
+                                }
                             }else{
                                 if($status1 == "resolved" AND isset($incident->ticket->resolve->created_at)){
                                     $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
+                                    $countRow +=1;
+                                    $countResolved +=1;
                                 }elseif($status1 == "unresolved" AND !isset($incident->ticket->resolve->created_at)){
                                     $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
+                                    $countRow +=1;
+                                    $countResolved = 0;
                                 }
                              } 
                             $resdate = "N/A";
@@ -211,7 +203,7 @@ class ReportsController extends Controller
             $data .= "</tbody>";
         $data .= "</table>";
 
-        return response()->json(array('success'=>true, 'ilrdata'=>$data), 200);
+        return response()->json(array('success'=>true, 'ilrdata'=>$data, 'rowCount'=>$countRow, 'resolvedCount'=>$countResolved), 200);
     }
 
     public function generateRDS(Request $request){
@@ -239,18 +231,7 @@ class ReportsController extends Controller
         $data .= "<tbody style='font-size:12px;'>";
              foreach($incidents  as $incident){
                 if(isset($incident->ticket->id)){
-                     
-                        switch($incident->ticket->status){
-                                case 1:
-                                    $status = "OPEN";
-                                break;
-                                case 2:
-                                    $status = "ON-GOING";
-                                break;
-                                case 3:
-                                    $status = "CLOSED";
-                                break;
-                        }
+                    $status = strtoupper($incident->ticket->statusRelation->name);
                         if(isset($incident->ticket->resolve->created_at)){
                             $resdate = date('m/d/y | H:i:s A', strtotime($incident->ticket->resolve->created_at));
                             $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
@@ -410,7 +391,7 @@ public function loadChart(){
             array_push($solveCount,[$count, $resolver->resolved_count]);
 
             foreach($resolver->resolved as $resolvedTickets){
-                array_push($supports, [$count, $resolvedTickets->ticket->incident->call->loggedBy->id, $resolvedTickets->ticket->incident->call->loggedBy->fullname]);
+                array_push($supports, [$count, $resolvedTickets->ticket->userLogged->id, $resolvedTickets->ticket->userLogged->full_name]);
             }
 
             $count+=1;

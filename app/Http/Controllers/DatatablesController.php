@@ -37,7 +37,7 @@ class DatatablesController extends Controller
                 return $query->whereStatus($get_status->id);
             })
             ->when($status === 'user',function ($query){
-                return $query->where('assignee',Auth::user()->id);
+                return $query->where('assignee',Auth::user()->id)->where('status','!=',3);
             })
             ->when($status === 'fixedRej',function ($query){
                 return $query->whereStatus(4);
@@ -80,7 +80,7 @@ class DatatablesController extends Controller
         $query = DB::table('system_data_corrections')
         ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-        ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted');
+        ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted ');
         $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
@@ -92,26 +92,32 @@ class DatatablesController extends Controller
         $query = DB::table('system_data_corrections')
         ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-        ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted, system_data_corrections.status');
+        ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.forward_status, system_data_corrections.status');
         
         switch($status){
-            case "approved":
-                $query = $query->where('system_data_corrections.status', '4');
-            break;
-            case "saved":
-                $query = $query->where('system_data_corrections.status', '0');
-            break;
-            case "posted":
-                 $query = $query->where('system_data_corrections.status', '1');
-            break;
-            case "ongoing":
-                 $query = $query->where('system_data_corrections.status', '2');
-            break;
-            case "forapproval":
+            case "fordeployment":
                 $query = $query->where('system_data_corrections.status', '3');
             break;
+            case "ty1":
+                $query = $query->where('system_data_corrections.forward_status', '1')->where('system_data_corrections.status', '1');
+            break;
+            case "ty2":
+                 $query = $query->where('system_data_corrections.forward_status', '2')->where('system_data_corrections.status', '1');
+            break;
+            case "govcomp":
+                 $query =  $query->where('system_data_corrections.forward_status', '3')->where('system_data_corrections.status', '1');
+            break;
+            case "finalapp":
+                 $query =  $query->where('system_data_corrections.forward_status', '4')->where('system_data_corrections.status', '1');
+            break;
+            case "draft":
+                 $query = $query->where('system_data_corrections.status', '0');
+            break;
             case "done":
-                 $query = $query->where('system_data_corrections.status', '5');
+                 $query = $query->where('system_data_corrections.status', '4');
+            break;
+            case "rejected":
+                 $query = $query->where('system_data_corrections.status', '2');
             break;
 
         }
@@ -148,16 +154,28 @@ class DatatablesController extends Controller
         system_data_corrections.status,
         system_data_corrections.forward_status');
         
+     if(Auth::user()->role_id == 5){
         if($status != "all"){
-           if($status == "pending"){
-                $query = $query->where('system_data_corrections.status', '1')->where('system_data_corrections.forward_status', '1');
-           }elseif($status == "done"){
-                $query = $query->where('system_data_corrections.status','1')->whereIn('system_data_corrections.forward_status', array('2','3','4','5'));
-           }
-        }else{
-            $query = $query->where('system_data_corrections.status', '1')->whereIn('system_data_corrections.forward_status', array('1','2','3','4','5'));
-        }
-
+            if($status == "pending"){
+                 $query = $query->where('system_data_corrections.status', '1')->where('system_data_corrections.forward_status', '1');
+            }elseif($status == "done"){
+                 $query = $query->whereIn('system_data_corrections.status', array('1','3','4') )->whereIn('system_data_corrections.forward_status', array('2','3','4','5'));
+            }
+         }else{
+             $query = $query->whereIn('system_data_corrections.status',  array('1','3','4'))->whereIn('system_data_corrections.forward_status', array('1','2','3','4','5'));
+         }
+     }else{
+        if($status != "all"){
+            if($status == "pending"){
+                 $query = $query->where('system_data_corrections.status', '1')->where('system_data_corrections.forward_status', '2');
+            }elseif($status == "done"){
+                 $query = $query->whereIn('system_data_corrections.status', array('1','3','4'))->whereIn('system_data_corrections.forward_status', array('3','4','5'));
+            }
+         }else{
+             $query = $query->whereIn('system_data_corrections.status', array('1','3','4'))->whereIn('system_data_corrections.forward_status', array('2','3','4','5'));
+         }
+     }  
+        $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }
@@ -175,19 +193,19 @@ class DatatablesController extends Controller
         system_data_corrections.department,
         system_data_corrections.position,
         system_data_corrections.date_submitted,
-        system_data_corrections.posted,
+        system_data_corrections.forward_status,
         system_data_corrections.status');
         
         if($status != "all"){
            if($status == "pending"){
-                $query = $query->where('system_data_corrections.status', '2');
+                $query = $query->where('system_data_corrections.forward_status', '3')->where('system_data_corrections.status', '1');
            }elseif($status == "done"){
-                $query = $query->whereIn('system_data_corrections.status',  array('3','4','5'));
+                $query = $query->whereIn('system_data_corrections.forward_status',  array('4','5'))->whereIn('system_data_corrections.status', array('1','3','4'));
            }
         }else{
-            $query = $query->whereIn('system_data_corrections.status', array('2','3'));
+            $query = $query->whereIn('system_data_corrections.forward_status', array('3','4','5'))->whereIn('system_data_corrections.status', array('1','3','4'));
         }
-
+        $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }
@@ -206,19 +224,19 @@ class DatatablesController extends Controller
         system_data_corrections.department,
         system_data_corrections.position,
         system_data_corrections.date_submitted,
-        system_data_corrections.posted,
+        system_data_corrections.forward_status,
         system_data_corrections.status');
         
         if($status != "all"){
            if($status == "pending"){
-                $query = $query->where('system_data_corrections.status', 3);
+                $query = $query->where('system_data_corrections.forward_status', '4')->where('system_data_corrections.status', '1');
            }elseif($status == "done"){
-                $query = $query->whereIn('system_data_corrections.status',  array(4,5));
+                $query = $query->where('system_data_corrections.forward_status', '5')->whereIn('system_data_corrections.status', array('1','3','4'));
            }
         }else{
-            $query = $query->whereIn('system_data_corrections.status', array(3,4,5));
+            $query = $query->whereIn('system_data_corrections.forward_status', array('4','5'))->whereIn('system_data_corrections.status', array('1','3','4'));
         }
-
+        $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
      }

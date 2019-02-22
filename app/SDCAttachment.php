@@ -12,7 +12,8 @@ class SDCAttachment extends Model
         'original_name',
         'sdc_no',
         'extension',
-        'mime_type'
+        'mime_type',
+        'role_id'
     ];
 
     public function sdc(){

@@ -12,6 +12,7 @@
         <th class="table__th">Created At</th>
         <th class="table__th">Expiration</th>
         <th class="table__th">Closed Date</th>
+        <th class="table__th">Fixed By</th>
         <th class="table__th">Resolved By</th>
         <th class="table__th"><input type="checkbox"></th>
         </thead>

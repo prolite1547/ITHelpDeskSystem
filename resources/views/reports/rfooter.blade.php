@@ -31,7 +31,10 @@
                   minViewMode: "months"
          });
 </script>
-<script>
+<script> 
+         var rowCount = 0;
+         var resolvedCount = 0;
+
         // $(document).ready(function(){
         //     $('.dataTables-example').DataTable({
         //         pageLength: 25,
@@ -160,6 +163,9 @@
                data:{ _token: '{{csrf_token()}}', category:categ, start:start1, end:end1, status :status},
                success:function(data) {
                   $('#ILRDATA').html(data.ilrdata);
+                  rowCount = data.rowCount;
+                  resolvedCount = data.resolvedCount;
+
                             $('.ILRTable').DataTable({
                             pageLength: 25,
                             responsive: true,
@@ -177,7 +183,7 @@
                                         $(win.document.body).addClass('white-bg');
                                         $(win.document.body).css('font-size', '10px');
                                         $(win.document.body).find('h1').css('font-size', '14px');
-
+                                        $(win.document.body).find('h1').append("<br><br>Logged : "+ rowCount + " | Resolved : "+ resolvedCount);
                                         $(win.document.body).find('table')
                                                 .addClass('compact')
                                                 .css('font-size', 'inherit');
@@ -186,7 +192,10 @@
                             ]
 
                         });
-               }
+               },
+               error:function(error){
+                  console.log(error);
+               }  
             });
          }
 

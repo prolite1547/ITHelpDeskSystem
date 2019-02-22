@@ -36,6 +36,21 @@ class DCController extends Controller
          return view('datacorrections.treasury');
      }
 
+
+
+     public function treasury2_pending(){
+      return view('datacorrections.treasury2');
+   }
+
+   public function treasury2_all(){
+      return view('datacorrections.treasury2');
+   }
+
+   public function treasury2_done(){
+       return view('datacorrections.treasury2');
+   }
+
+
      public function govcomp_all(){
          return view('datacorrections.govcomp');
      }
@@ -63,6 +78,8 @@ class DCController extends Controller
      public function sdc_route(){
         return view('datacorrections.systemdcs');
      }
+
+     
 
 
 }

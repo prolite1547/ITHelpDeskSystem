@@ -28,6 +28,7 @@ export const elements = {
     addDepartmentForm: document.getElementById('addDepartment'),
     addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
+    extendFormBtn: document.querySelector('.ticket-content__link--extend'),
 
     incidentFormItem: document.getElementById('incidentForm'),
     PLDTFormItem: document.getElementById('PLDTForm'),
@@ -144,3 +145,5 @@ export const toggleFormGroups = (e) => { /*FOR ELEMENTS THAT HAVE + ICON AND HID
             e.target.classList.toggle('fa-minus');
         }
 };
+
+

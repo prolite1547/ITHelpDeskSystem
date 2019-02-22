@@ -16,6 +16,9 @@ export const sendForm = (e) => {
 
         setDisable(formSbmtBtn);
 
+        /*SERIALIZE FORM DATA*/
+        formdata = $(form).serialize();
+
         if(form.id === 'addCaller'){
             object =  new Caller();
         }else if(form.id === 'addBranch'){
@@ -24,6 +27,7 @@ export const sendForm = (e) => {
             object = new Contact();
         }else if(form.id === 'addPLDTIssue'){
             object = new PLDTMail();
+            formdata = new FormData(form);
         }else if(form.id === 'addPosition'){
             object = new Position();
         }else if(form.id === 'addDepartment'){
@@ -32,8 +36,6 @@ export const sendForm = (e) => {
             alert('form not found');
         }
 
-        /*SERIALIZE FORM DATA*/
-        formdata = $(form).serialize();
 
         if(object){
             object.storeData(formdata)
@@ -42,9 +44,15 @@ export const sendForm = (e) => {
                         form.reset();
                         setDisable(formSbmtBtn,false);
                 })
-                .fail((jqXHR) => {
+                .fail((jqXHR,textStatus,errorThrown) => {
                         setDisable(formSbmtBtn,false);
-                        displayError(jqXHR);
+                        if(jqXHR){
+                            displayError(jqXHR);
+                        }else if(errorThrown) {
+                            alert(errorThrown);
+                        }else{
+                            alert(textStatus);
+                        }
                 });
         }
     }

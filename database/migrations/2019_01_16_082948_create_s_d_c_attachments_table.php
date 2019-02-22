@@ -21,6 +21,7 @@ class CreateSDCAttachmentsTable extends Migration
             $table->string('extension');
             $table->unsignedInteger('sdc_no');
             $table->foreign('sdc_no')->references('id')->on('system_data_corrections')->onDelete('cascade');
+            $table->integer('role_id')->unsigned();
             $table->timestamps();
         });
     }

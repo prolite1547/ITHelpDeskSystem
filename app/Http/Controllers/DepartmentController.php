@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Http\Requests\StoreDepartment;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -12,7 +13,7 @@ class DepartmentController extends Controller
         $this->middleware('auth');
     }
 
-    public function create(Request $request){
+    public function create(StoreDepartment $request){
         Department::create($request->except('_token'));
     }
 }

@@ -1,14 +1,12 @@
 import {
     clearLoader,
-    displayError,
     elements,
-    elementStrings,
-    hideModal,
     insertToModal,
     renderLoader,
     showModal
 } from "./base";
-import Resolve from "../models/Resolve";
+
+import {exprtionSelect2} from '../select2';
 
 export const makeElementsEditable = () => {
 
@@ -189,4 +187,21 @@ export const showRejectDetails = (ticket_id) => {
         }).catch(() => {
             alert('error getting the rejection details');
         });
+};
+
+export const showExtendFormModal = (ticket_id,e) => {
+    e.preventDefault();
+    showModal();
+    renderLoader(elements.modalContent);
+
+    $.ajax(`/modal/form/extend/${ticket_id}`,{
+       type: 'GET'
+    }).done(form => {
+        clearLoader();
+        insertToModal(form);
+        $('.extend-form__duration').select2(exprtionSelect2);
+    }).fail(() => {
+        alert('fail to get extend form');
+    });
+
 };

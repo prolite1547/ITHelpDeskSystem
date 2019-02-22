@@ -23,7 +23,7 @@
                  </div>
                  <div class="col-md-3">
                      <a class="btn btn-success action-buttons" onclick="window.print();" style="color:white;">Print Data</a>
-                     @if ($sdc->status < 0)
+                     @if ($sdc->status == 0)
                      <a href="{{ route('sdc.edit', ['id'=> $sdc->id ]) }}" class="btn btn-primary action-buttons" style="color:white;">Update Data</a>
                      @endif
                  </div>
@@ -111,29 +111,28 @@
                         <span class="data"> {{ $sdc->terminal_name }} </span>
                     </div>
             </div>
-
-            <div class="row ">
-                    <div class="col-md-12 mt-2">
-                        <span class="labels">Attachment(s) : </span>
+            @if (isset($sdc->attachments))
+                    <div class="row ">
+                            <div class="col-md-12 mt-2">
+                                <span class="labels">Attachment(s) : </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mt-1">
+                                
+                                       
+                                        <ol class="labels" style=" ">
+                                            @foreach ($sdc->attachments as $attachment)
+                                                @if ($attachment->role_id != '5')
+                                                    <li class="data"><a href="/storage/sdc_attachments/{{$attachment->original_name}}" download>{{  $attachment->original_name  }}</a></li>
+                                                @endif 
+                                            @endforeach
+                                        </ol>
+                                       
+                                    
+                            </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 mt-1">
-                           
-                                @if (isset($sdc->attachments))
-                                <ol class="labels" style=" ">
-                                    @foreach ($sdc->attachments as $attachment)
-                                        <li class="data">{{  $attachment->original_name  }}</li>
-                                    @endforeach
-                                </ol>
-                                @else
-                                    No Attachment
-                                @endif
-                               
-                            
-                    </div>
-            </div>
-
+            @endif
             <div class="row">
                     <div class="col-md-12">
                         <span class="labels">Findings and Recommendations : </span>
@@ -271,6 +270,40 @@
                     </div>
             </div>
 
+            @if (isset($sdc->attachments))
+            <div class="row ">
+                    <div class="col-md-12 mt-2">
+                        <span class="labels">Additional Attachment(s) : </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mt-1">
+                        
+                               
+                                <ol class="labels" style=" ">
+                                    @foreach ($sdc->attachments as $attachment)
+                                        @if ($attachment->role_id == '5')
+                                            <li class="data"><a href="/storage/sdc_attachments/{{$attachment->original_name}}" download>{{  $attachment->original_name  }}</a></li>
+                                        @endif 
+                                    @endforeach
+                                </ol>
+                               
+                            
+                    </div>
+            </div>
+     
+        @endif
+            <div class="row">
+                    <div class="col-md-2 wborder">
+                        <span class="labels">Checked By :</span>
+                    </div>
+                    <div class="col-md-10  wborder">
+                            <span class="data">  <?php echo strtoupper($sdc->ty1_fullname); ?> </span>
+                    </div>
+                    
+                   
+            </div>
+
             <div class="row">
                     <div class="col-md-4 wborder pt-2">
                         <span class="labels">Verified By : </span>
@@ -304,15 +337,230 @@
             <div class="row">
                 <div class="col-md-12 remarks">
                         <span class="data"> 
-                            {!! nl2br($sdc->ty_remarks) !!}
+                            {!! nl2br($sdc->ty2_remarks) !!}
                         </span>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 heading text-center">
-                    <span>Pre-Correction Verification</span>
-                </div>
+    @if (isset($sdc->accumulators->id))
+         <div class="row">
+            <div class="col-md-12 heading text-center">
+                <span>Accumulators</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">Trans. Reset Count :</span>
+            </div>
+            <div class="col-md-4 wborder">
+                    <span class="data"> {{ $sdc->accumulators->trans_reset_count }} </span>
+            </div>
+             
+            <div class="col-md-2 wborder">
+                    <span class="labels">OR Reset Count :</span>
+            </div>
+            <div class="col-md-4 wborder">
+                    <span class="data">{{ $sdc->accumulators->or_reset_count }} </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 heading">
+                <span class="labels">ACCUM. NET SALES</span>
+            </div>
+           
+            <div class="col-md-4 heading">
+                <span class="labels">ACCUM. NET RETURNS</span>
+            </div>
+
+            <div class="col-md-4 heading">
+                <span class="labels">ACCUM. NET SALES AFTER RETURNS</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Sales : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->vat_sales }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Returns : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->vat_sales }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->vat }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. Non VAT Sales : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->non_vat_sales }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. Non VAT Returns : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->non_vat_ret }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. Non VAT : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->non_vat }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. Zero Rated Sales : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->z_rated_sales }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. Zero Rated Returns : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->z_rated_ret }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. Zero Rated : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->z_rated }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Amount : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->vat_amount1 }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Amount : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->vat_amount2 }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Amount : </span>
+            </div>
+            <div class="col-md-2 wunderline ">
+                <span class="data">{{ $sdc->accumulators->vat_amount3 }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Exempt Amt : </span>
+            </div>
+            <div class="col-md-2 dashedBorder ">
+                <span class="data">{{ $sdc->accumulators->vat_exempt_amount1 }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Exempt Amt : </span>
+            </div>
+            <div class="col-md-2 dashedBorder ">
+                <span class="data">{{ $sdc->accumulators->vat_exempt_amount2 }}</span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Accum. VAT Exempt Amt : </span>
+            </div>
+            <div class="col-md-2 dashedBorder ">
+                <span class="data">{{ $sdc->accumulators->vat_exempt_3 }}</span>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2  ">
+                {{-- <span class="labels">Total Net Sales : </span> --}}
+            </div>
+            <div class="col-md-2   ">
+                <span class="labels">{{ $sdc->accumulators->total_net_sales }}</span>
+            </div>
+            <div class="col-md-2  ">
+                {{-- <span class="labels">Total Net Returns : </span> --}}
+            </div>
+            <div class="col-md-2   ">
+                <span class="labels">{{ $sdc->accumulators->total_net_returns }}</span>
+            </div>
+            <div class="col-md-2  ">
+                {{-- <span class="labels">Total Net Sales After Returns : </span> --}}
+            </div>
+            <div class="col-md-2   ">
+                <span class="labels">{{ $sdc->accumulators->total_after_returns }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 wborder">
+                <span class="labels">First Transaction :</span>
+            </div>
+            <div class="col-md-4 wborder">
+                    <span class="data"> {{ $sdc->accumulators->first_trx }} </span>
+            </div>
+             
+            <div class="col-md-2 wborder">
+                    <span class="labels">Last Transaction :</span>
+            </div>
+            <div class="col-md-4 wborder">
+                    <span class="data">{{ $sdc->accumulators->last_trx }} </span>
+            </div>
+        </div>
+
+        
+        
+        
+        <div class="row">
+            <div class="col-md-2 wborder">
+                    <span class="labels">Transaction Count :</span>
+            </div>
+            <div class="col-md-4 wborder">
+                    <span class="data"> {{ $sdc->accumulators->trx_count }} </span>
+            </div>
+            <div class="col-md-2 wborder">
+                <span class="labels">Previous Reading :</span>
+            </div>
+            <div class="col-md-4 wborder">
+                    <span class="data"> {{ $sdc->accumulators->prev_reading }} </span>
+            </div>
+             
+           
+        </div>
+
+        <div class="row">
+        
+            <div class="col-md-2 wborder">
+                    <span class="labels">Current Reading :</span>
+            </div>
+            <div class="col-md-10 wborder">
+                    <span class="data">{{ $sdc->accumulators->curr_reading }} </span>
+            </div>
+                
+        </div>
+
+@endif
+
+
+
+        <div class="row">
+            <div class="col-md-12 heading text-center">
+                <span>Pre-Correction Verification</span>
+            </div>
         </div>
 
         <div class="row">
@@ -324,9 +572,9 @@
 
                 <div class="mt-2 wunderline">
                     <span class="data"> {{ strtoupper($sdc->pre_acc_verified_by) }} </span>
-                     @if ($sdc->pre_acc_verified_signed)
+                     {{-- @if (isset($sdc->pre_acc_verified_by))
                         <span class="signed"> [Signed]</span>
-                     @endif
+                     @endif --}}
                 </div>
                 <span class="labels2">Signature over printed name</span>
                 
@@ -366,9 +614,9 @@
                     <div class="col-md-8 wborder text-center pt-2  row-height">
                     <div class="mt-2 wunderline">
                         <span class="data"> {{ strtoupper($sdc->app_approved_by) }} </span>
-                        @if ($sdc->app_approved_signed)
+                        {{-- @if (isset($sdc->app_approved_by))
                           <span class="signed"> [Signed]</span>
-                        @endif
+                        @endif --}}
                     </div>
                         <span class="labels2">Signature over printed name</span>
                         

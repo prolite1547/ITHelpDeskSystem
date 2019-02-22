@@ -34,12 +34,18 @@
                                         echo "SDC1";
                                 }
                       ?>">
-                      <input type="hidden" name="sdc_id" value="<?php 
+                      <input type="hidden" name="sdc_id" value="
+                      <?php 
                         if(isset($sdc->id)){
                                 echo $sdc->id;
                         }else{
                                 echo 1;
                         }
+                      ?>
+                      ">
+                      <input type="hidden" name="ticket_created" value ="<?php 
+                                 $newDate = date("m/d/Y", strtotime($ticket->created_at));   
+                                echo  $newDate;
                       ?>">
                 </div> 
             </div>
@@ -48,25 +54,29 @@
     <hr>
 
 {{-- SUPPORT FILL IN --}}
-        @if(Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4 )
+        {{-- @if(Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4 ) --}}
                     <div class="row">
                       <div class="col-md-4 mb-3">
                         <label for="datesubmitted">Date Submitted : </label>
-                            <div class="input-group date" data-provide="datepicker">
-                                <input type="text" id="datesubmitted" name="datesubmitted" class="form-control" required>
-                                <div class="input-group-addon invalid-tooltip ">
+                            {{-- <div class="input-group date" data-provide="datepicker"> --}}
+                                <input type="text" id="datesubmitted" name="datesubmitted" class="form-control"  value="<?php 
+                                          date_default_timezone_set("Asia/Manila");
+                                                        $currentDate =  date('m/d/Y');
+                                                        $newDate = date("m/d/Y", strtotime($currentDate));    
+
+                                                        echo $newDate;        
+                                ?>" readonly>
+                                {{-- <div class="input-group-addon invalid-tooltip ">
                                         Valid date is required.
-                                </div>             
-                            </div>
+                                </div>              --}}
+                            {{-- </div> --}}
                         </div>
 
                       <div class="col-md-8  mb-3">
                             <label for="requestor">Name of Requestor : </label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="requestor" id="requestor" required>
-                                <div class="invalid-tooltip " style="width: 100%;">
-                                    Valid name of requestor is required
-                                </div>
+                            <input type="text" class="form-control" name="requestor" id="requestor"   value="{{ strtoupper(Auth::user()->full_name) }}" readonly>
+                                
                             </div>
                       </div>
                     </div>
@@ -75,7 +85,7 @@
                         <div class="col-md-5 mb-3">
                             <label for="supervisor">Dept. Supervisor : </label>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="supervisor"  id="supervisor" required>
+                                <input type="text" class="form-control" name="supervisor"  id="supervisor" style="text-transform:uppercase;" required>
                                 <div class="invalid-tooltip " style="width: 100%;">
                                     Valid dept. supervisor is required
                                 </div>
@@ -93,7 +103,7 @@
                                     <div class="invalid-tooltip ">
                                         Please select a valid department.
                                     </div>
-                            </div>
+                        </div>
 
                         <div class="col-md-3 mb-3">
                                 <label for="position">Position : </label>
@@ -108,7 +118,7 @@
                                 </div>
                         </div>
                     </div>
-@endif
+{{-- @endif --}}
 
                     <hr>
                     <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
@@ -117,17 +127,22 @@
 
                     
 {{-- VISIBLE TO TREASURY USERS AND SUPPORTS --}}
-@if (Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4 OR Auth::user()->role_id === 5 )
+{{-- @if (Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4 OR Auth::user()->role_id === 5 ) --}}
 
                     <div class="row mb-3">
                             <div class="col-md-6 mb-3 ">
-                                    <label for="affected">Affected Store/Server : </label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="affected" id="affected" >
-                                        <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid affected store/server is required
-                                        </div>
-                                    </div>   
+                                <label for="affected">Affected Store/Server : </label>
+                                   
+                                <select class="custom-select d-block w-100" name="affected" id="affected">
+                                        <option data-id="0" value="">Choose...</option>
+                                                @foreach ($stores  as $store)
+                                                        <option data-id="{{ $store->id }}" value="{{ $store->store_name }}">{{ $store->store_name }}</option>
+                                                @endforeach
+                                        </select>
+                                <div class="invalid-tooltip">
+                                        Valid affected store/server is required
+                                </div>
+                                    
                             </div>
 
                             <div class="col-md-6">
@@ -140,7 +155,7 @@
                                     </div>   
                             </div>
                     </div>
-@endif
+{{-- @endif --}}
 {{-- END --}}
 
 {{-- ATTACHMENTS HERE (DOWNLOADABLE BY ALL USERS) --}}
@@ -176,310 +191,42 @@
                    </div>
 {{-- END --}}
 
-{{-- END OF 1ST PART SUPPORT FORM --}}
-
-
-{{-- FOR TREASURY VISIBLE FORM --}}
-@if (Auth::user()->role_id === 5)
-                        <hr>
-                            <div style=" color:darkslategray;padding:30px" class="py-3">
-                                    <h5><b> - Hard Copy for POS - </b></h5>
-                            </div>
-                        <hr>
-                            <div class="row mb-3">
-                                    <div class="col-md-4 mb-3">
-                                            <label for="hclastzreading">Last Z Reading : </label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="hclastzreading" id="hclastzreading" required  >
-                                                <div class="invalid-tooltip " style="width: 100%;">
-                                                    Valid position is required
-                                                </div>
-                                            </div>   
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                            <label for="hclastdcr">Last DCR : </label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="hclastdcr" id="hclastdcr"  >
-                                                <div class="invalid-tooltip " style="width: 100%;">
-                                                    Valid position is required
-                                                </div>
-                                            </div>   
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                            <label for="hclasttransactionid">Last Transaction ID : </label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="hclasttransactionid" id="hclasttransactionid"  >
-                                                <div class="invalid-tooltip " style="width: 100%;">
-                                                    Valid position is required
-                                                </div>
-                                            </div>   
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                        <div class="col-md-6 mb-3">
-                                                <label for="hclastzreading">Last Accumulator : </label>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                             <div class="custom-control custom-checkbox">
-                                                                    <input id="tally" name="hctally" type="checkbox" value="1" class="custom-control-input hcchk">
-                                                                    <label class="custom-control-label" for="tally">Tally</label>
-                                                              </div>
-                                                        </div>
-
-                                                        <div class="col-md-3">
-                                                                <div class="custom-control custom-checkbox">
-                                                                        <input id="nottally" name="hctally" value="0" type="checkbox" class="custom-control-input hcchk">
-                                                                        <label class="custom-control-label" for="nottally">Not Tally</label>
-                                                                </div>
-                                                        </div>
-                                                              
-                                                    </div>
-                                                      
-                                         </div>
-                                         
-                                <div class="col-md-6 mb-3">
-                                    <label for="hclastorno">Last OR No. : </label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="hclastorno" id="hclastorno" >
-                                        <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid position is required
-                                        </div>
-                                    </div>   
-                            
-                            </div>
-                            </div>
-               
-                            <hr>
-                            <div style=" color:darkslategray;padding:30px" class="py-3">
-                                    <h5><b> - Soft Copy for POS -</b></h5>
-                            </div>
-                        <hr>
-                            <div class="row mb-3">
-                                    <div class="col-md-6 mb-3">
-                                            <label for="sclastzreading">Last Z Reading : </label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="sclastzreading" id="sclastzreading"  >
-                                                <div class="invalid-tooltip " style="width: 100%;">
-                                                    Valid position is required
-                                                </div>
-                                            </div>   
-                                    </div>
-                                 
-                                    <div class="col-md-6 mb-3">
-                                            <label for="sclasttransactionid">Last Transaction ID : </label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" name="sclasttransactionid" id="sclasttransactionid"  >
-                                                <div class="invalid-tooltip " style="width: 100%;">
-                                                    Valid position is required
-                                                </div>
-                                            </div>   
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                        <div class="col-md-6 mb-3">
-                                                <label for="sclastzreading">Last Accumulator : </label>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                             <div class="custom-control custom-checkbox">
-                                                                    <input id="sctally" name="sctally" type="checkbox" value="1" class="custom-control-input scchk">
-                                                                    <label class="custom-control-label" for="sctally">Tally</label>
-                                                              </div>
-                                                        </div>
-
-                                                        <div class="col-md-3">
-                                                                <div class="custom-control custom-checkbox">
-                                                                        <input id="scnottally" name="sctally" type="checkbox" value="0" class="custom-control-input scchk">
-                                                                        <label class="custom-control-label" for="scnottally">Not Tally</label>
-                                                                </div>
-                                                        </div>
-                                                              
-                                                    </div>
-                                                      
-                                         </div>
-                                         
-                                <div class="col-md-6 mb-3">
-                                    <label for="sclastorno">Last OR No. : </label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="sclastorno" id="sclastorno" >
-                                        <div class="invalid-tooltip " style="width: 100%;">
-                                            
-                                        </div>
-                                    </div>   
-                            
-                            </div>
-                            </div>
-
-                   
-
-                    <hr>
-                    <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
-                            <h4>PRE-CORRECTION VERIFICATION</h4>
+{{-- @if (Auth::user()->role_id === 1 OR Auth::user()->role_id === 2 OR Auth::user()->role_id === 3 OR Auth::user()->role_id === 4) --}}
+<div class="row">
+        <div class="col-md-3 mb-2">
+                <label for="app_group">Approver Group : </label>
+        </div>
+        <div class="col-md-9 mb-2">
+                <label for="hierarchy" id = "hlabel">Hierarchy : </label>
+        </div>
+</div>
+<div class="row mb-5">
+        <div class="col-md-3 mb-2">
+                 
+                    <select class="custom-select d-block w-100" name="app_group" id="app_group" required>
+                        <option value="">--- Choose ---</option>
+                        @foreach ($appgroup as $group)
+                                <option value="{{ $group->group }}">{{ $group->group }} </option>
+                        @endforeach
+                        <option value="CUS">CUSTOM</option>
+                       
+                    </select>
+                    <div class="invalid-tooltip">
+                           Please choose an approver group
                     </div>
-                    
-@endif             
-
-{{-- VIEWABLE BY GOV.COMPLIANCE/APPROVER USERS --}}
-@if (Auth::user()->role_id === 5 OR Auth::user()->role_id === 6 )
-                      <hr>
-
-                      <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
-                                  <label for="prezreadingno">Next Z Reading No.  :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" name="prezreadingno" id="prezreadingno"  readonly>
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid Z reading no. is required
-                                    </div>
-                              </div>   
-                            </div>
-
-                            <div class="col-md-4 mb-3">
-                                    <label for="prenextorno">Next OR No.  :</label>
-                                      <div class="input-group">
-                                      <input type="text" class="form-control" name="prenextorno" id="prenextorno"  readonly >
-                                      <div class="invalid-tooltip " style="width: 100%;">
-                                              Valid OR no. is required
-                                      </div>
-                                </div>   
-                              </div>
-
-                              <div class="col-md-4">
-                                    <label for="prelasttransactionid">Last Transaction ID :</label>
-                                      <div class="input-group">
-                                      <input type="text" class="form-control" name="prelasttransactionid" id="prelasttransactionid" readonly >
-                                      <div class="invalid-tooltip " style="width: 100%;">
-                                              Valid OR no. is required
-                                      </div>
-                                </div>   
-                              </div>
- 
-                      </div>
-                      
-                      <div class="row mb-3">
-                                <div class="col-md-6 mb-3">
-                                        <label for="prelastacc">Last Accumulator :</label>
-                                        <div class="input-group">
-                                        <input type="text" class="form-control" name="prelastacc" id="prelastacc" readonly >
-                                        <div class="invalid-tooltip " style="width: 100%;">
-                                                Valid last accumulator
-                                        </div>
-                                </div>   
-                                </div>
-
-                                <div class="col-md-6">
-                                        <label for="prelastorno">Last OR No. :</label>
-                                        <div class="input-group">
-                                        <input type="text" class="form-control" name="prelastorno" id="prelastorno" readonly >
-                                        <div class="invalid-tooltip " style="width: 100%;">
-                                                Valid last OR no. is required
-                                        </div>
-                                </div>   
-                                </div>
-                      </div>
-@endif
-
-{{-- END OF VIEW --}}
-
-
-{{-- FORM VIEW FOR GOV. COMPLIANCE USERS --}}
-@if (Auth::user()->role_id === 6)
-
-                        <div class="row mb-3">
-                                <div class="col-md-12">
-                                <label for="preaccumulatorverifiedby">Accumulator verified by :</label>
-                                <div class="input-group">
-                                        <input type="text" class="form-control"  name="preaccumulatorverifiedby" id="preaccumulatorverifiedby" readonly >
-                                        <div class="invalid-tooltip " style="width: 100%;">
-                                                Valid accumulator verified by is required
-                                        </div>
-                                
-                                </div>   
-                                </div>
-                        </div>
-
-                        <div class="row mb-3">
-                                <div class="col-md-12">
-                                        <label for="predateaccumulator">Date : </label>
-                                        <div class="input-group date" data-provide="datepicker">
-                                                <input type="text" id="predateaccumulator" name="predateaccumulator" class="form-control" readonly >
-                                                <div class="input-group-addon invalid-tooltip ">
-                                                        Valid date is required.
-                                                </div>             
-                                        </div>
-                                </div>
-                        </div>
-{{-- REMARKS HERE --}}
-
-{{-- END --}}
+        </div>
+        <div class="col-md-9 mb-2">
+                
+             <div class="selected-group">
+                     
+             </div>
+    </div>
+</div>
     
-@endif
-{{-- END OF GOV. COMPLIANCE FORM --}}
-@if (Auth::user()->role_id === 5)
-                      <div class="row mb-3">
-                            <div class="col-md-12">
-                                  <label for="preverifiedby">Verified by :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" name="preverifiedby" id="preverifiedby" readonly >
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid verified by is required
-                                    </div>
-                                 
-                              </div>   
-                            </div>
-                      </div>
-
-                      <div class="row mb-3">
-                            <div class="col-md-12">
-                                    <label for="preverifieddate">Date : </label>
-                                        <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" id="preverifieddate"  name="preverifieddate" class="form-control" readonly >
-                                            <div class="input-group-addon invalid-tooltip ">
-                                                    Valid date is required.
-                                            </div>             
-                                        </div>
-                                    </div>
-                      </div>
-
-{{-- REMARKS FOR TREASURY --}}
-
-{{-- REMARKS END --}}
-
-@endif
-{{-- TREASURY FORM END  --}}
-
-{{-- APPROVER FORM --}}
-@if (Auth::user()->role_id === 7)
-                      <hr>
-                      <div style="background-color:#2c3e50;color:white;" class="py-3 text-center mb-3">
-                              <h4>APPROVAL OF THE CHANGE REQUEST</h4>
-                      </div>
-
-                      <div class="row mb-3">
-                            <div class="col-md-12">
-                                  <label for="acrapprovedby">Approved by :</label>
-                              <div class="input-group">
-                                    <input type="text" class="form-control" name="acrapprovedby" id="acrapprovedby" readonly  >
-                                    <div class="invalid-tooltip " style="width: 100%;">
-                                            Valid verified by is required
-                                    </div>
-                                 
-                              </div>   
-                            </div>
-
-                            <div class="col-md-12">
-                                    <label for="acrdate">Date : </label>
-                                        <div class="input-group date" data-provide="datepicker"> 
-                                            <input type="text" id="acrdate" name="acrdate" class="form-control" readonly >
-                                            <div class="input-group-addon invalid-tooltip ">
-                                                    Valid date is required.
-                                            </div>             
-                                        </div>
-                                    </div>
-                      </div>
-        @endif         
-                    <hr class="mb-4">
+{{-- @endif --}}
+{{-- END OF 1ST PART SUPPORT FORM --}}
+ 
+                <hr class="mb-4">
  
                   <div class="row">
                        
@@ -490,10 +237,15 @@
                   </div>
                   <hr>
                      <div class="row  mb-5">
-                            <div class="col-md-6">
-                                <input class="btn btn-success btn-md btn-block" type="submit" name="action" value="APPROVED & FORWARD" > 
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-md btn-block confirmation2" type="submit" name="action" value="POST DATA CORRECTION" > 
+                                <input class="btn btn-success btn-md btn-block" type="submit" style="display:none;" id="confirmPost" name="action" value="POST DATA CORRECTION" > 
+                         
                             </div>
-                            <div class="col-md-6">
+                           
+
+                            
+                            {{-- <div class="col-md-6">
                                 <select class="custom-select d-block w-100" name="forwardto" id="forwardto">
                                         <option value="1">Treasury 1</option> 
                                         <option value="2">Treasury 2</option> 
@@ -503,7 +255,7 @@
                                 <div class="input-group-addon invalid-tooltip">
                                         This field is required
                                 </div>    
-                            </div>
+                            </div> --}}
                     </div>
                    
             </form>
