@@ -31,7 +31,7 @@
                         <div class="form__group">
                             {!! Form::select('category', $typeSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
                             {!! Form::select('group', $groupSelect, null, ['placeholder' => '(select group)','class' => 'form__input','required']) !!}
-                            {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input categoryBSelect','required']) !!}
+                            {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input categoryBSelect form__input--select2','required']) !!}
                         </div>
                         <div class="form__group">
                             {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}

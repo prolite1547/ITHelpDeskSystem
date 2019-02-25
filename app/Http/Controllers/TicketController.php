@@ -65,8 +65,6 @@ class TicketController extends Controller
                 'incident',
                 'incident.getFiles'
             ];
-
-            $view = '';
         }else{
             $relationArray = [
                 'userLogged',
@@ -77,16 +75,18 @@ class TicketController extends Controller
                 'incident.catARelation',
                 'incident',
                 'incident.getMailData',
-                'incident.getFiles'
+                'incident.getFiles',
+                'connectionIssueMailReplies' => function($query){
+                    $query->latest();
+                }
             ];
-            $view = '_mail';
+
         }
 
         $ticket = Ticket::with($relationArray)
             ->findOrFail($id);
 
-
-        return view("ticket.ticket_lookup{$view}", ['ticket' => $ticket]);
+        return view("ticket.ticket_lookup", ['ticket' => $ticket]);
     }
 
     public function addTicketView()
@@ -155,7 +155,6 @@ class TicketController extends Controller
 
         /*GENERATE TE EXPIRATION DATE*/
         $expiration_date = Carbon::now()->addHours($expiration_hours);
-
 
         /*ADD EXPIRATION IN REQUEST ARRAY*/
         $request->request->add(array('expiration' => $expiration_date, 'catA' => $catA));
@@ -348,7 +347,6 @@ class TicketController extends Controller
 
     public function addConnectionIssue(Request $request)
     {
-
         $validation = [
             'to' => 'required|string',
             'subject' => 'required|string|min:5',
@@ -385,34 +383,36 @@ class TicketController extends Controller
 
         if($catB_relations->name === 'Both'){
             $td_header = 'PID/TEL';
+            $concern_number = "{$request->pid}/{$request->tel}";
         }elseif($catB_relations->name === 'Data'){
             $td_header = 'PID';
+            $concern_number = $request->pid;
         }elseif($catB_relations->name === 'Voice'){
             $td_header = 'TEL';
+            $concern_number = $request->tel;
         }else{
             $td_header = 'UNKNOWN';
         }
 
 
-//        $result = null;
 
-        $ticket_id = DB::transaction(function ()  use(&$result,$expiration,$request,$td_header){
+        $ticket_id = DB::transaction(function ()  use($expiration,$request,$td_header,$concern_number){
             /*INSERT TO DATABASE*/
             $ticket_id = ConnectionIssue::create($request->only(['cc','to','account','pid','tel','contact_person','contact_number']))
                 ->incident()->create($request->only(['subject','details','catC','catB','catA','category']))
                 ->ticket()->create(['assignee' => $request->user()->id,'logged_by' => $request->user()->id,'type' => 1,'priority' => 4,'status' => 2,'store' => $request->branch,'group' => 1,'expiration' => $expiration])->id;
 
             /*SEND MAIL*/
-            $to = explode(',',$request->to);
-
             $mail = new Mail;
 
+            /*include cc if request has cc*/
             if(!is_null($request->cc)){
                 $cc = explode(',',$request->cc);
                 $mail = $mail::cc($cc);
             }
+            $to = explode(',',$request->to);
+            $mail::to($to)->send(new PLDTIssue($request,$ticket_id,$td_header,$concern_number));
 
-            $mail->to($to)->send(new PLDTIssue($request,$ticket_id,$td_header));
             return $ticket_id;
 
         });
@@ -438,10 +438,6 @@ class TicketController extends Controller
         $ticket->rejectData()->create(['reason' => $request->reason,'rejected_by' => $rejected_by]);
 
         return redirect()->route('lookupTicketView',['id' => $id]);
-    }
-
-    public function extend(Request $request){
-        dd($request->all());
     }
 
     public function rejectForm($id){

@@ -34,8 +34,8 @@ class Kernel extends ConsoleKernel
 
             foreach ($ongoingMailInc as $ticket){
                 $ticketID =  $ticket->id;
-                $subject = $ticket->incident->subject;
-                $latest_reply = $ticket->connectionIssueMailReplies->first();
+                $subject = $ticket->incident->subject . " (TID#{$ticketID})";
+                $latest_reply = $ticket->connectionIssueMailReplies->first(); /*latest reply on the database*/
 
                 fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
             }

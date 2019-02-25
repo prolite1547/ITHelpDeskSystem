@@ -10,17 +10,18 @@ import User from './models/User';
 
 $(document).ready( function(){
 
-$('.categoryBSelect').select2();
-
-
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 
 /*ADDED SELECT2 PLUGIN*/
 if(elements.select2elements){
-  elements.select2elements.select2();
+  elements.select2elements.select2({
+      dropdownAutoWidth: true
+  });
 }
-
-
-
 
 elements.popupClose.addEventListener('click',() => {
     hideModal();

@@ -21,6 +21,7 @@ class ConnectionIssueReply extends Model
     ];
 
     protected $dates = ['reply_date'];
+    protected $casts = ['from' => 'array'];
 
     public function ticket(){
         return $this->belongsTo('App\Ticket');

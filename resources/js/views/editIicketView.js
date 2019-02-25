@@ -73,14 +73,6 @@ export const addEventListenerToEditInputs = (ticket) => {
 
 export const addFileMarkup = `<div class="dropzone" id="addFiles"><button type="button" class="dropzone__upload btn">Upload</button></div>`;
 
-export const getMessageData = () => {
-  return elements.reply.value;
-};
-
-export const resetReply = () => {
-  elements.reply.value = "";
-};
-
 export const showResolveButton = () => {
     elements.resolveButton.classList.remove('u-display-n');
 
@@ -246,5 +238,68 @@ export const showSelects = (e) => {
         elements.selectPID.classList.add('u-display-n');
         elements.selectTel.classList.add('u-display-n');
     }
+
+};
+
+/*generate form depending on the type of incident*/
+export const generateForm = identifier => {
+    const chat_form_inputs = elements.chatForm.elements;
+    const chat_form_childElem = elements.chatForm.children;
+
+    if(identifier === 'reply'){
+        elements.chatForm.dataset.form = 'reply';
+        chat_form_childElem[0].children[1].classList.remove('u-display-n'); /*chat menu*/
+        chat_form_childElem[1].classList.remove('u-display-n');  /*to form__group*/
+        chat_form_childElem['reply_attachments[]'].classList.remove('u-display-n'); /*attachments input*/
+        elements.chatForm__reply.classList.remove('u-display-n');
+        elements.chatForm__chat.classList.add('u-display-n');
+        chat_form_inputs.to.disabled = false;  /*to input*/
+    }else if(identifier === 'chat'){
+        elements.chatForm.dataset.form = 'chat';
+        chat_form_childElem[1].classList.add('u-display-n');  /*to form__group*/
+         chat_form_inputs.to.disabled = true;  /*to input*/
+         chat_form_childElem['reply_attachments[]'].classList.add('u-display-n'); /*attachments input*/
+        elements.chatForm__reply.classList.add('u-display-n');
+        elements.chatForm__chat.classList.remove('u-display-n');
+    }else{
+        alert('Error on retrieving chat form!');
+    }
+
+};
+
+export const generateRepliesMarkup = (replies) => {
+    let replyTemplate = `<div class="message" data-id="{%ID%}">
+                <div class="message__content">
+                    <div class="message__message-box">
+                        <div class="message__name">{%FROM%}</div>
+                        <div class="message__message">{%REPLY%}</div>
+                        <div class="message__flex message__flex--sb">
+                            <span class="message__time">{%REPLY_DATE%}</span>
+                            <div>
+                                {%attachment_count%}
+                                <a class="message__conversation" href="/reply/conversation/{%ID%}" title="View conversation" target="_blank">👁️‍🗨️</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        const thread = replies.map(reply => {
+            let markup,reply_from ;
+
+            /*convert greater and less than symbols to html entities*/
+            reply_from = reply.from.full.replace(/\</g,'&lt;');
+            reply_from = reply_from.replace(/\>/g,"&gt;");
+
+            markup = replyTemplate.replace(/{%ID%}/g,reply.id);
+            markup = markup.replace('{%FROM%}',reply_from);
+            markup = markup.replace('{%REPLY%}',reply.reply);
+            markup = markup.replace('{%REPLY_DATE%}',reply.reply_date);
+            reply.hasAttachments !== 0 ? markup = markup.replace('{%attachment_count%}',`<span class="message__attachment-count">${reply.hasAttachments}📎</span>`) : markup = markup.replace('{%attachment_count%}','');
+
+            return markup;
+        });
+
+        return thread.join('');
 
 };

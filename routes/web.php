@@ -12,14 +12,10 @@
 */
 
 
-use App\Caller;
+
 use App\ConnectionIssueReply;
-use App\Contact;
-use App\Incident;
-use App\Store;
-use App\User;
-use Illuminate\Support\Carbon;
 use App\Ticket;
+use Illuminate\Support\Facades\Mail;
 use Webklex\IMAP\Client;
 
 
@@ -155,9 +151,16 @@ Route::post('/add/position','PositionController@create');
 Route::post('/add/department','DepartmentController@create');
 
 //////////////////////////
+////////*Connection Issue Reply*//////
+//////////////////////////
+Route::get('/reply/conversation/{id}','ConnectionIssueReplyController@replyConversation')->name('replyConversation');
+Route::post('/reply/support','ConnectionIssueReplyController@replyMail');
+
+//////////////////////////
 ////////*API*//////
 //////////////////////////
 Route::get('/api/user/{id}','UserController@userAPI');
+Route::get('/api/connIssReply/{ticket_id}','ConnectionIssueReplyController@connIssReplyAPI');
 
 //////////////////////////
 ////////*EXTENDED*//////
@@ -165,8 +168,13 @@ Route::get('/api/user/{id}','UserController@userAPI');
 Route::post('/add/extend/{id}','ExtendController@create')->name('addExtend');
 
 Route::get('/test',function (){
-    return view('emails.PLDTIssue');
 
+    $collection = Ticket::with(['connectionIssueMailReplies' => function($query){
+        return $query->latest('reply_date');
+    }])->findOrFail(10);
+
+    dd($collection->connectionIssueMailReplies);
+    return  new \App\Http\Resources\ConnectionIssueReplyCollection(ConnectionIssueReply::all());
 });
 
 Route::get('/test2.1',function (){
@@ -201,23 +209,23 @@ Route::get('/test2',function (){
 
     $inboxMessages = $inboxFolder
         ->query()
-        ->since('18.02.2019')
-        ->subject('Praesent metus tellus elementum eu')
-        ->body('tid#24')
+        ->on('21.02.2019')
+        ->subject('This is the subject (TID#1)')
         ->setFetchFlags(false)
         ->setFetchBody(true)
-        ->setFetchAttachment(true)
+        ->setFetchAttachment(false)
         ->get();
 
 
     $latestInboxMessage = $inboxMessages->first();
+
     if($latestInboxMessage !== null){
     $plain_text = $latestInboxMessage->getTextBody();
     $html_body = $latestInboxMessage->getHTMLBody();
     $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($latestInboxMessage->getTextBody())->getVisibleText();
     $hasAttachments = $latestInboxMessage->getAttachments()->count();
     $subject = $latestInboxMessage->getSubject();
-    $from = json_encode($latestInboxMessage->getFrom());
+    $from = $latestInboxMessage->getFrom();
     $to = json_encode($latestInboxMessage->getTo());
     $cc = json_encode($latestInboxMessage->getCC());
     $reply_to = $latestInboxMessage->getInReplyTo();
@@ -225,16 +233,14 @@ Route::get('/test2',function (){
     $ticket_id = 1;
     $connection_issue = new ConnectionIssueReply;
     $connection_issue_fillable = $connection_issue->getFillable();
-    dd($hasAttachments);
+    dd(json_encode($from));
 //    $connection_issue->create(compact($connection_issue_fillable));
     }
 });
 
 Route::get('/test5',function (){
 
-    $ticket = Ticket::findOrFail(1)->tae;
-
-    dd($ticket);
+    Mail::to('john.dotaboy13@gmail.com')->send(new \App\Mail\ConnectionIssueReply('Re: This is the 2nd connection issue (TID#30)','sent from the system to john.dotaboy13'));
 
 });
 

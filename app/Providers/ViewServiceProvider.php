@@ -83,14 +83,14 @@ class ViewServiceProvider extends ServiceProvider
             $selfOption = [null => 'None', Auth::id() => 'Self'];
             $statusSelect = DB::table('ticket_status')->pluck('name', 'id')->toArray();  /*Status*/
             $prioSelect = DB::table('priorities')->pluck('name', 'id')->toArray();   /*Priority*/
-            $typeSelect = DB::table('categories')->pluck('name', 'id')->toArray();   /*Incident category*/
-            $incBSelect = DB::table('category_b')->pluck('name', 'id')->toArray(); /*A Sub category for incident*/
+            $typeSelect = DB::table('categories')->where('name','!=','Connection')->pluck('name', 'id')->toArray();   /*Incident category*/
+            $incBSelect = DB::table('category_b')->whereNotIn('id',[16,17,18])->pluck('name', 'id')->toArray(); /*A Sub category for incident*/
             $groupSelect = DB::table('ticket_groups')->pluck('name', 'id')->toArray(); /*TICKET_GROUP*/
             $rolesSelect = selectArray('', Role::class, 'id', 'role'); /*Roles*/
             $positionsSelect = selectArray('', Position::class, 'id', 'position'); /*Roles*/
             $callerSelect = Caller::get()->pluck('name', 'id');
+            $categoryBGroupSelect = groupListSelectArray(CategoryA::class, 'name', 'subCategories', 'id', 'name',array('column' => 'id','values' => [6]));
             $categoryCGroupSelect = groupListSelectArray(CategoryB::class, 'name', 'subCategories', 'id', 'name');
-            $categoryBGroupSelect = groupListSelectArray(CategoryA::class, 'name', 'subCategories', 'id', 'name');
             $branchSelect = Store::all()->pluck('store_name', 'id')->toArray();
             $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
 

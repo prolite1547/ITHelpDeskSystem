@@ -19,8 +19,8 @@ class CreateCategoryBTable extends Migration
             $table->unsignedInteger('catA_id');
             $table->unsignedInteger('expiration')->default(1);
             $table->timestamps();
-            $table->foreign('catA_id')->references('id')->on('category_a');
-            $table->foreign('expiration')->references('id')->on('expirations');
+            $table->foreign('catA_id')->references('id')->on('category_a')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('expiration')->references('id')->on('expirations')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

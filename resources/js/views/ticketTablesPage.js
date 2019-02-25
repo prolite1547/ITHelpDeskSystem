@@ -28,9 +28,9 @@ export const setDataTablesConf = () => {
                 render: () => {
                     return `<div class='menu'>
                             <ul class='menu__list u-display-n'>
-                                <li class='menu__item'><a href='#!' class='menu__link'>Print</a></li>
-                                <li class='menu__item'><a href='#!' class='menu__link'>Delete</a></li>
-                                <li class='menu__item'><a href='#!' class='menu__link'>Mark as resolved</a></li>
+                                <li class='menu__item'><a href='javascript:void(0);' class='menu__link'>Print</a></li>
+                                <li class='menu__item'><a href='javascript:void(0);' class='menu__link'>Delete</a></li>
+                                <li class='menu__item'><a href='javascript:void(0);' class='menu__link'>Mark as resolved</a></li>
                            </ul>
                             <input type='checkbox' class='menu__checkbox'>
                         </div>`

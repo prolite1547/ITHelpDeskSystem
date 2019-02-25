@@ -47,9 +47,14 @@ if (! function_exists('selectArray')) {
     }
 
     if (! function_exists('groupListSelectArray')) {
-        function groupListSelectArray($model,$groupName,$relationship,$value,$name){
+        function groupListSelectArray($model,$groupName,$relationship,$value,$name,$constraint = []){
+            $records = $model::when($constraint,function ($query,$constraint){
 
-            $records = $model::with($relationship)->get();
+                return $query->whereNotIn($constraint['column'],$constraint['values']);
+            })->with($relationship)->get();
+
+
+
             $dataArray = [];
             foreach ($records as $row){
                 if($row->$relationship->count() !== 0){
@@ -188,10 +193,9 @@ if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remo
 }
 
 
-if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*uppercase words and remove extra white spaces*/
+if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*fetch new mails then add to database*/
      function fetchNewConnectionIssueEmailReplies(int $ticketID,string $subject,$latest_reply){
         $date = \Carbon\Carbon::now()->format('d.m.Y');
-        $email_unique = "tid#$ticketID";
         $oClient = new \Webklex\IMAP\Client;
         $oClient->connect();
 
@@ -200,42 +204,39 @@ if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*uppercase word
 
         $inboxMessages = $inboxFolder
             ->query()
-            ->since($date)
+            ->on($date)
             ->subject($subject)
-            ->body($email_unique)
             ->setFetchFlags(false)
             ->setFetchBody(true)
             ->setFetchAttachment(true)
             ->get();
 
+        foreach ($inboxMessages as $message){
 
-        $latestInboxMessage = $inboxMessages->first();
+                $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($message->getTextBody())->getVisibleText();
+                $reply_date = $message->getDate();
 
+                /*IF MAIL HAS NO REPLY YET OR COMPARE LATEST REPLY ON THE MAIL AND IN THE DATABASE THEN INSERT*/
+                /*Note: The reason that from is not json encoded because it is cast to array*/
+                if (is_null($latest_reply) || ($latest_reply->reply !== $reply && !$latest_reply->reply_date->greaterThan($reply_date))) {
+                    $plain_text = $message->getTextBody();
+                    $html_body = $message->getHTMLBody();
+                    $hasAttachments = $message->getAttachments()->count();
+                    $subject = $message->getSubject();
+                    $from = $message->getFrom()[0];
+                    $to = json_encode($message->getTo());
+                    $cc = json_encode($message->getCC());
+                    $reply_to = $message->getInReplyTo();
+                    $ticket_id = $ticketID;
 
-        if($latestInboxMessage !== null){
-            $plain_text = $latestInboxMessage->getTextBody();
-            $html_body = $latestInboxMessage->getHTMLBody();
-            $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($latestInboxMessage->getTextBody())->getVisibleText();
-            $hasAttachments = $latestInboxMessage->getAttachments()->count();
-            $subject = $latestInboxMessage->getSubject();
-            $from = json_encode($latestInboxMessage->getFrom());
-            $to = json_encode($latestInboxMessage->getTo());
-            $cc = json_encode($latestInboxMessage->getCC());
-            $reply_to = $latestInboxMessage->getInReplyTo();
-            $reply_date = $latestInboxMessage->getDate();
-            $ticket_id = $ticketID;
-
-            $connection_issue = new \App\ConnectionIssueReply;
-            $connection_issue_fillable = $connection_issue->getFillable();
-
-
-            if (is_null($latest_reply)) { /*IF MAIL HAS NO REPLY YET THEN INSERT*/
-                $connection_issue->create(compact($connection_issue_fillable));
-            } else if (($latest_reply->reply !== $reply && !$latest_reply->reply_date->equalTo($reply_date))) {
-                $connection_issue->create(compact($connection_issue_fillable));
-            }
-
+                    $connection_issue = new \App\ConnectionIssueReply;
+                    $connection_issue_fillable = $connection_issue->getFillable();
+                    $connection_issue->create(compact($connection_issue_fillable));
+                }
         }
+
+         die();
+
     }
 }
 

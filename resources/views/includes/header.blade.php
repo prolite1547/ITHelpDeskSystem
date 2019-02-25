@@ -41,7 +41,7 @@
                         <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),$ticketRoutes) ? 'nav__a--active' : ''}}">Tickets</a>
                     </li>
                     <li class="nav__li">
-                        <a href="#!" class="nav__a">Requests</a>
+                        <a href="javascript:void(0);" class="nav__a">Requests</a>
                     </li>
                     <li class="nav__li">
                         <a href="{{route('datacorrectons.sdcApproved')}}"class="nav__a {{in_array(Route::currentRouteName(),$dcRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>

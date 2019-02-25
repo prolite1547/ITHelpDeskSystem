@@ -50,6 +50,11 @@ export const elements = {
     printTicketBtn: document.querySelector('.ticket-content__link--print'),
     ticketDetailStore: document.querySelector('a.ticket-details__value--store'),
     fixBtn: document.querySelector('.ticket-content__link--fix'),
+    chatForm__reply: document.querySelector('.group[data-thread=reply]'),
+    chatForm__chat: document.querySelector('.group[data-thread=chat]'),
+
+
+    refreshBtn: document.querySelector('svg[data-refresh]'),
 
 
     filterTicketsIcon:document.querySelector('#ticketFilter'),
@@ -62,7 +67,6 @@ export const elements = {
     /*ADMIN PAGE*/
     addUserBtn: document.querySelector('[data-action=addUserBtn]'),
 };
-
 
 export const elementStrings = {
     ticketCheckbox: '.menu__checkbox',

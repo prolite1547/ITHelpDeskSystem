@@ -2,9 +2,8 @@ export default class Ticket {
 
     constructor(ID){
         this.ID = parseInt(this.extractNumber(ID.textContent).join([]));;
-        this.ticket = this.fetchOriginalData();
+        this.fetchOriginalData();
         this.originalData = {};
-
     }
 
     extractNumber(string){
@@ -36,9 +35,9 @@ export default class Ticket {
         return $.ajax(`/ticket/${this.ID}`,{
             method:'GET',
             success: data => {
-                this.ticket = data;
                 this.originalData.subject = data.incident.subject;
                 this.originalData.details = data.incident.details;
+                this.data = data;
             }
         });
 
@@ -84,5 +83,11 @@ export default class Ticket {
          }).done(() => {
              window.location.reload();
          });
+    }
+
+    getReplies(){
+        return $.ajax(`/api/connIssReply/${this.ID}`,{
+            type: 'GET'
+        })
     }
 }

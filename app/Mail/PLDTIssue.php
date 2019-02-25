@@ -21,12 +21,13 @@ class PLDTIssue extends Mailable
     public $concern;
     public $ticket_id;
     public $td_header;
+    public $concern_number;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($request,$ticket_id,$td_header)
+    public function __construct($request,$ticket_id,$td_header,$concern_number)
     {
         $this->data = $request;
         $this->user = $request->user()->fName;
@@ -36,6 +37,7 @@ class PLDTIssue extends Mailable
         $this->concern = $this->getConcernName($request->concern);
         $this->ticket_id = $ticket_id;
         $this->td_header = $td_header;
+        $this->concern_number = $concern_number;
     }
 
     /**
@@ -45,17 +47,14 @@ class PLDTIssue extends Mailable
      */
     public function build()
     {
-         $mail = $this->subject($this->incidentSubject)
+         $mail = $this->subject($this->incidentSubject . " (TID#{$this->ticket_id})")
              ->view('emails.PLDTIssue');
-
         if($this->data->has('attachments')){
-            if ($this->data->file('attachments')->isValid()) {
                 foreach ($this->myAttachments as $attachment) {
                     $originalFileName = $attachment->getClientOriginalName();
                     $fileMimeType = $attachment->getMimeType();
                     $mail->attach($attachment->path(), ['as' => $originalFileName, 'mime' => $fileMimeType]);
                 }
-            }
         }
          return $mail;
     }
