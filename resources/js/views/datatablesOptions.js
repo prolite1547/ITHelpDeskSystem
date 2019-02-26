@@ -92,8 +92,8 @@ const fixedTickets = {
         {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
-        {data: 'fixed_date'},
-        {data: 'assignee',visible: true},
+        {data: 'fix_date'},
+        {data: 'fixed_by',visible: true},
         {data: 'id', orderable: false}
     ],
 };

@@ -410,6 +410,7 @@ class TicketController extends Controller
                 $cc = explode(',',$request->cc);
                 $mail = $mail::cc($cc);
             }
+
             $to = explode(',',$request->to);
             $mail::to($to)->send(new PLDTIssue($request,$ticket_id,$td_header,$concern_number));
 

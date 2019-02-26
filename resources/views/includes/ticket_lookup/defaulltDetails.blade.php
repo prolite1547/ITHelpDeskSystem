@@ -118,8 +118,8 @@
             @endif
         </li>
     </ul>
-    <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['Closed'] ? 'u-display-n' : ''}}"
-            data-action="viewRslveDtls">Resolve Details
+    <button class="btn u-margin-top-xsmall {{!in_array($ticket->status,[$ticket_status_arr['Closed'],$ticket_status_arr['Fixed']]) ? 'u-display-n' : ''}}"
+            data-action="viewFixDtls">Fix Details
     </button>
     <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['Rejected'] ? 'u-display-n' : ''}}"
             data-action="viewRjctDtls">Reject Details

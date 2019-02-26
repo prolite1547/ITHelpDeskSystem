@@ -1,13 +1,13 @@
-export default class Resolve {
+export default class Fix {
     constructor(ticketID,data){
         this.ticketID = ticketID;
         this.data = data;
     }
 
 
-    createResolve(){
+    createFix(){
 
-        return $.ajax(`/ticket/${this.ticketID}/resolve/create`,{
+        return $.ajax(`/ticket/${this.ticketID}/fix/create`,{
             type: 'POST',
             data: this.data
         })

@@ -24,7 +24,6 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('store');
             $table->unsignedInteger('group')->nullable();;
             $table->dateTime('expiration')->nullable();;
-            $table->dateTime('fixed_date')->nullable();;
             $table->foreign('store')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('assignee')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

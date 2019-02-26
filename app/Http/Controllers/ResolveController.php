@@ -30,19 +30,8 @@ class ResolveController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(StoreResolve $request,$id)
+    public function create()
     {
-        $ticket = Ticket::findOrFail($id);
-
-        $ticket->status = 3;
-
-        $ticket->save();
-
-        /*GET ID OF THE USER WHO RESOLVED THE TICKE*/
-        $request->request->add(['resolved_by' =>$request->user()->id]);
-
-        $resolve = $ticket->resolve()->create($request->except('_token'));
-
 
     }
 
@@ -52,9 +41,9 @@ class ResolveController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$id)
     {
-        //
+        Ticket::findOrFail($id)->update(['status' => 3]);
     }
 
     /**
@@ -65,9 +54,7 @@ class ResolveController extends Controller
      */
     public function show($id)
     {
-        $resolve = Ticket::findOrFail($id)->resolve;
 
-        return view('modal.resolve_lookup')->with(['resolve' => $resolve]);
     }
 
     /**

@@ -1,6 +1,6 @@
 import {
     clearLoader,
-    elements,
+    elements, elementStrings,
     insertToModal,
     renderLoader,
     showModal
@@ -45,15 +45,15 @@ export const restoreElementsTextContent = (ticket) => {
 };
 
 
-export const getResolveFormMarkUp = (lookup = false,ticketID = 0) => {
+export const getFixFormMarkUp = (lookup = false,ticketID = 0) => {
     let ajax;
 
     if(!lookup){
-         ajax = $.ajax('/modal/form/resolve',{
+         ajax = $.ajax('/modal/form/fix',{
                     type: 'GET'
                 });
     }else{
-        ajax = $.ajax(`/modal/form/resolve/${ticketID}`,{
+        ajax = $.ajax(`/modal/form/fix/${ticketID}`,{
             type: 'GET'
         });
     }
@@ -73,18 +73,32 @@ export const addEventListenerToEditInputs = (ticket) => {
 
 export const addFileMarkup = `<div class="dropzone" id="addFiles"><button type="button" class="dropzone__upload btn">Upload</button></div>`;
 
-export const showResolveButton = () => {
-    elements.resolveButton.classList.remove('u-display-n');
+export const getModalWithData = (ticket) => {
 
-};
-
-export const getModalWithData = (ticketID) => {
         showModal();
         renderLoader(elements.modalContent);
-        getResolveFormMarkUp(true,ticketID)
+        getFixFormMarkUp(true,ticket.id)
             .done(data => {
                 clearLoader();
                 insertToModal(data);
+
+                /*show the reject form*/
+                if(document.querySelector(elementStrings.rejectBtnShowForm))
+                document.querySelector(elementStrings.rejectBtnShowForm).addEventListener('click',showRejectModal.bind(null, ticket.id));
+
+                /*add event listenser when user resolves the fix ticket*/
+                if(document.querySelector(elementStrings.resolveBtn))
+                document.querySelector(elementStrings.resolveBtn).addEventListener('click',() => {
+                    $.ajax(`/ticket/resolve/${ticket.id}`,{
+                        type: 'POST'
+                    }).done(() => {
+                        alert('Ticket is now resolved!');
+                        window.location.reload();
+                    }).fail(() => {
+                        alert('Failed to resolve the ticket!');
+                    })
+                })
+
             });
 };
 
@@ -166,7 +180,9 @@ export const showRejectModal = (ticket_id,e) => {
 };
 
 function getRejectForm(ticket_id) {
-    return axios.get(`/modal/form/reject/${ticket_id}`);
+    return $.ajax(`/modal/form/reject/${ticket_id}`,{
+        type:'GET'
+    });
 }
 
 export const showRejectDetails = (ticket_id) => {

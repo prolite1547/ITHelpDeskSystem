@@ -44,7 +44,13 @@ class DatatablesController extends Controller
                 return $query->where('assignee',Auth::user()->id)->where('status','!=',3);
             })
             ->when($status === 'fixed',function ($query) use($group){
-                return $query->whereStatus(4)->whereIn('group',$group);
+                $fixed_details = DB::table('fixes')->selectRaw('ticket_id,max(created_at) as fix_date,fixed_by')->groupBy('fixes.ticket_id','fixed_by');
+
+                return $query->whereStatus(4)->whereIn('group',$group)
+                    ->leftJoinSub($fixed_details,'fixed_details',function ($join){
+                        $join->on('tickets.id','=','fixed_details.ticket_id');
+                    })->leftJoin('users as fixer','fixed_details.fixed_by','fixer.id')
+                    ->addSelect(DB::raw('CONCAT(fixer.fName," ",fixer.lName) as fixed_by'),'fix_date');
 
             })
             ->leftJoinSub($extends_count,'extends_count',function($join){
@@ -60,7 +66,7 @@ class DatatablesController extends Controller
             ->leftJoin('users as assignee','tickets.assignee','assignee.id')
             ->leftJoin('users as resolver','resolves.resolved_by','resolver.id')
             ->selectRaw(
-                'tickets.id,prio.name as priority,status.name as status,tickets.expiration,tickets.fixed_date,tickets.created_at,
+                'tickets.id,prio.name as priority,status.name as status,tickets.expiration,tickets.created_at,
             incidents.created_at as incident_created,incidents.subject,incidents.details,cat.name as category,
             CONCAT(assignee.fName," ",assignee.lName) as assignee,
             stores.store_name,

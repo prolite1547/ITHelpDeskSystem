@@ -3,11 +3,10 @@ import * as editTicketView from './views/editIicketView';
 import * as addTicketView from './views/ticket_add';
 import Ticket from './models/Ticket';
 import Message from './models/Message';
-import Resolve from './models/Resolve';
+import Fix from './models/Fix';
 import {branchSelect2, cntctSelect2, deptSelect2, psitionSelect2} from "./select2";
 import * as glboalScript from './global';
 import {renderLoader, clearLoader, showModal, insertToModal, hideModal} from "./views/base";
-import ConnectionIssue from "./models/ConnectionIssue";
 import ConnectionIssueReply from "./models/ConnectionIssueReply";
 import {disableSubmitBtn} from "./global";
 
@@ -113,10 +112,9 @@ export const ticketViewController = (user) => {
 
     ticket.fetchOriginalData()
         .done(data => {
-            /*TICKET STATUS ID 3 IS == TO CLOSES*/
-            if (data.status === 3) {
-                elements.resolveButton.addEventListener('click', editTicketView.getModalWithData.bind(this, data.id));
-
+            /*TICKET STATUS IS EQUAL TO FIX(4)*/
+            if (data.status === 4 || data.status === 3) {
+                elements.fixButtonShowDetails.addEventListener('click', editTicketView.getModalWithData.bind(null, data));
             } else {
 
                 /*ADD CLICK EVENT LISTENER */
@@ -244,30 +242,26 @@ export const ticketViewController = (user) => {
                 }
 
 
-                if (elements.resolve) {
+                if (elements.fixBtn) {
                     /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-                    elements.resolve.addEventListener('click', (e) => {
+                    elements.fixBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         showModal();
                         renderLoader(elements.modalContent);
-                        const resolveRequest = editTicketView.getResolveFormMarkUp();
-                        resolveRequest.done(data => {
+
+                        editTicketView.getFixFormMarkUp()
+                        .done(data => {
                             clearLoader();
                             insertToModal(data);
 
-                            document.querySelector('button[data-action=resolved]').addEventListener('click', () => {
 
-                                document.querySelector(elementStrings.resolve_form).addEventListener('submit', e => {
-                                    e.preventDefault();
-                                });
-
-                                const formdata = $(elementStrings.resolve_form).serialize();
-
-                                let resolve = new Resolve(ticket.ID, formdata);
-
-                                resolve.createResolve()
+                            document.querySelector(elementStrings.fix_form).addEventListener('submit', e => {
+                                e.preventDefault();
+                                const formdata = $(e.target).serialize();
+                                const fix = new Fix(ticket.ID, formdata);
+                                fix.createFix()
                                     .done(() => {
-                                        alert('Ticket marked as resolved successfully!!');
+                                        alert('Ticket marked as fixed successfully!!');
                                         window.location.reload();
                                         hideModal();
                                     })
@@ -275,15 +269,14 @@ export const ticketViewController = (user) => {
                                         displayError(jqXHR);
                                     });
                             });
+
                         });
                     });
 
 
                 }
 
-                if (elements.reject) {
-                    elements.reject.addEventListener('click', editTicketView.showRejectModal.bind(null, ticket.ID));
-                }
+
 
 
             }
@@ -402,7 +395,7 @@ export const ticketViewController = (user) => {
 
     elements.ticketDetailStore.addEventListener('click', editTicketView.displayContactNumbers);
 
-    if (elements.fixBtn) elements.fixBtn.addEventListener('click', ticket.markAsFixed.bind(ticket, user));
+    // if (elements. fixBtn) elements.fixBtn.addEventListener('click', ticket.markAsFixed.bind(ticket, user));
 
     if (elements.rejectDetailsBtn) elements.rejectDetailsBtn.addEventListener('click', editTicketView.showRejectDetails.bind(null, ticket.ID))
 };

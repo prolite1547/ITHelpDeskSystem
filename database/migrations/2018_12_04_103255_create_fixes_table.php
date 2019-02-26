@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateResolvesTable extends Migration
+class CreateFixesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateResolvesTable extends Migration
      */
     public function up()
     {
-        Schema::create('resolves', function (Blueprint $table) {
+        Schema::create('fixes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('cause');
             $table->string('resolution');
             $table->string('recommendation');
-            $table->integer('res_category');
-            $table->unsignedInteger('ticket_id')->unique();
-            $table->unsignedInteger('resolved_by')->nullable();
-            $table->foreign('resolved_by')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
+            $table->integer('fix_category');
+            $table->unsignedInteger('ticket_id');
+            $table->unsignedInteger('fixed_by')->nullable();
+            $table->foreign('fixed_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class CreateResolvesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('resolves');
+        Schema::dropIfExists('fixed');
     }
 }

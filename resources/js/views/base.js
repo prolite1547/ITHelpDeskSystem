@@ -17,8 +17,6 @@ export const elements = {
     chatSendButton: document.querySelector('.chat__button'),
     reply: document.querySelector('.chat__textarea'),
     categoryInput: document.querySelector('.form__input[name="category"]'),
-    resolve: document.querySelector('.ticket-content__link--resolve'),
-    reject: document.querySelector('.ticket-content__link--reject'),
     profilePicEditIcon: document.getElementById('profImage'),
     ticketAddSubmitBtn: document.getElementById('ticketAdd'),
     addCallerForm: document.getElementById('addCaller'),
@@ -45,14 +43,13 @@ export const elements = {
     selectTel: document.querySelector('.form-email__input-select--tel'),
     selectConcern: document.querySelector('.form-email__input-select--concern'),
 
-    resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
+    fixButtonShowDetails: document.querySelector('button[data-action=viewFixDtls'),
     chatForm: document.querySelector('.chat'),
     printTicketBtn: document.querySelector('.ticket-content__link--print'),
     ticketDetailStore: document.querySelector('a.ticket-details__value--store'),
     fixBtn: document.querySelector('.ticket-content__link--fix'),
     chatForm__reply: document.querySelector('.group[data-thread=reply]'),
     chatForm__chat: document.querySelector('.group[data-thread=chat]'),
-
 
     refreshBtn: document.querySelector('svg[data-refresh]'),
 
@@ -73,13 +70,16 @@ export const elementStrings = {
     select2element: '.form__input--select2',
     loader2: 'loader2',
     ticketContentEditIcon: '.ticket-content__link--edit',
-    resolve_form: '.form-resolve',
+    fix_form: '.form-fix',
     addCallerSubmit: 'button[data-action=addCaller]',
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
     branchSelectContact: 'select[data-select=contact]',
     depSelectpos: 'select[data-select=position]',
     ticketAddBtn: '#ticketAdd',
+    rejectBtnShowForm: '[data-action=showRejectForm]',
+    resolveBtn: '[data-action=resolveTicket]',
+
 
     /*TICKET ADD*/
     ticketAddFormActive: 'window__item--active',
@@ -131,6 +131,7 @@ export const hideModal= () => {
     elements.container.style.filter = '';
     elements.modal.style.visibility = 'hidden';
     elements.modal.style.opacity = '0';
+    elements.modalContent.innerHTML = "";
 };
 
 export const displayError = (jqXHR) => {

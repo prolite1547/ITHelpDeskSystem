@@ -11,10 +11,10 @@
                      <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                     @endif
                 @endif
-                @if((in_array(Auth::user()->role_id,[$user_roles['tower'],$user_roles['admin']]) && in_array($ticket->status,[$ticket_status_arr['Fixed']])) && $ticket->status !== $ticket_status_arr['Open'])
-                    <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>
-                    <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--reject">Reject</a></li>
-                @endif
+                {{--@if((in_array(Auth::user()->role_id,[$user_roles['tower'],$user_roles['admin']]) && in_array($ticket->status,[$ticket_status_arr['Fixed']])) && $ticket->status !== $ticket_status_arr['Open'])--}}
+                    {{--<li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--resolve">Resolve</a></li>--}}
+                    {{--<li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--reject">Reject</a></li>--}}
+                {{--@endif--}}
                 @if(!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && $ticket->assigneeRelation->id === Auth::id())
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
                 @endif

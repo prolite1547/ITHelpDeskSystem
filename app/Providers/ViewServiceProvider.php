@@ -70,7 +70,7 @@ class ViewServiceProvider extends ServiceProvider
         });
 
 
-        view()->composer('modal.resolve_form', function ($view) {
+        view()->composer('modal.fix_form', function ($view) {
 
             $resolutionOptions = DB::table('resolve_categories')->pluck('name', 'id')->toArray();  /*Resolve*/
 

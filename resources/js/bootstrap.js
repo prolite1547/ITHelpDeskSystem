@@ -11,8 +11,7 @@ window.Popper = require('popper.js').default;
 try {
     window.$ = window.jQuery = require('jquery');
     require( 'datatables.net' )(window,$);
-    // require( 'datatables.net-responsive' )( window,$);
-    // require( 'datatables.net-responsive-dt' )( window,$);
+
 } catch (e) {}
 
 /**

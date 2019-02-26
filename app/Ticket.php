@@ -62,8 +62,8 @@ public function ticketMessages(){
     return $this->hasMany('App\Message')->latest('created_at');
 }
 
-public function resolve(){
-    return $this->hasOne('App\Resolve','ticket_id','id');
+public function fixTicket(){
+    return $this->hasMany('App\Fix','ticket_id','id');
 }
 
 public function getFileDirectoryFolder()
