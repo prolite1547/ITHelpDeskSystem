@@ -71,7 +71,7 @@
                         <span class="labels"> Dept. Supervisor : </span>
                     </div>
                     <div class="col-md-10 wborder">
-                        <span class="data">{{ $sdc->dept_supervisor }}   </span>
+                        <span class="data">{{ strtoupper($sdc->dept_supervisor) }}   </span>
                     </div>
             </div>
             <div class="row">
@@ -297,10 +297,15 @@
                     <div class="col-md-2 wborder">
                         <span class="labels">Checked By :</span>
                     </div>
-                    <div class="col-md-10  wborder">
+                    <div class="col-md-4  wborder">
                             <span class="data">  <?php echo strtoupper($sdc->ty1_fullname); ?> </span>
                     </div>
-                    
+                    <div class="col-md-2 wborder">
+                        <span class="labels">Date Checked :</span>
+                    </div>
+                    <div class="col-md-4  wborder">
+                            <span class="data">  <?php echo  $sdc->ty1_date_verified; ?> </span>
+                    </div>
                    
             </div>
 
@@ -622,8 +627,8 @@
                         
                     </div>
                 </div>
-    
-            <div class="row ">
+
+                <div class="row ">
                     <div class="col-md-4 wborder">
                         <span class="labels"> Date : </span>
                     </div>
@@ -631,6 +636,19 @@
                             {{ $sdc->app_date_approved }}
                     </div>
             </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="labels">REMARKS : </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 remarks">
+                            <span class="data"> 
+                                {!! nl2br($sdc->app_remarks) !!}
+                            </span>
+                    </div>
+                </div>
+            
 
             
             <div class="row">

@@ -54,6 +54,7 @@ class SystemDataCorrection extends Model
         'forward_status',
         'posted_by',
         'ty1_fullname',
+        'ty1_date_verified',
         'ty1_remarks',
         'ty2_remarks',
         'accum_id',
@@ -63,7 +64,8 @@ class SystemDataCorrection extends Model
         't1_datetime_apprvd',
         't2_datetime_apprvd',
         'govcomp_datetime_apprvd',
-        'app_datetime_apprvd'
+        'app_datetime_apprvd',
+        'app_remarks'
     ];
 
 

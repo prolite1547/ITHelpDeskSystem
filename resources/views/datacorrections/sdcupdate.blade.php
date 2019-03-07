@@ -116,7 +116,7 @@
                         <div class="col-md-5 mb-3">
                             <label for="supervisor">Dept. Supervisor : </label>
                             <div class="input-group">
-                                <input type="text" class="form-control input-validate" name="supervisor" value="{{ $sdc->dept_supervisor }}" id="supervisor" required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
+                                <input type="text" class="form-control input-validate" name="supervisor" style="text-transform:uppercase;"  value="{{ $sdc->dept_supervisor }}" id="supervisor" required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
                                 disabled   
                                @endif>
                                 <div class="invalid-tooltip " style="width: 100%;">
@@ -553,11 +553,13 @@
                       if(isset($sdc->ty1_fullname)){
                               echo strtoupper($sdc->ty1_fullname);
                       }else{
-                        //       echo strtoupper(Auth::user()->full_name);
+                              echo strtoupper(Auth::user()->full_name);
                       }    
-                      ?>" @if (Auth::user()->role_id != 5)
+                      ?>" 
+                      {{-- @if (Auth::user()->role_id != 5)
                          disabled 
-                      @endif id="checkedby" required>
+                      @endif --}}
+                       id="checkedby" readonly>
                   
                   <div class="invalid-tooltip " style="width: 100%;">
                                  Please enter your full name
@@ -565,6 +567,32 @@
                 </div>   
               </div>
 </div>
+
+                                   
+<div class="row mb-3">
+        <div class="col-md-12">
+                <label for="date_checked">Date : </label>
+                    
+                       <input type="text" class="form-control" name="date_checked"  value="<?php
+                            if(isset($sdc->ty1_date_verified)){
+                                    echo $sdc->ty1_date_verified;
+                            }else{
+                                  
+                                    date_default_timezone_set("Asia/Manila");
+                                    $currentDate =  date('m/d/Y');
+                                    $newDate = date("m/d/Y", strtotime($currentDate));    
+
+                                    echo $newDate;
+                               
+                            }
+                        ?>" id="date_checked"  readonly >
+              
+                        <div class="input-group-addon invalid-tooltip ">
+                                Valid date is required.
+                        </div>             
+                    
+                </div>
+  </div>
 
         <div class="row mb-3">
                 <div class="col-md-12">
@@ -1217,6 +1245,21 @@
                                         
                                     </div>
                       </div>
+
+                      
+                      <div class="row mb-3">
+                        <div class="col-md-12">
+                                <label for="app_remarks">Remarks :</label>
+                                <div class="input-group">
+                                <textarea type="text" class="form-control text-area" name="app_remarks" cols="5" rows="5" id="app_remarks" required @if (Auth::user()->role_id != 8)
+                                        readonly
+                                @endif>{{ $sdc->app_remarks }}</textarea>
+                                <div class="invalid-tooltip " style="width: 100%;">
+                                                Remarks field is required
+                                </div>
+                                </div>   
+                        </div>
+                </div>
 @endif
 {{-- END OF APPROVER FORM --}}
 
@@ -1383,7 +1426,7 @@
                                                       Valid date is required.
                                               </div>             
                                           </div>
-                                      </div>
+                            </div>
                       </div>
 @endif                      
 @endif
@@ -1398,7 +1441,7 @@
                         <button class="btn btn-danger btn-lg btn-block confirmation3" value="SUBMIT" name="action" type="submit">SUBMIT DATA CORRECTION (DONE)</button>
                         <button class="btn btn-danger btn-lg btn-block" value="SUBMIT" style="display:none;" id="confirmDone" name="action" type="submit">SUBMIT DATA CORRECTION (DONE)</button>
                  @elseif($sdc->status == 0 || $sdc->status == 2 )
-                      @if ($sdc->status != 2)
+                     
                                 <div class="row">
                                         <div class="col-md-3 mb-2">
                                                 <label for="app_group">Approver Group : </label>
@@ -1433,12 +1476,14 @@
                                         </div>
                                 </div>
                                 </div>
+                @if ($sdc->status != 2)
                                 <hr class="mb-4">
                                 <div class="row">
                                       <div class="col-md-12">
                                               <input class="btn btn-primary btn-md btn-block" type="submit" name="action" value="SAVE"> 
                                       </div>
                                 </div>
+                @endif
                                 <hr>
                                 <div class="row  mb-5">
                                         <div class="col-md-12">
@@ -1446,7 +1491,7 @@
                                                 <input class="btn btn-success btn-md btn-block" style="display:none;" id="confirmPost" type="submit" name="action" value="POST DATA CORRECTION" > 
                                         </div>
                                 </div>
-                      @endif
+                   
                  @else
                       @if (Auth::user()->role_id != 8)
                       <div class="row">

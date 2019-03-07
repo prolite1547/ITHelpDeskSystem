@@ -12,11 +12,12 @@ $(function() {
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
             { data: 'ticket_id', name: 'ticket_id', visible: false},
-            { data: 'mdc_no', name: 'mdc_no', visible: false}
+            { data: 'sdc_no', name: 'sdc_no', visible: false}
         ],
          columnDefs: [
                 { 
@@ -132,7 +133,7 @@ $(function() {
       
         $.fn.dataTable.ext.errMode = 'throw';
     }catch(err){
-         console.log(err);
+        
     }
         
    
@@ -148,13 +149,14 @@ $(function() {
     const allTreasury = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/ty-data/all',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -164,7 +166,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -203,13 +205,14 @@ $(function() {
     const allTreasury2 = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/ty-data/all',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -219,7 +222,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -256,13 +259,14 @@ $(function() {
     const pendingTreasury = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/ty-data/pending',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -272,7 +276,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -297,13 +301,14 @@ $(function() {
     const doneTreasury = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/ty-data/done',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -313,7 +318,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -342,13 +347,14 @@ $(function() {
     const pendingGC = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/gc-data/pending',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -358,7 +364,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -383,13 +389,14 @@ $(function() {
     const doneGC = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/gc-data/done',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -399,7 +406,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -424,13 +431,14 @@ $(function() {
     const allGC = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/gc-data/all',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -440,7 +448,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -479,13 +487,14 @@ $(function() {
     const pendingAPP = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/app-data/pending',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -495,7 +504,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -519,13 +528,14 @@ $(function() {
     const doneApp = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/app-data/done',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -535,7 +545,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -560,13 +570,14 @@ $(function() {
     const allAPP = {
         processing: true,
         serverSide: true,
-        order: [[4, 'desc']],
+        order: [[5, 'desc']],
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         ajax: '/datacorrections/app-data/all',
         columns: [
             { data: 'subject', name: 'subject' },
             { data: 'requestor_name', name: 'requestor_name' },
+            { data: 'dept_supervisor', name: 'dept_supervisor' },
             { data: 'department', name: 'department' },
             { data: 'position', name: 'position' },
             { data: 'date_submitted', name: 'date_submitted' },
@@ -576,7 +587,7 @@ $(function() {
          columnDefs: [
                 { 
                   orderable: false, 
-                  targets: [0,1,2,3]
+                  targets: [0,1,2,3,4]
                 },
                 {
                     targets: 0, /*SUBJECT*/
@@ -685,7 +696,7 @@ try {
     }
 
 } catch (error) {
-    console.log(error);
+    
 }
 
 //  SUPPORTS DATATABLE
@@ -701,6 +712,53 @@ try {
 
 // }
 
+try {
+   $('#approver1').on('change',function(){
+       var myValue = $(this).val();
+        if(myValue == 1){
+            $('#approver2').html("<option value='2' selected>Treasury 2</option><option value='3'>Gov. Compliance</option><option value='4'>Final Approver</option>");
+            $('#approver3').html("<option value='3' selected>Gov. Compliance</option><option value='4'>Final Approver</option>");
+            $('#approver4').html("<option value='4' selected>Final Approver</option>");
+        }else if(myValue == 2){
+            $('#approver2').html("<option value='3' selected>Gov. Compliance</option><option value='4'>Final Approver</option>");
+            $('#approver3').html("<option value='4'>Final Approver</option>");
+            $('#approver4').html("<option value=''>-- -- --</option>");
+        }else if(myValue == 3){
+            $('#approver2').html("<option value='4' selected>Final Approver</option>");
+            $('#approver3').html("<option value=''>-- -- --</option>");
+            $('#approver4').html("<option value=''>-- -- --</option>");
+        }else if(myValue == 4){
+            $('#approver2').html("<option value=''>-- -- --</option>");
+            $('#approver3').html("<option value=''>-- -- --</option>");
+            $('#approver4').html("<option value=''>-- -- --</option>");
+        }
+   });
+
+   $('#approver2').on('change',function(){
+    var myValue = $(this).val();
+     if(myValue == 2){
+        $('#approver3').html("<option value='3' selected>Gov. Compliance</option><option value='4'>Final Approver</option>");
+        $('#approver4').html("<option value='4'>Final Approver</option>");
+    }else if(myValue == 3){
+        $('#approver3').html("<option value='4' selected>Final Approver</option>");
+        $('#approver4').html("<option value=''>-- -- --</option>");
+    }else if(myValue == 4){
+        $('#approver3').html("<option value=''>-- -- --</option>");
+        $('#approver4').html("<option value=''>-- -- --</option>");
+    }
+   });
+
+   $('#approver3').on('change',function(){
+    var myValue = $(this).val();
+     if(myValue == 3){
+        $('#approver4').html("<option value='4' selected>Final Approver</option>");
+    }else if(myValue == 4){
+        $('#approver4').html("<option value=''>-- -- --</option>");
+    }
+   });
+} catch (error) {
+    
+}
  
     
 });

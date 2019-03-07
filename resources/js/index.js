@@ -64,21 +64,16 @@ $.extend( true, $.fn.dataTable.defaults, {
             createdCell: ( cell, cellData) => {
                 cell.setAttribute('title',cellData);
             },
-            render: (data,type,row) => {
-
+            render: (data) => {
                 if(data){
                     let now;
                     now = moment();
-                    if(row.status == 'Expired'){
-                        return data;
-                    }else{
-                        if(now >= moment(data)){
-                            return `<span class="expired">Expired</span>`;
-                        }else {
-                            return moment(data).fromNow();
-                        }
-                    }
 
+                    if(now >= moment(data)){
+                        return `<span class="expired">Expired</span>`;
+                    }else {
+                        return moment(data).fromNow();
+                    }
                 }
 
             }
@@ -191,7 +186,7 @@ elements.popupClose.addEventListener('click',() => {
     const ticketView_route  = new RegExp("\/tickets\/view\/\\d+",'gm');
     const ticketAdd_route  = new RegExp("\/tickets\/add",'gm');
     const userProfile_route  = new RegExp("\/user\/profile\/\\d+",'gm');
-    const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all|fixed|expired)",'gm');
+    const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all|fixed)",'gm');
     const adminPage_route  = new RegExp("\/admin",'gm');
     const maintenancePage_route  = new RegExp("\/maintenance",'gm');
     const pathName = window.location.pathname;

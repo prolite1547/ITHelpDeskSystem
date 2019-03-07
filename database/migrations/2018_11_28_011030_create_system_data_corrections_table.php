@@ -95,6 +95,7 @@ class CreateSystemDataCorrectionsTable extends Migration
             // $table->boolean('post_verified_signed')->default(0);
             $table->string('post_date_verified')->nullable();
             $table->text('ty1_fullname')->nullable();
+            $table->text('ty1_date_verified')->nullable();
             $table->text('ty1_remarks')->nullable();
             $table->text('ty2_remarks')->nullable();
             $table->integer('accum_id')->default(0);
@@ -108,6 +109,7 @@ class CreateSystemDataCorrectionsTable extends Migration
             $table->text('t2_datetime_apprvd')->nullable();
             $table->text('govcomp_datetime_apprvd')->nullable();
             $table->text('app_datetime_apprvd')->nullable();
+            $table->text('app_remarks')->nullable();
          
             $table->timestamps();
         });

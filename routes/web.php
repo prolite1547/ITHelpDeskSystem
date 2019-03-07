@@ -257,3 +257,4 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
  Route::post('group/selection2', 'SDCController@selectGroup2')->name('select.group2');
  
  Route::post('assign/group', 'SDCController@ChangeGroupData')->name('assign.group');
+ Route::post('add/hierarchy', 'SDCController@addHierarchy')->name('add.hierarchy');

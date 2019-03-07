@@ -20,6 +20,10 @@
                     </aside>
                     
                 </div>
+
+                {{-- <div style="display:inline-block; float:right;">
+                    <span>Search : </span><input  type="text"  id="search">
+                </div> --}}
                 <div class="col-3-of-4">
                     <table class="table" id="mdc-table">
                         <thead class="table__thead">

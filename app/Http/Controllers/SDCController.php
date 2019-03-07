@@ -336,7 +336,7 @@ class SDCController extends Controller
            
                 $sdc->ty1_remarks = $request->ty1remarks;
                 $sdc->ty1_fullname = $request->checkedby;
-
+                $sdc->ty1_date_verified = $request->date_checked;
                 $unserialize = unserialize($sdc->hierarchy);
 
                 for($x = 0; $x < count($unserialize);  $x++) {
@@ -463,6 +463,7 @@ class SDCController extends Controller
                 $currentDate =  date('Y-m-d h:i:s a');
                
                 $sdc->app_datetime_apprvd =  $currentDate;
+                $sdc->app_remarks = $request->app_remarks;
          }
         // END
 
@@ -996,6 +997,28 @@ class SDCController extends Controller
     }
 
     return response()->json(array('success'=>true, 'Iscustom'=> $iscustom ,'data'=> $data), 200);
+}
+
+public function addHierarchy(Request $request){
+     $arr = [];
+     $arr_serialize = [];
+     $group_name = $request->group_name;
+     $app = "app";
+     $approver = "approver";
+    $ahg = new AppHerGroup();
+    $ahg->group = $group_name;
+     for ($i=1; $i <= 4; $i++) { 
+         $app  = "app{$i}";
+         $approver = "approver{$i}";
+         if($request->$app != null){
+             array_push($arr, (int) $request->$app);
+             $ahg->$approver = (int) $request->$app;
+         }
+     }
+     $arr_serialize = serialize($arr);
+     $ahg->s_heirarchy = $arr_serialize;
+     $ahg->save();
+     return redirect()->back();
 }
    
 }
