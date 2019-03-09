@@ -47,12 +47,22 @@ class TicketController extends Controller
         return response()->json($ticket);
     }
 
-    public function lookupView($id)
+    public function lookupView(Request $request,$id)
     {
+        $ticket = Ticket::findOrFail($id);
+
+        /*1 means Open Ticket*/
+        if($ticket->status === 1) {
+            $incomplete_ticket = checkTicketDataIfIncomplete($id);
+            if($incomplete_ticket['incomplete'] && ($incomplete_ticket['logged_by'] === $request->user()->id)){
+                return redirect()->route('incompleteTicket', ['id' => $id]);
+            }else{
+                return redirect()->back();
+            }
+        }
 
         /*CHECK IF TICKET IS CREATED THROUGH CALL OR EMAIL*/
-
-        if(Ticket::findOrFail($id)->incident->call_id){
+        if ($ticket->incident->call_id) {
             $relationArray = [
                 'incident.call.loggedBy',
                 'statusRelation',
@@ -65,7 +75,7 @@ class TicketController extends Controller
                 'incident',
                 'incident.getFiles'
             ];
-        }else{
+        } else {
             $relationArray = [
                 'userLogged',
                 'statusRelation',
@@ -76,14 +86,14 @@ class TicketController extends Controller
                 'incident',
                 'incident.getMailData',
                 'incident.getFiles',
-                'connectionIssueMailReplies' => function($query){
+                'connectionIssueMailReplies' => function ($query) {
                     $query->latest();
                 }
             ];
 
         }
 
-        $ticket = Ticket::with($relationArray)
+         $ticket::with($relationArray)
             ->findOrFail($id);
 
         return view("ticket.ticket_lookup", ['ticket' => $ticket]);
@@ -95,21 +105,25 @@ class TicketController extends Controller
 
         /*CHECK IF USER STILL HAS UNCOMPLETED TICKET DATA'S*/
         $uncompleted_ticket = validateLoggersTicketStatus($userID);
-        if($uncompleted_ticket){
-            return redirect()->route('incompleteTicket',['id' => $uncompleted_ticket->id]);
+
+        if ($uncompleted_ticket['incomplete'] === true) {
+            return redirect()->route('incompleteTicket', ['id' => $uncompleted_ticket['ticket_id']]);
         }else{
             return view('ticket.add_ticket');
         }
 
+
+
     }
 
-    public function incompleteTicket($id){
+    public function incompleteTicket($id)
+    {
 
         $ticket = Ticket::findOrFail($id);
 
-        if($ticket->logged_by === Auth::id()){
-            return view('ticket.incomplete',compact('ticket'));
-        }else {
+        if ($ticket->logged_by === Auth::id()) {
+            return view('ticket.incomplete', compact('ticket'));
+        } else {
             return redirect()->back();
         }
 
@@ -121,12 +135,12 @@ class TicketController extends Controller
         $caller_id = addCaller($request->except(['_token', 'store']));
         $requester_id = $request->user()->id;
 
-        $insert_data = DB::transaction(function () use ($request, $caller_id,$requester_id) {
+        $insert_data = DB::transaction(function () use ($request, $caller_id, $requester_id) {
 
             /*INSERT CALL RECORD*/
             $call = Call::create(['caller_id' => $caller_id, 'user_id' => $requester_id])
                 ->incident()->create()
-                ->ticket()->create(['store' => $request->store, 'status' => 1,'logged_by' => $requester_id]);
+                ->ticket()->create(['store' => $request->store, 'status' => 1, 'logged_by' => $requester_id]);
 
             return $call;
         });
@@ -140,7 +154,6 @@ class TicketController extends Controller
 
     public function addTicketDetails(StoreTicket $request)
     {
-
 
 
         /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
@@ -162,11 +175,11 @@ class TicketController extends Controller
         /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
         $request->request->add(self::assignStatus($request->assignee));
 
-         DB::transaction(function () use ($request, $incident_id,$ticket_id) {
+        DB::transaction(function () use ($request, $incident_id, $ticket_id) {
 
-             Incident::findOrFail($incident_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
-             $ticket = Ticket::findOrFail($ticket_id);
-             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status','group'));
+            Incident::findOrFail($incident_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
+            $ticket = Ticket::findOrFail($ticket_id);
+            $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status', 'group'));
 
             /*CREATE DIRECTORY NAME*/
             $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $ticket->created_at)) . '_' . $ticket_id;
@@ -191,8 +204,6 @@ class TicketController extends Controller
 
 
     }
-
-
 
 
     public function open()
@@ -252,11 +263,11 @@ class TicketController extends Controller
 
     public function delete($id)
     {
-
+        $this->authorize('delete', Ticket::class);
         Ticket::findOrFail($id)->delete();
 
 
-        return redirect()->route('openTickets');
+        return redirect()->route('myTickets');
     }
 
     public function edit($id, StoreTicket $request)
@@ -340,9 +351,10 @@ class TicketController extends Controller
         };
     }
 
-    public function print($id){
+    public function print($id)
+    {
         $ticket = Ticket::all()->where('id', $id);
-        return  view('layouts.printTicket')->with('ticket',$ticket);
+        return view('layouts.printTicket')->with('ticket', $ticket);
     }
 
     public function addConnectionIssue(Request $request)
@@ -356,111 +368,117 @@ class TicketController extends Controller
             'contact_number' => 'required|string|min:5',
             'contact_person' => 'required|string|min:5',
         ];
-        $voice =  ['tel' => 'required|string|min:5'];
+        $voice = ['tel' => 'required|string|min:5'];
         $data = ['pid' => 'required|string|min:5'];
 
         $catC = $request->concern;
         /*GET CATEGORY B id*/
         $catB = CategoryC::findOrFail($catC)->catB;
         /*GET CATEGORY A id*/
-        $catB_relations = CategoryB::with('group:id','getExpiration:id,expiration')->findOrFail($catB);
+        $catB_relations = CategoryB::with('group:id', 'getExpiration:id,expiration')->findOrFail($catB);
 
         /*ADD TO REQUEST PARAMETER BAG*/
-        $request->request->add(['catC' => $catC,'category' => 3,'catB' => $catB,'catA' => $catB_relations->group->id]);
+        $request->request->add(['catC' => $catC, 'category' => 3, 'catB' => $catB, 'catA' => $catB_relations->group->id]);
 
         /*16 IS THE ID OF THE CATEGORY B VOICE*/
-        if($catB === 16){
+        if ($catB === 16) {
             $validation = $validation + $voice;
 
-        }elseif ($catB === 17){
+        } elseif ($catB === 17) {
             $validation = $validation + $data;
-        }else{
+        } else {
             $validation = $validation + $data + $voice;
         }
 
         $request->validate($validation);
         $expiration = Carbon::now()->addHours($catB_relations->getExpiration->expiration);
 
-        if($catB_relations->name === 'Both'){
+        if ($catB_relations->name === 'Both') {
             $td_header = 'PID/TEL';
             $concern_number = "{$request->pid}/{$request->tel}";
-        }elseif($catB_relations->name === 'Data'){
+        } elseif ($catB_relations->name === 'Data') {
             $td_header = 'PID';
             $concern_number = $request->pid;
-        }elseif($catB_relations->name === 'Voice'){
+        } elseif ($catB_relations->name === 'Voice') {
             $td_header = 'TEL';
             $concern_number = $request->tel;
-        }else{
+        } else {
             $td_header = 'UNKNOWN';
         }
 
 
-
-        $ticket_id = DB::transaction(function ()  use($expiration,$request,$td_header,$concern_number){
+        $ticket_id = DB::transaction(function () use ($expiration, $request, $td_header, $concern_number) {
             /*INSERT TO DATABASE*/
-            $ticket_id = ConnectionIssue::create($request->only(['cc','to','account','pid','tel','contact_person','contact_number']))
-                ->incident()->create($request->only(['subject','details','catC','catB','catA','category']))
-                ->ticket()->create(['assignee' => $request->user()->id,'logged_by' => $request->user()->id,'type' => 1,'priority' => 4,'status' => 2,'store' => $request->branch,'group' => 1,'expiration' => $expiration])->id;
+            $ticket_id = ConnectionIssue::create($request->only(['cc', 'to', 'account', 'pid', 'tel', 'contact_person', 'contact_number']))
+                ->incident()->create($request->only(['subject', 'details', 'catC', 'catB', 'catA', 'category']))
+                ->ticket()->create(['assignee' => $request->user()->id, 'logged_by' => $request->user()->id, 'type' => 1, 'priority' => 4, 'status' => 2, 'store' => $request->branch, 'group' => 1, 'expiration' => $expiration])->id;
 
             /*SEND MAIL*/
             $mail = new Mail;
+            $to = explode(',', $request->to);
 
             /*include cc if request has cc*/
-            if(!is_null($request->cc)){
-                $cc = explode(',',$request->cc);
-                $mail = $mail::cc($cc);
+            if (!is_null($request->cc)) {
+                $cc = explode(',', $request->cc);
+                $mail::to($to)->cc($cc)->send(new PLDTIssue($request, $ticket_id, $td_header, $concern_number));
+            } else {
+                $mail::to($to)->send(new PLDTIssue($request, $ticket_id, $td_header, $concern_number));
             }
-
-            $to = explode(',',$request->to);
-            $mail::to($to)->send(new PLDTIssue($request,$ticket_id,$td_header,$concern_number));
 
             return $ticket_id;
 
         });
 
-        if(!is_null($ticket_id)){
-            return response()->json(['response' => 'emailConIssueSentSuccess','data' => ['ticket_id' => $ticket_id]]);
+        if (!is_null($ticket_id)) {
+            return response()->json(['response' => 'emailConIssueSentSuccess', 'data' => ['ticket_id' => $ticket_id]]);
         }
 
     }
 
-    public function editStatus(StoreTicket $request,$id){
+    public function editStatus(StoreTicket $request, $id)
+    {
         $ticket = Ticket::findOrFail($id);
         $ticket->status = 4;
         $ticket->fixed_date = Carbon::now();
         $ticket->save();
     }
 
-    public function reject(Request $request,$id){
+    public function reject(Request $request, $id)
+    {
         $ticket = Ticket::findOrFail($id);
         $ticket->status = 5;
         $ticket->save();
         $rejected_by = Auth::id();
-        $ticket->rejectData()->create(['reason' => $request->reason,'rejected_by' => $rejected_by]);
+        $ticket->rejectData()->create(['reason' => $request->reason, 'rejected_by' => $rejected_by]);
 
-        return redirect()->route('lookupTicketView',['id' => $id]);
+        return redirect()->route('lookupTicketView', ['id' => $id]);
     }
 
-    public function rejectForm($id){
-        return view('modal.rejectForm',['id' => $id]);
+    public function rejectForm($id)
+    {
+        return view('modal.rejectForm', ['id' => $id]);
     }
 
-    public function rejectFormDetails($id){
+    public function rejectFormDetails($id)
+    {
         $ticket = Ticket::findOrFail($id);
         $rejectData = $ticket->rejectData->first();
-        return view('modal.reject_lookup',compact('ticket','rejectData'));
+        return view('modal.reject_lookup', compact('ticket', 'rejectData'));
     }
 
-    public function getExtendForm($id){
-        return view('modal.extendForm',['id' => $id]);
+    public function getExtendForm($id)
+    {
+        return view('modal.extendForm', ['id' => $id]);
     }
 
-    public function ticketExtendDetails($id){
+    public function ticketExtendDetails($id)
+    {
         $ticket_extensions = Ticket::findOrFail($id)->extended()->latest()->get();
-        return view('ticketExtendDetails',['ticket_extensions' => $ticket_extensions]);
+        return view('ticketExtendDetails', ['ticket_extensions' => $ticket_extensions]);
     }
 
-    private static function assignStatus($assignee){
+    private static function assignStatus($assignee)
+    {
         /*GET ID'S OF THE OPEN AND ONGOING CATEGORY IN THE CATEGORY TABLE*/
         $openID = 1;
         $ongoingID = 2;

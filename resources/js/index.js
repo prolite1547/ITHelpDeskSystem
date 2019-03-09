@@ -1,4 +1,4 @@
-import {elements, elementStrings, hideModal, toggleFormGroups} from "./views/base";
+import {elements, hideModal, toggleFormGroups} from "./views/base";
 import {ticketViewController,ticketAddController} from "./TicketViewController";
 import {ticketPageController} from "./TicketPageController";
 import {profileController} from "./ProfileController";

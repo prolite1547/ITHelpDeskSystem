@@ -26,6 +26,7 @@ const openTickets = {
         {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration',defaultContent: 'Not Set'},
+        {data: 'logged_by'},
         {data: 'id', orderable: false}
     ],
 

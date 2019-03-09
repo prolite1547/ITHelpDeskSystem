@@ -14,7 +14,7 @@ class CreateConnectionIssuesTable extends Migration
     public function up()
     {
         Schema::create('connection_issues', function (Blueprint $table) {
-            $table->increments('id');
+            $table->mediumIncrements('id');
             $table->string('to');
             $table->string('cc')->nullable();
             $table->string('account')->nullable();

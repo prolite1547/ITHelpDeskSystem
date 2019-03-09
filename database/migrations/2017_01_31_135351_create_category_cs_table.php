@@ -14,9 +14,9 @@ class CreateCategoryCsTable extends Migration
     public function up()
     {
         Schema::create('category_c', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->unsignedInteger('catB');
+            $table->smallIncrements('id');
+            $table->string('name',50);
+            $table->unsignedSmallInteger('catB');
             $table->timestamps();
             $table->foreign('catB')->references('id')->on('category_b')->onUpdate('cascade')->onDelete('cascade');
         });

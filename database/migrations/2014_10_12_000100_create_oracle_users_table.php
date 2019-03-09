@@ -4,16 +4,16 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateOracleUsersTable extends Migration
 {
     /**
      * Run the migrations.
      *
-     * @return void(.*), (.*)
+     * @return void
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('oracle_users', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('fName',50);
             $table->string('mName', 50 )->nullable();
@@ -43,6 +43,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('oracle_users');
     }
 }

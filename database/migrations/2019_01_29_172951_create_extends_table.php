@@ -14,11 +14,11 @@ class CreateExtendsTable extends Migration
     public function up()
     {
         Schema::create('extends', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('ticket_id');
-            $table->unsignedInteger('extended_by');
-            $table->mediumText('details');
-            $table->unsignedInteger('duration');
+            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('ticket_id');
+            $table->unsignedSmallInteger('extended_by');
+            $table->text('details');
+            $table->unsignedTinyInteger('duration');
             $table->timestamps();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('duration')->references('id')->on('expirations')->onUpdate('cascade')->onDelete('cascade');

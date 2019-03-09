@@ -240,18 +240,17 @@ Route::get('/test2', function () {
 });
 
 Route::get('/test5', function () {
-    echo Auth::user()->fName;
+    dd(Auth::user()->position->group);
 
 });
 
 Route::get('/ongoingMail', function () {
 
-    $ongoingMailInc = Ticket::whereHas('incident', function ($query) {
+    $ongoingMailInc = Ticket::whereStatus(2)->whereHas('incident', function ($query) {
         $query->whereNotNull('connection_id');
     })->with(['connectionIssueMailReplies' => function ($query) {
         $query->latest('reply_date');
     }, 'incident:id,subject'])->get();
-
 
     foreach ($ongoingMailInc as $ticket) {
         $ticketID = $ticket->id;
@@ -263,7 +262,7 @@ Route::get('/ongoingMail', function () {
 });
 
 Auth::routes();
-
+Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
 
 

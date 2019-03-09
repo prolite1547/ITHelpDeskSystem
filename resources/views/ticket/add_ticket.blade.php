@@ -32,20 +32,20 @@
                                         <div class="fieldset__left">
                                             {!! Form::select('position', [], null, ['placeholder' => '(position)','class' => 'form__input','required','id' => 'ticketPositionSelect']) !!}
                                         </div>
-                                        <div class="fieldset__right">
-                                            <div class="form__group">
-                                                {!! Form::label('fName','First Name :',['class' => 'form__label'])!!}
-                                                {!! Form::text('fName',null,['class' => 'form__input','placeholder' => 'first','required','minlength' => 2]) !!}
-                                            </div>
-                                            <div class="form__group">
-                                                {!! Form::label('mName','Middle Name :',['class' => 'form__label'])!!}
-                                                {!! Form::text('mName',null,['class' => 'form__input','placeholder' => 'middle','required','minlength' => 2]) !!}
-                                            </div>
-                                            <div class="form__group">
-                                                {!! Form::label('lName','Last Name :',['class' => 'form__label'])!!}
-                                                {!! Form::text('lName',null,['class' => 'form__input','placeholder' => 'last','required','minlength' => 2]) !!}
-                                            </div>
-                                        </div>
+                                        {{--<div class="fieldset__right">--}}
+                                            {{--<div class="form__group">--}}
+                                                {{--{!! Form::label('fName','First Name :',['class' => 'form__label'])!!}--}}
+                                                {{--{!! Form::text('fName',null,['class' => 'form__input','placeholder' => 'first','required','minlength' => 2]) !!}--}}
+                                            {{--</div>--}}
+                                            {{--<div class="form__group">--}}
+                                                {{--{!! Form::label('mName','Middle Name :',['class' => 'form__label'])!!}--}}
+                                                {{--{!! Form::text('mName',null,['class' => 'form__input','placeholder' => 'middle','required','minlength' => 2]) !!}--}}
+                                            {{--</div>--}}
+                                            {{--<div class="form__group">--}}
+                                                {{--{!! Form::label('lName','Last Name :',['class' => 'form__label'])!!}--}}
+                                                {{--{!! Form::text('lName',null,['class' => 'form__input','placeholder' => 'last','required','minlength' => 2]) !!}--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
                                     </div>
 
                                 </fieldset>

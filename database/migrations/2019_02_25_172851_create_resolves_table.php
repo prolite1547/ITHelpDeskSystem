@@ -14,9 +14,9 @@ class CreateResolvesTable extends Migration
     public function up()
     {
         Schema::create('resolves', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('resolved_by');
-            $table->unsignedInteger('ticket_id');
+            $table->mediumIncrements('id');
+            $table->unsignedSmallInteger('resolved_by');
+            $table->unsignedMediumInteger('ticket_id');
             $table->foreign('resolved_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

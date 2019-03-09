@@ -9,8 +9,9 @@
         <th class="table__th">Priority</th>
         <th class="table__th">Status</th>
         <th class="table__th">Branch</th>
-        <th class="table__th" title="">Created At</th>
+        <th class="table__th">Created At</th>
         <th class="table__th">Expiration Date</th>
+        <th class="table__th">Logged By</th>
         <th class="table__th"><input type="checkbox"></th>
         </thead>
         <tbody class="table__tbody">

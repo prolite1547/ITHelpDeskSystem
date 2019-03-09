@@ -14,15 +14,15 @@ class CreateIncidentTable extends Migration
     public function up()
     {
         Schema::create('incidents', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('call_id')->nullable();
-            $table->unsignedInteger('connection_id')->nullable();
-            $table->mediumText('subject')->nullable();
-            $table->mediumText('details')->nullable();
-            $table->unsignedInteger('category')->nullable();
-            $table->unsignedInteger('catA')->nullable();
-            $table->unsignedInteger('catB')->nullable();
-            $table->unsignedInteger('catC')->nullable();
+            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('call_id')->nullable();
+            $table->unsignedMediumInteger('connection_id')->nullable();
+            $table->text('subject')->nullable();
+            $table->text('details')->nullable();
+            $table->unsignedTinyInteger('category')->nullable();
+            $table->unsignedTinyInteger('catA')->nullable();
+            $table->unsignedSmallInteger('catB')->nullable();
+            $table->unsignedSmallInteger('catC')->nullable();
             $table->boolean('drd')->default(0);
             $table->foreign('call_id')->references('id')->on('calls')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('category')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');

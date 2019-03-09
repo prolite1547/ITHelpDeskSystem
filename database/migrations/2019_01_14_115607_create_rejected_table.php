@@ -14,10 +14,10 @@ class CreateRejectedTable extends Migration
     public function up()
     {
         Schema::create('rejected', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('ticket_id');
+            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('ticket_id');
             $table->string('reason');
-            $table->unsignedInteger('rejected_by');
+            $table->unsignedSmallInteger('rejected_by');
             $table->timestamps();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('rejected_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

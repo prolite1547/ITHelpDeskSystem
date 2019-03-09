@@ -405,4 +405,3 @@ public function loadChart(){
 
 }
 
- 

@@ -102,7 +102,7 @@ export const ticketAddController = () => {
 ////////////////////////////////
 ////////////////////////////////
 
-export const ticketViewController = (user) => {
+export const ticketViewController = () => {
     const ticket = new Ticket(elements.ticketID, elements.ticketSubject, elements.ticketDetails);
 
     Echo.private(`chat.${ticket.ID}`)

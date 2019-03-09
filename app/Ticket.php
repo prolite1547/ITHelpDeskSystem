@@ -24,7 +24,6 @@ class Ticket extends Model
         'group'
     ];
 
-protected $dates = ['deleted_at'];
 
 public function userLogged(){
     return $this->belongsTo('App\User','logged_by');
@@ -41,10 +40,6 @@ public function incident(){
 public function assigneeRelation(){
     return $this->belongsTo('App\User','assignee')->withDefault(['id' => null]);
 }
-
-//public function store(){
-//    return $this->belongsTo('App\Store','store');
-//}
 
 public function priorityRelation(){
     return $this->belongsTo('App\Priority','priority');

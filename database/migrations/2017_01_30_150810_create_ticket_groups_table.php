@@ -14,8 +14,8 @@ class CreateTicketGroupsTable extends Migration
     public function up()
     {
         Schema::create('ticket_groups', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
+            $table->tinyIncrements('id');
+            $table->string('name', 50 )->unique();
             $table->timestamps();
         });
     }
