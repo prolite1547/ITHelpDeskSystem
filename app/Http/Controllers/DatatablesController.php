@@ -27,7 +27,6 @@ class DatatablesController extends Controller
     }
 
     public function tickets($status){
-        $group = Auth::user()->position->group;
         $statuses = Status::whereNotIn('name',['user','fixed'])->pluck('name')->toArray();
 
         $extends_count = DB::table('extends')->selectRaw('ticket_id,count(ticket_id) as extend_count')->groupBy('ticket_id');
@@ -36,17 +35,23 @@ class DatatablesController extends Controller
         $query = DB::table('tickets')
         ->whereNull('deleted_at')
         ->join('incidents','tickets.incident_id','incidents.id')
-            ->when(in_array(strtolower($status),array_map('strtolower',$statuses),true),function ($query) use ($status,$group){
+            ->when(in_array(strtolower($status),array_map('strtolower',$statuses),true),function ($query) use ($status){
                 $get_status = Status::where('name',$status)->firstOrFail();
                 return $query->whereStatus($get_status->id);
             })
             ->when($status === 'user',function ($query){
                 return $query->where('assignee',Auth::user()->id)->where('status','!=',3);
             })
-            ->when($status === 'fixed',function ($query) use($group){
+            ->when($status === 'fixed',function ($query){
+
+                $group = Auth::user()->group;
+
                 $fixed_details = DB::table('fixes')->selectRaw('ticket_id,max(created_at) as fix_date,fixed_by')->groupBy('fixes.ticket_id','fixed_by');
 
-                return $query->whereStatus(4)->whereGroup($group)
+                return $query->whereStatus(4)
+                    ->when($group,function ($query,$group){
+                        return $query->whereGroup($group);
+                    })
                     ->leftJoinSub($fixed_details,'fixed_details',function ($join){
                         $join->on('tickets.id','=','fixed_details.ticket_id');
                     })->leftJoin('users as fixer','fixed_details.fixed_by','fixer.id')

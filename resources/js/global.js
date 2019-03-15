@@ -109,3 +109,8 @@ export const disableSubmitBtn = (btn,text = '',disable = true) => {
     }
 
 };
+
+
+export const disableInputElements = (nodeList,disable) => {
+    for (let input of nodeList) input.disabled = disable;
+};

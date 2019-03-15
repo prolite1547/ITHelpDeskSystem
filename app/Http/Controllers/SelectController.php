@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Caller;
-use App\Contact;
 use App\Department;
 use App\Expiration;
 use App\Http\Resources\CallerCollection;
@@ -12,9 +10,10 @@ use App\Http\Resources\DepartmentCollection;
 use App\Http\Resources\ExpirationCollection;
 use App\Http\Resources\PositionCollection;
 use App\Http\Resources\StoreCollection;
+use App\Http\Resources\UserResource;
 use App\Position;
-use App\Role;
 use App\Store;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -83,4 +82,14 @@ class SelectController extends Controller
     public function expiration(Request $request){
         return new ExpirationCollection(Expiration::all(['id','expiration as text']));
     }
+
+    public function users(Request $request){
+
+        if($request->query('q')){
+            return UserResource::collection(User::whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%'.$request->q.'%"')->get());
+        }else{
+            return UserResource::collection(User::all());
+        }
+    }
+
 }

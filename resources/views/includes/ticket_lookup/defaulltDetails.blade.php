@@ -27,7 +27,7 @@
         <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
             <a href="javascript:void(0);"
                class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}
-                ({{$ticket->incident->call->callerRelation->positionData->position}})</a>
+                ({{$ticket->incident->call->callerRelation->position->position}})</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
             <span class="ticket-details__value"> {{$ticket->created_at}}</span>

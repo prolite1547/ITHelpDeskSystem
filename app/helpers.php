@@ -1,8 +1,10 @@
 <?php
 
+use App\AllUser;
 use App\Caller;
 use App\Category;
 use App\Status;
+use App\TempUser;
 use App\Ticket;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -96,14 +98,8 @@ if (! function_exists('ticketTypeCount')) {
 
 if (! function_exists('addCaller')) {
     function addCaller($data){
-        $caller = $caller = "{$data['fName']} {$data['mName']} {$data['lName']}";
-
-        $fetchedCaller = Caller::where(DB::raw('CONCAT_WS(" ",fName,mName,lName)'),'like',$caller)->first();
-        if($fetchedCaller === null){
-            return $caller_id = Caller::create($data)->id;
-        }else {
-            return $caller_id = $fetchedCaller->id;
-        }
+        $data['department_id'] = \App\Position::findOrFail($data['position_id'])->department->id;
+        return TempUser::create()->user()->create($data)->id;
     }
 }
 
@@ -173,9 +169,12 @@ if (! function_exists('getNumberOfTicketsOnASpecStatus')) { /*uppercase words an
         $ticketCounts['All'] =  Ticket::all()->count();
         foreach ($ticketStatuses as $key => $value){
             if($value === 'Fixed'){
-                $count = Status::findOrFail($key)->tickets->whereIn('group',Auth::user()->position->group)->count();
+                $group = Auth::user()->group;
+                $count = Ticket::whereStatus($key)->when($group,function ($query,$group){
+                    return $query->whereGroup($group);
+                })->count();
             }else{
-                $count = Status::findOrFail($key)->tickets->count();
+                $count = Ticket::whereStatus($key)->count();
             }
             $ticketCounts[$value] = $count;
         }

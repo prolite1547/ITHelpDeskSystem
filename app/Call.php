@@ -22,7 +22,7 @@ class Call extends Model
     }
 
     public function callerRelation(){
-        return $this->belongsTo('App\Caller','caller_id','id');
+        return $this->belongsTo('App\User','caller_id','id');
     }
 
     public function loggedBy(){

@@ -4,7 +4,7 @@ import * as addTicketView from './views/ticket_add';
 import Ticket from './models/Ticket';
 import Message from './models/Message';
 import Fix from './models/Fix';
-import {branchSelect2, cntctSelect2, deptSelect2, psitionSelect2} from "./select2";
+import {branchSelect2, cntctSelect2, deptSelect2, psitionSelect2,userSelect2} from "./select2";
 import * as glboalScript from './global';
 import {renderLoader, clearLoader, showModal, insertToModal, hideModal} from "./views/base";
 import ConnectionIssueReply from "./models/ConnectionIssueReply";
@@ -30,13 +30,27 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
-    $('#callerBranchSelect,#contactBranchSelect,.branchSelect').select2(branchSelect2);
+    $('#callerBranchSelect,.branchSelect').select2(branchSelect2);
     $('#ticketPositionSelect').select2(psitionSelect2);
     $('#positionDepSelect').select2(deptSelect2);
     $('#contact_id').select2(cntctSelect2);
-    $('#assigneeSelect').select2({
-        width: '30%',
-    });
+    $('#assigneeSelect').select2();
+
+    const userSelect = $('.userSelect');
+    if(userSelect) {
+        userSelect.select2(userSelect2);
+
+        userSelect.on('change',() => {
+
+            if(parseInt(userSelect.select2('data')[0].id) === 0) {
+                addTicketView.showUserForm(true);
+            }else {
+                addTicketView.showUserForm(false);
+            }
+        });
+    }
+
+
 
     /*DYNAMIC FORM*/
     document.querySelector('.window').addEventListener('click', e => {

@@ -171,7 +171,7 @@ export const showRejectModal = (ticket_id,e) => {
         getRejectForm(ticket_id)
             .then(response => {
                 clearLoader();
-                insertToModal(response.data);
+                insertToModal(response);
             }).catch(() => {
                 e.target.disabled = false;
                 alert('Fail to Get Reject Form');
@@ -188,11 +188,13 @@ function getRejectForm(ticket_id) {
 export const showRejectDetails = (ticket_id) => {
         showModal();
         renderLoader(elements.modalContent);
-    return axios.get(`/modal/lookup/reject/${ticket_id}`)
-        .then(response => {
+    return $.ajax(`/modal/lookup/reject/${ticket_id}`,{
+        type: 'GET'
+    })
+        .done(response => {
             clearLoader();
-            insertToModal(response.data);
-        }).catch(() => {
+            insertToModal(response);
+        }).fail(() => {
             alert('error getting the rejection details');
         });
 };

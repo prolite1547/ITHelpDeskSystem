@@ -5,14 +5,13 @@
         padding: .5rem;
     }
 
-    &__flex {
-        display: flex;
-        &--sb {
-            justify-content: space-between;
-        }
+    &__contact {
+        flex: 1 0;
     }
 
-    &__left {
-        flex: 0 0 30%;
+    &__contact-inputs {
+        width: 60%;
+        margin-left: 1rem;
     }
+
 }

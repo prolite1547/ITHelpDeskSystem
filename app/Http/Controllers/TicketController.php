@@ -47,16 +47,16 @@ class TicketController extends Controller
         return response()->json($ticket);
     }
 
-    public function lookupView(Request $request,$id)
+    public function lookupView(Request $request, $id)
     {
         $ticket = Ticket::findOrFail($id);
 
         /*1 means Open Ticket*/
-        if($ticket->status === 1) {
+        if ($ticket->status === 1) {
             $incomplete_ticket = checkTicketDataIfIncomplete($id);
-            if($incomplete_ticket['incomplete'] && ($incomplete_ticket['logged_by'] === $request->user()->id)){
+            if ($incomplete_ticket['incomplete'] && ($incomplete_ticket['logged_by'] === $request->user()->id)) {
                 return redirect()->route('incompleteTicket', ['id' => $id]);
-            }else{
+            } else {
                 return redirect()->back();
             }
         }
@@ -93,7 +93,7 @@ class TicketController extends Controller
 
         }
 
-         $ticket::with($relationArray)
+        $ticket::with($relationArray)
             ->findOrFail($id);
 
         return view("ticket.ticket_lookup", ['ticket' => $ticket]);
@@ -108,11 +108,9 @@ class TicketController extends Controller
 
         if ($uncompleted_ticket['incomplete'] === true) {
             return redirect()->route('incompleteTicket', ['id' => $uncompleted_ticket['ticket_id']]);
-        }else{
+        } else {
             return view('ticket.add_ticket');
         }
-
-
 
     }
 
@@ -131,18 +129,21 @@ class TicketController extends Controller
 
     public function addTicket(StoreTicket $request)
     {
-        /*INSERT/FETCH THEN GET CALLER ID*/
-        $caller_id = addCaller($request->except(['_token', 'store']));
-        $requester_id = $request->user()->id;
 
-        $insert_data = DB::transaction(function () use ($request, $caller_id, $requester_id) {
+        $insert_data = DB::transaction(function () use ($request) {
+            $caller_id = ((int)$request->user === 0) ? addCaller($request->except(['_token', 'store'])) : $request->user;
+            $requester_id = $request->user()->id;
 
             /*INSERT CALL RECORD*/
             $call = Call::create(['caller_id' => $caller_id, 'user_id' => $requester_id])
                 ->incident()->create()
                 ->ticket()->create(['store' => $request->store, 'status' => 1, 'logged_by' => $requester_id]);
 
-            return $call;
+            if(!is_null($call)){
+                return $call;
+            }else {
+                return response('Failed to create ticket',400);
+            }
         });
 
         /*FETCH ID OF THE INSERTED TICKET*/
@@ -490,5 +491,11 @@ class TicketController extends Controller
         }
 
         return $status;
+    }
+
+    public function resolve(Request $request,$id){
+        $ticket = Ticket::findOrFail($id);
+        $ticket->update(['status' => 3]);
+        $ticket->resolve()->create(['ticket_id' => $id,'resolved_by' => $request->user()->id]);
     }
 }

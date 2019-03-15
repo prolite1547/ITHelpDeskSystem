@@ -17,10 +17,10 @@ $.ajaxSetup({
 });
 
 /*ADDED SELECT2 PLUGIN*/
+$.fn.select2.defaults.set("width", "auto");
+$.fn.select2.defaults.set("dropdownAutoWidth", true);
 if(elements.select2elements){
-  elements.select2elements.select2({
-      dropdownAutoWidth: true
-  });
+  elements.select2elements.select2();
 }
 
 elements.popupClose.addEventListener('click',() => {

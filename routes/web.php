@@ -56,6 +56,7 @@ Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDel
 Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
 Route::post('/ticket/extend/{id}', 'TicketController@extend')->name('ticketExtend');
 Route::get('/modal/form/ticketExtendDetails/{id}', 'TicketController@ticketExtendDetails')->name('ticketExtendDetails');
+Route::post('/ticket/resolve/{id}', 'TicketController@resolve');
 
 //////////////////////////
 ////////*FIX*/////////
@@ -115,6 +116,7 @@ Route::get('/select/contact', 'SelectController@contact');
 Route::get('/select/position', 'SelectController@position');
 Route::get('/select/department', 'SelectController@department');
 Route::get('/select/expiration', 'SelectController@expiration');
+Route::get('/select/users', 'SelectController@users');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -136,11 +138,6 @@ Route::get('/maintenance', 'HomeController@maintenance')->name('maintenancePage'
 ////////*SEARCH*//////
 //////////////////////////
 Route::get('/search', 'HomeController@search')->name('search');
-
-//////////////////////////
-////////*RESOLVE*//////
-//////////////////////////
-Route::post('/ticket/resolve/{id}', 'ResolveController@store');
 
 //////////////////////////
 ////////*POSITION*//////
@@ -240,7 +237,8 @@ Route::get('/test2', function () {
 });
 
 Route::get('/test5', function () {
-    dd(Auth::user()->position->group);
+    dd(\App\User::selectRaw('CONCAT_WS(" ",fName,mName,lName) as full_name,id')
+        ->whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%john edward%"')->get());
 
 });
 
@@ -263,8 +261,6 @@ Route::get('/ongoingMail', function () {
 
 Auth::routes();
 Auth::routes(['register' => false]);
-Route::get('/home', 'HomeController@index')->name('home');
-
 
 Route::resource('sdc', 'SDCController');
 Route::resource('mdc', 'MDCController');

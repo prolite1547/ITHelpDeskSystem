@@ -1,0 +1,11 @@
+.row-flex {
+    display: flex;
+
+    &__ai--fe{
+        align-items: flex-end;
+    }
+
+    &__jc--sb{
+        justify-content: space-between;
+    }
+}

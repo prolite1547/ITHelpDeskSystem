@@ -1,15 +1,15 @@
-import {elements,elementStrings} from "./base";
-
+import {elements, elementStrings} from "./base";
+import * as globalFunc from "./../global";
 
 export const generateExpirationInputMarkup = (category) => {
 
     let date;
     switch (category) {
         case 'hardware':
-            date = moment().add(3,'days').format('YYYY-MM-DD HH:mm:ss');
+            date = moment().add(3, 'days').format('YYYY-MM-DD HH:mm:ss');
             break;
         case 'software':
-            date = moment().add(7,'days').format('YYYY-MM-DD HH:mm:ss');
+            date = moment().add(7, 'days').format('YYYY-MM-DD HH:mm:ss');
             break;
         default:
             date = moment().format();
@@ -30,24 +30,40 @@ export const hideContactFormGroup = () => {
 
 export const displayForm = () => {
     let items;
-   items = elements.formItems;
+    items = elements.formItems;
 
     for (let i = 0; i < items.length; i++) {
-        if($(items[i]).hasClass('window__item--active')){
+        if ($(items[i]).hasClass('window__item--active')) {
             showForm(items[i].id);
         }
     }
 };
 
-function showForm(id){
+function showForm(id) {
 
-    if(id === 'incidentForm'){
+    if (id === 'incidentForm') {
         elements.PLDTFormContainerAdd.style.display = 'none';
         elements.incidentFormContainerAdd.style.display = 'block';
-    }else if(id === 'PLDTForm'){
+    } else if (id === 'PLDTForm') {
         elements.incidentFormContainerAdd.style.display = 'none';
         elements.PLDTFormContainerAdd.style.display = 'block';
-    }else {
+    } else {
         alert('Form Not Found!');
     }
 }
+
+
+export const showUserForm = (show) => {
+
+    const inputElements = elements.userCallerForm.querySelectorAll('input,select');
+
+    if (show === true) {
+        elements.userCallerForm.classList.remove('u-display-n');
+            globalFunc.disableInputElements(inputElements,false);
+    } else {
+        elements.userCallerForm.classList.add('u-display-n');
+            globalFunc.disableInputElements(inputElements,true);
+    }
+
+};
+

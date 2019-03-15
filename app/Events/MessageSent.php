@@ -30,7 +30,7 @@ class MessageSent implements ShouldBroadcast
      */
     public function __construct(Message $message,User $user,$ticketID)
     {
-        $this->message = htmlspecialchars($message->message);
+        $this->message = $message->message;
         $this->messageID = $message->id;
         $this->user = $user->full_name;
         $this->userID = $user->id;

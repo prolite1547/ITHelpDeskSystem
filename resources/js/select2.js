@@ -22,7 +22,6 @@ export const psitionSelect2 = {
 };
 
 export const deptSelect2 = {
-    width: 'auto',
     ajax: {
         url: '/select/department',
         processResults: function (data) {
@@ -34,7 +33,6 @@ export const deptSelect2 = {
 };
 
 export const exprtionSelect2 = {
-    width: 'auto',
     ajax: {
         url: '/select/expiration',
         processResults: function (data) {
@@ -57,7 +55,6 @@ export const exprtionSelect2 = {
 };
 
 export const cntctSelect2 = {
-    width: '30%',
     ajax: {
         url: '/select/contact',
         processResults: function (data) {
@@ -78,4 +75,17 @@ export const cntctSelect2 = {
             };
         }
     }
+};
+
+export const userSelect2 = {
+    width: '100%',
+    ajax: {
+        url: '/select/users',
+        processResults: function (data) {
+                data.data.unshift({id: 0,text: 'Others'});
+                return {
+                    results: data.data
+                };
+        }
+    },
 };
