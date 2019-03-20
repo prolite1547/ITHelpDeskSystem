@@ -13,9 +13,10 @@
         {{Form::text('lName',null,['class'=> 'form__input-text','placeholder' => 'last name','required'])}}
     </div>
     <div class="form__group">
-        {{Form::select('store_id',$branchSelect,null,['class'=>'form__input-select','placeholder' => '(choose store)','required'])}}
-        {{Form::select('role_id',$rolesSelect,null,['class'=>'form__input-select','placeholder' => '(choose role)','required'])}}
-        {{Form::select('position_id',$positionsSelect,null,['class'=>'form__input-select','placeholder' => '(choose position)','required'])}}
+        {{Form::select('store_id',$branchSelect,null,['class'=>'form__input-select form__input--select2','placeholder' => '(choose store)','required'])}}
+        {{Form::select('role_id',$rolesSelect,null,['class'=>'form__input-select form__input--select2','placeholder' => '(choose role)','required'])}}
+        {{Form::select('position_id',$positionsSelect,null,['class'=>'form__input-select form__input--select2','placeholder' => '(choose position)','required'])}}
+        {{Form::select('department_id',$departmentSelect,null,['class'=>'form__input-select form__input--select2','placeholder' => '(choose department)','required'])}}
     </div>
     <div class="form__group">
         {{Form::button('Cancel',['class' => 'btn btn--red','data-action' => 'closeModal'])}}

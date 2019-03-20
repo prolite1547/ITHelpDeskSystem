@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\CategoryA;
 use App\CategoryB;
+use App\Department;
 use App\Position;
 use App\Status;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,7 @@ class ViewServiceProvider extends ServiceProvider
             $groupSelect = DB::table('ticket_groups')->pluck('name', 'id')->toArray(); /*TICKET_GROUP*/
             $rolesSelect = selectArray('', Role::class, 'id', 'role'); /*Roles*/
             $positionsSelect = selectArray('', Position::class, 'id', 'position'); /*Roles*/
+            $departmentSelect = selectArray('', Department::class, 'id', 'department'); /*Roles*/
             $callerSelect = Caller::get()->pluck('name', 'id');
             $categoryBGroupSelect = groupListSelectArray(CategoryA::class, 'name', 'subCategories', 'id', 'name',array('column' => 'id','values' => [6]));
             $categoryCGroupSelect = groupListSelectArray(CategoryB::class, 'name', 'subCategories', 'id', 'name');
@@ -104,6 +106,7 @@ class ViewServiceProvider extends ServiceProvider
                 'assigneeSelect',
                 'rolesSelect',
                 'positionsSelect',
+                'departmentSelect',
                 'categoryBGroupSelect',
                 'selfOption',
                 'groupSelect',

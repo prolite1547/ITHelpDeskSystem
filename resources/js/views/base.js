@@ -80,6 +80,7 @@ export const elementStrings = {
     ticketAddBtn: '#ticketAdd',
     rejectBtnShowForm: '[data-action=showRejectForm]',
     resolveBtn: '[data-action=resolveTicket]',
+    select2Elements: '.form__input--select2',
 
 
     /*TICKET ADD*/
@@ -87,7 +88,7 @@ export const elementStrings = {
     addPLDTIssueSubmit: 'button[data-action=addPLDTIssue]',
 
     /*ADMIN PAGE*/
-    addUserFrom: 'addUser'
+    addUserFrom: 'addUser',
 };
 
 

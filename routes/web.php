@@ -27,7 +27,7 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 //////////////////////////
 Route::get('/user/profile/{id}', 'UserController@profile')->name('userProfile');
 Route::post('/image', 'UserController@changeProf')->name('changeProf');
-Route::post('/user/add', 'UserController@create')->name('addUser');
+Route::post('/user/add', 'UserController@create');
 
 //////////////////////////
 ////////*TICKETS*/////////
@@ -132,12 +132,12 @@ Route::get('/tickets/ticket-data/{status}', 'DatatablesController@tickets');
 //////////////////////////
 ////////*MAINTENANCE*//////
 //////////////////////////
-Route::get('/maintenance', 'HomeController@maintenance')->name('maintenancePage');
+Route::get('/maintenance', 'PublicController@maintenance')->name('maintenancePage');
 
 //////////////////////////
 ////////*SEARCH*//////
 //////////////////////////
-Route::get('/search', 'HomeController@search')->name('search');
+Route::get('/search', 'PublicController@search')->name('search');
 
 //////////////////////////
 ////////*POSITION*//////
@@ -175,6 +175,12 @@ Route::get('/test', function () {
     dd($collection->connectionIssueMailReplies);
     return new \App\Http\Resources\ConnectionIssueReplyCollection(ConnectionIssueReply::all());
 });
+
+//////////////////////////
+////////*EXTENDED*//////
+//////////////////////////
+Route::get('treasury/dashboard','PublicController@treasuryDashboard')->name('treasuryDashboard');
+
 
 Route::get('/test2.1', function () {
     $nntp = imap_open('{imap.gmail.com:993/imap/ssl}Ticketing', 'it.support@citihardware.com', 'citihardware2020');

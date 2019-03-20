@@ -4,6 +4,7 @@ import {ticketPageController} from "./TicketPageController";
 import {profileController} from "./ProfileController";
 import {adminPageController} from  "./AdminPageController";
 import {maintenancePageController} from "./maintenancePageController";
+import {treasuryDashboardController} from "./treasury/index";
 import User from './models/User';
 
 
@@ -20,7 +21,7 @@ $.ajaxSetup({
 $.fn.select2.defaults.set("width", "auto");
 $.fn.select2.defaults.set("dropdownAutoWidth", true);
 if(elements.select2elements){
-  elements.select2elements.select2();
+    elements.select2elements.select2();
 }
 
 elements.popupClose.addEventListener('click',() => {
@@ -33,6 +34,7 @@ elements.popupClose.addEventListener('click',() => {
     const tikcketPages_route  = new RegExp("\/tickets\/(open|my|ongoing|closed|all|fixed|expired)",'gm');
     const adminPage_route  = new RegExp("\/admin",'gm');
     const maintenancePage_route  = new RegExp("\/maintenance",'gm');
+    const treasuryDashboard_route  = new RegExp("\/treasury/dashboard",'gm');
     const pathName = window.location.pathname;
 
     switch (true){
@@ -55,6 +57,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case maintenancePage_route.test(pathName):
             maintenancePageController();
+            break;
+        case treasuryDashboard_route.test(pathName):
+            treasuryDashboardController();
             break;
         default:
             console.log('route not set');
