@@ -5,6 +5,7 @@ use App\Category;
 use App\Status;
 use App\Ticket;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 if (! function_exists('selectArray')) {
@@ -46,15 +47,20 @@ if (! function_exists('selectArray')) {
     }
 
     if (! function_exists('groupListSelectArray')) {
-        function groupListSelectArray($model,$groupName,$relationship,$value,$name){
+        function groupListSelectArray($model,$groupName,$relationship,$value,$name,$constraint = []){
+            $records = $model::when($constraint,function ($query,$constraint){
 
-            $records = $model::with($relationship)->get();
+                return $query->whereNotIn($constraint['column'],$constraint['values']);
+            })->with($relationship)->get();
+
+
 
             $dataArray = [];
             foreach ($records as $row){
-                $dataArray[$row->$groupName] = $row->$relationship->pluck($name,$value)->toArray();
+                if($row->$relationship->count() !== 0){
+                    $dataArray[$row->$groupName] = $row->$relationship->pluck($name,$value)->toArray();
+                }
             }
-
             return $dataArray;
         }
 
@@ -107,7 +113,7 @@ if (! function_exists('validateLoggersTicketStatus')) {
             ->where('u.id',$user_id)
             ->whereNotNull('t.id')
             ->where(function ($query){
-                $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null]);
+                $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null,'t.group' => null]);
             })
             ->leftJoin('tickets as t','u.id','t.logged_by')
             ->leftJoin('incidents as i','t.incident_id','i.id')
@@ -145,13 +151,93 @@ if (! function_exists('getNumberOfTicketsOnASpecStatus')) { /*uppercase words an
 
         $ticketStatuses = Status::all()->pluck('name','id')->toArray();
         $ticketCounts = array();
-        $ticketCounts['All'] =  Status::all()->count();
+        $ticketCounts['All'] =  Ticket::all()->count();
         foreach ($ticketStatuses as $key => $value){
-            $count = Status::findOrFail($key)->tickets->count();
+            if($value === 'Fixed'){
+                $count = Status::findOrFail($key)->tickets->whereIn('group',getGroupIDDependingOnUser())->count();
+            }else{
+                $count = Status::findOrFail($key)->tickets->count();
+            }
             $ticketCounts[$value] = $count;
         }
 
         return $ticketCounts;
     }
 }
+
+if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remove extra white spaces*/
+    function getGroupIDDependingOnUser(){
+
+        $authRoleID = Auth::user()->role->id;
+        $authPositionID = Auth::user()->position->id;
+
+
+        $group = [4 => [1],5 => [2],'all' => [1,2]];
+
+        /*4 is equivalent to admin user*/
+        if($authRoleID !== 4){
+
+            if($authPositionID !== 1 && $authPositionID !== 2){
+                $groupID = $group[$authPositionID];
+            }else{
+                $groupID = $group[4];
+            }
+
+        }else {
+            $groupID = $group['all'];
+        }
+
+
+        return $groupID;
+    }
+}
+
+
+if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*fetch new mails then add to database*/
+     function fetchNewConnectionIssueEmailReplies(int $ticketID,string $subject,$latest_reply){
+        $date = \Carbon\Carbon::now()->format('d.m.Y');
+        $oClient = new \Webklex\IMAP\Client;
+        $oClient->connect();
+
+        $inboxFolder = $oClient
+            ->getFolder('INBOX');
+
+        $inboxMessages = $inboxFolder
+            ->query()
+            ->on($date)
+            ->subject($subject)
+            ->setFetchFlags(false)
+            ->setFetchBody(true)
+            ->setFetchAttachment(true)
+            ->get();
+
+        foreach ($inboxMessages as $message){
+
+                $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($message->getTextBody())->getVisibleText();
+                $reply_date = $message->getDate();
+
+                /*IF MAIL HAS NO REPLY YET OR COMPARE LATEST REPLY ON THE MAIL AND IN THE DATABASE THEN INSERT*/
+                /*Note: The reason that from is not json encoded because it is cast to array*/
+                if (is_null($latest_reply) || ($latest_reply->reply !== $reply && !$latest_reply->reply_date->greaterThan($reply_date))) {
+                    $plain_text = $message->getTextBody();
+                    $html_body = $message->getHTMLBody();
+                    $hasAttachments = $message->getAttachments()->count();
+                    $subject = $message->getSubject();
+                    $from = $message->getFrom()[0];
+                    $to = json_encode($message->getTo());
+                    $cc = json_encode($message->getCC());
+                    $reply_to = $message->getInReplyTo();
+                    $ticket_id = $ticketID;
+
+                    $connection_issue = new \App\ConnectionIssueReply;
+                    $connection_issue_fillable = $connection_issue->getFillable();
+                    $connection_issue->create(compact($connection_issue_fillable));
+                }
+        }
+
+         die();
+
+    }
+}
+
 ?>

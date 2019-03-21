@@ -1,15 +1,10 @@
 export default class Message {
 
-    constructor(ticketID,message){
-        this.ticketID = ticketID;
-        this.message = message;
-    }
-
-    saveMessage () {
+    saveMessage (ticket_id,message) {
 
         return $.ajax(`/message/new`,{
            method: 'POST',
-           data: {message:this.message,ticket_id:this.ticketID}
+           data: {message:message,ticket_id:ticket_id}
         });
     }
 }

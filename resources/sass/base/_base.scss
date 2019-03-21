@@ -3,12 +3,31 @@
 *::before {
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
+    box-sizing: inherit;
 }
 
 html {
     font-size: 62.5%;
-    font-family: 'Lato', sans-serif;
-    line-height: 1.7;
+
+    @include respond(tab-land) { // width < 1200?
+        font-size: 56.25%; //1 rem = 9px, 9/16 = 50%
+    }
+
+    @include respond(tab-port) { // width < 900?
+        font-size: 50%; //1 rem = 8px, 8/16 = 50%
+    }
+
+    @include respond(med-desktop) {
+        font-size: 75%; //1rem = 12, 12/16
+    }
+
+    @include respond(big-desktop) {
+        font-size: 75%; //1rem = 12, 12/16
+    }
 }
+
+body {
+    box-sizing: border-box;
+}
+
 

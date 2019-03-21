@@ -11,24 +11,22 @@
     },
     "devDependencies": {
         "axios": "^0.18",
-        "bootstrap": "^4.0.0",
+        "bootstrap": "^4.3.1",
         "cross-env": "^5.2.0",
         "jquery": "^3.2",
         "laravel-mix": "^2.0",
         "lodash": "^4.17.5",
         "popper.js": "^1.12",
-        "vue": "^2.5.17"
+        "vue": "^2.6.8"
     },
     "dependencies": {
         "datatables.net": "^1.10.19",
-        "datatables.net-buttons-dt": "^1.5.4",
-        "datatables.net-select-dt": "^1.2.7",
         "dropzone": "^5.5.1",
         "jquery": "^3.3.1",
-        "laravel-echo": "^1.5.0",
+        "laravel-echo": "^1.5.3",
         "moment": "^2.22.2",
         "navigo": "^7.1.2",
-        "pusher-js": "^4.3.1",
+        "pusher-js": "^4.4.0",
         "select2": "^4.0.6-rc.1"
     }
 }

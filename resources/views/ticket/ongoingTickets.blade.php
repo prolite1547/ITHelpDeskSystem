@@ -2,7 +2,7 @@
 @section('title','Ongoing Tickets')
 
 @section('table')
-    <table class="table" id="tickets-table">
+    <table class="table responsive" id="tickets-table">
         <thead class="table__thead">
         <th class="table__th">Subject</th>
         <th class="table__th">Category</th>

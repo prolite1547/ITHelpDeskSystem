@@ -26,27 +26,27 @@
             <tbody>
                 <tr>
                     <th>Name</th>
-                    <td>CITIHARDWARE {{$data->branch}}</td>
+                    <td>CITIHARDWARE {{$branch}}</td>
                 </tr>
                 <tr>
                     <th>Account#</th>
-                    <td>{{$data->}}</td>
+                    <td>{{$data->dial ?? ''}}</td>
                 </tr>
                 <tr>
-                    <th>Dial#</th>
-                    <td>Concern</td>
+                    <th>{{$td_header}}#</th>
+                    <td>{{$concern_number}}</td>
                 </tr>
                 <tr>
                     <th>Concern</th>
-                    <td>No Dial Tone</td>
+                    <td>{{$concern}}</td>
                 </tr>
                 <tr>
                     <th>Contact Person</th>
-                    <td>JENNIFER</td>
+                    <td>{{$data->contact_person}}</td>
                 </tr>
                 <tr>
                     <th>Contact Number</th>
-                    <td>09237187997/09212173224</td>
+                    <td>{{$data->contact_number}}</td>
                 </tr>
                 <tr>
                     <th>E-mail</th>
@@ -60,6 +60,8 @@
             <div>Regards,</div>
             <div class="mail__sender-name">{{$user}}</div>
             <div class="mail__sender-position">IT Support Staff</div>
+
+
             <div>CitiHardware Inc.</div>
             <div>Quimpo Boulevard</div>
             <div>Matina, Davao City</div>
@@ -68,6 +70,7 @@
             <div>Fax: (082)2961821 to 23 loc. 231</div>
             <div>Tel:  (082)2961821 to 23 loc. 226</div>
             <div class="mail__info">This e-mail message (including attachments, if any) is intended for the use of the individual or the entity to whom it is addressed and may contain information that is privileged, proprietary and confidential.  If you are not the intended recipient, you are notified that any dissemination, distribution, disclosure or copying of this communication is strictly prohibited.  If you have received this communication in error, please notify the sender and delete this E-mail message immediately. Any views or opinions expressed are solely those of the author and do not necessarily represent the Company.</div>
+
     </div>
 
 </div>

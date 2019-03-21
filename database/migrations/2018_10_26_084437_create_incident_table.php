@@ -15,18 +15,21 @@ class CreateIncidentTable extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('call_id')->unique();
+            $table->unsignedInteger('call_id')->nullable();
+            $table->unsignedInteger('connection_id')->nullable();
             $table->mediumText('subject')->nullable();
             $table->mediumText('details')->nullable();
             $table->unsignedInteger('category')->nullable();
             $table->unsignedInteger('catA')->nullable();
             $table->unsignedInteger('catB')->nullable();
-//            $table->unsignedInteger('catC')->nullable();
+            $table->unsignedInteger('catC')->nullable();
             $table->boolean('drd')->default(0);
             $table->foreign('call_id')->references('id')->on('calls')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('category')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('catA')->references('id')->on('category_a')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('catB')->references('id')->on('category_b')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('catC')->references('id')->on('category_c')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('connection_id')->references('id')->on('connection_issues')->onDelete('cascade')->onUpdate('cascade');
 //            $table->foreign('catC')->references('id')->on('category_c')->onDelete('cascade');
             $table->timestamps();
         });

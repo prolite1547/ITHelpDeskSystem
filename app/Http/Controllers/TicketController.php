@@ -5,16 +5,15 @@ namespace App\Http\Controllers;
 use App\Call;
 use App\Caller;
 use App\CategoryB;
+use App\CategoryC;
+use App\ConnectionIssue;
 use App\File;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
 use App\Mail\PLDTIssue;
-use App\Status;
 use App\Ticket;
-use App\Category;
-use App\Message;
+use App\SystemDataCorrection;
 use Carbon\Carbon;
-use DateInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,24 +52,59 @@ class TicketController extends Controller
     public function lookupView($id)
     {
 
-        $ticket = Ticket::with([
-            'incident.call.loggedBy',
-            'statusRelation',
-            'incident.call.callerRelation',
-            'typeRelation',
-            'incident.call.contact.store',
-            'assigneeRelation',
-            'incident.categoryRelation',
-            'incident.catARelation',
-            'incident',
-            'incident.getFiles'
-        ])
-            ->findOrFail($id);
+        /*CHECK IF TICKET IS CREATED THROUGH CALL OR EMAIL*/
 
-        return view("ticket.ticket_lookup", ['ticket' => $ticket]);
+        if(Ticket::findOrFail($id)->incident->call_id){
+            $relationArray = [
+                'incident.call.loggedBy',
+                'statusRelation',
+                'incident.call.callerRelation',
+                'typeRelation',
+                'incident.call.contact.store',
+                'assigneeRelation',
+                'incident.categoryRelation',
+                'incident.catARelation',
+                'incident',
+                'incident.getFiles'
+            ];
+        }else{
+            $relationArray = [
+                'userLogged',
+                'statusRelation',
+                'typeRelation',
+                'assigneeRelation',
+                'incident.categoryRelation',
+                'incident.catARelation',
+                'incident',
+                'incident.getMailData',
+                'incident.getFiles',
+                'connectionIssueMailReplies' => function($query){
+                    $query->latest();
+                }
+            ];
+
+        }
+        $sdc = null;
+        $ticket = Ticket::with($relationArray)
+            ->findOrFail($id);
+        $sdc = SystemDataCorrection::where('ticket_no', '=', $ticket->id)->first();
+
+        $cTicket = null;
+        $pTicket = null;
+
+        if(isset($ticket->crt_id)){ 
+            $cTickets = unserialize($ticket->crt_id);
+            $cTicket = Ticket::whereIn('id',$cTickets)->get();
+        }elseif(isset($ticket->prt_id)){
+            $pTicket = Ticket::findOrfail($ticket->prt_id);
+        }
+
+        
+    
+        return view("ticket.ticket_lookup",  compact(['ticket','cTicket', 'pTicket', 'sdc']));
     }
 
-    public function addTicketView(Request $request)
+    public function addTicketView()
     {
         $userID = Auth::user()->id;
 
@@ -96,6 +130,11 @@ class TicketController extends Controller
 
     }
 
+    public function relateTicket($id){
+        $ticket = Ticket::findOrFail($id);
+        // return view('ticket.create_rticket', compact('ticket'));
+        return view('modal.r_ticket', compact('ticket'));
+    }
     public function addTicket(StoreTicket $request)
     {
         /*INSERT/FETCH THEN GET CALLER ID*/
@@ -119,12 +158,91 @@ class TicketController extends Controller
 
     }
 
+    public function createRTicket(Request $request){
+         $ticket = Ticket::findOrFail($request->rt_id);
+         $incident = Incident::findOrFail($ticket->incident_id);
+        //  $ticketReplicate = $ticket->replicate();
+        //  $incidentReplicate = $incident->replicate();         
+
+         $requester_id = Auth::user()->id;
+         $call = Call::findOrfail($incident->call_id);
+         $caller_id = $call->caller_id;
+
+         $newCall =  new Call();
+         $newCall->caller_id = $caller_id;
+         $newCall->user_id = $requester_id;
+          $newCall->save();
+
+         $newIncident = new Incident();
+         $newIncident->call_id = $newCall->id ;
+         $newIncident->connection_id = null;
+         $newIncident->subject = $request->subject;
+         $newIncident->details = $request->details;
+         $newIncident->category = $request->category;
+         $catA = CategoryB::findOrFail($request->catB)->group->id;
+         $newIncident->catA =  $catA;
+         $newIncident->catB = $request->catB;
+         $newIncident->catC = null;
+         $newIncident->save();
+         $newIncident_id = $newIncident->id;
+
+         $newTicket = new Ticket();
+         $newTicket->incident_id = $newIncident->id;
+         $newTicket->assignee = $request->assignee;
+         $newTicket->logged_by = $newCall->user_id;
+         $newTicket->type = 1;
+         $newTicket->priority = $request->priority;
+         if(isset($request->assignee)){
+            $newTicket->status = 2;
+         }else{
+            $newTicket->status = 1;
+         }
+         $newTicket->store = $ticket->store;
+         $newTicket->group = $request->group;
+         $expiration_hours = CategoryB::findOrFail($request->catB)->getExpiration->expiration;
+         $expiration_date = Carbon::now()->addHours($expiration_hours);
+         $newTicket->expiration = $expiration_date;
+         $newTicket->prt_id = $ticket->id;
+         $newTicket->save();
+
+         $newTicket_id = $newTicket->id;
+         $newTicket_cdate = $newTicket->created_at;
+
+          $crtArr = "";
+         if(isset($ticket->crt_id)){
+              $arr = unserialize($ticket->crt_id);
+              array_push($arr, $newTicket_id );
+              $crtArr = serialize($arr);
+          }else{
+              $arr = [];
+              array_push($arr,$newTicket_id);
+              $crtArr = serialize($arr);
+          }
+
+          $ticket->crt_id = $crtArr;
+          $ticket->save();
+         
+           /*CREATE DIRECTORY NAME*/
+           $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $newTicket_cdate)) . '_' .  $newTicket_id;
+
+         if ($request->hasFile('attachments')) {
+            foreach ($request->attachments as $attachment) {
+
+                $original_name = $attachment->getClientOriginalName();
+                $mime_type = $attachment->getMimeType();
+                $original_ext = $attachment->getClientOriginalExtension();
+                $path = $attachment->store("$ticketDirectoryName", 'ticket');
+
+                File::create(['incident_id' => $newIncident_id , 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
+            };
+        }
+
+        return redirect()->route('lookupTicketView', ['id' => $newTicket->id]);
+    }
     public function addTicketDetails(StoreTicket $request)
     {
 
-        /*GET ID'S OF THE OPEN AND ONGOING CATEGORY IN THE CATEGORY TABLE*/
-        $openID = 1;
-        $ongoingID = 2;
+
 
         /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
         $ticket_id = $request->ticket_id;
@@ -139,22 +257,17 @@ class TicketController extends Controller
         /*GENERATE TE EXPIRATION DATE*/
         $expiration_date = Carbon::now()->addHours($expiration_hours);
 
-
         /*ADD EXPIRATION IN REQUEST ARRAY*/
         $request->request->add(array('expiration' => $expiration_date, 'catA' => $catA));
 
         /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
-        if (!$request->assignee) {
-            $request->request->add(['status' => $openID]);
-        } else {
-            $request->request->add(['status' => $ongoingID]);
-        }
+        $request->request->add(self::assignStatus($request->assignee));
 
          DB::transaction(function () use ($request, $incident_id,$ticket_id) {
 
              Incident::findOrFail($incident_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
              $ticket = Ticket::findOrFail($ticket_id);
-             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status'));
+             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status','group'));
 
             /*CREATE DIRECTORY NAME*/
             $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $ticket->created_at)) . '_' . $ticket_id;
@@ -179,6 +292,9 @@ class TicketController extends Controller
 
 
     }
+
+
+
 
     public function open()
     {
@@ -238,8 +354,8 @@ class TicketController extends Controller
     public function delete($id)
     {
 
-        $ticket = Ticket::findOrFail($id)->delete();
-//        $ticket = Ticket::findOrFail($id)->incident->call->delete();
+        Ticket::findOrFail($id)->delete();
+
 
         return redirect()->route('openTickets');
     }
@@ -264,6 +380,10 @@ class TicketController extends Controller
                 foreach ($request->ticket as $key => $value) {
                     $ticket->$key = $value;
                 }
+
+                /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
+                $status = self::assignStatus($request->ticket['assignee']);
+                $ticket->status = $status['status'];
                 $ticket->save();
             }
 
@@ -275,8 +395,8 @@ class TicketController extends Controller
             }
 
             DB::commit();
-        } catch (\Exception $e) {
-            $bool = false;
+        } catch (\Throwable $e) {
+            $bool = $e;
             DB::rollback();
         }
 
@@ -326,9 +446,83 @@ class TicketController extends Controller
         return  view('layouts.printTicket')->with('ticket',$ticket);
     }
 
-    public function addPLDTTicket(Request $request)
+    public function addConnectionIssue(Request $request)
     {
-        Mail::to($request->to)->send(new PLDTIssue($request));
+        $validation = [
+            'to' => 'required|string',
+            'subject' => 'required|string|min:5',
+            'cc' => 'string|nullable',
+            'details' => 'required|string|min:5',
+            'branch' => 'required|numeric',
+            'contact_number' => 'required|string|min:5',
+            'contact_person' => 'required|string|min:5',
+        ];
+        $voice =  ['tel' => 'required|string|min:5'];
+        $data = ['pid' => 'required|string|min:5'];
+
+        $catC = $request->concern;
+        /*GET CATEGORY B id*/
+        $catB = CategoryC::findOrFail($catC)->catB;
+        /*GET CATEGORY A id*/
+        $catB_relations = CategoryB::with('group:id','getExpiration:id,expiration')->findOrFail($catB);
+
+        /*ADD TO REQUEST PARAMETER BAG*/
+        $request->request->add(['catC' => $catC,'category' => 3,'catB' => $catB,'catA' => $catB_relations->group->id]);
+
+        /*16 IS THE ID OF THE CATEGORY B VOICE*/
+        if($catB === 16){
+            $validation = $validation + $voice;
+
+        }elseif ($catB === 17){
+            $validation = $validation + $data;
+        }else{
+            $validation = $validation + $data + $voice;
+        }
+
+        $request->validate($validation);
+        $expiration = Carbon::now()->addHours($catB_relations->getExpiration->expiration);
+
+        if($catB_relations->name === 'Both'){
+            $td_header = 'PID/TEL';
+            $concern_number = "{$request->pid}/{$request->tel}";
+        }elseif($catB_relations->name === 'Data'){
+            $td_header = 'PID';
+            $concern_number = $request->pid;
+        }elseif($catB_relations->name === 'Voice'){
+            $td_header = 'TEL';
+            $concern_number = $request->tel;
+        }else{
+            $td_header = 'UNKNOWN';
+        }
+
+
+
+        $ticket_id = DB::transaction(function ()  use($expiration,$request,$td_header,$concern_number){
+            /*INSERT TO DATABASE*/
+            $ticket_id = ConnectionIssue::create($request->only(['cc','to','account','pid','tel','contact_person','contact_number']))
+                ->incident()->create($request->only(['subject','details','catC','catB','catA','category']))
+                ->ticket()->create(['assignee' => $request->user()->id,'logged_by' => $request->user()->id,'type' => 1,'priority' => 4,'status' => 2,'store' => $request->branch,'group' => 1,'expiration' => $expiration])->id;
+
+            /*SEND MAIL*/
+            $mail = new Mail;
+
+            /*include cc if request has cc*/
+            if(!is_null($request->cc)){
+                $cc = explode(',',$request->cc);
+                $mail = $mail::cc($cc);
+            }
+
+            $to = explode(',',$request->to);
+            $mail::to($to)->send(new PLDTIssue($request,$ticket_id,$td_header,$concern_number));
+
+            return $ticket_id;
+
+        });
+
+        if(!is_null($ticket_id)){
+            return response()->json(['response' => 'emailConIssueSentSuccess','data' => ['ticket_id' => $ticket_id]]);
+        }
+
     }
 
     public function editStatus(StoreTicket $request,$id){
@@ -348,10 +542,6 @@ class TicketController extends Controller
         return redirect()->route('lookupTicketView',['id' => $id]);
     }
 
-    public function extend(Request $request){
-        dd($request->all());
-    }
-
     public function rejectForm($id){
         return view('modal.rejectForm',['id' => $id]);
     }
@@ -364,5 +554,173 @@ class TicketController extends Controller
 
     public function getExtendForm($id){
         return view('modal.extendForm',['id' => $id]);
+    }
+
+    public function ticketExtendDetails($id){
+        $ticket_extensions = Ticket::findOrFail($id)->extended()->latest()->get();
+        return view('ticketExtendDetails',['ticket_extensions' => $ticket_extensions]);
+    }
+
+    private static function assignStatus($assignee){
+        /*GET ID'S OF THE OPEN AND ONGOING CATEGORY IN THE CATEGORY TABLE*/
+        $openID = 1;
+        $ongoingID = 2;
+
+        if (!$assignee) {
+            $status = ['status' => $openID];
+        } else {
+            $status = ['status' => $ongoingID];
+        }
+
+        return $status;
+    }
+
+    public function showAppStats($id){
+        $data = "";
+        $sdc = SystemDataCorrection::findOrfail($id);
+        $unhierarchy = $sdc->hierarchy;
+        $serhierarchy = unserialize($unhierarchy);
+        $hierarchy = "";
+        
+        foreach ($serhierarchy as $app) {
+        $data .="<tr>";
+            $approver = "";
+            $status = "";
+            $datetimeapproved = "N/A";
+            $approvedby = "N/A";
+           switch($app){
+                case '1' : 
+                    $approver = "TREASURY I";
+                    if($sdc->forward_status > 1 && $sdc->status != 0){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->t1_datetime_apprvd;
+                        $approvedby = $sdc->ty1_fullname;
+                    }else{
+                       if($sdc->status == 2 && $sdc->forward_status == 1){
+                            $status = "REJECTED";
+                       }else{
+                            $status = "PENDING";
+                       }
+                    }
+                    $hierarchy .= "TREASURY I " . " >> ";
+                break;
+                case '2' : 
+                    $approver = "TREASURY II";
+                    if($sdc->forward_status > 2 && $sdc->status != 0){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->t2_datetime_apprvd;
+                        $approvedby = $sdc->ty1_fullname;
+                    }else{
+                        if($sdc->status == 2 && $sdc->forward_status == 2){
+                            $status = "REJECTED";
+                       }else{
+                            $status = "PENDING";
+                       }
+                    }
+                    $hierarchy .= "TREASURY II " . " >> ";
+                break;
+                case '3' : 
+                    $approver = "GOV. COMPLIANCE";
+                    if($sdc->forward_status > 3 && $sdc->status != 0){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->govcomp_datetime_apprvd;
+                         $approvedby = $sdc->pre_acc_verified_by;
+                    }else{
+                       if($sdc->status == 2 && $sdc->forward_status == 3){
+                            $status = "REJECTED";
+                       }else{
+                            $status = "PENDING";
+                       }
+                    }
+                    $hierarchy .= "GOV. COMPLIANCE " . " >> ";
+                break;
+                case '4' : 
+                    $approver = "FINAL APPROVER";
+                    
+                    if($sdc->forward_status > 4 && $sdc->status != 0){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->app_datetime_apprvd;
+                        $approvedby = $sdc->app_approved_by;
+                    }else{
+                       if($sdc->status == 2 && $sdc->forward_status == 4 ){
+                            $status = "REJECTED";
+                       }else{
+                            $status = "PENDING";
+                       }
+                    }
+                    $hierarchy .= "FINAL APPROVER";
+                break;
+           }
+           $data .= "<td>".$approver."</td><td>".$status."</td><td>".$datetimeapproved."</td><td>".$approvedby."</td>";
+        $data .= "</tr>";
+        }
+
+       
+         $view = view('modal.approver_stats')->with('id',$id)->with('hierarchy', $hierarchy);
+         return response()->json(array('success'=>true, 'data'=>"$data", 'view'=>"$view"), 200);
+    }
+
+    public function getAppStatsDetails($id){
+        $data = "";
+        $sdc = SystemDataCorrection::findOrfail($id);
+        $unhierarchy = $sdc->hierarchy;
+        $serhierarchy = unserialize($unhierarchy);
+        
+        foreach ($serhierarchy as $app) {
+        $data .="<tr>";
+            $approver = "";
+            $status = "";
+            $datetimeapproved = "N/A";
+            $approvedby = "N/A";
+           switch($app){
+                case '1' : 
+                    $approver = "TREASURY I";
+                    if($sdc->forward_status > 1){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->t1_datetime_apprvd;
+                        $approvedby = $sdc->ty1_fullname;
+                    }else{
+                        $status = "PENDING";
+                    }
+                break;
+                case '2' : 
+                    $approver = "TREASURY II";
+                    if($sdc->forward_status > 2){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->t2_datetime_apprvd;
+                        $approvedby = $sdc->ty1_fullname;
+                    }else{
+                        $status = "PENDING";
+                    }
+                break;
+                case '3' : 
+                    $approver = "GOV. COMPLIANCE";
+                    if($sdc->forward_status > 3){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->govcomp_datetime_apprvd;
+                        // $approvedby = $sdc->ty1_fullname;
+                    }else{
+                        $status = "PENDING";
+                    }
+                break;
+                case '4' : 
+                    $approver = "FINAL APPROVER";
+                    
+                    if($sdc->forward_status > 4){
+                        $status = "APPROVED";
+                        $datetimeapproved = $sdc->app_datetime_apprvd;
+                        // $approvedby = $sdc->ty1_fullname;
+                    }else{
+                        $status = "PENDING";
+                    }
+                break;
+           }
+           $data .= "<td>".$approver."</td><td>".$status."</td><td>".$datetimeapproved."</td><td>".$approvedby."</td>";
+        $data .= "</tr>";
+        }
+
+       
+
+        return response()->json(array('success'=>true, 'data'=>"$data"), 200);
     }
 }

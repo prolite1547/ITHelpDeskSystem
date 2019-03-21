@@ -12,15 +12,10 @@
 */
 
 
-use App\Caller;
-use App\Contact;
-use App\Incident;
-use App\Store;
-use App\User;
-use Illuminate\Support\Carbon;
+use App\ConnectionIssueReply;
+use App\Ticket;
+use Illuminate\Support\Facades\Mail;
 use Webklex\IMAP\Client;
-
-
 
 
 Route::get('/', 'PublicController@login')->name('index');
@@ -30,20 +25,20 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 //////////////////////////
 ////////*USER*///////////
 //////////////////////////
-Route::get('/user/profile/{id}','UserController@profile')->name('userProfile');
-Route::post('/image','UserController@changeProf')->name('changeProf');
-Route::post('/user/add','UserController@create')->name('addUser');
+Route::get('/user/profile/{id}', 'UserController@profile')->name('userProfile');
+Route::post('/image', 'UserController@changeProf')->name('changeProf');
+Route::post('/user/add', 'UserController@create')->name('addUser');
 
 //////////////////////////
 ////////*TICKETS*/////////
 //////////////////////////
 
-Route::get('/ticket/incomplete/{id}','TicketController@incompleteTicket')->name('incompleteTicket');
-Route::get('/ticket/{id}','TicketController@getTicket');
-Route::get('/tickets/add','TicketController@addTicketView')->name('addTicketView');
-Route::post('/ticket/add','TicketController@addTicket')->name('addTicket');
-Route::patch('/ticket/add/details','TicketController@addTicketDetails')->name('addTicketDetails');
-Route::post('/ticket/pldt/add','TicketController@addPLDTTicket')->name('addPLDTTicket');
+Route::get('/ticket/incomplete/{id}', 'TicketController@incompleteTicket')->name('incompleteTicket');
+Route::get('/ticket/{id}', 'TicketController@getTicket');
+Route::get('/tickets/add', 'TicketController@addTicketView')->name('addTicketView');
+Route::post('/ticket/add', 'TicketController@addTicket')->name('addTicket');
+Route::patch('/ticket/add/details', 'TicketController@addTicketDetails')->name('addTicketDetails');
+Route::post('/ticket/pldt/add', 'TicketController@addConnectionIssue')->name('addConnectionIssue');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::patch('/ticket/edit/{id}', 'TicketController@edit')->name('editTicket');
 Route::patch('/tickets/status/fixed/{id}', 'TicketController@editStatus')->name('editStatus');
@@ -60,55 +55,56 @@ Route::get('/tickets/all', 'TicketController@all')->name('allTickets');
 Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDelete');
 Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
 Route::post('/ticket/extend/{id}', 'TicketController@extend')->name('ticketExtend');
+Route::get('/modal/form/ticketExtendDetails/{id}', 'TicketController@ticketExtendDetails')->name('ticketExtendDetails');
 
 //////////////////////////
-////////*RESOLVE*/////////
+////////*FIX*/////////
 //////////////////////////
-Route::post('/ticket/{id}/resolve/create','ResolveController@create')->name('addResolve');
+Route::post('/ticket/{id}/fix/create', 'FixController@create')->name('addFix');
 
 //////////////////////////
 ////////*FILE*////////////
 //////////////////////////
-Route::get('/file/download/{id}','FileController@download')->name('fileDownload');
-Route::post('/file/ticket/{id}','TicketController@addFile');
+Route::get('/file/download/{id}', 'FileController@download')->name('fileDownload');
+Route::post('/file/ticket/{id}', 'TicketController@addFile');
 //////////////////////////
 ////////*MODAL*////////////
 //////////////////////////
 //Route::get('/modal/ticketEdit/{id}','StoreController@contacts')->name('modalTicketEdit');
-Route::get('/modal/ticketEdit/{id}','TicketController@editModal')->name('modalTicketEdit');
-Route::get('/modal/form/reject/{ticket_id}','TicketController@rejectForm');
-Route::get('/modal/lookup/reject/{ticket_id}','TicketController@rejectFormDetails');
-Route::view('/modal/form/resolve','modal.resolve_form');
-Route::view('/modal/form/userAdd','modal.user_add');
-Route::get('/modal/form/extend/{id}','TicketController@getExtendForm');
-Route::get('/modal/form/resolve/{id}','ResolveController@show')->name('modalResolveView');
-Route::get('/modal/{store_id}/contacts','StoreController@storeContacts')->name('storeContacts');
+Route::get('/modal/ticketEdit/{id}', 'TicketController@editModal')->name('modalTicketEdit');
+Route::get('/modal/form/reject/{ticket_id}', 'TicketController@rejectForm');
+Route::get('/modal/lookup/reject/{ticket_id}', 'TicketController@rejectFormDetails');
+Route::view('/modal/form/fix', 'modal.fix_form');
+Route::view('/modal/form/userAdd', 'modal.user_add');
+Route::get('/modal/form/extend/{id}', 'TicketController@getExtendForm');
+Route::get('/modal/form/fix/{id}', 'FixController@show')->name('modalFixView');
+Route::get('/modal/{store_id}/contacts', 'StoreController@storeContacts')->name('storeContacts');
 
 //////////////////////////
 ////////*MESSAGE*/////////
 //////////////////////////
-Route::post('/message/new','MessageController@create');
-Route::delete('/message/delete/{id}','MessageController@destroy');
+Route::post('/message/new', 'MessageController@create');
+Route::delete('/message/delete/{id}', 'MessageController@destroy');
 
 //////////////////////////
 ////////*CALLER*/////////
 //////////////////////////
-Route::post('/caller/save','CallerController@create');
+Route::post('/caller/save', 'CallerController@create');
 
 //////////////////////////
 ////////*STORE*/////////
 //////////////////////////
-Route::post('/store/save','StoreController@create');
+Route::post('/store/save', 'StoreController@create');
 
 //////////////////////////
 ////////*CONTACT*/////////
 //////////////////////////
-Route::post('/contact/save','ContactController@create');
+Route::post('/contact/save', 'ContactController@create');
 
 //////////////////////////
 ////////*ADMIN*/////////
 //////////////////////////
-Route::get('/admin','AdminController@index')->name('adminPage');
+Route::get('/admin', 'AdminController@index')->name('adminPage');
 
 //////////////////////////
 ////////*SELECT*/////////
@@ -129,53 +125,141 @@ Route::get('/reports', 'AdminController@report')->name('reportsPage');
 ////////*DATATABLES*//////
 //////////////////////////
 
-Route::get('/tickets/ticket-data/{status}','DatatablesController@tickets');
+Route::get('/tickets/ticket-data/{status}', 'DatatablesController@tickets');
 
 //////////////////////////
 ////////*MAINTENANCE*//////
 //////////////////////////
-Route::get('/maintenance','HomeController@maintenance')->name('maintenancePage');
+Route::get('/maintenance', 'HomeController@maintenance')->name('maintenancePage');
 
 //////////////////////////
 ////////*SEARCH*//////
 //////////////////////////
-Route::get('/search','HomeController@search')->name('search');
+Route::get('/search', 'HomeController@search')->name('search');
+
+//////////////////////////
+////////*RESOLVE*//////
+//////////////////////////
+Route::post('/ticket/resolve/{id}', 'ResolveController@store');
 
 //////////////////////////
 ////////*POSITION*//////
 //////////////////////////
-Route::post('/add/position','PositionController@create');
+Route::post('/add/position', 'PositionController@create');
 
 //////////////////////////
 ////////*DEPARTMENT*//////
 //////////////////////////
-Route::post('/add/department','DepartmentController@create');
+Route::post('/add/department', 'DepartmentController@create');
+
+//////////////////////////
+////////*Connection Issue Reply*//////
+//////////////////////////
+Route::get('/reply/conversation/{id}', 'ConnectionIssueReplyController@replyConversation')->name('replyConversation');
+Route::post('/reply/support', 'ConnectionIssueReplyController@replyMail');
 
 //////////////////////////
 ////////*API*//////
 //////////////////////////
-Route::get('/api/user/{id}','UserController@userAPI');
+Route::get('/api/user/{id}', 'UserController@userAPI');
+Route::get('/api/connIssReply/{ticket_id}', 'ConnectionIssueReplyController@connIssReplyAPI');
 
 //////////////////////////
 ////////*EXTENDED*//////
 //////////////////////////
-Route::post('/add/extend/{id}','ExtendController@create')->name('addExtend');
+Route::post('/add/extend/{id}', 'ExtendController@create')->name('addExtend');
 
-Route::get('/test',function (){
-    return view('emails.PLDTIssue');
+Route::get('/test', function () {
+
+    $collection = Ticket::with(['connectionIssueMailReplies' => function ($query) {
+        return $query->latest('reply_date');
+    }])->findOrFail(10);
+
+    dd($collection->connectionIssueMailReplies);
+    return new \App\Http\Resources\ConnectionIssueReplyCollection(ConnectionIssueReply::all());
+});
+
+Route::get('/test2.1', function () {
+    $nntp = imap_open('{imap.gmail.com:993/imap/ssl}Ticketing', 'it.support@citihardware.com', 'citihardware2020');
+    $threads = imap_thread($nntp);
+
+
+    foreach ($threads as $key => $val) {
+        $tree = explode('.', $key);
+        if ($tree[1] == 'num') {
+            $header = imap_headerinfo($nntp, $val);
+            echo "<ul>\n\t<li>" . $header->subject . "\n";
+        } elseif ($tree[1] == 'branch') {
+            echo "\t</li>\n</ul>\n";
+        }
+    }
+
+    imap_close($nntp);
+
+    dd($threads);
+});
+
+Route::get('/test2', function () {
+    $oClient = new Client();
+    $oClient->connect();
+
+
+    $inboxFolder = $oClient
+        ->getFolder('INBOX');
+
+
+    $inboxMessages = $inboxFolder
+        ->query()
+        ->on('21.02.2019')
+        ->subject('This is the subject (TID#1)')
+        ->setFetchFlags(false)
+        ->setFetchBody(true)
+        ->setFetchAttachment(false)
+        ->get();
+
+
+    $latestInboxMessage = $inboxMessages->first();
+
+    if ($latestInboxMessage !== null) {
+        $plain_text = $latestInboxMessage->getTextBody();
+        $html_body = $latestInboxMessage->getHTMLBody();
+        $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($latestInboxMessage->getTextBody())->getVisibleText();
+        $hasAttachments = $latestInboxMessage->getAttachments()->count();
+        $subject = $latestInboxMessage->getSubject();
+        $from = $latestInboxMessage->getFrom();
+        $to = json_encode($latestInboxMessage->getTo());
+        $cc = json_encode($latestInboxMessage->getCC());
+        $reply_to = $latestInboxMessage->getInReplyTo();
+        $reply_date = $latestInboxMessage->getDate();
+        $ticket_id = 1;
+        $connection_issue = new ConnectionIssueReply;
+        $connection_issue_fillable = $connection_issue->getFillable();
+        dd(json_encode($from));
+//    $connection_issue->create(compact($connection_issue_fillable));
+    }
+});
+
+Route::get('/test5', function () {
+    echo Auth::user()->fName;
 
 });
 
-Route::get('/test2',function (){
-    $oClient = new Client();
-    $oClient->connect();
-    $aFolder = $oClient->getFolder('INBOX');
-    $aMessage = $aFolder->query()->UNSEEN()->get();
+Route::get('/ongoingMail', function () {
 
-    foreach ($aMessage as $message){
-        echo $message->getHTMLBody(true);
+    $ongoingMailInc = Ticket::whereHas('incident', function ($query) {
+        $query->whereNotNull('connection_id');
+    })->with(['connectionIssueMailReplies' => function ($query) {
+        $query->latest('reply_date');
+    }, 'incident:id,subject'])->get();
+
+
+    foreach ($ongoingMailInc as $ticket) {
+        $ticketID = $ticket->id;
+        $subject = $ticket->incident->subject;
+        $latest_reply = $ticket->connectionIssueMailReplies->first();
+
+        fetchNewConnectionIssueEmailReplies($ticketID, $subject, $latest_reply);
     }
-    dd($aMessage);
 });
 
 Auth::routes();
@@ -258,3 +342,8 @@ Route::post('get/positions', 'SDCController@getPosition')->name('get.positions')
  
  Route::post('assign/group', 'SDCController@ChangeGroupData')->name('assign.group');
  Route::post('add/hierarchy', 'SDCController@addHierarchy')->name('add.hierarchy');
+ 
+ Route::get('relate/{id}/ticket', 'TicketController@relateTicket')->name('relate.ticket');
+ Route::get('/show/{id}/approverstats', 'TicketController@showAppStats')->name('show.appstats');
+ Route::get('/get/{id}/appdetails', 'TicketController@getAppStatsDetails')->name('get.appDetails');
+ Route::post('create/rticket', 'TicketController@createRTicket')->name('create.rticket'); 

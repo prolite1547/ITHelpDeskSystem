@@ -3,6 +3,7 @@
 $(function() {
     
     $('#mdc-table').DataTable({
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[4, 'desc']],
@@ -53,6 +54,7 @@ $(function() {
         dcStats = dcStatsRegex.exec(window.location.pathname)[1];
         
        var table =  $('#sdc-table').DataTable({
+            dom: 'lrtip',
             processing: true,
             serverSide: true,
             order: [[5, 'desc']],
@@ -147,6 +149,7 @@ $(function() {
  //  START OF TREASURY TABLE OPTIONS
  
     const allTreasury = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -203,6 +206,7 @@ $(function() {
 
     
     const allTreasury2 = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -257,6 +261,7 @@ $(function() {
     };
 
     const pendingTreasury = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -299,6 +304,7 @@ $(function() {
     };
 
     const doneTreasury = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -345,6 +351,7 @@ $(function() {
 //  START OF GOV.COMP TABLE OPTIONS 
 
     const pendingGC = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -387,6 +394,7 @@ $(function() {
     };
 
     const doneGC = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -429,6 +437,7 @@ $(function() {
     };
 
     const allGC = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -485,6 +494,7 @@ $(function() {
 
 // START OF APPROVER TABLE OPTIONS
     const pendingAPP = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -526,6 +536,7 @@ $(function() {
     };
 
     const doneApp = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -568,6 +579,7 @@ $(function() {
     };
 
     const allAPP = {
+        dom: 'lrtip',
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
@@ -759,6 +771,25 @@ try {
 } catch (error) {
     
 }
- 
+
+// try {
+   
+//     let sdcID = $('#appStatus').data('sdcid');
+//     if(sdcID){
+//                 $.ajax({
+//                     url : '/get/'+sdcID+'/appdetails',
+//                     type : 'GET',
+//                     data : {
+//                         _token: '{{csrf_token()}}',
+//                     },
+//                     success : function(data){
+//                         $('#appstats_tbody').html(data.data);
+//                     }
+//                 });      
+//     }
+
+// } catch (error) {
+    
+// }
     
 });

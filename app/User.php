@@ -38,6 +38,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Role')->withDefault(['role' => null]);
     }
 
+    public function position()
+    {
+        return $this->belongsTo('App\Position')->withDefault(['position' => null]);
+    }
+
     public function ticketMessage()
     {
         return $this->hasMany('App\Message');

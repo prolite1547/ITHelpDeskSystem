@@ -19,7 +19,7 @@
             </div>
             <div class="form-ticketFilter__group">
                 {!! Form::label(3,'Status:',['class' => 'form-ticketFilter__label']) !!}
-                {!! Form::select(3,$statusFilter,null,['placeholder' => '(select priority...)','class' => 'form-ticketFilter__input']) !!}
+                {!! Form::select(3,$statusFilter,null,['placeholder' => '(select status...)','class' => 'form-ticketFilter__input']) !!}
             </div>
             <div class="form-ticketFilter__group">
                 {!! Form::label(4,'Store:',['class' => 'form-ticketFilter__label']) !!}

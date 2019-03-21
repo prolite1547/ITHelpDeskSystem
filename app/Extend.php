@@ -16,4 +16,8 @@ class Extend extends Model
     public function ticket(){
         return $this->belongsTo('App\Ticket');
     }
+
+    public function extendedBy(){
+        return $this->belongsTo('App\User','extended_by','id');
+    }
 }

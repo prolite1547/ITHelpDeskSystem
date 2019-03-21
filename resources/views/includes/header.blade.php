@@ -41,7 +41,7 @@
                         <a href="{{route('myTickets')}}" class="nav__a {{in_array(Route::currentRouteName(),$ticketRoutes) ? 'nav__a--active' : ''}}">Tickets</a>
                     </li>
                     <li class="nav__li">
-                        <a href="#!" class="nav__a">Requests</a>
+                        <a href="javascript:void(0);" class="nav__a">Requests</a>
                     </li>
                     <li class="nav__li">
                         <a href="{{route('datacorrectons.sdcDeployment')}}"class="nav__a {{in_array(Route::currentRouteName(),$dcRoutes) ? 'nav__a--active' : ''}}">Data Corrections</a>
@@ -67,7 +67,7 @@
             <a href="{{route('addTicketView')}}" id="addTicketPageBtn" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
             {{Form::open(['method' => 'GET','url'=>'/search','class' => 'form form--search'])}}
                 <i class="fas fa-search form--search__icon"></i>
-                {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID'))}}
+                {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID)'))}}
             {{Form::close()}}
         </div>
     </div>

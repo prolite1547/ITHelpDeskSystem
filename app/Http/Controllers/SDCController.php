@@ -48,6 +48,7 @@ class SDCController extends Controller
 
         
         $user_id = 0;
+        $sdcID = 0;
        
         $action = $request->action;
   
@@ -83,12 +84,12 @@ class SDCController extends Controller
         if($request->app_group != "CUS"){
             $group = $request->app_group;
             $appGroup = AppHerGroup::where('group','=',$group)->first();
-            $s_heirarchy = $appGroup->s_heirarchy;
-            $unserializedHer = unserialize($s_heirarchy);
+            $s_hierarchy = $appGroup->s_hierarchy;
+            $unserializedHer = unserialize($s_hierarchy);
             $forward_status = $unserializedHer[0];
             
             $sdc->h_group = $group;
-            $sdc->hierarchy = $s_heirarchy;
+            $sdc->hierarchy = $s_hierarchy;
 
 
             if($action == "SAVE"){
@@ -100,16 +101,16 @@ class SDCController extends Controller
         }else{
             $unserialized_array = array();
             $group = $request->app_group;
-            if($request->approver1 != '0'){
+            if($request->approver1 != null){
                 array_push($unserialized_array, (int)$request->approver1);
             }
-            if($request->approver2 != '0'){
+            if($request->approver2 != null){
                 array_push($unserialized_array, (int)$request->approver2);
             }
-            if($request->approver3 != '0'){
+            if($request->approver3 != null){
                 array_push($unserialized_array, (int)$request->approver3);
             }
-            if($request->approver4 != '0'){
+            if($request->approver4 != null){
                 array_push($unserialized_array, (int)$request->approver4);
             }
             $custom_her = serialize($unserialized_array);
@@ -128,6 +129,7 @@ class SDCController extends Controller
         if($sdc->save()){
             $sdc->sdc_no = "SDC".$sdc->id;
             $sdc->save();
+            $sdcID = $sdc->id;
         }
 
        
@@ -153,7 +155,7 @@ class SDCController extends Controller
                     $path = $file->storeAs('public/sdc_attachments',$fileNametoStore);
                     // $path1 = "/storage/sdc_attachments/". $fileNametoStore;
 
-                    SDCAttachment::create(['sdc_no' => $request->sdc_id,'path' => $path,'original_name' => $fileNametoStore,'mime_type' => '','extension' => $fileExtension, 'role_id'=>Auth::user()->role_id]);
+                    SDCAttachment::create(['sdc_no' => $sdcID,'path' => $path,'original_name' => $fileNametoStore,'mime_type' => '','extension' => $fileExtension, 'role_id'=>Auth::user()->role_id]);
     
             }
        }
@@ -240,6 +242,15 @@ class SDCController extends Controller
 
           $sdc = SystemDataCorrection::find($id);
           $sdcstatus = $sdc->status;
+          $ticket_no = $sdc->ticket_no;
+          if($action == "CANCEL DATA CORRECTION"){
+              foreach($sdc->attachments as $att){
+                Storage::disk('sdc_attach')->delete($att->original_name);
+              }
+
+             $sdc->delete();
+             return redirect()->route('lookupTicketView', ['id'=> $ticket_no]);
+          }
 
           //   SUPPORTS UPDATES
           if(($role_id < 5 AND ($status == 0 OR $status == 1))){
@@ -258,12 +269,12 @@ class SDCController extends Controller
                 if($request->app_group != "CUS"){
                     $group = $request->app_group;
                     $appGroup = AppHerGroup::where('group','=',$group)->first();
-                    $s_heirarchy = $appGroup->s_heirarchy;
-                    $unserializedHer = unserialize($s_heirarchy);
+                    $s_hierarchy = $appGroup->s_hierarchy;
+                    $unserializedHer = unserialize($s_hierarchy);
                     $forward_status = $unserializedHer[0];
                     
                     $sdc->h_group = $group;
-                    $sdc->hierarchy = $s_heirarchy;
+                    $sdc->hierarchy = $s_hierarchy;
 
                     if($action == "SAVE"){
                         $sdc->forward_status = 0;
@@ -548,7 +559,7 @@ class SDCController extends Controller
 
            if($role_id < 5){
                 if($status == 0){
-                    return redirect()->route('sdc.printer', ['id'=>$sdc->id]);
+                    return redirect()->route('lookupTicketView', ['id'=> $ticket_no]);
                 }else{
                     return redirect()->route('datacorrectons.sdcDeployment');
                 }
@@ -638,7 +649,7 @@ class SDCController extends Controller
                 $iscustom = false;
                 $data = "";
                 $appgroups = AppHerGroup::where('group','=',$group)->first();
-                $her = $appgroups->s_heirarchy;
+                $her = $appgroups->s_hierarchy;
                 $serialized = unserialize($her);
                 $role = "";
                 $data = "<ol class='breadcrumb'>";
@@ -735,7 +746,7 @@ class SDCController extends Controller
             $iscustom = false;
             $data = "";
             $appgroups = AppHerGroup::where('group','=',$group)->first();
-            $her = $appgroups->s_heirarchy;
+            $her = $appgroups->s_hierarchy;
             $serialized = unserialize($her);
             $role = "";
             $data = "<ol class='breadcrumb'>";
@@ -1016,7 +1027,7 @@ public function addHierarchy(Request $request){
          }
      }
      $arr_serialize = serialize($arr);
-     $ahg->s_heirarchy = $arr_serialize;
+     $ahg->s_hierarchy = $arr_serialize;
      $ahg->save();
      return redirect()->back();
 }

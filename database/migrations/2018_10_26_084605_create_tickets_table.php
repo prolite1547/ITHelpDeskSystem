@@ -22,8 +22,8 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('priority')->nullable();
             $table->unsignedInteger('status');
             $table->unsignedInteger('store');
+            $table->unsignedInteger('group')->nullable();;
             $table->dateTime('expiration')->nullable();;
-            $table->dateTime('fixed_date')->nullable();;
             $table->foreign('store')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('assignee')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
@@ -31,6 +31,9 @@ class CreateTicketsTable extends Migration
             $table->foreign('status')->references('id')->on('ticket_status')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('type')->references('id')->on('ticket_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('priority')->references('id')->on('priorities')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('group')->references('id')->on('ticket_groups')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedInteger('prt_id')->nullable();
+            $table->text('crt_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

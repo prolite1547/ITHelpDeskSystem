@@ -21,7 +21,10 @@ class ExtendController extends Controller
 
             $request->request->add(['extended_by' => $request->user()->id]);
             $ticket = Ticket::findOrFail($id);
-            $ticket->status = 2;
+
+            (is_null($ticket->assignee)) ? $status = 1 : $status = 2;
+
+            $ticket->status = $status;
             $ticket->expiration = Carbon::now()->addHours($duration);
             $ticket->save();
 

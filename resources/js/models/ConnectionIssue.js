@@ -1,6 +1,7 @@
-export default class PLDTMail {
-    storeData(data){
+export default class ConnectionIssue {
 
+
+     storeData(data){
         return $.ajax('/ticket/pldt/add',{
             type: 'POST',
             data: data,
@@ -8,4 +9,6 @@ export default class PLDTMail {
             contentType: false,
         })
     }
+
+
 }

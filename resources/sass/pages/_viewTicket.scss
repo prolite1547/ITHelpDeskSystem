@@ -7,9 +7,34 @@
     border-radius: 3px;
 }
 
+.thread {
+    padding: $padding-default;
+    min-height: 8rem;
+    max-height: 26rem;
+    overflow-y: scroll;
+    position: relative;
+    &__refresh {
+        fill: currentColor;
+        width: 3rem;
+        height: 3rem;
+        cursor: pointer;
+        position: absolute;
+        right: 1rem;
+
+        //&:hover {
+        //    animation: rotate 3s linear infinite;
+        //}
+
+        &:active {
+            transform: scale(.9);
+        }
+
+    }
+}
+
 .ticket-content {
     padding: $padding-default;
-
+    font-size: $default-font-size;
 
     & > * {
         color: $color-black;
@@ -70,6 +95,7 @@
 
     &__more-dropdown:hover  &__list {
         display: block;
+        z-index: 1;
     }
 
     &__subject,&__details {
@@ -182,13 +208,25 @@
     }
 }
 
-.thread {
-    padding: $padding-default;
-    max-height: 26rem;
-    overflow-y: scroll;
-}
+
 
 .message {
+    font-size: $default-font-size;
+
+    &__flex {
+        display: flex;
+        position: absolute;
+        bottom: -2rem;
+        left: 0;
+        width: 100%;
+        &--sb {
+            justify-content: space-between;
+        }
+    }
+
+    &__message {
+        text-indent: 1rem;
+    }
 
     &__name {
         color: $color-tertiary-light;
@@ -207,6 +245,17 @@
         background-color: $color-grey-light-2;
         padding: .2rem 2rem .2rem .5rem;
         border-radius: $border-radius-small;
+    }
+
+    &__conversation {
+        &,
+        &:visited,
+        &:link {
+            font-size: 1rem;
+            color: blue;
+            text-decoration: none;
+        }
+
     }
 
     &__close-icon {
@@ -235,10 +284,12 @@
 
     &__time{
         display: block;
+        font-style: italic;
+        font-size: 1rem;
     }
 
     &:not(:last-child){
-        margin-bottom: 1rem;
+        margin-bottom: 3rem;
     }
 }
 

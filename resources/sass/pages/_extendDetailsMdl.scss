@@ -1,0 +1,14 @@
+.extend-details {
+    padding: 2rem;
+
+    &__details {
+        background-color: $color-grey-light-2;
+        padding: 3px;
+
+
+    }
+
+    &__item:not(:last-child) {
+            margin-bottom: 1rem;
+    }
+}

@@ -25,6 +25,7 @@
                      <a class="btn btn-success action-buttons" onclick="window.print();" style="color:white;">Print Data</a>
                      @if ($sdc->status == 0)
                      <a href="{{ route('sdc.edit', ['id'=> $sdc->id ]) }}" class="btn btn-primary action-buttons" style="color:white;">Update Data</a>
+                     <a href="{{ route('sdc.destroy', ['id'=> $sdc->id ]) }}" class="btn btn-danger action-buttons mt-1" style="color:white;">Cancel Data Correct</a>
                      @endif
                  </div>
              </div>

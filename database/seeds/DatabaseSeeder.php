@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
             ['department' => 'Engineering']
         ]);
 
+        DB::table('ticket_groups')->insert([
+            ['name' => 'Support'],
+            ['name' => 'Technical'],
+        ]);
+
         DB::table('positions')->insert([
             ['position' => 'Web Developer','department_id' => 1],
             ['position' => 'Accountant','department_id' => 2],
@@ -32,7 +37,7 @@ class DatabaseSeeder extends Seeder
             ['role' => 'User'],
             ['role' => 'Admin'],
             ['role' => 'Treasury 1'],
-            ['role' => 'Treasury 1'],
+            ['role' => 'Treasury 2'],
             ['role' => 'Gov. Compliance'],
             ['role' => 'Approver']
         ]);
@@ -52,6 +57,7 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->insert([
             ['name' => 'Hardware'],
             ['name' => 'Software'],
+            ['name' => 'Connection']
         ]);
 
         DB::table('category_a')->insert([
@@ -119,6 +125,17 @@ class DatabaseSeeder extends Seeder
             ['name' => 'User Access(EBS)','catA_id' => 5,'expiration' => 2],
         ]);
 
+        DB::table('category_c')->insert([
+            ['name' => 'No dial tone','catB' => '16'],
+            ['name' => 'Humming tone','catB' => '16'],
+            ['name' => 'Damage telephone','catB' => '16'],
+            ['name' => 'No VPN connection','catB' => '17'],
+            ['name' => 'Intermittent connection','catB' => '17'],
+            ['name' => 'no internet connection','catB' => '17'],
+            ['name' => 'No dial tone and no VPN connection','catB' => '18'],
+        ]);
+
+
         DB::table('resolve_categories')->insert([
             ['name' => 'Patches/Software Update'],
             ['name' => 'Data correction'],
@@ -147,9 +164,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('app_her_groups')->insert([
-            ['group' => 'A', 'approver1'=> 1, 'approver2'=> 2, 'approver3' => 3, 'approver4'=> 4],
-            ['group' => 'A', 'approver1'=> 1, 'approver2'=> 4, 'approver3' => null, 'approver4'=> null],
-            ['group' => 'A', 'approver1'=> 1, 'approver2'=> 2, 'approver3' => 4, 'approver4'=> null]
+            ['group' => 'Group A', 'approver1'=> 1, 'approver2'=> 2, 'approver3' => 3, 'approver4'=> 4, 's_hierarchy' => 'a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}'],
+            ['group' => 'Group B', 'approver1'=> 3, 'approver2'=> 4, 'approver3' => null, 'approver4'=> null, 's_hierarchy' => 'a:2:{i:0;i:3;i:1;i:4;}'],
+            ['group' => 'Group C', 'approver1'=> 1, 'approver2'=> 2, 'approver3' => 4, 'approver4'=> null, 's_hierarchy' => 'a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}'], 
         ]);
 
 

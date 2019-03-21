@@ -2,11 +2,11 @@ const userTickets = {
     ajax: '/tickets/ticket-data/user',
     order: [[5, 'desc']],
     columns: [
-        {data: 'id'},
-        {data: 'category', visible: false},
+        {data: null,name: 'tickets.id'},
+        {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'status', name:'status.name',orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'id', orderable: false}
@@ -19,11 +19,11 @@ const openTickets = {
     ajax: '/tickets/ticket-data/open',
     order: [[5, 'desc']],
     columns: [
-        {data: 'id'},
+        {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,defaultContent: 'Not Set'},
         {data: 'priority',defaultContent: 'Not Set'},
         {data: 'status', orderable: false,defaultContent: 'Not Set'},
-        {data: 'store_name'},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration',defaultContent: 'Not Set'},
         {data: 'id', orderable: false}
@@ -35,11 +35,11 @@ const expiredTickets = {
     ajax: '/tickets/ticket-data/expired',
     order: [[4, 'desc']],
     columns: [
-        {data: 'id'},
-        {data: 'category', visible: false},
+        {data: null,name: 'tickets.id'},
+        {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'status', name:'status.name',orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},
@@ -51,11 +51,11 @@ const ongoingTickets = {
     ajax: '/tickets/ticket-data/ongoing',
     order: [[5, 'desc']],
     columns: [
-        {data: 'id'},
-        {data: 'category', visible: false},
+        {data: null,name: 'tickets.id'},
+        {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'status', name:'status.name',orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},
@@ -67,11 +67,11 @@ const closedTickets = {
     ajax: '/tickets/ticket-data/closed',
     order: [[4, 'desc']],
     columns: [
-        {data: 'id'},
+        {data: null,name: 'tickets.id'},
         {data: 'category',visible: false},
         {data: 'priority'},
-        {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'status', name:'status.name',orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
         {data: 'resolved_date'},
@@ -82,18 +82,18 @@ const closedTickets = {
 };
 
 const fixedTickets = {
-    ajax: '/tickets/ticket-data/fixedRej',
+    ajax: '/tickets/ticket-data/fixed',
     order: [[4, 'desc']],
     columns: [
-        {data: 'id'},
-        {data: 'category', visible: false},
+        {data: null,name: 'tickets.id'},
+        {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'status', name:'status.name',orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
-        {data: 'fixed_date'},
-        {data: 'assignee',visible: true},
+        {data: 'fix_date'},
+        {data: 'fixed_by',visible: true},
         {data: 'id', orderable: false}
     ],
 };
@@ -102,11 +102,11 @@ const allTickets = {
     ajax: '/tickets/ticket-data/all',
     order: [[5, 'desc']],
     columns: [
-        {data: 'id'},
-        {data: 'category', visible: false},
+        {data: null,name: 'tickets.id'},
+        {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', orderable: false},
-        {data: 'store_name'},
+        {data: 'status', name:'status.name',orderable: false},
+        {data: 'store_name',name:'stores.store_name'},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},
@@ -155,7 +155,7 @@ export const initDataTables = () => {
 
     /*APPLY THE GENERATED DATATABLE OPTION*/
     return $('table').DataTable(options);
-    ;
+
 
 
 };

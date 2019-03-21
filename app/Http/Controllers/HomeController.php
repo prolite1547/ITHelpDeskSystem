@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -32,8 +33,12 @@ class HomeController extends Controller
     }
 
     public function search(Request $request){
-        $ticket = Ticket::find($request->q);
+        $search_results = DB::table('incidents')
+            ->select(['tickets.id','subject','details'])
+            ->join('tickets','tickets.incident_id','=','incidents.id')
+            ->whereRaw("concat_ws(' ',tickets.id,incidents.subject,incidents.details) LIKE '%$request->q%'")
+            ->get();
 
-        return view('search')->with(compact('ticket'));
+        return view('search')->with(compact('search_results'));
     }
 }

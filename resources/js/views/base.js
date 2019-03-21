@@ -17,8 +17,6 @@ export const elements = {
     chatSendButton: document.querySelector('.chat__button'),
     reply: document.querySelector('.chat__textarea'),
     categoryInput: document.querySelector('.form__input[name="category"]'),
-    resolve: document.querySelector('.ticket-content__link--resolve'),
-    reject: document.querySelector('.ticket-content__link--reject'),
     profilePicEditIcon: document.getElementById('profImage'),
     ticketAddSubmitBtn: document.getElementById('ticketAdd'),
     addCallerForm: document.getElementById('addCaller'),
@@ -39,12 +37,21 @@ export const elements = {
     maintenanceCol: document.querySelector('.plusToggleContainer'),
     addTicketDetailsForm: document.querySelector('.form-addTicketDetails'),
     addTicketDetailsFormTicketEl: document.querySelector('.form-addTicketDetails__ticket-value'),
+    btnShwExtndDtails: document.querySelector('.ticket-details__value--extend'),
 
-    resolveButton: document.querySelector('button[data-action=viewRslveDtls'),
+    selectPID: document.querySelector('.form-email__input-select--pid'),
+    selectTel: document.querySelector('.form-email__input-select--tel'),
+    selectConcern: document.querySelector('.form-email__input-select--concern'),
+
+    fixButtonShowDetails: document.querySelector('button[data-action=viewFixDtls'),
     chatForm: document.querySelector('.chat'),
     printTicketBtn: document.querySelector('.ticket-content__link--print'),
     ticketDetailStore: document.querySelector('a.ticket-details__value--store'),
     fixBtn: document.querySelector('.ticket-content__link--fix'),
+    chatForm__reply: document.querySelector('.group[data-thread=reply]'),
+    chatForm__chat: document.querySelector('.group[data-thread=chat]'),
+
+    refreshBtn: document.querySelector('svg[data-refresh]'),
 
 
     filterTicketsIcon:document.querySelector('#ticketFilter'),
@@ -53,24 +60,27 @@ export const elements = {
     clearFilter: document.querySelector('#clearFilter'),
     rejectDetailsBtn: document.querySelector('button[data-action=viewRjctDtls]'),
 
-
+    btnAddRelated: document.getElementById('btnAddRelated'),
+    btnShowAppStats: document.getElementById('appStatus'),
     /*ADMIN PAGE*/
     addUserBtn: document.querySelector('[data-action=addUserBtn]'),
 };
-
 
 export const elementStrings = {
     ticketCheckbox: '.menu__checkbox',
     select2element: '.form__input--select2',
     loader2: 'loader2',
     ticketContentEditIcon: '.ticket-content__link--edit',
-    resolve_form: '.form-resolve',
+    fix_form: '.form-fix',
     addCallerSubmit: 'button[data-action=addCaller]',
     addBranchSubmit: 'button[data-action=addBranch]',
     addContactSubmit: 'button[data-action=addContact]',
     branchSelectContact: 'select[data-select=contact]',
     depSelectpos: 'select[data-select=position]',
     ticketAddBtn: '#ticketAdd',
+    rejectBtnShowForm: '[data-action=showRejectForm]',
+    resolveBtn: '[data-action=resolveTicket]',
+
 
     /*TICKET ADD*/
     ticketAddFormActive: 'window__item--active',
@@ -97,7 +107,11 @@ export const clearLoader = () => {
     if (loader) loader.parentElement.removeChild(loader);
 };
 
-export const showModal= (markup = false) => {
+export const showModal= (markup = false,close = true) => {
+    const popup__close = elements.modal.querySelector('.popup__close');
+
+    close === true ? popup__close.classList.remove('u-display-n') : popup__close.classList.add('u-display-n');
+
     if(markup){
         elements.modalContent.innerHTML = markup;
     }else{
@@ -105,7 +119,9 @@ export const showModal= (markup = false) => {
     }
     elements.container.style.filter = 'blur(1px)';
     elements.modal.style.visibility = 'visible';
+
     elements.modal.style.opacity = '1';
+
 };
 
 export const insertToModal = (markup) => {
@@ -116,6 +132,7 @@ export const hideModal= () => {
     elements.container.style.filter = '';
     elements.modal.style.visibility = 'hidden';
     elements.modal.style.opacity = '0';
+    elements.modalContent.innerHTML = "";
 };
 
 export const displayError = (jqXHR) => {

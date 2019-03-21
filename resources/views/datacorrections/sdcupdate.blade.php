@@ -1478,11 +1478,17 @@
                                 </div>
                 @if ($sdc->status != 2)
                                 <hr class="mb-4">
-                                <div class="row">
+                                <div class="row mb-2">
                                       <div class="col-md-12">
                                               <input class="btn btn-primary btn-md btn-block" type="submit" name="action" value="SAVE"> 
                                       </div>
                                 </div>
+                                <div class="row ">
+                                        <div class="col-md-12">
+                                                <input class="btn btn-danger btn-md btn-block confirmation5" type="submit" name="action" value="CANCEL DATA CORRECTION"> 
+                                                <input class="btn btn-success btn-md btn-block" style="display:none;" id="cancelSDC" type="submit" name="action" value="CANCEL DATA CORRECTION" > 
+                                        </div>
+                                  </div>
                 @endif
                                 <hr>
                                 <div class="row  mb-5">

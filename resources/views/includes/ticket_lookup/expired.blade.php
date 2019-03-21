@@ -6,7 +6,7 @@
                     <div class="ticket-content__more-dropdown">
                         <span class="ticket-content__more">More...</span>
                         <ul class="ticket-content__list">
-                            <li class="ticket-content__item"><a href="#!" class="ticket-content__link ticket-content__link--edit">Extend</a></li>
+                            <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--edit">Extend</a></li>
                             <li class="ticket-content__item"><a href="{{route('print.ticket',['id' => $ticket->id])}}" target="_blank" class="ticket-content__link ticket-content__link--print">Print</a></li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@
                         <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
-                        <a href="#!" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}} ({{$ticket->incident->call->callerRelation->positionData->position}})</a>
+                        <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}} ({{$ticket->incident->call->callerRelation->positionData->position}})</a>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
                         <span class="ticket-details__value"> {{$ticket->created_at}}</span>
@@ -82,7 +82,7 @@
                         <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                        <a href="#!" data-store="{{$ticket->getStore->id}}" class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->getStore->store_name}}</a>
+                        <a href="javascript:void(0);" data-store="{{$ticket->getStore->id}}" class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->getStore->store_name}}</a>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
                         @if($ticket->assigneeRelation)

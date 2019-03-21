@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,8 +21,12 @@ class Ticket extends Model
         'created_at',
         'logged_by',
         'fixed_date',
+        'group',
+        'prt_id',
+        'crt_id'
     ];
 
+protected $dates = ['deleted_at'];
 
 public function userLogged(){
     return $this->belongsTo('App\User','logged_by');
@@ -59,8 +64,8 @@ public function ticketMessages(){
     return $this->hasMany('App\Message')->latest('created_at');
 }
 
-public function resolve(){
-    return $this->hasOne('App\Resolve','ticket_id','id');
+public function fixTicket(){
+    return $this->hasMany('App\Fix','ticket_id','id');
 }
 
 public function getFileDirectoryFolder()
@@ -103,5 +108,11 @@ public function rejectData() {
 public function extended(){
     return $this->hasMany('App\Extend');
 }
+
+
+public function connectionIssueMailReplies(){
+    return $this->hasMany('App\ConnectionIssueReply','ticket_id','id');
+}
+
 
 }

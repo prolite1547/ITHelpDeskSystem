@@ -20,7 +20,7 @@ class CreateAppHerGroupsTable extends Migration
             $table->integer("approver2")->nullable();
             $table->integer("approver3")->nullable();
             $table->integer("approver4")->nullable();
-            $table->text("s_heirarchy")->nullable();
+            $table->text("s_hierarchy")->nullable();
             $table->timestamps();
         });
     }

@@ -1,15 +1,14 @@
-import {elements,elementStrings,displayError,toggleFormGroups} from "./views/base";
+import {elements, elementStrings, displayError} from "./views/base";
 import * as editTicketView from './views/editIicketView';
 import * as addTicketView from './views/ticket_add';
 import Ticket from './models/Ticket';
 import Message from './models/Message';
-import Resolve from './models/Resolve';
+import Fix from './models/Fix';
 import {branchSelect2, cntctSelect2, deptSelect2, psitionSelect2} from "./select2";
 import * as glboalScript from './global';
-import {renderLoader,clearLoader,showModal,insertToModal,hideModal} from "./views/base";
-
-
-
+import {renderLoader, clearLoader, showModal, insertToModal, hideModal} from "./views/base";
+import ConnectionIssueReply from "./models/ConnectionIssueReply";
+import {disableSubmitBtn} from "./global";
 
 
 ////////////////////////////////
@@ -21,7 +20,7 @@ import {renderLoader,clearLoader,showModal,insertToModal,hideModal} from "./view
 export const ticketAddController = () => {
 
     /*INITIALIZE*/
-    (function(){
+    (function () {
 
         /*ADD THE ACTIVE CLASS TO THE INCIDENT ITEM*/
         // elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
@@ -31,46 +30,42 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
-    $('#callerBranchSelect,#contactBranchSelect,#ticketBranchSelect').select2(branchSelect2);
-
+    $('#callerBranchSelect,#contactBranchSelect,.branchSelect').select2(branchSelect2);
     $('#ticketPositionSelect').select2(psitionSelect2);
-
     $('#positionDepSelect').select2(deptSelect2);
-
     $('#contact_id').select2(cntctSelect2);
-
     $('#assigneeSelect').select2({
         width: '30%',
     });
 
     /*DYNAMIC FORM*/
-    document.querySelector('.window').addEventListener('click',e => {
-       if(e.target.matches('.window__item')){
-           let items,item;
-           items = e.target.parentNode.querySelectorAll('.window__item');
-           item = e.target;
+    document.querySelector('.window').addEventListener('click', e => {
+        if (e.target.matches('.window__item')) {
+            let items, item;
+            items = e.target.parentNode.querySelectorAll('.window__item');
+            item = e.target;
 
-           /*REMOVE THE ACTIVE CLASS FROM THE ITEMS*/
-           items.forEach(el => {
-              el.classList.remove(elementStrings.ticketAddFormActive);
-           });
+            /*REMOVE THE ACTIVE CLASS FROM THE ITEMS*/
+            items.forEach(el => {
+                el.classList.remove(elementStrings.ticketAddFormActive);
+            });
 
-           /*ADD THE ACTIVE CLASS TO THE CLICKED ITEM*/
-           item.classList.add(elementStrings.ticketAddFormActive);
+            /*ADD THE ACTIVE CLASS TO THE CLICKED ITEM*/
+            item.classList.add(elementStrings.ticketAddFormActive);
 
-           /*DISPLAY THE FORM*/
-           addTicketView.displayForm();
-       }
+            /*DISPLAY THE FORM*/
+            addTicketView.displayForm();
+        }
     });
 
     /*ADD EVENT LISTENER ON ADD TICKET FORM*/
-    elements.addTicketForm.addEventListener('submit',(e) => {
-        if(e.target.checkValidity()){
+    elements.addTicketForm.addEventListener('submit', (e) => {
+        if (e.target.checkValidity()) {
             e.preventDefault();
             e.target.classList.toggle('u-display-n');
             renderLoader(e.target.parentElement);
 
-            $.ajax('/ticket/add',{
+            $.ajax('/ticket/add', {
                 type: 'POST',
                 data: $(e.target).serialize()
             })
@@ -94,7 +89,11 @@ export const ticketAddController = () => {
     elements.addPositionForm.addEventListener('submit', glboalScript.sendForm);
     elements.addDepartmentForm.addEventListener('submit', glboalScript.sendForm);
     elements.addBranchForm.addEventListener('submit', glboalScript.sendForm);
-    elements.PLDTForm.addEventListener('submit',glboalScript.sendForm);
+    elements.PLDTForm.addEventListener('submit', glboalScript.sendForm);
+
+
+    /*get concern element*/
+    elements.selectConcern.addEventListener('change', editTicketView.showSelects);
 };
 
 ////////////////////////////////
@@ -104,7 +103,7 @@ export const ticketAddController = () => {
 ////////////////////////////////
 
 export const ticketViewController = (user) => {
-    const ticket = new Ticket(elements.ticketID,elements.ticketSubject,elements.ticketDetails);
+    const ticket = new Ticket(elements.ticketID, elements.ticketSubject, elements.ticketDetails);
 
     Echo.private(`chat.${ticket.ID}`)
         .listen('MessageSent', (e) => {
@@ -113,23 +112,20 @@ export const ticketViewController = (user) => {
 
     ticket.fetchOriginalData()
         .done(data => {
-            /*TICKET STATUS ID 3 IS == TO CLOSES*/
-            if(data.status === 3){
-                elements.resolveButton.addEventListener('click', editTicketView.getModalWithData.bind(this,data.id));
-
-            }else {
+            /*TICKET STATUS IS EQUAL TO FIX(4)*/
+            if (data.status === 4 || data.status === 3) {
+                elements.fixButtonShowDetails.addEventListener('click', editTicketView.getModalWithData.bind(null, data));
+            } else {
 
                 /*ADD CLICK EVENT LISTENER */
                 elements.ticketContent.addEventListener('click', e => {
                     /*IF USER CLICK THE EDIT INSIDE THE MORE*/
                     if (e.target.matches(elementStrings.ticketContentEditIcon)) {
                         /*make elements editable*/
-
                         editTicketView.makeElementsEditable();
 
                         /*show save button*/
                         editTicketView.showButtons();
-
                     }
 
 
@@ -167,7 +163,7 @@ export const ticketViewController = (user) => {
                 });
 
                 /*EVENT LISTENER EDIT ICON CLICK*/
-                if(elements.ticketDetailsEditIcon){
+                if (elements.ticketDetailsEditIcon) {
                     elements.ticketDetailsEditIcon.addEventListener('click', () => {
                         ticket.createObjectForEditData(); /*CLEAR EDIT DATA*/
 
@@ -186,35 +182,35 @@ export const ticketViewController = (user) => {
                                 console.log(`Error on making edit modal markup!! Error: ${error}`);
                             });
                     });
-                if(elements.ticketDetailsAddFilesIcon){
-                    elements.ticketDetailsAddFilesIcon.addEventListener('click', () => {
-                        showModal();
-                        /*SHOW MODAL*/
-                        insertToModal(editTicketView.addFileMarkup);
+                    if (elements.ticketDetailsAddFilesIcon) {
+                        elements.ticketDetailsAddFilesIcon.addEventListener('click', () => {
+                            showModal();
+                            /*SHOW MODAL*/
+                            insertToModal(editTicketView.addFileMarkup);
 
-                        const myDropzone = new Dropzone("#addFiles", {
-                            url: `/file/ticket/${ticket.ID}`,
-                            parallelUploads: 3,
-                            uploadMultiple: true,
-                            autoProcessQueue: false,
-                            addRemoveLinks: true,
-                            dictDefaultMessage: 'Drop files here to be uploaded'
+                            const myDropzone = new Dropzone("#addFiles", {
+                                url: `/file/ticket/${ticket.ID}`,
+                                parallelUploads: 3,
+                                uploadMultiple: true,
+                                autoProcessQueue: false,
+                                addRemoveLinks: true,
+                                dictDefaultMessage: 'Drop files here to be uploaded'
+                            });
+
+                            myDropzone.on("complete", function () {
+                                myDropzone.removeAllFiles();
+                            });
+
+                            document.querySelector('.dropzone__upload').addEventListener('click', () => {
+                                if (myDropzone.files.length !== 0) {
+                                    myDropzone.processQueue();
+                                } else {
+                                    return alert('No files found to be uploaded!!');
+                                }
+                            })
+
                         });
-
-                        myDropzone.on("complete", function () {
-                            myDropzone.removeAllFiles();
-                        });
-
-                        document.querySelector('.dropzone__upload').addEventListener('click', () => {
-                            if (myDropzone.files.length !== 0) {
-                                myDropzone.processQueue();
-                            } else {
-                                return alert('No files found to be uploaded!!');
-                            }
-                        })
-
-                    });
-                }
+                    }
                     /*EVENT LISTENER ON CANCEL AND DONE BUTTON INSIDE TICKET DETAILS MODAL*/
                     elements.modal.addEventListener('click', e => {
                         if (e.target.matches('button')) {
@@ -246,30 +242,26 @@ export const ticketViewController = (user) => {
                 }
 
 
-                if (elements.resolve){
-                /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
-                    elements.resolve.addEventListener('click', (e) => {
+                if (elements.fixBtn) {
+                    /*CLICK EVENT LISTENER ON RESOLVE BUTTON*/
+                    elements.fixBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         showModal();
                         renderLoader(elements.modalContent);
-                        const resolveRequest = editTicketView.getResolveFormMarkUp();
-                        resolveRequest.done(data => {
+
+                        editTicketView.getFixFormMarkUp()
+                        .done(data => {
                             clearLoader();
                             insertToModal(data);
 
-                            document.querySelector('button[data-action=resolved]').addEventListener('click', () => {
 
-                                document.querySelector(elementStrings.resolve_form).addEventListener('submit', e => {
-                                    e.preventDefault();
-                                });
-
-                                const formdata = $(elementStrings.resolve_form).serialize();
-
-                                let resolve = new Resolve(ticket.ID, formdata);
-
-                                resolve.createResolve()
+                            document.querySelector(elementStrings.fix_form).addEventListener('submit', e => {
+                                e.preventDefault();
+                                const formdata = $(e.target).serialize();
+                                const fix = new Fix(ticket.ID, formdata);
+                                fix.createFix()
                                     .done(() => {
-                                        alert('Ticket marked as resolved successfully!!');
+                                        alert('Ticket marked as fixed successfully!!');
                                         window.location.reload();
                                         hideModal();
                                     })
@@ -277,54 +269,114 @@ export const ticketViewController = (user) => {
                                         displayError(jqXHR);
                                     });
                             });
+
                         });
                     });
 
 
                 }
 
-                if(elements.reject){
-                    elements.reject.addEventListener('click', editTicketView.showRejectModal.bind(null,ticket.ID));
+
+
+
+            }
+
+
+            // /*EVENT LISTENER ON SEND BUTTON*/
+            if (elements.chatForm) {
+
+                const connection_id = data.incident.connection_id;
+                const call_id = data.incident.call_id;
+
+                /*generate input depending if its mail or call*/
+                if(connection_id && call_id === null){
+                    editTicketView.generateForm('reply');
+                }else if(call_id && connection_id === null){
+                    editTicketView.generateForm('chat');
                 }
 
 
-            }
-        });
+                /*generate inputs whenever user clicks that chat or reply menu*/
+                elements.chatForm.addEventListener('click',e => {
+                    if(e.target.matches('li')){
+                        const form = e.target.dataset.form;
+                        editTicketView.generateForm(form);
+                    }
+                });
 
-
-
-    // /*EVENT LISTENER ON SEND BUTTON*/
-    elements.chatForm.addEventListener('submit', e => {
-        if (e.target.checkValidity()) {
-            e.preventDefault();
-            const newMessage = editTicketView.getMessageData();
-            if (!newMessage) {
-                return alert(`What's the point of sending a message if its empty!! Message: ${newMessage}`);
-            }
-            editTicketView.resetReply();
-            const newMessageObject = new Message(ticket.ID, newMessage);
-            newMessageObject.saveMessage(newMessageObject)
-                .done(() => {
-                    alert('Message Sent Successfull!')
-                })
-                .fail((jqXHR) => {
-                    displayError(jqXHR);
+                /*refreshes the thread of replies*/
+                elements.refreshBtn.addEventListener('click',(e) => {
+                    const threadEl = e.target.parentElement;
+                    const refreshBtn = e.target;
+                    threadEl.innerHTML = "";
+                    renderLoader(threadEl);
+                    ticket.getReplies()
+                        .done(data => {
+                            const replies = editTicketView.generateRepliesMarkup(data.data);
+                            threadEl.innerHTML = replies;
+                            threadEl.insertAdjacentElement('afterbegin',refreshBtn);
+                        }).fail(() => {
+                            alert('Failed to get replies!');
                     });
-        }
-    });
+                });
+
+                elements.chatForm.addEventListener('submit', e => {
+                    if (e.target.checkValidity()) {
+                        e.preventDefault();
+                        let promise,error;
+                        const action = e.target.dataset.form;
+                        const form_elements = e.target.elements;
+                        const reply = form_elements.reply.value;
+                        const submitBtn = form_elements.chat__button;
+                        const original_text = submitBtn.value;
+                        disableSubmitBtn(submitBtn);
+
+                        if(action === 'chat'){
+                            const message = new Message;
+                            promise = message.saveMessage(ticket.ID,reply);
+
+                        }else if(action === 'reply'){
+                            let subject;
+                            const formData = new FormData(e.target);
+
+                            subject = `Re: ${data.incident.subject} (TID#${data.id})`;
+
+                            formData.append('subject',subject);
+
+                            promise = ConnectionIssueReply.sendMailReply(formData);
+                        }else{
+                            error = 'Error on sending data!'
+                        }
+
+                        if(!error){
+                            promise.done(() => {
+                                alert('Message Sent Successfully!');
+                                disableSubmitBtn(submitBtn,original_text,false);
+                                e.target.reset();
+                            })
+                            .fail((jqXHR) => {
+                                disableSubmitBtn(submitBtn,original_text,false);
+                                displayError(jqXHR);
+                            });
+                        }
+                    }
+                });
+            }
+
+        });
 
 
     /*DELETE MESSAGE*/
     document.querySelector('.thread').addEventListener('click', e => {
 
-        if(e.target.matches('.message__close-icon')){
-            let message,messageID;
+        if (e.target.matches('.message__close-icon')) {
+            let message, messageID;
 
             message = e.target.closest('.message');
             messageID = message.dataset.id;
 
-            $.ajax(`/message/delete/${messageID}`,{
-               type: 'delete'
+            $.ajax(`/message/delete/${messageID}`, {
+                type: 'delete'
             }).done(() => {
                 e.target.parentNode.parentNode.parentNode.parentNode.removeChild(message);
             }).fail(() => {
@@ -333,13 +385,57 @@ export const ticketViewController = (user) => {
         }
     });
 
+    if (elements.btnShwExtndDtails) {
+        elements.btnShwExtndDtails.addEventListener('click', editTicketView.showExtndMdl.bind(null, ticket.ID));
+    }
+
 
     /*EXTEND*/
-    if(elements.extendFormBtn) elements.extendFormBtn.addEventListener('click',editTicketView.showExtendFormModal.bind(null,ticket.ID));
+    if (elements.extendFormBtn) elements.extendFormBtn.addEventListener('click', editTicketView.showExtendFormModal.bind(null, ticket.ID));
 
-    elements.ticketDetailStore.addEventListener('click',editTicketView.displayContactNumbers);
+    elements.ticketDetailStore.addEventListener('click', editTicketView.displayContactNumbers);
 
-    if(elements.fixBtn) elements.fixBtn.addEventListener('click',ticket.markAsFixed.bind(ticket,user));
+    // if (elements. fixBtn) elements.fixBtn.addEventListener('click', ticket.markAsFixed.bind(ticket, user));
 
-    if(elements.rejectDetailsBtn) elements.rejectDetailsBtn.addEventListener('click',editTicketView.showRejectDetails.bind(null,ticket.ID))
+    if (elements.rejectDetailsBtn) elements.rejectDetailsBtn.addEventListener('click', editTicketView.showRejectDetails.bind(null, ticket.ID))
+
+  if(elements.btnAddRelated){
+    elements.btnAddRelated.addEventListener('click', function(){
+        let id = $(this).data('rid');
+        showModal();
+        renderLoader(elements.modalContent);
+        $.ajax({
+                url : '/relate/'+id+'/ticket',
+                type: 'GET',
+                success : function(data){
+                    clearLoader();
+                       insertToModal(data);
+                }
+        });
+    });
+  }
+
+  if(elements.btnShowAppStats){
+    elements.btnShowAppStats.addEventListener('click',function(){
+        showModal();
+        renderLoader(elements.modalContent);
+        let sdcid =  $(this).data('sdcid');
+        $.ajax({
+                url : '/show/'+sdcid+'/approverstats',
+                type: 'GET',
+                success : function(data){
+                    clearLoader();
+                       insertToModal(data.view);
+                       $('#appstats_tbody').html(data.data);
+                }
+        });
+    });
+  }
+
+  
+
+   
+
+
+
 };

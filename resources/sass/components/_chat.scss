@@ -1,5 +1,6 @@
 .chat {
-
+    font-size: 1.3rem;
+    position: relative;
     display: table;
     width: 100%;
     padding: $padding-default;
@@ -8,17 +9,35 @@
     border-top-right-radius: 3rem;
     border-bottom-right-radius: 3rem;
 
+    &__menu {
+        list-style: none;
+        position: absolute;
+        top: -2rem;
+    }
+
+    &__item {
+        display: inline-block;
+        background-color: $color-grey-light-2;
+        padding: 0 5px 5px 5px;
+        cursor: pointer;
+        user-select: none;
+        &:hover {
+            transform: translateY(-.2rem);
+        }
+
+        &:active {
+            transform: translateY(.01px);
+        }
+    }
+
+    &__attachment {
+
+    }
+
     &__textarea {
         display: table-cell;
         width: 100%;
         vertical-align: middle;
-    }
-
-    &__send {
-        display: table-cell;
-        vertical-align: middle;
-        text-align: center;
-        width: 10%;
     }
 
     &__button {
@@ -30,6 +49,7 @@
         border: none;
         outline: none;
         cursor: pointer;
+        margin-left: 3px;
 
         &:active {
             transform: translateY(1px);

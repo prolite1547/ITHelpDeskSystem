@@ -242,6 +242,25 @@
  
         });
 
+        $('.confirmation5').on('click',function(e){
+          e.preventDefault();
+          swal({
+                title: "Are you sure?",
+                text: "You are about to cancel this data correction!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((confirmed) => {
+                if (confirmed) {
+                  $('#cancelSDC').click();
+                  
+                }  
+              });
+ 
+        });
+
+
         
         //   $('.needs-validation').on('keyup keypress', function(e) {
         //   var keyCode = e.keyCode || e.which;
