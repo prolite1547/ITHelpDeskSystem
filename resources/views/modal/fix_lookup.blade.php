@@ -20,10 +20,10 @@
         {{Form::label('created_at','Fix Date:',['form__label'])}}
         {{Form::text('created_at',$fix->created_at,['class' => 'form__input form__input--readonly','readonly'])}}
     </div>
-    @if((in_array(Auth::user()->role_id,[$user_roles['tower'],$user_roles['admin']]) && $ticket->status === $ticket_status_arr['Fixed']))
+    @can('resolveReject',$ticket)
     <div class="form__group">
         <button type="button" class="btn btn--red" data-action="showRejectForm">Reject</button>
         <button type="button" class="btn btn--blue" data-action="resolveTicket">Resolve</button>
     </div>
-    @endif
+    @endcan
 </div>

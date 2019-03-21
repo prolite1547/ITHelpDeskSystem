@@ -12,24 +12,24 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        DB::table('departments')->insert([
-            ['department' => 'IT'],
-            ['department' => 'Accounting'],
-            ['department' => 'Engineering']
-        ]);
+//        DB::table('departments')->insert([
+//            ['department' => 'IT'],
+//            ['department' => 'Accounting'],
+//            ['department' => 'Engineering']
+//        ]);
 
         DB::table('ticket_groups')->insert([
             ['name' => 'Support'],
             ['name' => 'Technical'],
         ]);
 
-        DB::table('positions')->insert([
-            ['position' => 'Web Developer','department_id' => 1],
-            ['position' => 'Accountant','department_id' => 2],
-            ['position' => 'Surveyor','department_id' => 3],
-            ['position' => 'Support','department_id' => 1],
-            ['position' => 'Technical','department_id' => 1]
-        ]);
+//        DB::table('positions')->insert([
+//            ['position' => 'Web Developer','department_id' => 1],
+//            ['position' => 'Accountant','department_id' => 2],
+//            ['position' => 'Surveyor','department_id' => 3],
+//            ['position' => 'Support','department_id' => 1],
+//            ['position' => 'Technical','department_id' => 1]
+//        ]);
 
         DB::table('roles')->insert([
             ['role' => '1st Level Support'],
@@ -69,13 +69,13 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Connection'],
         ]);
 
-        DB::table('stores')->insert([
-            ['store_name' => 'Bajada'],
-            ['store_name' => 'Liloan'],
-            ['store_name' => 'Matina'],
-            ['store_name' => 'Naval'],
-            ['store_name' => 'Oton']
-        ]);
+//        DB::table('stores')->insert([
+//            ['store_name' => 'Bajada'],
+//            ['store_name' => 'Liloan'],
+//            ['store_name' => 'Matina'],
+//            ['store_name' => 'Naval'],
+//            ['store_name' => 'Oton']
+//        ]);
 
         DB::table('expirations')->insert([
             ['expiration' => 24],

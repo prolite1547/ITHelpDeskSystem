@@ -2,14 +2,14 @@
     <div class="ticket-details__title">
         <h4 class="heading-quaternary">Details</h4>
     </div>
-    @if((!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && ($ticket->assigneeRelation->id === Auth::id()) || in_array(Auth::user()->role->id,$higherUserGroup)))
+    @can('update',$ticket)
         <div class="ticket-details__icon-box">
             @if($ticket->assigneeRelation->id === Auth::id())
                 <i class="fas fa-plus ticket-details__icon ticket-details__icon--add" title="Add Files"></i>
             @endif
             <i class="far fa-edit ticket-details__icon ticket-details__icon--edit" title="Edit Details"></i>
         </div>
-    @endif
+    @endcan
 </div>
 <div class="ticket-details__content">
     <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
@@ -46,7 +46,7 @@
         <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
             <a href="javascript:void(0);"
                class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}
-                ({{$ticket->incident->call->callerRelation->positionData->position}})</a>
+                ({{$ticket->incident->call->callerRelation->position->position}})</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
             <span class="ticket-details__value"> {{$ticket->created_at}}</span>
@@ -79,11 +79,7 @@
             @endif
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
-            <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
-        </li>
-        <li class="ticket-details__item"><span class="ticket-details__field">Sub-A Category:</span>
-            <span
-                class="ticket-details__value">{{$ticket->incident->catARelation->name}} - {{$ticket->incident->catBRelation->name}}</span>
+            <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}} - {{$ticket->incident->catARelation->name}} - {{$ticket->incident->catBRelation->name}}</span>
         </li>
         {{--<li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>--}}
         {{--<span class="ticket-details__value">&nbsp;</span>--}}

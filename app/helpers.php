@@ -1,8 +1,10 @@
 <?php
 
+use App\AllUser;
 use App\Caller;
 use App\Category;
 use App\Status;
+use App\TempUser;
 use App\Ticket;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -96,31 +98,44 @@ if (! function_exists('ticketTypeCount')) {
 
 if (! function_exists('addCaller')) {
     function addCaller($data){
-        $caller = $caller = "{$data['fName']} {$data['mName']} {$data['lName']}";
-
-        $fetchedCaller = Caller::where(DB::raw('CONCAT_WS(" ",fName,mName,lName)'),'like',$caller)->first();
-        if($fetchedCaller === null){
-            return $caller_id = Caller::create($data)->id;
-        }else {
-            return $caller_id = $fetchedCaller->id;
-        }
+        $data['department_id'] = \App\Position::findOrFail($data['position_id'])->department->id;
+        return TempUser::create()->user()->create($data)->id;
     }
 }
 
 if (! function_exists('validateLoggersTicketStatus')) {
     function validateLoggersTicketStatus($user_id){
         $user_tickets = DB::table('users as u')
+            ->join('tickets as t','u.id','t.logged_by')
+            ->leftJoin('incidents as i','t.incident_id','i.id')
             ->where('u.id',$user_id)
-            ->whereNotNull('t.id')
             ->where(function ($query){
                 $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null,'t.group' => null]);
             })
-            ->leftJoin('tickets as t','u.id','t.logged_by')
-            ->leftJoin('incidents as i','t.incident_id','i.id')
-            ->select('t.id','t.incident_id','t.priority','t.expiration','i.subject','i.details','i.category','i.catA','i.catB')
+            ->select('t.id','t.logged_by')
             ->first();
+        if($user_tickets){
+            return ['incomplete' => true,'ticket_id' => $user_tickets->id];
+        }else{
+            return ['incomplete' => false];
+        }
 
-        return $user_tickets;
+    }
+}
+
+
+if (! function_exists('checkTicketDataIfIncomplete')) {
+    function checkTicketDataIfIncomplete($ticket_id){
+        $ticket = DB::table('tickets AS t')
+            ->join('incidents AS i','t.incident_id','i.id')
+            ->select('t.id','t.logged_by','t.priority','t.expiration','i.subject','i.details','i.category','i.catA','i.catB')
+            ->where('t.id',$ticket_id)
+        ->first();
+
+        foreach ($ticket as $property => $value){
+            if(is_null($value)) return ['incomplete' => true,'logged_by' =>$ticket->logged_by];
+        }
+
     }
 }
 
@@ -154,9 +169,12 @@ if (! function_exists('getNumberOfTicketsOnASpecStatus')) { /*uppercase words an
         $ticketCounts['All'] =  Ticket::all()->count();
         foreach ($ticketStatuses as $key => $value){
             if($value === 'Fixed'){
-                $count = Status::findOrFail($key)->tickets->whereIn('group',getGroupIDDependingOnUser())->count();
+                $group = Auth::user()->group;
+                $count = Ticket::whereStatus($key)->when($group,function ($query,$group){
+                    return $query->whereGroup($group);
+                })->count();
             }else{
-                $count = Status::findOrFail($key)->tickets->count();
+                $count = Ticket::whereStatus($key)->count();
             }
             $ticketCounts[$value] = $count;
         }
@@ -168,17 +186,16 @@ if (! function_exists('getNumberOfTicketsOnASpecStatus')) { /*uppercase words an
 if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remove extra white spaces*/
     function getGroupIDDependingOnUser(){
 
-        $authRoleID = Auth::user()->role->id;
-        $authPositionID = Auth::user()->position->id;
-
+        $authRole = Auth::user()->role->role;
+        $authPosition = Auth::user()->position->position;
 
         $group = [4 => [1],5 => [2],'all' => [1,2]];
 
         /*4 is equivalent to admin user*/
-        if($authRoleID !== 4){
+        if(strcasecmp($authRole,'admin') !== 0){
 
-            if($authPositionID !== 1 && $authPositionID !== 2){
-                $groupID = $group[$authPositionID];
+            if($authPosition !== 1 && $authPosition !== 2){
+                $groupID = $group[$authPosition];
             }else{
                 $groupID = $group[4];
             }

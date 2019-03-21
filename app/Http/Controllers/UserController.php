@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUser;
 use App\Http\Resources\UserResource;
+use App\TempUser;
+use App\Ticket;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +19,7 @@ class UserController extends Controller
 
     public function create(StoreUser $request){
 
-         User::create($request->except('_token'));
+        TempUser::create()->user()->create($request->except('_token'));
 
     }
 

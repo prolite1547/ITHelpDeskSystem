@@ -14,8 +14,8 @@ class CreateExpirationsTable extends Migration
     public function up()
     {
         Schema::create('expirations', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('expiration');
+            $table->tinyIncrements('id');
+            $table->tinyInteger('expiration');
             $table->timestamps();
         });
     }

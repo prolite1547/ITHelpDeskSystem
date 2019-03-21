@@ -1,12 +1,23 @@
+const columnStrings = {
+    category:'',
+    priority:'',
+    status_name:'status_name',
+    store_name:'store_name',
+    created_at:'',
+    expiration: '',
+    resolved_by: 'resolver',
+};
+
+
 const userTickets = {
-    ajax: '/tickets/ticket-data/user',
+    ajax: '/tickets/ticket-data/my',
     order: [[5, 'desc']],
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', name:'status.name',orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'id', orderable: false}
@@ -22,10 +33,11 @@ const openTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,defaultContent: 'Not Set'},
         {data: 'priority',defaultContent: 'Not Set'},
-        {data: 'status', orderable: false,defaultContent: 'Not Set'},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, orderable: false,defaultContent: 'Not Set'},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration',defaultContent: 'Not Set'},
+        {data: 'logged_by'},
         {data: 'id', orderable: false}
     ],
 
@@ -38,8 +50,8 @@ const expiredTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', name:'status.name',orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},
@@ -54,8 +66,8 @@ const ongoingTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', name:'status.name',orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},
@@ -70,13 +82,13 @@ const closedTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category',visible: false},
         {data: 'priority'},
-        {data: 'status', name:'status.name',orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
         {data: 'resolved_date'},
         {data: 'assignee',visible: true},
-        {data: 'resolved_by',visible: true},
+        {data: columnStrings.resolved_by,visible: true},
         {data: 'id', orderable: false}
     ],
 };
@@ -88,13 +100,13 @@ const fixedTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', name:'status.name',orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
         {data: 'fix_date'},
         {data: 'fixed_by',visible: true},
-        {data: 'id', orderable: false}
+        {data: 'id', orderable: false} 
     ],
 };
 
@@ -105,8 +117,8 @@ const allTickets = {
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
         {data: 'priority'},
-        {data: 'status', name:'status.name',orderable: false},
-        {data: 'store_name',name:'stores.store_name'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
         {data: 'assignee',visible: true},
@@ -115,7 +127,21 @@ const allTickets = {
 };
 
 
-
+export const posTickets = {
+    ajax: '/tickets/ticket-data/pos',
+    order: [[5, 'desc']],
+    columns: [
+        {data: null,name: 'tickets.id'},
+        {data: 'category', visible: false,name:'cat.name'},
+        {data: 'priority'},
+        {data: columnStrings.status_name, name:'status.name',orderable: false},
+        {data: 'store_name',name:columnStrings.store_name},
+        {data: 'created_at',visible: true},
+        {data: 'expiration'},
+        {data: 'assignee',visible: true},
+        {data: 'id', orderable: false}
+    ]
+};
 
 
 

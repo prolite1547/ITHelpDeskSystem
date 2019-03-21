@@ -14,10 +14,10 @@ class CreateContactsTable extends Migration
     public function up()
     {
         Schema::create('contacts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('number')->unique();
-            $table->unsignedInteger('store_id');
-            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            $table->smallIncrements('id');
+            $table->string('number',40)->unique();
+            $table->unsignedMediumInteger('store_id');
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

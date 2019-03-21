@@ -43,7 +43,7 @@ class ResolveController extends Controller
      */
     public function store(Request $request,$id)
     {
-        Ticket::findOrFail($id)->update(['status' => 3]);
+
     }
 
     /**

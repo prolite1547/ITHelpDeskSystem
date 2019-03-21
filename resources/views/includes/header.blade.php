@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="row-flex">
+    <div class="row-flex u-padding-big">
         <div class="header__logo-box">
             <img src="{{asset('images/icon.png')}}" alt="Citihardware Logo" class="header__logo">
         </div>
@@ -30,7 +30,7 @@
     </div>
 
 @if(Auth::user()->role_id != 5 AND Auth::user()->role_id != 6  AND  Auth::user()->role_id != 7  AND  Auth::user()->role_id != 8 )
-    <div class="row-flex">
+    <div class="row-flex row-flex__ai--fe">
         <div class="left">
             <nav class="nav">
                 <ul class="nav__ul">

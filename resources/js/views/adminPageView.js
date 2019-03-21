@@ -8,6 +8,8 @@ export const showAddUserForm = () => {
     }).done(data => {
         showModal(data);
 
+        $(elementStrings.select2Elements).select2(); /*Initialize Select2 to all select elements*/
+
         document.getElementById(elementStrings.addUserFrom).querySelector('button[data-action=closeModal').addEventListener('click', () => {
            hideModal();
         });
@@ -18,10 +20,10 @@ export const showAddUserForm = () => {
                 let user;
                 e.preventDefault();
 
-                let [token,fname,mname,lname,store,role,position] = $(e.target).serializeArray();
+                let [token,fname,mname,lname,store,role,position,department] = $(e.target).serializeArray();
 
                 user = new User;
-                user.addUser(fname.value,mname.value,lname.value,store.value,role.value,position.value,token.value);
+                user.addUser(fname.value,mname.value,lname.value,store.value,role.value,position.value,department.value,token.value);
 
                 addData('/user/add',user)
                     .done(() => {

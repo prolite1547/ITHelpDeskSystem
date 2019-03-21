@@ -27,6 +27,7 @@ export const elements = {
     addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
     extendFormBtn: document.querySelector('.ticket-content__link--extend'),
+    userCallerForm: document.querySelector('.fieldset__contact-inputs'),
 
     incidentFormItem: document.getElementById('incidentForm'),
     PLDTFormItem: document.getElementById('PLDTForm'),
@@ -80,6 +81,7 @@ export const elementStrings = {
     ticketAddBtn: '#ticketAdd',
     rejectBtnShowForm: '[data-action=showRejectForm]',
     resolveBtn: '[data-action=resolveTicket]',
+    select2Elements: '.form__input--select2',
 
 
     /*TICKET ADD*/
@@ -87,7 +89,7 @@ export const elementStrings = {
     addPLDTIssueSubmit: 'button[data-action=addPLDTIssue]',
 
     /*ADMIN PAGE*/
-    addUserFrom: 'addUser'
+    addUserFrom: 'addUser',
 };
 
 

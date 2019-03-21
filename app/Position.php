@@ -14,4 +14,9 @@ class Position extends Model
     public function setPositionAttribute($value){
         return $this->attributes['position'] = cleanInputs($value);
     }
+
+    public function department() {
+        return $this->belongsTo('App\Department');
+    }
+
 }

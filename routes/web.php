@@ -27,7 +27,7 @@ Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
 //////////////////////////
 Route::get('/user/profile/{id}', 'UserController@profile')->name('userProfile');
 Route::post('/image', 'UserController@changeProf')->name('changeProf');
-Route::post('/user/add', 'UserController@create')->name('addUser');
+Route::post('/user/add', 'UserController@create');
 
 //////////////////////////
 ////////*TICKETS*/////////
@@ -56,6 +56,7 @@ Route::delete('/ticket/delete/{id}', 'TicketController@delete')->name('ticketDel
 Route::post('/ticket/reject/{id}', 'TicketController@reject')->name('ticketReject');
 Route::post('/ticket/extend/{id}', 'TicketController@extend')->name('ticketExtend');
 Route::get('/modal/form/ticketExtendDetails/{id}', 'TicketController@ticketExtendDetails')->name('ticketExtendDetails');
+Route::post('/ticket/resolve/{id}', 'TicketController@resolve');
 
 //////////////////////////
 ////////*FIX*/////////
@@ -115,6 +116,7 @@ Route::get('/select/contact', 'SelectController@contact');
 Route::get('/select/position', 'SelectController@position');
 Route::get('/select/department', 'SelectController@department');
 Route::get('/select/expiration', 'SelectController@expiration');
+Route::get('/select/users', 'SelectController@users');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -130,17 +132,12 @@ Route::get('/tickets/ticket-data/{status}', 'DatatablesController@tickets');
 //////////////////////////
 ////////*MAINTENANCE*//////
 //////////////////////////
-Route::get('/maintenance', 'HomeController@maintenance')->name('maintenancePage');
+Route::get('/maintenance', 'PublicController@maintenance')->name('maintenancePage');
 
 //////////////////////////
 ////////*SEARCH*//////
 //////////////////////////
-Route::get('/search', 'HomeController@search')->name('search');
-
-//////////////////////////
-////////*RESOLVE*//////
-//////////////////////////
-Route::post('/ticket/resolve/{id}', 'ResolveController@store');
+Route::get('/search', 'PublicController@search')->name('search');
 
 //////////////////////////
 ////////*POSITION*//////
@@ -178,6 +175,12 @@ Route::get('/test', function () {
     dd($collection->connectionIssueMailReplies);
     return new \App\Http\Resources\ConnectionIssueReplyCollection(ConnectionIssueReply::all());
 });
+
+//////////////////////////
+////////*EXTENDED*//////
+//////////////////////////
+Route::get('treasury/dashboard','PublicController@treasuryDashboard')->name('treasuryDashboard');
+
 
 Route::get('/test2.1', function () {
     $nntp = imap_open('{imap.gmail.com:993/imap/ssl}Ticketing', 'it.support@citihardware.com', 'citihardware2020');
@@ -240,18 +243,18 @@ Route::get('/test2', function () {
 });
 
 Route::get('/test5', function () {
-    echo Auth::user()->fName;
+    dd(\App\User::selectRaw('CONCAT_WS(" ",fName,mName,lName) as full_name,id')
+        ->whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%john edward%"')->get());
 
 });
 
 Route::get('/ongoingMail', function () {
 
-    $ongoingMailInc = Ticket::whereHas('incident', function ($query) {
+    $ongoingMailInc = Ticket::whereStatus(2)->whereHas('incident', function ($query) {
         $query->whereNotNull('connection_id');
     })->with(['connectionIssueMailReplies' => function ($query) {
         $query->latest('reply_date');
     }, 'incident:id,subject'])->get();
-
 
     foreach ($ongoingMailInc as $ticket) {
         $ticketID = $ticket->id;
@@ -263,9 +266,7 @@ Route::get('/ongoingMail', function () {
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
+Auth::routes(['register' => false]);
 
 Route::resource('sdc', 'SDCController');
 Route::resource('mdc', 'MDCController');

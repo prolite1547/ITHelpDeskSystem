@@ -14,15 +14,15 @@ class CreateTicketsTable extends Migration
     public function up()
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('incident_id')->unique();
-            $table->unsignedInteger('assignee')->nullable();
-            $table->unsignedInteger('logged_by')->nullable();
-            $table->unsignedInteger('type')->default(1);
-            $table->unsignedInteger('priority')->nullable();
-            $table->unsignedInteger('status');
-            $table->unsignedInteger('store');
-            $table->unsignedInteger('group')->nullable();;
+            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('incident_id')->unique();
+            $table->unsignedSmallInteger('assignee')->nullable();
+            $table->unsignedSmallInteger('logged_by')->nullable();
+            $table->unsignedTinyInteger('type')->default(1);
+            $table->unsignedTinyInteger('priority')->nullable();
+            $table->unsignedTinyInteger('status');
+            $table->unsignedMediumInteger('store');
+            $table->unsignedTinyInteger('group')->nullable();;
             $table->dateTime('expiration')->nullable();;
             $table->foreign('store')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade')->onUpdate('cascade');

@@ -32,6 +32,10 @@
     width: 100%;
 }
 
+.u-width-50 {
+    width: calc(#{$grid-width}/2);
+}
+
 .u-display-ib {
     display: inline-block;
 }
@@ -80,3 +84,6 @@
     width: 100% !important;
 }
 
+.u-padding-big{
+    padding: 1.5rem;
+}

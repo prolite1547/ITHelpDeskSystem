@@ -15,10 +15,10 @@ class CreateMessagesTable extends Migration
     public function up()
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('ticket_id');
-            $table->unsignedInteger('user_id');
-            $table->mediumText('message');
+            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('ticket_id');
+            $table->unsignedSmallInteger('user_id');
+            $table->text('message');
             $table->timestamps();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');;
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;

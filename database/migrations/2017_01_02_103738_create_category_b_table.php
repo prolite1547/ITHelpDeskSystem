@@ -14,10 +14,10 @@ class CreateCategoryBTable extends Migration
     public function up()
     {
         Schema::create('category_b', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->unsignedInteger('catA_id');
-            $table->unsignedInteger('expiration')->default(1);
+            $table->smallIncrements('id');
+            $table->string('name',30)->unique();
+            $table->unsignedTinyInteger('catA_id');
+            $table->unsignedTinyInteger('expiration')->default(1);
             $table->timestamps();
             $table->foreign('catA_id')->references('id')->on('category_a')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('expiration')->references('id')->on('expirations')->onDelete('cascade')->onUpdate('cascade');

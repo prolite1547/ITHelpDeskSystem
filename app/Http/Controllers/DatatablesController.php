@@ -28,62 +28,52 @@ class DatatablesController extends Controller
         return Datatables::of(User::query())->make(true);
     }
 
-    public function tickets($status){
-        $group = getGroupIDDependingOnUser();
-        $statuses = Status::whereNotIn('name',['user','fixed'])->pluck('name')->toArray();
+    public function tickets($status)
+    {
+        if($status === 'pos'){
+            $query = DB::table('v_tickets as vt')->select('vt.id','vt.subject','vt.details','vt.status_name','vt.assignee','vt.store_name','logged_by');
+        }else{
+            $statuses = Status::whereNotIn('name', ['fixed','closed'])->pluck('name')->toArray();
+            $query = DB::table('v_tickets as tickets')
+                ->select(
+                    'tickets.id', 'priority', 'status','status_name', 'expiration', 'tickets.created_at',
+                    'subject', 'details', 'category',
+                    'assignee',
+                    'store_name',
+                    'logged_by',
+                    'ticket_group',
+                    'extend_count'
+                )
+                ->when(in_array(strtolower($status), array_map('strtolower', $statuses), true), function ($query) use ($status) {
+                    $get_status = Status::where('name', $status)->firstOrFail();
+                    return $query->whereStatus($get_status->id);
+                })
+                ->when($status === 'my', function ($query) {
+                    return $query->whereAssigneeId(Auth::user()->id)->where('status', '!=', 3);
+                })
+                ->when($status === 'fixed', function ($query) {
 
-        $extends_count = DB::table('extends')->selectRaw('ticket_id,count(ticket_id) as extend_count')->groupBy('ticket_id');
+                    $group = Auth::user()->group;
 
-        /*DATATABLES PLUGIN INIT*/
-        $query = DB::table('tickets')
-        ->whereNull('deleted_at')
-        ->join('incidents','tickets.incident_id','incidents.id')
-            ->when(in_array(strtolower($status),array_map('strtolower',$statuses),true),function ($query) use ($status,$group){
-                $get_status = Status::where('name',$status)->firstOrFail();
-                return $query->whereStatus($get_status->id);
-            })
-            ->when($status === 'user',function ($query){
-                return $query->where('assignee',Auth::user()->id)->where('status','!=',3);
-            })
-            ->when($status === 'fixed',function ($query) use($group){
-                $fixed_details = DB::table('fixes')->selectRaw('ticket_id,max(created_at) as fix_date,fixed_by')->groupBy('fixes.ticket_id','fixed_by');
+                    $fixed_details = DB::table('fixes')->selectRaw('ticket_id,max(created_at) as fix_date,fixed_by')->groupBy('fixes.ticket_id', 'fixed_by');
 
-                return $query->whereStatus(4)->whereIn('group',$group)
-                    ->leftJoinSub($fixed_details,'fixed_details',function ($join){
-                        $join->on('tickets.id','=','fixed_details.ticket_id');
-                    })->leftJoin('users as fixer','fixed_details.fixed_by','fixer.id')
-                    ->addSelect(DB::raw('CONCAT(fixer.fName," ",fixer.lName) as fixed_by'),'fix_date');
+                    return $query->whereStatus(4)
+                        ->when($group, function ($query, $group) {
+                            return $query->whereGroup($group);
+                        })
+                        ->leftJoinSub($fixed_details, 'fixed_details', function ($join) {
+                            $join->on('tickets.id', '=', 'fixed_details.ticket_id');
+                        })->leftJoin('users as fixer', 'fixed_details.fixed_by', 'fixer.id')
+                        ->addSelect(DB::raw('CONCAT(fixer.fName," ",fixer.lName) as fixed_by'), 'fix_date');
 
-            })
-            ->leftJoinSub($extends_count,'extends_count',function($join){
-                $join->on('tickets.id','=','extends_count.ticket_id');
-            })
-            ->leftJoin('stores','tickets.store','stores.id')
-            ->leftJoin('ticket_groups','ticket_groups.id','tickets.group')
-            ->leftJoin('calls','incidents.call_id','calls.id')
-            ->leftJoin('resolves','tickets.id','resolves.ticket_id')
-            ->leftJoin('categories as cat','incidents.category','cat.id')
-            ->leftJoin('ticket_status as status','tickets.status','status.id')
-            ->leftJoin('priorities as prio','tickets.priority','prio.id')
-            ->leftJoin('users as assignee','tickets.assignee','assignee.id')
-            ->leftJoin('users as resolver','resolves.resolved_by','resolver.id')
-            ->selectRaw(
-                'tickets.id,prio.name as priority,status.name as status,tickets.expiration,tickets.created_at,
-            incidents.created_at as incident_created,incidents.subject,incidents.details,cat.name as category,
-            CONCAT(assignee.fName," ",assignee.lName) as assignee,
-            stores.store_name,
-            CONCAT(resolver.fName," ",resolver.lName) as resolved_by,resolves.created_at as resolved_date,
-            ticket_groups.name as ticket_group,
-            extend_count'
-            );
-
-
+                })
+                ->when($status === 'closed',function ($query){
+                    return $query->join('v_resolves','tickets.id','v_resolves.ticket_id')
+                        ->addSelect('resolver','resolved_date');
+                });
+        }
         $datatablesJSON = DataTables::of($query);
-
-
-
         return $datatablesJSON->make(true);
-
     }
 
     // public function sdc(){
@@ -95,7 +85,8 @@ class DatatablesController extends Controller
     //    return $datatablesJSON->make(true);
     // }
 
-    public function sdc(){
+    public function sdc()
+    {
         $query = DB::table('system_data_corrections')
         ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
@@ -103,11 +94,12 @@ class DatatablesController extends Controller
         $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
-     }
-     
-     public function system($status){
+    }
 
-       
+    public function system($status)
+    {
+
+
         $query = DB::table('system_data_corrections')
         ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
         ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
@@ -143,25 +135,26 @@ class DatatablesController extends Controller
         $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
-     }
-     
+    }
 
 
-    public function mdc(){
+    public function mdc()
+    {
         $query = DB::table('manual_data_corrections')
-        ->join('tickets', 'manual_data_corrections.ticket_no', 'tickets.id')
-        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-        ->selectRaw('manual_data_corrections.id,manual_data_corrections.mdc_no ,tickets.id as ticket_id ,incidents.subject, manual_data_corrections.requestor_name ,manual_data_corrections.department, manual_data_corrections.position, manual_data_corrections.date_submitted, manual_data_corrections.posted');
+            ->join('tickets', 'manual_data_corrections.ticket_no', 'tickets.id')
+            ->leftjoin('incidents', 'tickets.incident_id', 'incidents.id')
+            ->selectRaw('manual_data_corrections.id,manual_data_corrections.mdc_no ,tickets.id as ticket_id ,incidents.subject, manual_data_corrections.requestor_name ,manual_data_corrections.department, manual_data_corrections.position, manual_data_corrections.date_submitted, manual_data_corrections.posted');
         $query = $query->orderBy('manual_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
-     }
+    }
 
-     public function treasury($status){
+    public function treasury($status)
+    {
         $query = DB::table('system_data_corrections')
-        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
-        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-        ->selectRaw('system_data_corrections.id,
+            ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+            ->leftjoin('incidents', 'tickets.incident_id', 'incidents.id')
+            ->selectRaw('system_data_corrections.id,
         system_data_corrections.sdc_no,
         tickets.id as ticket_id,
         incidents.subject, 
@@ -197,13 +190,14 @@ class DatatablesController extends Controller
         $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
-     }
+    }
 
-     public function govcomp($status){
+    public function govcomp($status)
+    {
         $query = DB::table('system_data_corrections')
-        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
-        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-        ->selectRaw('system_data_corrections.id,
+            ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+            ->leftjoin('incidents', 'tickets.incident_id', 'incidents.id')
+            ->selectRaw('system_data_corrections.id,
         system_data_corrections.sdc_no,
         tickets.id as ticket_id,
         incidents.subject, 
@@ -227,14 +221,15 @@ class DatatablesController extends Controller
         $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
-     }
+    }
 
 
-     public function approver($status){
+    public function approver($status)
+    {
         $query = DB::table('system_data_corrections')
-        ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
-        ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
-        ->selectRaw('system_data_corrections.id,
+            ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+            ->leftjoin('incidents', 'tickets.incident_id', 'incidents.id')
+            ->selectRaw('system_data_corrections.id,
         system_data_corrections.sdc_no,
         tickets.id as ticket_id,
         incidents.subject, 
@@ -258,5 +253,6 @@ class DatatablesController extends Controller
         $query = $query->orderBy('system_data_corrections.created_at', 'desc');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
-     }
+    }
+
 }

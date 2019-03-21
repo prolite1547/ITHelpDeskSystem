@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $ongoingMailInc = \App\Ticket::whereHas('incident' , function($query){
+            $ongoingMailInc = \App\Ticket::whereStatus(2)->whereHas('incident' , function($query){
                 $query->whereNotNull('connection_id');
             })->with(['connectionIssueMailReplies' => function($query){
                 $query->latest('reply_date');

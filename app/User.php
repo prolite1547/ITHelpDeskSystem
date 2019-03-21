@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'fName', 'mName', 'lName', 'email', 'password', 'uname', 'position_id', 'role_id','store_id'
+        'fName', 'mName', 'lName', 'email', 'password', 'uname', 'position_id', 'role_id', 'store_id', 'department_id'
     ];
 
     /**
@@ -27,6 +27,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $appends = ['full_name', 'group'];
 
     public function calls()
     {
@@ -60,15 +62,36 @@ class User extends Authenticatable
 
     public function ticketLogged()
     {
-        return $this->hasMany('App\Ticket','logged_by');
+        return $this->hasMany('App\Ticket', 'logged_by');
     }
 
     public function getFullNameAttribute()
     {
         $middle_name = $this->mName;
 
-        return ucfirst($this->fName) . ' ' . $middle_name[0] .'.' . ' ' . ucfirst($this->lName);
+        if (is_null($middle_name) || $middle_name === '') {
+            return ucfirst($this->fName) . ' ' . ucfirst($this->lName);
+        } else {
+            return ucfirst($this->fName) . ' ' . $middle_name[0] . '.' . ' ' . ucfirst($this->lName);
+        }
     }
+
+    public function getGroupAttribute()
+    {
+        if (strtolower($this->role->role) === 'admin') {
+            return false;
+        } else {
+            switch (true) {
+                case strpos(strtolower($this->position->position), 'support') !== false:
+                    return 1;
+                case strpos(strtolower($this->position->position), 'technical') !== false:
+                    return 2;
+                default:
+                    return 0;
+            }
+        }
+    }
+
 
     public function assignedTickets()
     {
@@ -86,16 +109,25 @@ class User extends Authenticatable
 
     }
 
-    public function setfNameAttribute($value){
+    public function setfNameAttribute($value)
+    {
         return $this->attributes['fName'] = cleanInputs($value);
     }
 
-    public function setmNameAttribute($value){
+    public function setmNameAttribute($value)
+    {
         return $this->attributes['mName'] = cleanInputs($value);
     }
 
-    public function setlNameAttribute($value){
+    public function setlNameAttribute($value)
+    {
         return $this->attributes['lName'] = cleanInputs($value);
     }
+
+    public function userable()
+    {
+        return $this->morphTo();
+    }
+
 
 }

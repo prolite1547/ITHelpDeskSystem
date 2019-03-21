@@ -3,10 +3,10 @@
         <div class="ticket-content__more-dropdown">
             <span class="ticket-content__more">More...</span>
             <ul class="ticket-content__list">
-                @if($ticket->status === $ticket_status_arr['Expired'] &&  in_array(Auth::user()->role_id,$higherUserGroup))
+                @can('extend',$ticket)
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--extend">Extend</a></li>
-                @endif
-                @if((!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && $ticket->assigneeRelation->id === Auth::id()) || $ticket->status === $ticket_status_arr['Open'])
+                @endcan
+                @can('update',$ticket)
                     @if(is_null($ticket->incident->connection_id))
                      <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                     @endif
@@ -38,8 +38,12 @@
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
 
                 @endif
+                @endcan
+                {{-- @can('markAsFix',$ticket)
+                    <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
+                @endcan --}}
                 <li class="ticket-content__item"><a href="{{route('print.ticket',['id' => $ticket->id])}}" target="_blank" class="ticket-content__link ticket-content__link--print">Print</a></li>
-                @if(in_array(Auth::user()->role_id,$higherUserGroup))
+                @can('delete', App\Ticket::class)
                     <li class="ticket-content__item">
                         <a href="javascript:void(0);" class="ticket-content__link" onclick="document.getElementById('ticket_delete').submit()">Delete</a>
                         <form action="{{route('ticketDelete',['id' => $ticket->id])}}" method="POST" id="ticket_delete">
@@ -47,7 +51,7 @@
                             <input type="hidden" name="_method" value="DELETE" >
                         </form>
                     </li>
-                @endif
+                @endcan
             </ul>
         </div>
     </div>

@@ -14,12 +14,12 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->increments('id');
+            $table->mediumIncrements('id');
             $table->string('path');
             $table->string('original_name');
-            $table->string('mime_type');
-            $table->string('extension');
-            $table->unsignedInteger('incident_id');
+            $table->string('mime_type',50);
+            $table->string('extension',50);
+            $table->unsignedMediumInteger('incident_id');
             $table->foreign('incident_id')->references('id')->on('incidents')->onDelete('cascade');
             $table->timestamps();
         });

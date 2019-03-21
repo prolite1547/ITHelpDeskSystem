@@ -18,8 +18,8 @@
                     {{--<li class="window__item"><a href="#!" class="window__link">PLDT</a></li>--}}
                 </div>
             <div class="window__content" id="incidentFormContainer">
-                <div class="row">
-                    <div class="col-1-of-2">
+                <div class="row-flex u-width-50">
+                    <div class="window__form">
                         <div class="formColumn">
                             {!! Form::open(['method' => 'POST','route' => 'addTicket','id' => 'form-addTicket']) !!}
                             <div class="form__group">
@@ -28,11 +28,11 @@
                             <div class="form__group">
                                 <fieldset class="fieldset">
                                     <legend class="fieldset__legend">Caller Details</legend>
-                                    <div class="fieldset__flex fieldset__flex--sb">
-                                        <div class="fieldset__left">
-                                            {!! Form::select('position', [], null, ['placeholder' => '(position)','class' => 'form__input','required','id' => 'ticketPositionSelect']) !!}
+                                    <div class="row-flex row-flex__jc--sb">
+                                        <div class="fieldset__contact">
+                                            {!! Form::select('user', [], null, ['placeholder' => '(contact)','class' => 'form__input userSelect','required']) !!}
                                         </div>
-                                        <div class="fieldset__right">
+                                        <div class="fieldset__contact-inputs u-display-n">
                                             <div class="form__group">
                                                 {!! Form::label('fName','First Name :',['class' => 'form__label'])!!}
                                                 {!! Form::text('fName',null,['class' => 'form__input','placeholder' => 'first','required','minlength' => 2]) !!}
@@ -45,9 +45,11 @@
                                                 {!! Form::label('lName','Last Name :',['class' => 'form__label'])!!}
                                                 {!! Form::text('lName',null,['class' => 'form__input','placeholder' => 'last','required','minlength' => 2]) !!}
                                             </div>
+                                            <div class="form__group">
+                                                {!! Form::select('position_id', [], null, ['placeholder' => '(position)','class' => 'form__input ','required','id' => 'ticketPositionSelect']) !!}
+                                            </div>
                                         </div>
                                     </div>
-
                                 </fieldset>
                             </div>
                             {!! Form::button('Add Ticket',['class' => 'btn btn--blue','type' => 'submit','id'=>'ticketAdd']) !!}
@@ -87,7 +89,7 @@
                             {!! Form::close() !!}
                         </div>
                     </div>
-                    <div class="col-1-of-2 plusToggleContainer">
+                    <div class="window__maintenance plusToggleContainer">
                         @if(in_array(Auth::user()->role_id,[$user_roles['admin'],$user_roles['tower']]))
                             <div class="form-branchAdd">
                                 <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>

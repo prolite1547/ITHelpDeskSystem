@@ -14,15 +14,16 @@ class CreateFixesTable extends Migration
     public function up()
     {
         Schema::create('fixes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->mediumIncrements('id');
             $table->string('cause');
             $table->string('resolution');
             $table->string('recommendation');
-            $table->integer('fix_category');
-            $table->unsignedInteger('ticket_id');
-            $table->unsignedInteger('fixed_by')->nullable();
+            $table->unsignedTinyInteger('fix_category');
+            $table->unsignedMediumInteger('ticket_id');
+            $table->unsignedSmallInteger('fixed_by')->nullable();
             $table->foreign('fixed_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('fix_category')->references('id')->on('resolve_categories')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
