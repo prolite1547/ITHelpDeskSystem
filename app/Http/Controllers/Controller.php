@@ -11,5 +11,5 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public $test = 'tae';
+    public $treasury_department_id = 60657;
 }

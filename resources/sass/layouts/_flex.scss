@@ -1,11 +1,15 @@
 .row-flex {
     display: flex;
 
-    &__ai--fe{
+    &--wrap {
+        flex-wrap: wrap;
+    }
+
+    &--ai-fe{
         align-items: flex-end;
     }
 
-    &__jc--sb{
+    &--jc-sb{
         justify-content: space-between;
     }
 }

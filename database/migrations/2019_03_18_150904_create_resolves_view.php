@@ -13,17 +13,20 @@ class CreateResolvesView extends Migration
      */
     public function up()
     {
-        DB::statement('
+        DB::statement("
         CREATE OR REPLACE VIEW v_resolves AS
         SELECT 
-            CONCAT_WS(\' \', u.fName, u.mName, u.lName) AS resolver,
-            r.ticket_id,
-            r.created_at AS resolved_date
-        FROM
-            resolves r
-                JOIN
-        users u ON r.resolved_by = u.id;
-        ');
+        `f`.`ticket_id` AS `ticket_id`,
+        CONCAT_WS(' ',
+                `u`.`fName`,
+                `u`.`mName`,
+                `u`.`lName`) AS `resolver`,
+        `r`.`created_at` AS `resolved_date`
+    FROM
+        ((`resolves` `r`
+        JOIN `v_latest_fixes` `f` ON ((`r`.`fixes_id` = `f`.`id`)))
+        JOIN `users` `u` ON ((`r`.`resolved_by` = `u`.`id`)));
+        ");
     }
 
     /**

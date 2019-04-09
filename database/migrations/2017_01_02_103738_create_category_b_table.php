@@ -15,7 +15,7 @@ class CreateCategoryBTable extends Migration
     {
         Schema::create('category_b', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('name',30)->unique();
+            $table->string('name',100)->unique();
             $table->unsignedTinyInteger('catA_id');
             $table->unsignedTinyInteger('expiration')->default(1);
             $table->timestamps();

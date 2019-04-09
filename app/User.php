@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'fName', 'mName', 'lName', 'email', 'password', 'uname', 'position_id', 'role_id', 'store_id', 'department_id'
+        'fName', 'mName', 'lName', 'email', 'password', 'uname', 'position_id', 'role_id', 'store_id'
     ];
 
     /**
@@ -30,9 +30,8 @@ class User extends Authenticatable
 
     protected $appends = ['full_name', 'group'];
 
-    public function calls()
-    {
-        return $this->belongsToMany('App\Call', 'calls');
+    public  function call(){
+        return $this->morphMany('App\Call','caller');
     }
 
     public function role()
@@ -128,6 +127,5 @@ class User extends Authenticatable
     {
         return $this->morphTo();
     }
-
 
 }

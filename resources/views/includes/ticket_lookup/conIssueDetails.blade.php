@@ -25,18 +25,18 @@
             <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Sent To:</span>
-            <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->incident->getMailData->to}}</a>
+            <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->issue->incident->to}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">CC:</span>
-            <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->incident->getMailData->cc}}</a>
+            <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->issue->incident->cc}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Contact Person:</span>
             <a href="javascript:void(0);"
-               class="ticket-details__value">{{$ticket->incident->getMailData->contact_person}}</a>
+               class="ticket-details__value">{{$ticket->issue->incident->contact_person}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Contact Number:</span>
             <a href="javascript:void(0);"
-               class="ticket-details__value">{{$ticket->incident->getMailData->contact_number}}</a>
+               class="ticket-details__value">{{$ticket->issue->incident->contact_number}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
             <span class="ticket-details__value"> {{$ticket->created_at}}</span>
@@ -52,8 +52,8 @@
             <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-            <a href="javascript:void(0);" data-store="{{$ticket->getStore->id}}"
-               class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->getStore->store_name}}</a>
+            <a href="javascript:void(0);" data-store="{{$ticket->storeid}}"
+               class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->storestore_name}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
             @if($ticket->assigneeRelation)
@@ -65,11 +65,11 @@
             @endif
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
-            <span class="ticket-details__value">{{$ticket->incident->catARelation->name}} - {{$ticket->incident->catBRelation->name}} - {{$ticket->incident->catCRelation->name}}</span>
+            <span class="ticket-details__value">{{$ticket->issue->catARelation->name}} - {{$ticket->issue->catBRelation->name}} - {{$ticket->issue->catCRelation->name}}</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
-            @if(!$ticket->incident->getFiles->isEmpty())
-                @foreach($ticket->incident->getFiles as $file)
+            @if(!$ticket->issue->getFiles->isEmpty())
+                @foreach($ticket->issue->getFiles as $file)
                     <span class="ticket-details__value ticket-details__value--file"><a
                             href="{{route('fileDownload',['id' => $file->id])}}"
                             target="_blank">{{$file->original_name}}</a></span>

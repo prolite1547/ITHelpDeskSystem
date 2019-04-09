@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCallsTable extends Migration
+class CreateOldStoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateCallsTable extends Migration
      */
     public function up()
     {
-        Schema::create('calls', function (Blueprint $table) {
+        Schema::create('m_stores', function (Blueprint $table) {
             $table->mediumIncrements('id');
-            $table->morphs('caller');
-            $table->unsignedSmallInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->timestamps();
+            $table->string('store_name',50);
         });
     }
 
@@ -29,6 +26,6 @@ class CreateCallsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('calls');
+        Schema::dropIfExists('old_stores');
     }
 }

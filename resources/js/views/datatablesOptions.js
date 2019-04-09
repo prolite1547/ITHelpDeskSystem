@@ -1,11 +1,13 @@
 const columnStrings = {
     category:'',
-    priority:'',
     status_name:'status_name',
     store_name:'store_name',
     created_at:'',
     expiration: '',
     resolved_by: 'resolver',
+    logged_by: 'logger',
+    assignee: 'assigned_user',
+    priority: 'priority_name'
 };
 
 
@@ -15,7 +17,7 @@ const userTickets = {
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
@@ -32,12 +34,12 @@ const openTickets = {
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,defaultContent: 'Not Set'},
-        {data: 'priority',defaultContent: 'Not Set'},
+        {data: columnStrings.priority,defaultContent: 'Not Set'},
         {data: columnStrings.status_name, orderable: false,defaultContent: 'Not Set'},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration',defaultContent: 'Not Set'},
-        {data: 'logged_by'},
+        {data: columnStrings.logged_by},
         {data: 'id', orderable: false}
     ],
 
@@ -49,12 +51,12 @@ const expiredTickets = {
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
-        {data: 'assignee',visible: true},
+        {data: columnStrings.assignee,visible: true},
         {data: 'id', orderable: false}
     ],
 };
@@ -65,29 +67,29 @@ const ongoingTickets = {
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
-        {data: 'assignee',visible: true},
+        {data: columnStrings.assignee,visible: true},
         {data: 'id', orderable: false}
     ],
 };
 
 const closedTickets = {
     ajax: '/tickets/ticket-data/closed',
-    order: [[4, 'desc']],
+    order: [[7, 'desc']],
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category',visible: false},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration',visible: false},
         {data: 'resolved_date'},
-        {data: 'assignee',visible: true},
+        {data: columnStrings.assignee,visible: true},
         {data: columnStrings.resolved_by,visible: true},
         {data: 'id', orderable: false}
     ],
@@ -95,11 +97,11 @@ const closedTickets = {
 
 const fixedTickets = {
     ajax: '/tickets/ticket-data/fixed',
-    order: [[4, 'desc']],
+    order: [[5, 'desc']],
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
@@ -116,12 +118,12 @@ const allTickets = {
     columns: [
         {data: null,name: 'tickets.id'},
         {data: 'category', visible: false,name:'cat.name'},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
         {data: 'created_at',visible: true},
         {data: 'expiration'},
-        {data: 'assignee',visible: true},
+        {data: columnStrings.assignee,visible: true},
         {data: 'id', orderable: false}
     ]
 };
@@ -131,15 +133,41 @@ export const posTickets = {
     ajax: '/tickets/ticket-data/pos',
     order: [[5, 'desc']],
     columns: [
-        {data: null,name: 'tickets.id'},
+        {
+            data: null,
+            name: 'tickets.id',
+            createdCell: ( cell, cellData,rowData) => {
+                cell.setAttribute('title',rowData.subject);
+            },
+            orderable: false,
+            render: (data, type, row) => {
+                return `<a href='javascript:void(0)' class='table__subject' data-action="ticketDtlsModal" data-id="${data.id}">${row.subject}</a>
+                <span class='table__info'>Ticket #: ${data.id}</span>
+                <span class='table__info'>POS Category: <strong>${row.catB_name}</strong></span>
+                <!--<span class='table__info'>Group: ${data.ticket_group}</span>-->
+                ${(data.extend_count > 0) ? `<span class='table__info table__info--red'>Extended (${data.extend_count})</span>` : ''}`
+            }
+        },
         {data: 'category', visible: false,name:'cat.name'},
-        {data: 'priority'},
+        {data: columnStrings.priority},
         {data: columnStrings.status_name, name:'status.name',orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
-        {data: 'created_at',visible: true},
-        {data: 'expiration'},
-        {data: 'assignee',visible: true},
-        {data: 'id', orderable: false}
+        {
+            data: 'created_at',
+            visible: true,
+            createdCell: ( cell, cellData) => {
+                cell.innerText = moment(cellData).format('MMMM DD,YYYY');
+            }
+        },
+        {data: columnStrings.logged_by,visible: true},
+        {data: columnStrings.assignee,visible: true},
+        {
+            data: 'id',
+            orderable: false,
+            createdCell: ( cell, cellData) => {
+                cell.innerHTML = `<a href="/print/${cellData}/ticket" target="_blank" class="btn"><svg class="sprite"><use xlink:href="/svg/sprite2.svg#icon-print"></use></svg></a>`;
+            }
+        }
     ]
 };
 

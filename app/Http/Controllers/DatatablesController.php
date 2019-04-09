@@ -29,44 +29,45 @@ class DatatablesController extends Controller
     public function tickets($status)
     {
         if($status === 'pos'){
-            $query = DB::table('v_tickets as vt')->select('vt.id','vt.subject','vt.details','vt.status_name','vt.assignee','vt.store_name','logged_by');
+            /*catB id's of pos categories*/
+            $pos_categories_array = DB::table('category_a as a')->join('category_b as b','a.id','b.catA_id')->where('a.id','=',1)->pluck('b.id')->toArray();
+            /*query tickets that are pos related*/
+            $query = DB::table('v_tickets as vt')->select('vt.id','vt.category','vt.ticket_group','vt.subject','vt.details','vt.status_name','vt.assigne','vt.store_name','logged_by','vt.priority','vt.created_at')->whereIn('vt.catB',$pos_categories_array);
         }else{
             $statuses = Status::whereNotIn('name', ['fixed','closed'])->pluck('name')->toArray();
-            $query = DB::table('v_tickets as tickets')
+            $query = DB::table('v_tickets as vt')
                 ->select(
-                    'tickets.id', 'priority', 'status','status_name', 'expiration', 'tickets.created_at',
+                    'vt.id', 'priority_name', 'status_id','status_name', 'expiration', 'vt.created_at',
                     'subject', 'details', 'category',
-                    'assignee',
+                    'assigned_user',
                     'store_name',
-                    'logged_by',
-                    'ticket_group',
-                    'extend_count'
+                    'logger',
+                    'ticket_group_name',
+                    'times_extended'
                 )
                 ->when(in_array(strtolower($status), array_map('strtolower', $statuses), true), function ($query) use ($status) {
                     $get_status = Status::where('name', $status)->firstOrFail();
-                    return $query->whereStatus($get_status->id);
+                    return $query->whereStatusId($get_status->id);
                 })
                 ->when($status === 'my', function ($query) {
-                    return $query->whereAssigneeId(Auth::user()->id)->where('status', '!=', 3);
+                    return $query->whereAssigneeId(Auth::user()->id)->where('status_id', '!=', 3);
                 })
                 ->when($status === 'fixed', function ($query) {
 
                     $group = Auth::user()->group;
 
-                    $fixed_details = DB::table('fixes')->selectRaw('ticket_id,max(created_at) as fix_date,fixed_by')->groupBy('fixes.ticket_id', 'fixed_by');
-
-                    return $query->whereStatus(4)
+                    return $query->whereStatusId(4)
                         ->when($group, function ($query, $group) {
                             return $query->whereGroup($group);
                         })
-                        ->leftJoinSub($fixed_details, 'fixed_details', function ($join) {
-                            $join->on('tickets.id', '=', 'fixed_details.ticket_id');
+                        ->leftJoinSub(DB::table('v_latest_fixes'), 'fixed_details', function ($join) {
+                            $join->on('vt.id', '=', 'fixed_details.ticket_id');
                         })->leftJoin('users as fixer', 'fixed_details.fixed_by', 'fixer.id')
                         ->addSelect(DB::raw('CONCAT(fixer.fName," ",fixer.lName) as fixed_by'), 'fix_date');
 
                 })
                 ->when($status === 'closed',function ($query){
-                    return $query->join('v_resolves','tickets.id','v_resolves.ticket_id')
+                    return $query->join('v_resolves','vt.id','v_resolves.ticket_id')
                         ->addSelect('resolver','resolved_date');
                 });
         }
@@ -76,7 +77,7 @@ class DatatablesController extends Controller
 
     // public function sdc(){
     //    $query = DB::table('system_data_corrections')
-    //    ->join('tickets', 'system_data_corrections.ticket_no', 'tickets.id')
+    //    ->join('vt', 'system_data_corrections.ticket_no', 'tickets.id')
     //    ->leftjoin('incidents', 'tickets.incident_id','incidents.id')
     //    ->selectRaw('system_data_corrections.id,system_data_corrections.sdc_no ,tickets.id as ticket_id ,incidents.subject, system_data_corrections.requestor_name, system_data_corrections.dept_supervisor ,system_data_corrections.department, system_data_corrections.position, system_data_corrections.date_submitted, system_data_corrections.posted');
     //    $datatablesJSON = DataTables::of($query);

@@ -30,7 +30,7 @@
     </div>
 
 @if(Auth::user()->role_id != 5 AND Auth::user()->role_id != 6  AND  Auth::user()->role_id != 7 )
-    <div class="row-flex row-flex__ai--fe">
+    <div class="row-flex row-flex--ai-fe">
         <div class="left">
             <nav class="nav">
                 <ul class="nav__ul">

@@ -7,7 +7,7 @@
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--extend">Extend</a></li>
                 @endcan
                 @can('update',$ticket)
-                    @if(is_null($ticket->incident->connection_id))
+                    @if($ticket->issue->incident_type === 'App\Call')
                      <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--edit">Edit</a></li>
                     @endif
                 @endcan
@@ -28,10 +28,10 @@
         </div>
     </div>
     <div>
-        <h3 class="heading-tertiary ticket-content__subject">{{$ticket->incident->subject}}</h3>
+        <h3 class="heading-tertiary ticket-content__subject">{{$ticket->issue->subject}}</h3>
     </div>
     <p class="ticket-content__details">
-        {!!$ticket->incident->details!!}
+        {!!$ticket->issue->details!!}
     </p>
     @if($ticket->status !== $ticket_status_arr['Expired'])
         <form class="chat" data-form="chat" enctype="multipart/form-data">
@@ -41,7 +41,7 @@
             </ul>
             <div class="form__group u-display-n">
                 <label for="to" class="chat__label">To:</label>
-                <input type="email" name="to" class="chat__text" multiple required>
+                <input type="email" name="to" class="chat__text" multiple required disabled>
             </div>
             <div class="form__group-flex">
                 <textarea name="reply" rows="3" class="chat__textarea" placeholder="Enter message here..." maxlength="1000" minlength="5" required></textarea>

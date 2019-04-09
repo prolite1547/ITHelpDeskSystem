@@ -1,0 +1,30 @@
+.treasury-lookup {
+    padding: 1rem;
+
+    &__content {
+        flex-grow: 1;
+    }
+
+    &__details{
+        margin-left: 1rem;
+    }
+
+    &__label {
+        display: block;
+        font-size: 1.5rem;
+    }
+
+    &__value {
+        border: none;
+        resize: none;
+        font-size: 1.5rem;
+        padding: $padding-default-s;
+        width: 100%;
+        background-color: $color-grey-light-2;
+        min-height: 10rem;
+    }
+
+    &__tcketId{
+        flex: 0 0 100%;
+    }
+}

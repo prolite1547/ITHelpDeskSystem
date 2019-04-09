@@ -12,9 +12,9 @@
             </div>
             <div class="col-1-of-4">
                 <div class="ticket-details">
-                    @if( isset($ticket->incident->call_id) && is_null($ticket->incident->connection_id) )
+                    @if( $ticket->issue->incident_type === 'App\Call' )
                         @include('includes.ticket_lookup.defaulltDetails')
-                    @elseif( isset($ticket->incident->connection_id) && is_null($ticket->incident->call_id) )
+                    @elseif( $ticket->issue->incident_type === 'App\ConnectionIssue' )
                         @include('includes.ticket_lookup.conIssueDetails')
                     @else
                         NOT FOUND

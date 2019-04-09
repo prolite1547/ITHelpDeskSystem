@@ -19,12 +19,12 @@ class Incident extends Model
         'drd',
     ];
 
-    public function call(){
-        return $this->belongsTo('App\Call');
+    public function incident(){
+        return $this->morphTo();
     }
 
     public function ticket(){
-        return $this->hasOne('App\Ticket');
+        return $this->morphOne('App\Ticket','issue');
     }
 
     public function categoryRelation(){
@@ -46,10 +46,6 @@ class Incident extends Model
 
     public function getFiles(){
         return $this->hasMany('App\File');
-    }
-
-    public function getMailData(){
-        return $this->belongsTo('App\ConnectionIssue','connection_id');
     }
 
     public function getDetailsAttribute($value)

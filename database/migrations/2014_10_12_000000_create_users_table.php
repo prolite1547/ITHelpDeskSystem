@@ -24,14 +24,12 @@ class CreateUsersTable extends Migration
             $table->unsignedSmallInteger('role_id')->default(3);
             $table->unsignedMediumInteger('position_id');
             $table->unsignedMediumInteger('division_id')->nullable();
-            $table->unsignedMediumInteger('department_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->morphs('userable');
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('position_id')->references('id')->on('positions')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

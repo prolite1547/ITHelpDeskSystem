@@ -18,10 +18,8 @@ import {disableSubmitBtn} from "./global";
 ////////////////////////////////
 
 export const ticketAddController = () => {
-
     /*INITIALIZE*/
     (function () {
-
         /*ADD THE ACTIVE CLASS TO THE INCIDENT ITEM*/
         // elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
         elements.incidentFormItem.classList.add(elementStrings.ticketAddFormActive);
@@ -128,7 +126,7 @@ export const ticketViewController = () => {
         .done(data => {
             /*TICKET STATUS IS EQUAL TO FIX(4)*/
             if (data.status === 4 || data.status === 3) {
-                elements.fixButtonShowDetails.addEventListener('click', editTicketView.getModalWithData.bind(null, data));
+                document.querySelector('button[data-action=viewFixDtls').addEventListener('click', editTicketView.getModalWithData.bind(null, data));
             } else {
 
                 /*ADD CLICK EVENT LISTENER */
@@ -232,6 +230,7 @@ export const ticketViewController = () => {
                             if (action === 'cancel') {
                                 hideModal();
                             } else if (action === 'confirm') {
+                                console.log(ticket);
                                 ticket.saveEdit(ticket.detailsEditData).done(data => {
                                     if (data.success === true) {
                                         alert('Updated Successfully!');
@@ -239,6 +238,8 @@ export const ticketViewController = () => {
                                     } else {
                                         alert('Failed to update...');
                                     }
+                                }).fail(data => {
+                                    alert('tae');
                                 });
 
                             }
@@ -299,16 +300,13 @@ export const ticketViewController = () => {
             // /*EVENT LISTENER ON SEND BUTTON*/
             if (elements.chatForm) {
 
-                const connection_id = data.incident.connection_id;
-                const call_id = data.incident.call_id;
-
+                const incident_type = data.issue.incident_type;
                 /*generate input depending if its mail or call*/
-                if(connection_id && call_id === null){
+                if(incident_type === "App\\ConnectionIssue"){
                     editTicketView.generateForm('reply');
-                }else if(call_id && connection_id === null){
+                }else if(incident_type === "App\\Incident"){
                     editTicketView.generateForm('chat');
                 }
-
 
                 /*generate inputs whenever user clicks that chat or reply menu*/
                 elements.chatForm.addEventListener('click',e => {
@@ -353,7 +351,7 @@ export const ticketViewController = () => {
                             let subject;
                             const formData = new FormData(e.target);
 
-                            subject = `Re: ${data.incident.subject} (TID#${data.id})`;
+                            subject = `Re: ${data.issue.subject} (TID#${data.id})`;
 
                             formData.append('subject',subject);
 

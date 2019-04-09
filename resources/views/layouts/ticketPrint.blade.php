@@ -154,19 +154,19 @@
             </div>
             <div class="print__group">
                 <div class="print__label">Subject:</div>
-                <div class="print__value">{{$ticket->incident->subject}}</div>
+                <div class="print__value">{{$ticket->issue->subject}}</div>
             </div>
             <div class="print__group">
                 <div class="print__label">Details:</div>
-                <div class="print__value">{{$ticket->incident->details}}</div>
+                <div class="print__value">{{$ticket->issue->details}}</div>
             </div>
             <div class="print__group">
                 <div class="print__label">Contact #:</div>
-                <div class="print__value">{{$ticket->incident->call->contact->store->store_name}} - {{$ticket->incident->call->contact->number}}</div>
+                <div class="print__value">{{$ticket->issue->incident->contact->store->store_name}} - {{$ticket->issue->incident->contact->number}}</div>
             </div>
             <div class="print__group">
                 <div class="print__label">Caller:</div>
-                <div class="print__value">{{$ticket->incident->call->callerRelation->full_name}}</div>
+                <div class="print__value">{{$ticket->issue->incident->caller->full_name}}</div>
             </div>
             <div class="print__group">
                 <div class="print__label">Logged Date:</div>
@@ -174,7 +174,7 @@
             </div>
             <div class="print__group">
                 <div class="print__label">Logged By:</div>
-                <div class="print__value">{{$ticket->incident->call->loggedBy->full_name}} <span>({{$ticket->incident->call->loggedBy->role->role}})</span>}</div>
+                <div class="print__value">{{$ticket->issue->incident->loggedBy->full_name}} <span>({{$ticket->issue->incident->loggedBy->role->role}})</span>}</div>
             </div>
             <div class="print__group">
                 <div class="print__label">Expiration Date:</div>
@@ -208,7 +208,7 @@
             @endif
             <div class="print__group">
                 <div class="print__label">Category:</div>
-                <div class="print__value">{{$ticket->incident->categoryRelation->name}} > {{$ticket->incident->catARelation->name}} > {{$ticket->incident->catBRelation->name}}</div>
+                <div class="print__value">{{$ticket->issue->categoryRelation->name}} > {{$ticket->issue->catARelation->name}} > {{$ticket->issue->catBRelation->name}}</div>
             </div>
             <div class="print__group">
                 <div class="print__label">Data Correction:</div>
@@ -223,8 +223,8 @@
             <div class="print__group">
                 <div class="print__label">Attachments:</div>
                 <div class="print__value">
-                    @if(!$ticket->incident->getFiles->isEmpty())
-                        @foreach($ticket->incident->getFiles as $file)
+                    @if(!$ticket->issue->getFiles->isEmpty())
+                        @foreach($ticket->issue->getFiles as $file)
                             <span class="ticket-details__value ticket-details__value--file"><a href="{{route('fileDownload',['id' => $file->id])}}" target="_blank">{{$file->original_name}}</a></span>
                         @endforeach
                     @else

@@ -15,9 +15,17 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        if($request->user()->role->id !== 4){
-            return back();
+        if($request->user()->position->department->id === 60666){
+            if($request->is('/admin')){
+                if($request->user()->role === 4){
+                    return $next($request);
+                }else {
+                    return back();
+                }
+            }else {
+                return $next($request);
+            }
         }
-        return $next($request);
+        return back();
     }
 }

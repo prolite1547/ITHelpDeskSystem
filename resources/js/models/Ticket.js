@@ -35,8 +35,8 @@ export default class Ticket {
         return $.ajax(`/ticket/${this.ID}`,{
             method:'GET',
             success: data => {
-                this.originalData.subject = data.incident.subject;
-                this.originalData.details = data.incident.details;
+                this.originalData.subject = data.issue.subject;
+                this.originalData.details = data.issue.details;
                 this.data = data;
             }
         });
@@ -47,10 +47,9 @@ export default class Ticket {
         const val  = e.target.value;
         const name = e.target.name;
 
-        if(name in this.ticket){
+        if(name in this.data){
             this.detailsEditData['ticket'][`${name}`] = val;
-        }else if(name in this.ticket.incident){
-
+        }else if(name in this.data.issue){
             this.detailsEditData['incident'][`${name}`] = val;
         }
 
