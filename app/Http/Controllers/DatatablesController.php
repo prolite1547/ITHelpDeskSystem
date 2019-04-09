@@ -32,12 +32,12 @@ class DatatablesController extends Controller
             /*catB id's of pos categories*/
             $pos_categories_array = DB::table('category_a as a')->join('category_b as b','a.id','b.catA_id')->where('a.id','=',1)->pluck('b.id')->toArray();
             /*query tickets that are pos related*/
-            $query = DB::table('v_tickets as vt')->select('vt.id','vt.category','vt.ticket_group','vt.subject','vt.details','vt.status_name','vt.assigne','vt.store_name','logged_by','vt.priority','vt.created_at')->whereIn('vt.catB',$pos_categories_array);
+            $query = DB::table('v_tickets as vt')->select('vt.id','vt.catB_name','vt.category','vt.ticket_group_name','vt.subject','vt.details','vt.status_name','vt.assigned_user','vt.store_name','logger','vt.priority_name','vt.created_at')->whereIn('vt.catB',$pos_categories_array);
         }else{
             $statuses = Status::whereNotIn('name', ['fixed','closed'])->pluck('name')->toArray();
-            $query = DB::table('v_tickets as vt')
+            $query = DB::table('v_tickets')
                 ->select(
-                    'vt.id', 'priority_name', 'status_id','status_name', 'expiration', 'vt.created_at',
+                    'id', 'priority_name', 'status_id','status_name', 'expiration', 'created_at',
                     'subject', 'details', 'category',
                     'assigned_user',
                     'store_name',
@@ -61,13 +61,13 @@ class DatatablesController extends Controller
                             return $query->whereGroup($group);
                         })
                         ->leftJoinSub(DB::table('v_latest_fixes'), 'fixed_details', function ($join) {
-                            $join->on('vt.id', '=', 'fixed_details.ticket_id');
+                            $join->on('v_tickets.id', '=', 'fixed_details.ticket_id');
                         })->leftJoin('users as fixer', 'fixed_details.fixed_by', 'fixer.id')
                         ->addSelect(DB::raw('CONCAT(fixer.fName," ",fixer.lName) as fixed_by'), 'fix_date');
 
                 })
                 ->when($status === 'closed',function ($query){
-                    return $query->join('v_resolves','vt.id','v_resolves.ticket_id')
+                    return $query->join('v_resolves','v_tickets.id','v_resolves.ticket_id')
                         ->addSelect('resolver','resolved_date');
                 });
         }
