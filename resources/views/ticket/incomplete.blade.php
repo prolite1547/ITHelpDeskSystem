@@ -8,7 +8,7 @@
             <h1 class="incomplete__header-primary">Incomplete Ticket Data</h1>
                 <div class="incomplete__flex">
                     <div class="incomplete__left">
-                        {!! Form::model($ticket->incident,['method'=>'PATCH','route' => ['addTicketDetails'],'class'=>'form-addTicketDetails','enctype'=>'multipart/form-data']) !!}
+                        {!! Form::model($ticket->issue,['method'=>'PATCH','route' => ['addTicketDetails'],'class'=>'form-addTicketDetails','enctype'=>'multipart/form-data']) !!}
                         {{Form::hidden('_method','PATCH')}}
                         <label class="form-addTicketDetails__ticket">Ticket #: <input name="ticket_id" type="text" value="{{$ticket->id}}" readonly class="form-addTicketDetails__ticket-value"></label>
                         <div class="form__group">

@@ -28,7 +28,7 @@
                             <div class="form__group">
                                 <fieldset class="fieldset">
                                     <legend class="fieldset__legend">Caller Details</legend>
-                                    <div class="row-flex row-flex__jc--sb">
+                                    <div class="row-flex row-flex--jc-sb">
                                         <div class="fieldset__contact">
                                             {!! Form::select('user', [], null, ['placeholder' => '(contact)','class' => 'form__input userSelect','required']) !!}
                                         </div>

@@ -65,7 +65,6 @@ export const getFixFormMarkUp = (lookup = false,ticketID = 0) => {
 
 export const addEventListenerToEditInputs = (ticket) => {
     const inputs = document.querySelectorAll('.ticket-details__select');
-
     inputs.forEach(el => {
         el.addEventListener('input',ticket.storeEditData.bind(ticket));
     });
@@ -88,8 +87,9 @@ export const getModalWithData = (ticket) => {
 
                 /*add event listenser when user resolves the fix ticket*/
                 if(document.querySelector(elementStrings.resolveBtn))
-                document.querySelector(elementStrings.resolveBtn).addEventListener('click',() => {
-                    $.ajax(`/ticket/resolve/${ticket.id}`,{
+                document.querySelector(elementStrings.resolveBtn).addEventListener('click',e => {
+                    const fix_id = parseInt(elements.modalContent.querySelector('.resolve-details__fix-id').textContent);
+                    $.ajax(`/ticket/resolve/${fix_id}`,{
                         type: 'POST'
                     }).done(() => {
                         alert('Ticket is now resolved!');

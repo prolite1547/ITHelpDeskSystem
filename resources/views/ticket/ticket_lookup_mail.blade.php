@@ -37,10 +37,10 @@
                             </div>
                         </div>
                         <div>
-                            <h3 class="heading-tertiary ticket-content__subject">{{$ticket->incident->subject}}</h3>
+                            <h3 class="heading-tertiary ticket-content__subject">{{$ticket->issue->subject}}</h3>
                         </div>
                         <p class="ticket-content__details">
-                            {!!$ticket->incident->details!!}
+                            {!!$ticket->issue->details!!}
                         </p>
                         @if($ticket->status !== $ticket_status_arr['Expired'])
                             <form class="chat">
@@ -58,9 +58,9 @@
                         </div>
                     </div>
                 </div>
-                @if( isset($ticket->incident->call_id) && is_null($ticket->inciden->connection_id) )
+                @if( isset($ticket->issue->incident_id) && is_null($ticket->inciden->connection_id) )
 
-                @elseif(isset($ticket->incident->connection_id) && is_null($ticket->inciden->call_id))
+                @elseif(isset($ticket->issue->connection_id) && is_null($ticket->inciden->call_id))
                     @include('includes.ticket_lookup.messages')
                 @endif
             </div>

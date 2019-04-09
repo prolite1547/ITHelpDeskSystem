@@ -183,23 +183,26 @@ Route::get('treasury/dashboard','PublicController@treasuryDashboard')->name('tre
 
 
 Route::get('/test2.1', function () {
-    $nntp = imap_open('{imap.gmail.com:993/imap/ssl}Ticketing', 'it.support@citihardware.com', 'citihardware2020');
-    $threads = imap_thread($nntp);
+//    $ongoingMailInc = \App\Ticket::whereStatus(2)
+//        ->has('incident' , function($query){
+//        $query->whereNotNull('connection_id');
+//    })->with(['connectionIssueMailReplies' => function($query){
+//        $query->latest('reply_date');
+//    },'incident:id,subject'])->get();
 
+    $ongoingMailInc = \App\ConnectionIssue::with(['incident.ticket' => function($query){
+        $query->whereStatus(2);
+    },'incident.ticket.connectionIssueMailReplies' => function($query){
+        $query->latest('reply_date');
+    }])->get();
 
-    foreach ($threads as $key => $val) {
-        $tree = explode('.', $key);
-        if ($tree[1] == 'num') {
-            $header = imap_headerinfo($nntp, $val);
-            echo "<ul>\n\t<li>" . $header->subject . "\n";
-        } elseif ($tree[1] == 'branch') {
-            echo "\t</li>\n</ul>\n";
-        }
+    foreach ($ongoingMailInc as $connection_issue){
+        $ticketID =  $connection_issue->incident->ticket->id;
+        $subject = $connection_issue->incident->subject . " (TID#{$ticketID})";
+        $latest_reply = $connection_issue->incident->ticket->connectionIssueMailReplies->first(); /*latest reply on the database*/
+
+        fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
     }
-
-    imap_close($nntp);
-
-    dd($threads);
 });
 
 Route::get('/test2', function () {

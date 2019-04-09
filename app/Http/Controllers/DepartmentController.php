@@ -10,7 +10,7 @@ class DepartmentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','check.role']);
     }
 
     public function create(StoreDepartment $request){

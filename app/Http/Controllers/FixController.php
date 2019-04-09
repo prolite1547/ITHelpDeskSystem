@@ -10,7 +10,7 @@ class FixController extends Controller
 {
     public function __construct()
     {
-        return $this->middleware('auth');
+        return $this->middleware(['auth','check.role']);
     }
 
     public function create(StoreFix $request,$id)

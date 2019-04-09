@@ -28,12 +28,12 @@
             </div>
         </div>
     </div>
-    <div class="row-flex row-flex__ai--fe">
+    <div class="row-flex row-flex--ai-fe">
         <div class="left">
             <nav class="nav">
                 <ul class="nav__ul">
                     <li class="nav__li">
-                        <a href="{{route('dashboard')}}" class="nav__a {{Route::currentRouteName() == 'dashboard' ? 'nav__a--active' : ''}}">Dashboard</a>
+                        <a href="{{route('treasuryDashboard')}}" class="nav__a {{Route::currentRouteName() == 'dashboard' ? 'nav__a--active' : ''}}">Dashboard</a>
                     </li>
                 </ul>
             </nav>

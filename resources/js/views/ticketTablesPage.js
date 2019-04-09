@@ -55,10 +55,9 @@ export const setDataTablesConf = () => {
                     return `<a href='/tickets/view/${data.id}' class='table__subject'>${row.subject}</a>
                 <span class='table__info'>Ticket #: ${data.id}</span>
                 <span class='table__info'>Category: ${row.category}</span>
-                <span class='table__info'>Group: ${data.ticket_group}</span>
-                ${(data.extend_count > 0) ? `<span class='table__info table__info--red'>Extended (${data.extend_count})</span>` : ''}`
+                <span class='table__info'>Group: ${data.ticket_group_name}</span>
+                ${(data.times_extended > 0) ? `<span class='table__info table__info--red'>Extended (${data.times_extended})</span>` : ''}`
                 }
-
             },
             {
                 targets: 5, /*CREATED_AT COLUMN*/

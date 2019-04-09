@@ -40,14 +40,14 @@ class Caller extends Model
     }
 
     public  function call(){
-        return $this->hasMany('App\Call','caller_id','id');
+        return $this->morphMany('App\Call','caller');
     }
 
     public function store(){
         return $this->belongsTo('App\Store');
     }
 
-    public function positionData(){
-        return $this->belongsTo('App\Position','position');
+    public function position(){
+        return $this->morphTo();
     }
 }

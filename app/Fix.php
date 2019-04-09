@@ -26,4 +26,8 @@ class Fix extends Model
     public function fixedBy(){
         return $this->belongsTo('App\User','fixed_by')->withDefault(['name' => 'none']);
     }
+
+    public function resolve(){
+        return $this->hasOne(\App\Resolve::class,'fixes_id');
+    }
 }

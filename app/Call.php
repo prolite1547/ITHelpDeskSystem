@@ -8,21 +8,22 @@ class Call extends Model
 {
     protected $fillable = [
     'caller_id',
+    'caller_type',
     'user_id',
     'contact_id',
     ];
 
 
     public function incident(){
-        return $this->hasOne('App\Incident');
+        return $this->morphOne('App\Incident','incident');
     }
 
     public function contact(){
         return $this->belongsTo('App\Contact');
     }
 
-    public function callerRelation(){
-        return $this->belongsTo('App\User','caller_id','id');
+    public function caller(){
+        return $this->morphTo();
     }
 
     public function callerRelationOld(){

@@ -105,15 +105,16 @@ if (! function_exists('addCaller')) {
 
 if (! function_exists('validateLoggersTicketStatus')) {
     function validateLoggersTicketStatus($user_id){
-        $user_tickets = DB::table('users as u')
-            ->join('tickets as t','u.id','t.logged_by')
-            ->leftJoin('incidents as i','t.incident_id','i.id')
-            ->where('u.id',$user_id)
+        $user_tickets = DB::table('tickets as t')
+            ->join('incidents as i','t.issue_id','i.id')
+            ->where('t.logged_by',$user_id)
+            ->where('t.status',1)
             ->where(function ($query){
                 $query->orWhere(['t.priority' => null,'t.expiration' => null,'i.subject' => null,'i.details' => null,'i.category' => null,'i.catA' => null,'i.catB' => null,'t.group' => null]);
             })
             ->select('t.id','t.logged_by')
             ->first();
+
         if($user_tickets){
             return ['incomplete' => true,'ticket_id' => $user_tickets->id];
         }else{
@@ -127,15 +128,15 @@ if (! function_exists('validateLoggersTicketStatus')) {
 if (! function_exists('checkTicketDataIfIncomplete')) {
     function checkTicketDataIfIncomplete($ticket_id){
         $ticket = DB::table('tickets AS t')
-            ->join('incidents AS i','t.incident_id','i.id')
+            ->join('incidents AS i','t.issue_id','i.id')
             ->select('t.id','t.logged_by','t.priority','t.expiration','i.subject','i.details','i.category','i.catA','i.catB')
             ->where('t.id',$ticket_id)
         ->first();
-
         foreach ($ticket as $property => $value){
             if(is_null($value)) return ['incomplete' => true,'logged_by' =>$ticket->logged_by];
         }
 
+        return ['incomplete' => false,'logged_by' =>$ticket->logged_by];
     }
 }
 

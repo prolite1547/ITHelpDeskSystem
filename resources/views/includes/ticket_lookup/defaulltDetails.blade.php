@@ -56,7 +56,7 @@
             <span class="ticket-details__value">{{$ticket->getOriginal('expiration')}}</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-            <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}"
+            <a href="{{route('userProfile',['id' => $ticket->issue->incident->loggedBy->id])}}"
                class="ticket-details__value ticket-details__value--link">{{$ticket->userLogged->full_name}}</a> <span>({{$ticket->userLogged->role->role}})</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
@@ -67,8 +67,8 @@
             <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-            <a href="javascript:void(0);" data-store="{{$ticket->getStore->id}}"
-               class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->getStore->store_name}}</a>
+            <a href="javascript:void(0);" data-store="{{$ticket->store->id}}"
+               class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->store->store_name}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
             @if($ticket->assigneeRelation)
@@ -80,7 +80,7 @@
             @endif
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
-            <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}} - {{$ticket->incident->catARelation->name}} - {{$ticket->incident->catBRelation->name}}</span>
+            <span class="ticket-details__value">{{$ticket->issue->categoryRelation->name}} - {{$ticket->issue->catARelation->name}} - {{$ticket->issue->catBRelation->name}}</span>
         </li>
         {{--<li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>--}}
         {{--<span class="ticket-details__value">&nbsp;</span>--}}
@@ -145,11 +145,11 @@
        @endif
 
         {{-- <li class="ticket-details__item"><span class="ticket-details__field">Data Correction:</span>
-            <span class="ticket-details__value">{{$ticket->incident->drd}}</span>
+            <span class="ticket-details__value">{{$ticket->issue->drd}}</span>
         </li> --}}
         <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
-            @if(!$ticket->incident->getFiles->isEmpty())
-                @foreach($ticket->incident->getFiles as $file)
+            @if(!$ticket->issue->getFiles->isEmpty())
+                @foreach($ticket->issue->getFiles as $file)
                     <span class="ticket-details__value ticket-details__value--file"><a
                             href="{{route('fileDownload',['id' => $file->id])}}"
                             target="_blank">{{$file->original_name}}</a></span>

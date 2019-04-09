@@ -8,6 +8,7 @@ use App\CategoryB;
 use App\CategoryC;
 use App\ConnectionIssue;
 use App\File;
+use App\Fix;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
 use App\Mail\PLDTIssue;
@@ -25,23 +26,22 @@ class TicketController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','check.role'])->except(['print','lookupView']);
     }
 
     public function getTicket($id)
     {
 
         $ticket = Ticket::with([
-            'incident.call.loggedBy',
+            'issue.incident',
             'statusRelation',
-            'incident.call.callerRelation',
+//            'issue.issue.caller',
             'typeRelation',
-            'incident.call.contact.store',
             'assigneeRelation',
-            'incident.categoryRelation',
-            'incident.catARelation',
-            'incident',
-            'incident.getFiles',
+            'issue.categoryRelation',
+            'issue.catARelation',
+            'issue',
+            'issue.getFiles',
             'ticketMessages'
         ])
             ->findOrFail($id)->toArray();
@@ -58,24 +58,24 @@ class TicketController extends Controller
             $incomplete_ticket = checkTicketDataIfIncomplete($id);
             if ($incomplete_ticket['incomplete'] && ($incomplete_ticket['logged_by'] === $request->user()->id)) {
                 return redirect()->route('incompleteTicket', ['id' => $id]);
-            } else {
+            } else if($incomplete_ticket['logged_by'] !== $request->user()->id){
                 return redirect()->back();
             }
         }
 
         /*CHECK IF TICKET IS CREATED THROUGH CALL OR EMAIL*/
-        if ($ticket->incident->call_id) {
+        if ($ticket->issue->incident_type === \App\Call::class) {
             $relationArray = [
-                'incident.call.loggedBy',
+                'issue.incident.loggedBy',
                 'statusRelation',
-                'incident.call.callerRelation',
+                'issue.incident.caller',
                 'typeRelation',
-                'incident.call.contact.store',
+                'issue.incident.contact.store',
                 'assigneeRelation',
-                'incident.categoryRelation',
-                'incident.catARelation',
-                'incident',
-                'incident.getFiles'
+                'issue.categoryRelation',
+                'issue.catARelation',
+                'issue',
+                'issue.getFiles'
             ];
         } else {
             $relationArray = [
@@ -83,11 +83,10 @@ class TicketController extends Controller
                 'statusRelation',
                 'typeRelation',
                 'assigneeRelation',
-                'incident.categoryRelation',
-                'incident.catARelation',
-                'incident',
-                'incident.getMailData',
-                'incident.getFiles',
+                'issue.categoryRelation',
+                'issue.catARelation',
+                'issue',
+                'issue.getFiles',
                 'connectionIssueMailReplies' => function ($query) {
                     $query->latest();
                 }
@@ -151,24 +150,20 @@ class TicketController extends Controller
     public function addTicket(StoreTicket $request)
     {
 
-        $insert_data = DB::transaction(function () use ($request) {
+        $ticket_id = DB::transaction(function () use ($request) {
             $caller_id = ((int)$request->user === 0) ? addCaller($request->except(['_token', 'store'])) : $request->user;
             $requester_id = $request->user()->id;
 
-            /*INSERT CALL RECORD*/
-            $call = Call::create(['caller_id' => $caller_id, 'user_id' => $requester_id])
-                ->incident()->create()
-                ->ticket()->create(['store' => $request->store, 'status' => 1, 'logged_by' => $requester_id]);
+            /*INSERT CALL RECORD ANG GET THE ID OF THE INSERTTED RELATION INCIDENT*/
+            $ticket_id = Call::create(['caller_id' => $caller_id,'caller_type' => 'App\User', 'user_id' => $requester_id])
+                ->incident()->create()->ticket()->create(['store_id' => $request->store,'store_type' => 'App\Store', 'status' => 1, 'logged_by' => $requester_id])->id;
 
-            if(!is_null($call)){
-                return $call;
+            if(!is_null($ticket_id)){
+                return $ticket_id;
             }else {
                 return response('Failed to create ticket',400);
             }
         });
-
-        /*FETCH ID OF THE INSERTED TICKET*/
-        $ticket_id = $insert_data->incident->ticket->id;
 
         return response(compact('ticket_id'));
 
@@ -257,14 +252,6 @@ class TicketController extends Controller
     }
     public function addTicketDetails(StoreTicket $request)
     {
-
-
-        /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
-        $ticket_id = $request->ticket_id;
-
-        /*INCIDENT_ID OF THE TICKET THE DETAILS WILL BE INSERTED TO*/
-        $incident_id = Ticket::findOrFail($ticket_id)->incident_id;
-
         /*FETCH THE EXPIRATION HOURS COLUMN*/
         $expiration_hours = CategoryB::findOrFail($request->catB)->getExpiration->expiration;
         $catA = CategoryB::findOrFail($request->catB)->group->id;
@@ -275,14 +262,17 @@ class TicketController extends Controller
         /*ADD EXPIRATION IN REQUEST ARRAY*/
         $request->request->add(array('expiration' => $expiration_date, 'catA' => $catA));
 
+        /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
+        $ticket_id = $request->ticket_id;
+
         /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
         $request->request->add(self::assignStatus($request->assignee));
 
-        DB::transaction(function () use ($request, $incident_id, $ticket_id) {
+        DB::transaction(function () use ($request, $ticket_id) {
 
-            Incident::findOrFail($incident_id)->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
             $ticket = Ticket::findOrFail($ticket_id);
             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status', 'group'));
+            $ticket->issue->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
 
             /*CREATE DIRECTORY NAME*/
             $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $ticket->created_at)) . '_' . $ticket_id;
@@ -296,7 +286,7 @@ class TicketController extends Controller
                     $original_ext = $attachment->getClientOriginalExtension();
                     $path = $attachment->store("$ticketDirectoryName", 'ticket');
 
-                    File::create(['incident_id' => $incident_id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
+                    File::create(['incident_id' => $ticket->issue_id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
                 };
             }
 
@@ -379,7 +369,7 @@ class TicketController extends Controller
             DB::beginTransaction();
             $bool = true;
             if ($request->filled(['incident'])) {
-                $incident = Ticket::findOrFail($id)->incident;
+                $incident = Ticket::findOrFail($id)->issue;
 
                 foreach ($request->incident as $key => $value) {
                     $incident->$key = $value;
@@ -395,7 +385,7 @@ class TicketController extends Controller
                 }
 
                 /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
-                $status = self::assignStatus($request->ticket['assignee']);
+                $status = self::assignStatus($request->ticket['assignee'] ?? FALSE);
                 $ticket->status = $status['status'];
                 $ticket->save();
             }
@@ -413,7 +403,6 @@ class TicketController extends Controller
             DB::rollback();
         }
 
-
         return response()->json(['success' => $bool]);
 
     }
@@ -421,15 +410,15 @@ class TicketController extends Controller
     public function editModal($id)
     {
         $ticket = Ticket::with([
-            'incident.call.loggedBy',
+            'issue.incident.loggedBy',
             'statusRelation',
-            'incident.call.callerRelation',
+//            'issue.issue.caller',
             'typeRelation',
-            'incident.call.contact.store',
+            'issue.incident.contact.store',
             'assigneeRelation',
-            'incident.categoryRelation',
-            'incident.catARelation',
-            'incident',
+            'issue.categoryRelation',
+            'issue.catARelation',
+            'issue',
         ])
             ->findOrFail($id);
         $view = view('modal.ticket_edit', ['ticket' => $ticket]);
@@ -450,7 +439,7 @@ class TicketController extends Controller
             $original_ext = $attachment->getClientOriginalExtension();
             $path = $attachment->store($destination, 'ticket');
 
-            File::create(['incident_id' => $ticket->incident->id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
+            File::create(['incident_id' => $ticket->issue->id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
         };
     }
 
@@ -514,7 +503,7 @@ class TicketController extends Controller
             /*INSERT TO DATABASE*/
             $ticket_id = ConnectionIssue::create($request->only(['cc', 'to', 'account', 'pid', 'tel', 'contact_person', 'contact_number']))
                 ->incident()->create($request->only(['subject', 'details', 'catC', 'catB', 'catA', 'category']))
-                ->ticket()->create(['assignee' => $request->user()->id, 'logged_by' => $request->user()->id, 'type' => 1, 'priority' => 4, 'status' => 2, 'store' => $request->branch, 'group' => 1, 'expiration' => $expiration])->id;
+                ->ticket()->create(['assignee' => $request->user()->id, 'logged_by' => $request->user()->id, 'type' => 1, 'priority' => 4, 'status' => 2, 'store_id' => $request->branch, 'group' => 1, 'expiration' => $expiration,'store_type' => "App\Store"])->id;
 
             /*SEND MAIL*/
             $mail = new Mail;
@@ -745,8 +734,11 @@ class TicketController extends Controller
   
 }
     public function resolve(Request $request,$id){
-        $ticket = Ticket::findOrFail($id);
-        $ticket->update(['status' => 3]);
-        $ticket->resolve()->create(['ticket_id' => $id,'resolved_by' => $request->user()->id]);
+        $fix = Fix::findOrFail($id);
+
+        DB::transaction(function () use($fix,$request,$id){
+            $fix->ticket->update(['status' => 3]);
+            $fix->resolve()->create(['fixes_id' => $id,'resolved_by' => $request->user()->id]);
+        });
     }
 }

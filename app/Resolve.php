@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Resolve extends Model
 {
     protected $fillable = [
-        'ticket_id',
+        'fixes_id',
         'resolved_by'
     ];
 
     public function ticket(){
         return $this->belongsTo('App\Ticket');
+    }
+    public function fix(){
+        return $this->belongsTo(\App\Fix::class);
     }
 }

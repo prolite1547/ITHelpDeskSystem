@@ -14,11 +14,11 @@ class CreateResolvesTable extends Migration
     public function up()
     {
         Schema::create('resolves', function (Blueprint $table) {
-            $table->mediumIncrements('id');
+            $table->unsignedMediumInteger('fixes_id');
             $table->unsignedSmallInteger('resolved_by');
-            $table->unsignedMediumInteger('ticket_id');
+            $table->foreign('fixes_id')->references('id')->on('fixes')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('resolved_by')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade')->onUpdate('cascade');
+            $table->primary(['fixes_id','resolved_by']);
             $table->timestamps();
         });
     }

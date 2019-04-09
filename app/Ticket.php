@@ -12,7 +12,8 @@ class Ticket extends Model
     use SoftDeletes;
     protected $fillable = [
         'type',
-        'store',
+        'store_id',
+        'store_type',
         'incident_id',
         'assignee',
         'priority',
@@ -32,14 +33,14 @@ class Ticket extends Model
         return $this->belongsTo('App\User', 'logged_by');
     }
 
-    public function getStore()
+    public function store()
     {
-        return $this->belongsTo('App\Store', 'store', 'id');
+        return $this->morphTo();
     }
 
-    public function incident()
+    public function issue()
     {
-        return $this->belongsTo('App\Incident');
+        return $this->morphTo();
     }
 
     public function assigneeRelation()

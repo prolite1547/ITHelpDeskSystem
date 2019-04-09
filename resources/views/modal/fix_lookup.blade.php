@@ -1,4 +1,5 @@
 <div class="resolve-details">
+<span class="resolve-details__fix-id" hidden>{{$fix->id}}</span>
 <div class="form__group">
     {!! Form::label('cause','Root Cause:',['class' => 'form__label--block']) !!}
     {!! Form::textarea('cause',$fix->cause,['class' => 'form__input--textarea','required','id' => 'cause','readonly']) !!}

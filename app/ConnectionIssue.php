@@ -20,7 +20,7 @@ class ConnectionIssue extends Model
 
 
     public function incident(){
-        return $this->hasOne('App\Incident','connection_id','id');
+        return $this->morphOne('App\Incident','incident');
     }
 
     public function createTicketArray($userID,$catBID,$store){

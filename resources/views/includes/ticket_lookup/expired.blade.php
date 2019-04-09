@@ -12,10 +12,10 @@
                     </div>
                 </div>
                 <div>
-                    <h3 class="heading-tertiary ticket-content__subject">{{$ticket->incident->subject}}</h3>
+                    <h3 class="heading-tertiary ticket-content__subject">{{$ticket->issue->subject}}</h3>
                 </div>
                 <p class="ticket-content__details">
-                    {!!$ticket->incident->details!!}
+                    {!!$ticket->issue->details!!}
                 </p>
                 <div class="ticket-content__updateBtns">
                     <div class="ticket-content__buttons u-float-r">
@@ -64,7 +64,7 @@
                         <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
-                        <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}} ({{$ticket->incident->call->callerRelation->positionData->position}})</a>
+                        <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->issue->incident->caller->full_name}} ({{$ticket->issue->incident->caller->positionData->position}})</a>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
                         <span class="ticket-details__value"> {{$ticket->created_at}}</span>
@@ -73,7 +73,7 @@
                         <span class="ticket-details__value">{{$ticket->getOriginal('expiration')}}</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Logged by:</span>
-                        <a href="{{route('userProfile',['id' => $ticket->incident->call->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->userLogged->full_name}}</a> <span>({{$ticket->userLogged->role->role}})</span>
+                        <a href="{{route('userProfile',['id' => $ticket->issue->incident->loggedBy->id])}}" class="ticket-details__value ticket-details__value--link">{{$ticket->userLogged->full_name}}</a> <span>({{$ticket->userLogged->role->role}})</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Priority:</span>
                         <span class="ticket-details__value ticket-details__value--{{strtolower($ticket->priorityRelation->name)}}">{{$ticket->priorityRelation->name}}</span>
@@ -82,7 +82,7 @@
                         <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-                        <a href="javascript:void(0);" data-store="{{$ticket->getStore->id}}" class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->getStore->store_name}}</a>
+                        <a href="javascript:void(0);" data-store="{{$ticket->storeid}}" class="ticket-details__value ticket-details__value--link ticket-details__value--store">{{$ticket->storestore_name}}</a>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Assigned to:</span>
                         @if($ticket->assigneeRelation)
@@ -92,10 +92,10 @@
                         @endif
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
-                        <span class="ticket-details__value">{{$ticket->incident->categoryRelation->name}}</span>
+                        <span class="ticket-details__value">{{$ticket->issue->categoryRelation->name}}</span>
                     </li>
                     <li class="ticket-details__item"><span class="ticket-details__field">Sub-A Category:</span>
-                        <span class="ticket-details__value">{{$ticket->incident->catARelation->name}} - {{$ticket->incident->catBRelation->name}}</span>
+                        <span class="ticket-details__value">{{$ticket->issue->catARelation->name}} - {{$ticket->issue->catBRelation->name}}</span>
                     </li>
                     {{--<li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>--}}
                     {{--<span class="ticket-details__value">&nbsp;</span>--}}
@@ -133,11 +133,11 @@
                     </li>
 
                     {{-- <li class="ticket-details__item"><span class="ticket-details__field">Data Correction:</span>
-                        <span class="ticket-details__value">{{$ticket->incident->drd}}</span>
+                        <span class="ticket-details__value">{{$ticket->issue->drd}}</span>
                     </li> --}}
                     <li class="ticket-details__item"><span class="ticket-details__field">Attachments:</span>
-                        @if(!$ticket->incident->getFiles->isEmpty())
-                            @foreach($ticket->incident->getFiles as $file)
+                        @if(!$ticket->issue->getFiles->isEmpty())
+                            @foreach($ticket->issue->getFiles as $file)
                                 <span class="ticket-details__value ticket-details__value--file"><a href="{{route('fileDownload',['id' => $file->id])}}" target="_blank">{{$file->original_name}}</a></span>
                             @endforeach
                         @else
