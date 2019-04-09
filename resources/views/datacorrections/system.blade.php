@@ -83,9 +83,16 @@
 
                     <div class="row mb-3">
                         <div class="col-md-5 mb-3">
+                         <div class="input-group">
                             <label for="supervisor">Dept. Supervisor : </label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="supervisor"  id="supervisor" style="text-transform:uppercase;" required>
+                            <select class="custom-select d-block w-100" name="supervisor" id="supervisor" required>
+                                <option data-id="0"   value="">Choose...</option>
+                                 @foreach ($users  as $user)
+                                        <option data-id="{{ $user->id }}" value="{{ $user->full_name }}">{{ $user->full_name }}</option>
+                                 @endforeach
+                            </select>
+                            
+                                {{-- <input type="text" class="form-control" name="supervisor"  id="supervisor" style="text-transform:uppercase;" required> --}}
                                 <div class="invalid-tooltip " style="width: 100%;">
                                     Valid dept. supervisor is required
                                 </div>
@@ -94,7 +101,9 @@
 
                         <div class="col-md-4 mb-3">
                                 <label for="department">Department : </label>
-                                    <select class="custom-select d-block w-100" name="department" id="department" required>
+                                <input type="text" class="form-control" name="department" id="department"   readonly>
+                           
+                                    {{-- <select class="custom-select d-block w-100" name="department" id="department" required>
                                         <option data-id="0" value="">Choose...</option>
                                          @foreach ($departments  as $department)
                                                 <option data-id="{{ $department->id }}" value="{{ $department->department }}">{{ $department->department }}</option>
@@ -102,20 +111,21 @@
                                     </select>
                                     <div class="invalid-tooltip ">
                                         Please select a valid department.
-                                    </div>
+                                    </div> --}}
                         </div>
 
                         <div class="col-md-3 mb-3">
                                 <label for="position">Position : </label>
-                                <select class="custom-select d-block w-100" name="position" id="position"  required>
-                                        <option value="">Choose...</option> 
+                                <input type="text" class="form-control" name="position" id="position"   readonly>
+                                {{-- <select class="custom-select d-block w-100" name="position" id="position"  required>
+                                        <option value="">Choose...</option>  --}}
                                         {{-- @foreach ($positions  as $position)
                                                 <option value="{{ $position->position }}">{{ $position->position }}</option>
                                         @endforeach --}}
                                 </select>
-                                <div class="invalid-tooltip">
+                                {{-- <div class="invalid-tooltip">
                                          Valid position is required
-                                </div>
+                                </div> --}}
                         </div>
                     </div>
 {{-- @endif --}}

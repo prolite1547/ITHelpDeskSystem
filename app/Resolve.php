@@ -11,5 +11,7 @@ class Resolve extends Model
         'resolved_by'
     ];
 
-
+    public function ticket(){
+        return $this->belongsTo('App\Ticket');
+    }
 }

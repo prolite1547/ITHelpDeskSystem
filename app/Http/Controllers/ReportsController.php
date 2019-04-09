@@ -396,7 +396,7 @@ public function loadChart(){
 
             $count+=1;
         }
-        return response()->json(array('success'=>true, 'topresolvers'=>$topresolvers, 'solveCount'=>$solveCount, 'supports'=>$supports), 200);
+        return response()->json(array('success'=>true, 'topresolvers'=>$topresolvers, 'solveCount'=>$solveCount, 'supports'=>$supports ), 200);
     }
 
  

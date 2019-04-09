@@ -14,6 +14,7 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="{{ asset('css/app_2.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
        
 
 

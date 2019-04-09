@@ -114,20 +114,43 @@
 
                     <div class="row mb-3">
                         <div class="col-md-5 mb-3">
+                                
                             <label for="supervisor">Dept. Supervisor : </label>
                             <div class="input-group">
+                            <select class="custom-select d-block w-100" name="supervisor" id="supervisor" required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
+                                        disabled   
+                                       @endif>
+                                        <option data-id="0"   value="">Choose...</option>
+                                         @foreach ($users  as $user)
+                                                <option data-id="{{ $user->id }}" value="{{ $user->full_name }}" @if ($user->full_name == $sdc->dept_supervisor)
+                                                    selected
+                                                @endif>{{ $user->full_name }}</option>
+                                         @endforeach
+                                    </select>
+                                  
+                                                 
+                                                <div class="invalid-tooltip " style="width: 100%;">
+                                                    Valid dept. supervisor is required
+                                                </div>
+                        </div>        
+                            {{-- <div class="input-group">
                                 <input type="text" class="form-control input-validate" name="supervisor" style="text-transform:uppercase;"  value="{{ $sdc->dept_supervisor }}" id="supervisor" required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
                                 disabled   
                                @endif>
                                 <div class="invalid-tooltip " style="width: 100%;">
                                     Valid dept. supervisor is required
                                 </div>
-                            </div>   
+                            </div>    --}}
                         </div>
 
                         <div class="col-md-4 mb-3">
                                 <label for="department">Department : </label>
-                                  <select class="custom-select d-block w-100 input-validate" name="department" id="department" required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
+                                <input type="text" class="form-control" name="department" id="department"  value="<?php echo $sdc->department ?>"   @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
+                                disabled   
+                                @else 
+                                readonly
+                               @endif>
+                                  {{-- <select class="custom-select d-block w-100 input-validate" name="department" id="department" required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
                                                 disabled   
                                                @endif>
                                         
@@ -140,15 +163,20 @@
                                     </select>
                                     <div class="invalid-tooltip ">
                                         Please select a valid department.
-                                    </div>
+                                    </div> --}}
                             </div>
 
                         <div class="col-md-3 mb-3">
                                 <label for="position">Position : </label>
-                         <select class="custom-select d-block w-100 input-validate" data-position="{{ $sdc->position }}" name="position" id="position"   required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))disabled @endif>
+                                <input type="text" class="form-control" name="position" id="position"  value="<?php echo $sdc->position ?>"   @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))
+                                disabled   
+                                @else 
+                                readonly
+                               @endif>
+                         {{-- <select class="custom-select d-block w-100 input-validate" data-position="{{ $sdc->position }}" name="position" id="position"   required @if (Auth::user()->role_id === 8 OR ($sdc->status != 2 AND $sdc->status != 0 ))disabled @endif>
                                 
                                      
-                                </select>
+                                </select> --}}
                                 <div class="invalid-tooltip">
                                           Valid position is required
                                 </div>

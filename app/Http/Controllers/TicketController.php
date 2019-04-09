@@ -629,7 +629,7 @@ class TicketController extends Controller
                     if($sdc->forward_status > 2 && $sdc->status != 0){
                         $status = "APPROVED";
                         $datetimeapproved = $sdc->t2_datetime_apprvd;
-                        $approvedby = $sdc->ty1_fullname;
+                        $approvedby = $sdc->pre_verified_by;
                     }else{
                         if($sdc->status == 2 && $sdc->forward_status == 2){
                             $status = "REJECTED";

@@ -118,7 +118,7 @@
                 success: function(data){
                     $('#selectedtryear').html(tryear);
                     generateTopResolvers(data.topresolvers,data.solveCount, data.supports);
-                  
+                    
                 }
             });
             
@@ -225,7 +225,7 @@
     } 
 
     function generateTopResolvers(topresolvers,solveCount,supports){
-        
+       
         $.plot("#topresolvers", [
                 {
                     label: "Resolved",

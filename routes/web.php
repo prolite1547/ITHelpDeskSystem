@@ -283,7 +283,7 @@ Route::post('reports/ipcr', 'ReportsController@loadIPCR')->name('reports.ipcr');
 Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');
 
 Route::post('get/positions', 'SDCController@getPosition')->name('get.positions');
-
+Route::post('get/deppos', 'SDCController@getDepPos')->name('get.deppos');
 // Data Corrections Separate Page
  Route::get('datacorrections', 'DCController@index')->name('datacorrections');
  

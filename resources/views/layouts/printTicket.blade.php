@@ -64,7 +64,7 @@
             <div class="row mb-1 border-bot">
                 <div class="col-md-6  border-right">
                         <span class="ticket-titles">Caller </span>
-                <span class="ticket-detail ">{{ $tcket->incident->call->callerRelation->full_name }}</span>
+                <span class="ticket-detail ">{{$tcket->incident->call->callerRelation->full_name ?? $tcket->incident->call->callerRelationOld->full_name}}</span>
                 </div>
                 <div class="col-md-6">
                         <span class="ticket-titles">Assigned To  </span>

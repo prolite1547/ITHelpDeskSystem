@@ -3,12 +3,15 @@
 <script src="{{ asset('js/jquery-3.3.1.min.js') }} "></script>
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/select2.js') }}"></script>
 
+<script type="text/javascript">
+  $('select').select2();
+</script>
 
 <script>
         
         var attachmentTormv =  [];
-
         function isEmptyOrSpaces(str){
           return str === null || str.match(/^ *$/) !== null;
       }
@@ -123,6 +126,20 @@
                 
               });
         }catch (error) {}
+        
+        $('#supervisor').on('change',function(){
+          var user_id =  $(this).find(':selected').data('id');
+            $.ajax({
+                type : "POST",
+                url : "/get/deppos",
+                data : { _token: '{{csrf_token()}}', user_id: user_id },
+                success:function(data){
+                    $('#position').val(data.position);
+                    $('#department').val(data.department);
+                }
+               
+            });
+        });
 
         $('#department').on('change',function(){
           var depID =  $(this).find(':selected').data('id');
@@ -692,8 +709,6 @@
 
       // onkeypress="return isNumberKey(event,this)"
 
-     
-       
       </script>
 </body>
 </html>

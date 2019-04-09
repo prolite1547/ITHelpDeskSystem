@@ -12,6 +12,7 @@ use App\SDCAttachment;
 use App\AppHerGroup;
 use App\Store;
 use App\Accumulators;
+use App\User;
 
  
 use Illuminate\Support\Facades\Auth;
@@ -182,12 +183,14 @@ class SDCController extends Controller
                 $positions = Position::all();
                 $ticket = Ticket::find($id);
                 $stores = Store::all();
+                $users = User::orderBy('lName','DESC')->get();
                 return view('datacorrections.system')
                 ->with('sdc',$sdc)->with('ticket', $ticket)
                 ->with('departments', $departments)
                 ->with('positions',  $positions)
                 ->with('appgroup',$appGroup)
-                ->with('stores',$stores);
+                ->with('stores',$stores)
+                ->with('users',$users);
           }else{
               return redirect()->back();
           }
@@ -195,19 +198,20 @@ class SDCController extends Controller
 
    
     public function edit($id)
-    {
+    {   
+        $users = User::orderBy('lName','DESC')->get();
         return view('datacorrections.sdcupdate')
         ->with('sdc',SystemDataCorrection::find($id))
         ->with('departments', Department::all())
         ->with('positions', Position::all())
         ->with('appgroup',AppHerGroup::all())
-        ->with('stores', Store::all());
+        ->with('stores', Store::all())
+        ->with('users',$users);
     }
  
     public function update(Request $request, $id)
     {     
 
-          
           $post = 1;
           $status = 0;
           $action = $request->action;
@@ -1031,5 +1035,12 @@ public function addHierarchy(Request $request){
      $ahg->save();
      return redirect()->back();
 }
+
+ public function getDepPos(Request $request){
+    $user = User::find($request->user_id);
+    $position = $user->position->position;
+    $department = $user->department->department;
+    return response()->json(array('success'=>true,  'position'=>$position , 'department'=>$department), 200);
+ }
    
 }

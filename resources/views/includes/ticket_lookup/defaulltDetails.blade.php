@@ -14,14 +14,14 @@
 <div class="ticket-details__content">
     <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
     <ul class="ticket-details__list">
+       
+        @if ($ticket->statusRelation->name != "Expired" AND $ticket->statusRelation->name != "Closed" )
         <li class="ticket-details__item"><span class="ticket-details__field">Related to:</span>
             @if (isset($ticket->prt_id) Or isset($ticket->crt_id) )
                    @if (isset($ticket->crt_id))
                             @foreach ($cTicket as $tcket) 
-
                                         <a class="ticket-details__value ticket-details__value--link" href="/tickets/view/{{ $tcket->id }}"> <span>[C] Ticket ID: #{{ $tcket->id }}</span></a> | <span>  Status : {{$tcket->statusRelation->name}}</span>
-                 
-                           @endforeach
+                            @endforeach
                    @elseif (isset($pTicket))
                                     <a class="ticket-details__value ticket-details__value--link" href="/tickets/view/{{$ticket->prt_id}}"> <span>[P] Ticket ID: #{{$ticket->prt_id}}</span></a> | <span>  Status : {{$pTicket->statusRelation->name}}</span>
                    @endif
@@ -31,7 +31,7 @@
                     <button class="btn btn--blue" data-rid="{{$ticket->id}}" id="btnAddRelated">(+) Add Related Ticket</button>
             @endif
         </li>
-
+    @endif
         
         @if($ticket->extended->count() > 0)
             <li class="ticket-details__item"><span class="ticket-details__field">Times Extended:</span>
@@ -43,10 +43,11 @@
         <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
             <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
         </li>
+ 
         <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
             <a href="javascript:void(0);"
-               class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name}}
-                ({{$ticket->incident->call->callerRelation->position->position}})</a>
+               class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name ?? $ticket->incident->call->callerRelationOld->full_name}}
+                ({{$ticket->incident->call->callerRelation->position->position ?? $ticket->incident->call->callerRelationOld->positionData->position}})</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
             <span class="ticket-details__value"> {{$ticket->created_at}}</span>
@@ -166,7 +167,7 @@
     </button>
 </div>
 
-@if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $ticket_status_arr['Closed'] && $ticket->status !== $ticket_status_arr['Fixed'])
+@if ((!$ticket->SDC && !$ticket->MDC) && $ticket->status !== $ticket_status_arr['Closed'] && $ticket->status !== $ticket_status_arr['Fixed'] && $ticket->status !== $ticket_status_arr['Expired'])
     <div class="ticket-details__title-box">
         <div class="ticket-details__title">
             <h4 class="heading-quaternary">Create/Add Data Correction</h4>

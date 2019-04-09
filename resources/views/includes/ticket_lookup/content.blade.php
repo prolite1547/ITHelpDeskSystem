@@ -38,7 +38,7 @@
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
 
                 @endif
-                @endcan
+              
                 {{-- @can('markAsFix',$ticket)
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
                 @endcan --}}

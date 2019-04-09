@@ -20,9 +20,9 @@ class CreateConnectionIssueRepliesTable extends Migration
             $table->text('reply');
             $table->tinyInteger('hasAttachments');
             $table->string('subject');
-            $table->json('from');
-            $table->json('to');
-            $table->json('cc');
+            $table->text('from');
+            $table->text('to');
+            $table->text('cc');
             $table->string('reply_to');
             $table->timestamp('reply_date');
             $table->unsignedMediumInteger('ticket_id');
