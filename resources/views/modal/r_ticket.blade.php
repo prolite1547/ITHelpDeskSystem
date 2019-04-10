@@ -1,8 +1,7 @@
 <main style="">
-<div class="relatedTicket" style="margin-left:50px">
-        <h1 class="incomplete__header-primary">Create Related Ticket</h1>
-            <div class="incomplete__flex">
-                <div class="incomplete__left">
+<div class="relatedTicket" style="margin:0px;">
+        <h1 class="incomplete__header-primary">Add Related Ticket</h1>
+            
                     {!! Form::open(['method'=>'POST','enctype'=>'multipart/form-data', 'action'=>'TicketController@createRTicket']) !!}
                     <label class="form-addTicketDetails__ticket" style="margin-bottom: 10px;">Related to Ticket #: <input name="rt_id" type="text" value="{{$ticket->id}}" readonly class="form-addTicketDetails__ticket-value"></label>  
                     <div class="form__group">
@@ -45,6 +44,5 @@
                         </div>
                     @endif
                 </div>
-            </div>
-    </div>
+      
 </main>

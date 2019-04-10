@@ -1039,8 +1039,8 @@ public function addHierarchy(Request $request){
  public function getDepPos(Request $request){
     $user = User::find($request->user_id);
     $position = $user->position->position;
-    $department = $user->department->department;
-    return response()->json(array('success'=>true,  'position'=>$position , 'department'=>$department), 200);
+    $department = $user->position->department->department;
+    return response()->json(array('success'=>true,  'position'=>$position , 'department'=>$department ), 200);
  }
    
 }

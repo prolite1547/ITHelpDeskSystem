@@ -318,13 +318,25 @@ public function loadChart(){
             $incidents = Incident::whereYear('created_at', '=', $request->year )
             ->whereMonth('created_at', '=', $request->month )
             ->get();
+            $year = $request->year;
+            $month = $request->month;
+            Incident::whereHas('ticket.fixTicket.resolve', function($query) use ($year, $month){ 
+                $query->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month);
+            })->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month)->limit(1)->get();
+
             $categories = CategoryA::orderBy('name','asc')->get();
       }else{
             $relation = "catBRelation";
             $incidents = Incident::whereYear('created_at', '=', $request->year )
             ->whereMonth('created_at', '=', $request->month )
             ->get();
-            $categories = CategoryB::where('catA_id',$category)->orderBy('name','asc')->get();
+            // $year = $request->year;
+            // $month = $request->month;
+            // Incident::whereHas('ticket.fixTicket.resolve', function($query) use ($year, $month){ 
+            //     $query->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month);
+            // })->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month)->limit(1)->get();
+
+            // $categories = CategoryB::where('catA_id',$category)->orderBy('name','asc')->get();
       }
         
         foreach($categories as $category){
@@ -336,7 +348,7 @@ public function loadChart(){
             foreach($incidents as $incident){
                 if($incident->$relation->name == $category3[$i][1]){
                         
-                    if(isset($incident->ticket->resolve->created_at)){
+                    if($incident->ticket->status == 3){
                          $resolves+=1;
                          $ovrlResolved +=1;
                     }

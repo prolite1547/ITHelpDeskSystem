@@ -46,8 +46,8 @@
  
         <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
             <a href="javascript:void(0);"
-               class="ticket-details__value">{{$ticket->incident->call->callerRelation->full_name ?? $ticket->incident->call->callerRelationOld->full_name}}
-                ({{$ticket->incident->call->callerRelation->position->position ?? $ticket->incident->call->callerRelationOld->positionData->position}})</a>
+            class="ticket-details__value">{{$ticket->issue->incident->caller->full_name}}
+             ({{$ticket->issue->incident->caller->position->position}})</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
             <span class="ticket-details__value"> {{$ticket->created_at}}</span>

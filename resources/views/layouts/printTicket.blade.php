@@ -34,7 +34,7 @@
             <div class="row mb-1 border-bot">
                     <div class="col-md-6 border-right">
                             <span class="ticket-titles">Subject  </span>
-                            <span class="ticket-detail ">{{ $tcket->incident->subject }}</span>
+                            <span class="ticket-detail ">{{$tcket->issue->subject}}</span>
                     </div>
                     <div class="col-md-6">
                             <span class="ticket-titles">Status  </span>
@@ -44,7 +44,7 @@
             <div class="row mb-1 border-bot">
                     <div class="col-md-6  border-right">
                             <span class="ticket-titles">Details  </span>
-                    <span class="ticket-detail ">{{ $tcket->incident->details }}</span>
+                    <span class="ticket-detail "><?php echo preg_replace('<br/>','\n', $tcket->issue->details); ?></span>
                     </div>
                     <div class="col-md-6">
                             <span class="ticket-titles">Priority  </span>
@@ -58,13 +58,14 @@
                     </div>
                     <div class="col-md-6">
                         <span class="ticket-titles">Store  </span>
-                        <span class="ticket-detail"> {{ $tcket->getStore->store_name }}</span>
+                        <span class="ticket-detail"> {{ $tcket->store->store_name }}</span>
                     </div>
             </div>
             <div class="row mb-1 border-bot">
                 <div class="col-md-6  border-right">
                         <span class="ticket-titles">Caller </span>
-                <span class="ticket-detail ">{{$tcket->incident->call->callerRelation->full_name ?? $tcket->incident->call->callerRelationOld->full_name}}</span>
+                <span class="ticket-detail "> {{$tcket->issue->incident->caller->full_name}}
+                        ({{$tcket->issue->incident->caller->position->position}}) </span>
                 </div>
                 <div class="col-md-6">
                         <span class="ticket-titles">Assigned To  </span>
@@ -79,14 +80,14 @@
             </div>
             <div class="col-md-6">
                     <span class="ticket-titles">Category  </span>
-            <span class="ticket-detail">{{ $tcket->incident->categoryRelation->name }} > {{ $tcket->incident->catARelation->name }} > {{ $tcket->incident->catBRelation->name  }}</span>
+            <span class="ticket-detail">{{$tcket->issue->categoryRelation->name}} - {{$tcket->issue->catARelation->name}} - {{$tcket->issue->catBRelation->name}}</span>
             </div>
         </div>
 
         <div class="row mb-1 border-bot ">
             <div class="col-md-6  border-right">
                     <span class="ticket-titles">Logged By </span>
-                    <span class="ticket-detail ">{{ $tcket->incident->call->loggedBy->full_name }} ({{ $tcket->incident->call->loggedBy->role->role  }})</span>
+                    <span class="ticket-detail ">{{ $tcket->userLogged->full_name }} ({{ $tcket->userLogged->role->role  }})</span>
             </div>
             <div class="col-md-6">
                     <span class="ticket-titles">Data Correction  </span>
@@ -128,8 +129,8 @@
             <div class="col-md-6">
                     <span class="ticket-titles">Attachments  </span>
                     <span class="ticket-detail">
-                            @if(!$tcket->incident->getFiles->isEmpty())
-                            @foreach($tcket->incident->getFiles as $file)
+                            @if(!$tcket->issue->incident->getFiles )
+                            @foreach($tcket->issue->getFiles as $file)
                                     {{$file->original_name}} ,
                             @endforeach
                             @else

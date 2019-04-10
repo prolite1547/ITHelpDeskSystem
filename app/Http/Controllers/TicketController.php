@@ -111,7 +111,13 @@ class TicketController extends Controller
 
         
     
-        return view("ticket.ticket_lookup",  compact(['ticket','cTicket', 'pTicket', 'sdc']));
+        // return view("ticket.ticket_lookup",  compact(['ticket','cTicket', 'pTicket', 'sdc']));
+        if(Auth::user()->position->department->id === $this->treasury_department_id){
+            $view  = 'treasury.ticket_lookup';
+        }else {
+            $view = 'ticket.ticket_lookup';
+        }
+        return view($view, compact(['ticket','cTicket', 'pTicket', 'sdc']));
     }
 
     public function addTicketView()
@@ -171,22 +177,25 @@ class TicketController extends Controller
 
     public function createRTicket(Request $request){
          $ticket = Ticket::findOrFail($request->rt_id);
-         $incident = Incident::findOrFail($ticket->incident_id);
+         $incident = Incident::findOrFail($ticket->issue_id);
         //  $ticketReplicate = $ticket->replicate();
         //  $incidentReplicate = $incident->replicate();         
 
          $requester_id = Auth::user()->id;
-         $call = Call::findOrfail($incident->call_id);
+         $call = Call::findOrfail($incident->incident_id);
          $caller_id = $call->caller_id;
+         $caller_type = $call->caller_type;
 
          $newCall =  new Call();
+         $newCall->caller_type = $caller_type;
          $newCall->caller_id = $caller_id;
          $newCall->user_id = $requester_id;
-          $newCall->save();
+         $newCall->save();
 
          $newIncident = new Incident();
-         $newIncident->call_id = $newCall->id ;
-         $newIncident->connection_id = null;
+         $newIncident->incident_type = "App\Call";
+         $newIncident->incident_id = $newCall->id ;
+        //  $newIncident->connection_id = null;
          $newIncident->subject = $request->subject;
          $newIncident->details = $request->details;
          $newIncident->category = $request->category;
@@ -198,7 +207,10 @@ class TicketController extends Controller
          $newIncident_id = $newIncident->id;
 
          $newTicket = new Ticket();
-         $newTicket->incident_id = $newIncident->id;
+        //  MAY CHANGE IN THE FUTURE IF THERES AN REQUEST TYPE TICKET DEPLOYED
+         $newTicket->issue_type = $ticket->issue_type;
+         $newTicket->issue_id = $newIncident->id;
+        //  END
          $newTicket->assignee = $request->assignee;
          $newTicket->logged_by = $newCall->user_id;
          $newTicket->type = 1;
@@ -208,7 +220,8 @@ class TicketController extends Controller
          }else{
             $newTicket->status = 1;
          }
-         $newTicket->store = $ticket->store;
+         $newTicket->store_type = $ticket->store_type;
+         $newTicket->store_id = $ticket->store_id;
          $newTicket->group = $request->group;
          $expiration_hours = CategoryB::findOrFail($request->catB)->getExpiration->expiration;
          $expiration_date = Carbon::now()->addHours($expiration_hours);
