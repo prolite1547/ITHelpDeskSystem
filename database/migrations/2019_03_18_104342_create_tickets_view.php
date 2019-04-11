@@ -38,6 +38,8 @@ class CreateTicketsView extends Migration
                     (`homestead`.`m_stores`.`id` = `t`.`store_id`))) AS `store_name`,
         `i`.`subject` AS `subject`,
         `i`.`details` AS `details`,
+        `i`.`catB` AS `catB`,
+        `homestead`.`category_b`.`name` AS `catB_name`,
         CONCAT_WS(' ',
                 `asgn`.`fName`,
                 `asgn`.`mName`,
@@ -50,7 +52,7 @@ class CreateTicketsView extends Migration
         IFNULL(`tickets_extend_count`.`times_extended`,
                 0) AS `times_extended`
     FROM
-        ((((((((`homestead`.`tickets` `t`
+        (((((((((`homestead`.`tickets` `t`
         JOIN `homestead`.`priorities` `p` ON ((`t`.`priority` = `p`.`id`)))
         JOIN `homestead`.`ticket_status` `s` ON ((`t`.`status` = `s`.`id`)))
         JOIN `homestead`.`ticket_groups` `g` ON ((`t`.`group` = `g`.`id`)))
@@ -58,6 +60,7 @@ class CreateTicketsView extends Migration
         LEFT JOIN `homestead`.`users` `asgn` ON ((`t`.`assignee` = `asgn`.`id`)))
         JOIN `homestead`.`users` `lger` ON ((`t`.`logged_by` = `lger`.`id`)))
         LEFT JOIN `homestead`.`categories` `c` ON ((`i`.`category` = `c`.`id`)))
+        LEFT JOIN `homestead`.`category_b` ON ((`i`.`catB` = `homestead`.`category_b`.`id`)))
         LEFT JOIN (SELECT 
             `homestead`.`extends`.`ticket_id` AS `ticket_id`,
                 COUNT(`homestead`.`extends`.`ticket_id`) AS `times_extended`

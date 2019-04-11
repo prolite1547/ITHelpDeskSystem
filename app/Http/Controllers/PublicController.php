@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
 {
@@ -40,10 +41,9 @@ class PublicController extends Controller
     }
 
     public function search(Request $request){
-        $search_results = DB::table('incidents')
-            ->select(['tickets.id','subject','details'])
-            ->join('tickets','tickets.incident_id','=','incidents.id')
-            ->whereRaw("concat_ws(' ',tickets.id,incidents.subject,incidents.details) LIKE '%$request->q%'")
+        $search_results = DB::table('v_tickets')
+            ->select(['id','subject','details'])
+            ->whereRaw("concat_ws(' ',id,subject,details) LIKE '%$request->q%'")
             ->get();
 
         return view('search')->with(compact('search_results'));

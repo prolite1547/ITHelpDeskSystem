@@ -130,4 +130,8 @@ class Ticket extends Model
     {
         return $this->hasOne('App\Resolve');
     }
+
+    public function getStore(){
+        return $this->hasOne('App\Store','id','store_id');
+    }
 }

@@ -132,4 +132,8 @@ class User extends Authenticatable
         return $this->morphTo();
     }
 
+    public function fixedTicket(){
+        return $this->hasMany('App\Fix','fixed_by');
+    }
+
 }

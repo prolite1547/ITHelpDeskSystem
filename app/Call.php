@@ -26,10 +26,6 @@ class Call extends Model
         return $this->morphTo();
     }
 
-    public function callerRelationOld(){
-        return $this->belongsTo('App\Caller','caller_id','id');
-    }
-
     public function loggedBy(){
         return $this->belongsTo('App\User','user_id');
     }

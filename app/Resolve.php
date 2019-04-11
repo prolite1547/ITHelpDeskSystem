@@ -15,6 +15,6 @@ class Resolve extends Model
         return $this->belongsTo('App\Ticket');
     }
     public function fix(){
-        return $this->belongsTo(\App\Fix::class);
+        return $this->belongsTo('App\Fix','fixes_id');
     }
 }

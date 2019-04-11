@@ -25,4 +25,5 @@ class Store extends Model
     public function setStoreNameAttribute($value){
         return $this->attributes['store_name'] = cleanInputs($value);
     }
+
 }

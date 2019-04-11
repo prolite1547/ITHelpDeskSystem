@@ -13,6 +13,7 @@ use App\Resolve;
 use App\CategoryA;
 use App\CategoryB;
 use App\Store;
+use App\Fix;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -44,12 +45,13 @@ class ReportsController extends Controller
             $data .= "<tbody style='font-size:12px;'>";
                    
                        foreach($TicketUserLogged as $logs){
-                               
-                                if(isset($logs->incident->ticket->resolve->created_at)){
+                        $r = Fix::where('ticket_id','=', $logs->incident->ticket->id)->first();
+
+                                if(isset($r->resolve->created_at)){
                                     $resolved = "YES";
-                                        $resdate = date('m/d/y | H:i:s A', strtotime($logs->incident->ticket->resolve->created_at));
+                                        $resdate = date('m/d/y | H:i:s A', strtotime($r->resolve->created_at));
                                         $date1 = date_create(date('Y-m-d H:i:s', strtotime($logs->incident->ticket->created_at)));
-                                        $date2 = date_create(date('Y-m-d H:i:s', strtotime($logs->incident->ticket->resolve->created_at)));
+                                        $date2 = date_create(date('Y-m-d H:i:s', strtotime($r->resolve->created_at)));
                                         $diff = date_diff($date1,$date2);
                                     
                                         if((int)$diff->format("%a") == 0){
@@ -149,11 +151,12 @@ class ReportsController extends Controller
                     foreach($incidents  as $incident){
                        if(isset($incident->ticket->id)){
                            $status = strtoupper($incident->ticket->statusRelation->name);
-                           
-                                if(isset($incident->ticket->resolve->created_at)){
-                                    $resdate = date('m/d/y | H:i:s A', strtotime($incident->ticket->resolve->created_at));
+                           $resolved = Fix::where('ticket_id','=', $incident->ticket->id)->first();
+
+                            if(isset($resolved->resolve->created_at)){
+                                    $resdate = date('m/d/y | H:i:s A', strtotime($resolved->resolve->created_at));
                                     $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
-                                    $date2 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->resolve->created_at)));
+                                    $date2 = date_create(date('Y-m-d H:i:s', strtotime($resolved->resolve->created_at)));
                                     $diff = date_diff($date1,$date2);
                                 
                                     if((int)$diff->format("%a") == 0){
@@ -181,15 +184,15 @@ class ReportsController extends Controller
                             if($status1 == "all"){
                                 $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                                 $countRow +=1;
-                                if(isset($incident->ticket->resolve->created_at)){
+                                if(isset($resolved->resolve->created_at)){
                                     $countResolved +=1;
                                 }
                             }else{
-                                if($status1 == "resolved" AND isset($incident->ticket->resolve->created_at)){
+                                if($status1 == "resolved" AND isset($resolved->resolve->created_at)){
                                     $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                                     $countRow +=1;
                                     $countResolved +=1;
-                                }elseif($status1 == "unresolved" AND !isset($incident->ticket->resolve->created_at)){
+                                }elseif($status1 == "unresolved" AND !isset($resolved->resolve->created_at)){
                                     $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                                     $countRow +=1;
                                     $countResolved = 0;
@@ -212,7 +215,7 @@ class ReportsController extends Controller
         $resdate = "N/A";
         $resinterval = "N/A";
         $rowdata ="";
-        $store = $request->store;
+         $store = $request->store;
        
         if($store == "all"){
             $incidents = Incident::whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
@@ -232,24 +235,31 @@ class ReportsController extends Controller
              foreach($incidents  as $incident){
                 if(isset($incident->ticket->id)){
                     $status = strtoupper($incident->ticket->statusRelation->name);
-                        if(isset($incident->ticket->resolve->created_at)){
-                            $resdate = date('m/d/y | H:i:s A', strtotime($incident->ticket->resolve->created_at));
-                            $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
-                            $date2 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->resolve->created_at)));
-                            $diff = date_diff($date1,$date2);
-                        
-                            if((int)$diff->format("%a") == 0){
-                                $resinterval =  $diff->format("%h Hour(s) %i Minute(s) %s Second(s)");
-                            }else{
-                                $resinterval =  $diff->format("%a Day(s)");
+                    $resolved = Fix::where('ticket_id','=', $incident->ticket->id)->first();
+
+                        if(isset($resolved->resolve->created_at)){
+                            if($resolved->resolve->created_at != null){
+                                $resdate = date('m/d/y | H:i:s A', strtotime($resolved->resolve->created_at));
+                                $date1 = date_create(date('Y-m-d H:i:s', strtotime($incident->ticket->created_at)));
+                                $date2 = date_create(date('Y-m-d H:i:s', strtotime($resolved->resolve->created_at)));
+                                $diff = date_diff($date1,$date2);
+                            
+                                if((int)$diff->format("%a") == 0){
+                                    $resinterval =  $diff->format("%h Hour(s) %i Minute(s) %s Second(s)");
+                                }else{
+                                    $resinterval =  $diff->format("%a Day(s)");
+                                }
                             }
                         }
                        
                                //  $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".""."</td><td>".$incident->catARelation->name."</td><td>".""."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
-                               $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->ticket->getStore->store_name."</td><td>".$incident->catARelation->name."</td><td>".$incident->catBRelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
+                               $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->ticket->store->store_name."</td><td>".$incident->catARelation->name."</td><td>".$incident->catBRelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$status."</td></tr>";
                      
                      
                 }
+
+                $resdate = "N/A";
+                $resinterval = "N/A";
              }
          $data .= $rowdata;
         $data .= "</tbody>";
@@ -284,20 +294,18 @@ public function loadChart(){
         ->whereMonth('created_at', '=', $request->month)
         ->get();             
         array_push($logs,  count($incidents));
-      
+        $totalLogs = count($incidents);
         
-        $resolves = Resolve::whereYear('created_at', '=', $request->year)
-        ->whereMonth('created_at', '=', $request->month)
-        ->get();             
+        $resolves = Incident::whereHas('ticket.fixTicket.resolve')
+        ->whereYear('created_at','=',$request->year)
+        ->whereMonth('created_at','=',$request->month)
+        ->get();
+        
+        // $resolves = Resolve::whereYear('created_at', '=', $request->year)
+        // ->whereMonth('created_at', '=', $request->month)
+        // ->get();             
         array_push($resolve,  count($resolves));
-     
-        for($log = 0;$log<count($logs); $log++){
-            $totalLogs += $logs[$log];
-        }
-
-        for($res = 0; $res<count($resolve); $res++){
-            $totalResolved +=  $resolve[$res];
-        }
+         $totalResolved = count($resolves);
         
         return response()->json(array('success'=>true, 'logged'=>$logs, 'resolved'=>$resolve, 'totalLogged'=>$totalLogs, 'totalResolved'=>$totalResolved), 200);
     }
@@ -318,25 +326,15 @@ public function loadChart(){
             $incidents = Incident::whereYear('created_at', '=', $request->year )
             ->whereMonth('created_at', '=', $request->month )
             ->get();
-            $year = $request->year;
-            $month = $request->month;
-            Incident::whereHas('ticket.fixTicket.resolve', function($query) use ($year, $month){ 
-                $query->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month);
-            })->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month)->limit(1)->get();
-
+            
             $categories = CategoryA::orderBy('name','asc')->get();
       }else{
             $relation = "catBRelation";
             $incidents = Incident::whereYear('created_at', '=', $request->year )
             ->whereMonth('created_at', '=', $request->month )
             ->get();
-            // $year = $request->year;
-            // $month = $request->month;
-            // Incident::whereHas('ticket.fixTicket.resolve', function($query) use ($year, $month){ 
-            //     $query->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month);
-            // })->whereYear('created_at','=', $year)->whereMonth('created_at','=',$month)->limit(1)->get();
-
-            // $categories = CategoryB::where('catA_id',$category)->orderBy('name','asc')->get();
+          
+             $categories = CategoryB::where('catA_id',$category)->orderBy('name','asc')->get();
       }
         
         foreach($categories as $category){
@@ -348,9 +346,12 @@ public function loadChart(){
             foreach($incidents as $incident){
                 if($incident->$relation->name == $category3[$i][1]){
                         
-                    if($incident->ticket->status == 3){
-                         $resolves+=1;
-                         $ovrlResolved +=1;
+                    if(isset($incident->ticket->status)){
+                        if($incident->ticket->status == 3){
+                            $resolves+=1;
+                            $ovrlResolved +=1;     
+                        }
+                       
                     }
 
                     $logs+=1;
@@ -402,9 +403,21 @@ public function loadChart(){
             array_push($topresolvers,[$count,  $resolver->full_name]);
             array_push($solveCount,[$count, $resolver->resolved_count]);
 
-            foreach($resolver->resolved as $resolvedTickets){
-                array_push($supports, [$count, $resolvedTickets->ticket->userLogged->id, $resolvedTickets->ticket->userLogged->full_name]);
+            $ticketResolved =  Resolve::where('resolved_by', '=', $resolver->id)
+            ->whereYear('created_at','=',$year)
+            ->whereMonth('created_at',$month)->get();
+             
+            foreach($ticketResolved as $fixedTicket){
+                $fix = Fix::find($fixedTicket->fixes_id);
+                array_push($supports, [$count,  $fix->fixedBy->id, $fix->fixedBy->full_name ]);
             }
+
+            // foreach($resolver->resolved as $userResolved){
+                
+            //     // array_push($supports, [$count, $resolvedTickets->ticket->userLogged->id, $resolvedTickets->ticket->userLogged->full_name]);
+            //     array_push($supports, [$count,  '1', '1' ]);
+           
+            // }
 
             $count+=1;
         }
