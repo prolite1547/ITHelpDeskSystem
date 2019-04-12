@@ -87,11 +87,15 @@ class ReportsController extends Controller
         // Reservation::whereBetween('reservation_from', [$from, $to])->get();
 
         if($request->category == "all"){
-            $incidents = Incident::whereYear('created_at', '=', $request->year)
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereYear('created_at', '=', $request->year)
             ->whereMonth('created_at', '=', $request->month)
             ->get();
         }else{
-            $incidents = Incident::whereYear('created_at', '=', $request->year)
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereYear('created_at', '=', $request->year)
             ->whereMonth('created_at', '=', $request->month)
             ->where('catA', $request->category)
             ->get();
@@ -130,9 +134,13 @@ class ReportsController extends Controller
 
       
         if($category != "all"){
-            $incidents = Incident::whereBetween('created_at', [$start, $end])->where('catA', $category)->get();
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereBetween('created_at', [$start, $end])->where('catA', $category)->get();
         }else{
-            $incidents = Incident::whereBetween('created_at', [$start, $end])->get();
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereBetween('created_at', [$start, $end])->get();
         }
 
         $rowdata ="";
@@ -218,9 +226,13 @@ class ReportsController extends Controller
          $store = $request->store;
        
         if($store == "all"){
-            $incidents = Incident::whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
         }else{
-            $incidents = Incident::whereHas('ticket.getStore', function ($query) use ($store) {
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereHas('ticket.getStore', function ($query) use ($store) {
                 $query->where('id', '=',$store); 
             })->whereBetween('created_at', [$start, $end])->where('catA', 6)->get();
         }
@@ -290,7 +302,9 @@ public function loadChart(){
         $resolve = array();
         $incidents;
         
-        $incidents = Incident::whereYear('created_at', '=', $request->year )
+        $incidents = Incident::whereHas('ticket', function($query){
+            $query->whereNull('deleted_at');
+        })->whereYear('created_at', '=', $request->year )
         ->whereMonth('created_at', '=', $request->month)
         ->get();             
         array_push($logs,  count($incidents));
@@ -323,14 +337,18 @@ public function loadChart(){
         
       if($category == "all"){
             $relation = "catARelation";
-            $incidents = Incident::whereYear('created_at', '=', $request->year )
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereYear('created_at', '=', $request->year )
             ->whereMonth('created_at', '=', $request->month )
             ->get();
             
             $categories = CategoryA::orderBy('name','asc')->get();
       }else{
             $relation = "catBRelation";
-            $incidents = Incident::whereYear('created_at', '=', $request->year )
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereYear('created_at', '=', $request->year )
             ->whereMonth('created_at', '=', $request->month )
             ->get();
           
