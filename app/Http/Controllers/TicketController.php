@@ -484,17 +484,16 @@ class TicketController extends Controller
 
         /*ADD TO REQUEST PARAMETER BAG*/
         $request->request->add(['catC' => $catC, 'category' => 3, 'catB' => $catB, 'catA' => $catB_relations->group->id]);
-
+        
         /*16 IS THE ID OF THE CATEGORY B VOICE*/
-        if ($catB === 16) {
+        if ((int)$catB === 16) {
             $validation = $validation + $voice;
-
         } elseif ($catB === 17) {
             $validation = $validation + $data;
         } else {
             $validation = $validation + $data + $voice;
         }
-
+        
         $request->validate($validation);
         $expiration = Carbon::now()->addHours($catB_relations->getExpiration->expiration);
 
