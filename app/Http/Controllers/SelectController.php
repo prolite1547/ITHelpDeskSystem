@@ -88,7 +88,7 @@ class SelectController extends Controller
         if($request->query('q')){
             return UserResource::collection(User::whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%'.$request->q.'%"')->get());
         }else{
-            return UserResource::collection(User::all());
+            return UserResource::collection(User::where('userable_type','<>','App\TempUser')->orderBy('fName')->get());
         }
     }
 
