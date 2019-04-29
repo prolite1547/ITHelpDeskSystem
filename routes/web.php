@@ -117,6 +117,8 @@ Route::get('/select/position', 'SelectController@position');
 Route::get('/select/department', 'SelectController@department');
 Route::get('/select/expiration', 'SelectController@expiration');
 Route::get('/select/users', 'SelectController@users');
+Route::get('/select/catA', 'SelectController@categoryA');
+Route::get('/select/catB', 'SelectController@categoryB');
 
 //////////////////////////
 ////////*REPORTS*/////////
@@ -148,6 +150,19 @@ Route::post('/add/position', 'PositionController@create');
 ////////*DEPARTMENT*//////
 //////////////////////////
 Route::post('/add/department', 'DepartmentController@create');
+
+//////////////////////////
+////////*Category A*//////
+//////////////////////////
+Route::post('/add/categoryA', 'MaintenanceController@storeCategoryA');
+//////////////////////////
+////////*Category B*//////
+//////////////////////////
+Route::post('/add/categoryB', 'MaintenanceController@storeCategoryB');
+//////////////////////////
+////////*Category C*//////
+//////////////////////////
+Route::post('/add/categoryC', 'MaintenanceController@storeCategoryC');
 
 //////////////////////////
 ////////*Connection Issue Reply*//////

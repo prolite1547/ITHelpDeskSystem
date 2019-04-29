@@ -5,8 +5,7 @@ import Contact from './models/Contact';
 import ConnectionIssue from "./models/ConnectionIssue";
 import Position from "./models/Position";
 import Department from "./models/Department";
-import ConnectionIssueReply from "./models/ConnectionIssueReply";
-import Ticket from "./models/Ticket";
+
 
 export const sendForm = (e) => {
     if(e.target.checkValidity()){

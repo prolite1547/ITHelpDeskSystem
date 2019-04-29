@@ -65,6 +65,9 @@ export const elements = {
     btnShowAppStats: document.getElementById('appStatus'),
     /*ADMIN PAGE*/
     addUserBtn: document.querySelector('[data-action=addUserBtn]'),
+
+    /* Maintenance Page El */
+    plusToggleContainer: document.querySelector('.form-categoriesAdd')
 };
 
 export const elementStrings = {

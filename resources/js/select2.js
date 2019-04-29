@@ -89,3 +89,25 @@ export const userSelect2 = {
         }
     },
 };
+
+export const catBSelect2 = {
+    ajax: {
+        url: '/select/catB',
+        processResults: function (data) {
+            return {
+                results: data.data
+            };
+        }
+    },
+};
+
+export const catASelect2 = {
+    ajax: {
+        url: '/select/catA',
+        processResults: function (data) {
+            return {
+                results: data.data
+            };
+        }
+    },
+};
