@@ -488,7 +488,7 @@ class TicketController extends Controller
         /*16 IS THE ID OF THE CATEGORY B VOICE*/
         if ((int)$catB === 16) {
             $validation = $validation + $voice;
-        } elseif ($catB === 17) {
+        } elseif ((int)$catB === 17) {
             $validation = $validation + $data;
         } else {
             $validation = $validation + $data + $voice;
