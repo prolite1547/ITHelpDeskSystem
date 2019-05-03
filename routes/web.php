@@ -20,6 +20,7 @@ use Webklex\IMAP\Client;
 
 Route::get('/', 'PublicController@login')->name('index');
 Route::get('/dashboard', 'PublicController@dashboard')->name('dashboard');
+Route::get('/store-operations', 'PublicController@storeOperations')->name('storeOperations');
 
 
 //////////////////////////
@@ -80,7 +81,10 @@ Route::view('/modal/form/userAdd', 'modal.user_add');
 Route::get('/modal/form/extend/{id}', 'TicketController@getExtendForm');
 Route::get('/modal/form/fix/{id}', 'FixController@show')->name('modalFixView');
 Route::get('/modal/{store_id}/contacts', 'StoreController@storeContacts')->name('storeContacts');
-
+Route::view('/modal/form/target', 'modal.target_form');
+Route::view('/modal/form/visit-details', 'modal.visit_details_form');
+Route::get('/modal/form/editVisitTarget/{id}','StoreVisitController@editTargetModal');
+Route::get('/modal/form/editVisitDetails/{id}','StoreVisitController@editDetailsModal');
 //////////////////////////
 ////////*MESSAGE*/////////
 //////////////////////////
@@ -117,6 +121,7 @@ Route::get('/select/position', 'SelectController@position');
 Route::get('/select/department', 'SelectController@department');
 Route::get('/select/expiration', 'SelectController@expiration');
 Route::get('/select/users', 'SelectController@users');
+Route::get('/select/techUsers', 'SelectController@techUsers');
 Route::get('/select/catA', 'SelectController@categoryA');
 Route::get('/select/catB', 'SelectController@categoryB');
 
@@ -130,6 +135,7 @@ Route::get('/reports', 'AdminController@report')->name('reportsPage');
 //////////////////////////
 
 Route::get('/tickets/ticket-data/{status}', 'DatatablesController@tickets');
+Route::get('/store-visit/{table}', 'DatatablesController@storeVisit');
 
 //////////////////////////
 ////////*MAINTENANCE*//////
@@ -195,6 +201,17 @@ Route::get('/test', function () {
 ////////*EXTENDED*//////
 //////////////////////////
 Route::get('treasury/dashboard','PublicController@treasuryDashboard')->name('treasuryDashboard');
+
+//////////////////////////
+////////*Technical Visit *//////
+//////////////////////////
+Route::get('/technical/store-visit','StoreVisitController@index')->name('storeVisitIndex');
+Route::post('/store-visit/target/save','StoreVisitController@storeTarget');
+Route::post('/store-visit/target/update/{id}','StoreVisitController@updateTarget')->name('updateTarget');
+Route::post('/store-visit/detail/update/{id}','StoreVisitController@updateDetail')->name('updateDetail');
+Route::delete('/store-visit/target/delete/{id}','StoreVisitController@deleteTarget');
+Route::delete('/store-visit/details/delete/{id}','StoreVisitController@deleteDetails');
+Route::post('/store-visit/details/save','StoreVisitController@storeDetails');
 
 
 Route::get('/test2.1', function () {

@@ -96,6 +96,21 @@ class SelectController extends Controller
         }
     }
 
+    public function techUsers(Request $request){
+
+        if($request->query('q')){
+            return UserResource::collection(User::whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%'.$request->q.'%"')->get());
+        }else{
+            return UserResource::collection(
+                DB::table('users as u')
+                    ->join('positions as p','u.position_id','=','p.id')
+                    ->where('p.position','LIKE',"%Technical%")
+                    ->select('u.id',DB::raw("concat_ws(' ',fName,mName,lName) as full_name"))
+                    ->get()
+            );
+        }
+    }
+
     public function categoryA(Request $request){
 
         if($request->query('q')){

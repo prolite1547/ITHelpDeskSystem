@@ -67,7 +67,8 @@ export const elements = {
     addUserBtn: document.querySelector('[data-action=addUserBtn]'),
 
     /* Maintenance Page El */
-    plusToggleContainer: document.querySelector('.form-categoriesAdd')
+    plusToggleContainer: document.querySelector('.form-categoriesAdd'),
+
 };
 
 export const elementStrings = {
@@ -93,6 +94,10 @@ export const elementStrings = {
 
     /*ADMIN PAGE*/
     addUserFrom: 'addUser',
+
+    /*Technical Store Visit*/
+    targetTable:'#storeTarget',
+    detailsTable:'#storeDetails',
 };
 
 
