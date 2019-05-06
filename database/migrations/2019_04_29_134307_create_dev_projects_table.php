@@ -18,8 +18,8 @@ class CreateDevProjectsTable extends Migration
             $table->text('project_name');
             $table->text('assigned_to');
             $table->text('status');
-            $table->text('date_start');
-            $table->text('date_end');
+            $table->text('date_start')->nullable();
+            $table->text('date_end')->nullable();
             $table->text('md50_status');
             $table->softDeletes();
             $table->timestamps();

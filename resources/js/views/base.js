@@ -63,8 +63,12 @@ export const elements = {
 
     btnAddRelated: document.getElementById('btnAddRelated'),
     btnShowAppStats: document.getElementById('appStatus'),
+
     /*ADMIN PAGE*/
     addUserBtn: document.querySelector('[data-action=addUserBtn]'),
+
+    /*Add Ticket Page */
+    windowMaintenance: document.querySelector('.window__maintenance')
 };
 
 export const elementStrings = {

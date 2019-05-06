@@ -253,18 +253,18 @@ Route::get('/test5', function () {
 
 Route::get('/ongoingMail', function () {
 
-    $ongoingMailInc = Ticket::whereStatus(2)->whereHas('incident', function ($query) {
-        $query->whereNotNull('connection_id');
-    })->with(['connectionIssueMailReplies' => function ($query) {
+    $ongoingMailInc = \App\ConnectionIssue::whereHas('incident.ticket',function($query){
+        $query->where('status',2);
+    })->with(['incident.ticket.connectionIssueMailReplies' => function($query){
         $query->latest('reply_date');
-    }, 'incident:id,subject'])->get();
-
-    foreach ($ongoingMailInc as $ticket) {
-        $ticketID = $ticket->id;
-        $subject = $ticket->incident->subject;
-        $latest_reply = $ticket->connectionIssueMailReplies->first();
-
-        fetchNewConnectionIssueEmailReplies($ticketID, $subject, $latest_reply);
+    }])->get();
+       
+    foreach ($ongoingMailInc as $connection_issue){
+        $ticketID =  $connection_issue->incident->ticket->id;
+        $subject = $connection_issue->incident->subject . " (TID#{$ticketID})";
+        $latest_reply = $connection_issue->incident->ticket->connectionIssueMailReplies->first(); /*latest reply on the database*/
+        
+        fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
     }
 });
 

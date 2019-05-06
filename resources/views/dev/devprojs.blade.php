@@ -45,6 +45,9 @@
                                                 {{-- {{  $onGoing }} | {{ $testing }} | {{ $done }} | {{ $allProj }} --}}
                                         </div>
                                 </div>
+                <div style="margin-bottom:10px;">
+                        <span>Search : </span><input  type="text" name="search" id="devsearch">
+                </div>
                 <table class="table" id="devprojs-table" >
                         <thead class="table__thead">
                         <th class="table__th">Project Name</th>
@@ -91,7 +94,7 @@
                                                     </div>
                                                     <div class="form__group">
                                                             {!! Form::label('dateEnd','Date End :',['class' => 'form__label'])!!}
-                                                            {!! Form::date('dateEnd',null,['class' => 'form__input','placeholder' => ' ','required','minlength' => 2, 'style'=>'width:300px;']) !!}
+                                                            {!! Form::date('dateEnd',null,['class' => 'form__input','placeholder' => ' ','minlength' => 2, 'style'=>'width:300px;']) !!}
                                                     </div>
                                                     <div class="form__group">
                                                             {!! Form::label('statusmd','MD50 Status :',['class' => 'form__label'])!!}
