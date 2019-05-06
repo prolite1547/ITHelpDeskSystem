@@ -34,14 +34,14 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('*',function($view){
 
             $ticket_status_arr = Status::all(['id','name'])->pluck('id','name')->toArray();
-
-
+            $store_visit_status_arr = Status::whereIn('id',[2,3])->pluck('name','id')->toArray();
             $user_roles = array('admin'=> 4,'user'=> 3,'1support'=> 1,'tower'=> 2);
             $higherUserGroup = array($user_roles['admin'],$user_roles['tower']);
             $view->with(compact(
                 'ticket_status_arr',
                 'user_roles',
-                    'higherUserGroup'
+                    'higherUserGroup',
+                    'store_visit_status_arr'
                 )
             );
         });
