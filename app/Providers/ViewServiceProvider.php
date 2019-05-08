@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\CategoryA;
 use App\CategoryB;
+use App\CategoryC;
 use App\Department;
 use App\Position;
 use App\Status;
@@ -94,7 +95,7 @@ class ViewServiceProvider extends ServiceProvider
             $departmentSelect = selectArray('', Department::class, 'id', 'department'); /*Roles*/
             $callerSelect = Caller::get()->pluck('name', 'id');
             $categoryBGroupSelect = groupListSelectArray(CategoryA::class, 'name', 'subCategories', 'id', 'name',array('column' => 'id','values' => [6]));
-            $categoryCGroupSelect = groupListSelectArray(CategoryB::class, 'name', 'subCategories', 'id', 'name');
+            $CategoryCSelect = CategoryC::all()->pluck('name', 'id')->toArray();
             $branchSelect = Store::all()->pluck('store_name', 'id')->toArray();
             $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
 
@@ -112,7 +113,8 @@ class ViewServiceProvider extends ServiceProvider
                 'categoryBGroupSelect',
                 'selfOption',
                 'groupSelect',
-                'categoryCGroupSelect'
+                'categoryCGroupSelect',
+                'CategoryCSelect'
             ));
         });
 

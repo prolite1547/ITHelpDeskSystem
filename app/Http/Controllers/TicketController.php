@@ -285,7 +285,7 @@ class TicketController extends Controller
 
             $ticket = Ticket::findOrFail($ticket_id);
             $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status', 'group'));
-            $ticket->issue->update($request->only('subject', 'details', 'category', 'catA', 'catB'));
+            $ticket->issue->update($request->only('subject', 'details', 'category', 'catA', 'catB','catC'));
 
             /*CREATE DIRECTORY NAME*/
             $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $ticket->created_at)) . '_' . $ticket_id;
