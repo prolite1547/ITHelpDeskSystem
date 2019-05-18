@@ -23,5 +23,6 @@
                     <span class="icon-btn__label">Master Data Services</span>
                 </a>
         </div>
+
     </main>
 @endsection

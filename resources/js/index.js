@@ -28,6 +28,8 @@ if(elements.select2elements){
     elements.select2elements.select2();
 }
 
+
+
 elements.popupClose.addEventListener('click',() => {
     hideModal();
 });

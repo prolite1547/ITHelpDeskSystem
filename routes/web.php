@@ -143,6 +143,13 @@ Route::get('/store-visit/{table}', 'DatatablesController@storeVisit');
 Route::get('/maintenance', 'PublicController@maintenance')->name('maintenancePage');
 
 //////////////////////////
+////////*Email Group*//////
+//////////////////////////
+Route::get('/email/group/{id}/emails','MaintenanceController@getMailsFromGroup');
+Route::post('/email/group/add','MaintenanceController@addMailsFromGroup');
+Route::delete('/email/group/delete/pivot/{pivot_id}','MaintenanceController@deleteEmailOnGroup');
+
+//////////////////////////
 ////////*SEARCH*//////
 //////////////////////////
 Route::get('/search', 'PublicController@search')->name('search');
@@ -188,13 +195,24 @@ Route::get('/api/connIssReply/{ticket_id}', 'ConnectionIssueReplyController@conn
 Route::post('/add/extend/{id}', 'ExtendController@create')->name('addExtend');
 
 Route::get('/test', function () {
+    $group = \App\EmailGroup::findOrFail(1)
+        ->whereHas('emails',function($query)
+        {
+            $query->where('email_id',2);
+        }
+        )
+        ->get();
+    dd($group);
+});
 
-    $collection = Ticket::with(['connectionIssueMailReplies' => function ($query) {
-        return $query->latest('reply_date');
-    }])->findOrFail(10);
 
-    dd($collection->connectionIssueMailReplies);
-    return new \App\Http\Resources\ConnectionIssueReplyCollection(ConnectionIssueReply::all());
+Route::get('/test2', function () {
+    $group = \App\EmailGroup::
+        whereHas('emails',function($query)
+        {
+            $query->where('email_id',16);
+        })->find(1);
+    dd($group);
 });
 
 //////////////////////////
@@ -212,74 +230,12 @@ Route::post('/store-visit/detail/update/{id}','StoreVisitController@updateDetail
 Route::delete('/store-visit/target/delete/{id}','StoreVisitController@deleteTarget');
 Route::delete('/store-visit/details/delete/{id}','StoreVisitController@deleteDetails');
 Route::post('/store-visit/details/save','StoreVisitController@storeDetails');
+Route::get('/store-visit/target/{year}','StoreVisitController@getMonthsOnYear');
 
 
-Route::get('/test2.1', function () {
-//    $ongoingMailInc = \App\Ticket::whereStatus(2)
-//        ->has('incident' , function($query){
-//        $query->whereNotNull('connection_id');
-//    })->with(['connectionIssueMailReplies' => function($query){
-//        $query->latest('reply_date');
-//    },'incident:id,subject'])->get();
+Route::get('/test', function () {
+    $email_group = \App\EmailGroup::with('emails:id,mail')->pluck('group_name','id')->toArray();
 
-    $ongoingMailInc = \App\ConnectionIssue::with(['incident.ticket' => function($query){
-        $query->whereStatus(2);
-    },'incident.ticket.connectionIssueMailReplies' => function($query){
-        $query->latest('reply_date');
-    }])->get();
-
-    foreach ($ongoingMailInc as $connection_issue){
-        $ticketID =  $connection_issue->incident->ticket->id;
-        $subject = $connection_issue->incident->subject . " (TID#{$ticketID})";
-        $latest_reply = $connection_issue->incident->ticket->connectionIssueMailReplies->first(); /*latest reply on the database*/
-
-        fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
-    }
-});
-
-Route::get('/test2', function () {
-    $oClient = new Client();
-    $oClient->connect();
-
-
-    $inboxFolder = $oClient
-        ->getFolder('INBOX');
-
-
-    $inboxMessages = $inboxFolder
-        ->query()
-        ->on('21.02.2019')
-        ->subject('This is the subject (TID#1)')
-        ->setFetchFlags(false)
-        ->setFetchBody(true)
-        ->setFetchAttachment(false)
-        ->get();
-
-
-    $latestInboxMessage = $inboxMessages->first();
-
-    if ($latestInboxMessage !== null) {
-        $plain_text = $latestInboxMessage->getTextBody();
-        $html_body = $latestInboxMessage->getHTMLBody();
-        $reply = (new \EmailReplyParser\Parser\EmailParser())->parse($latestInboxMessage->getTextBody())->getVisibleText();
-        $hasAttachments = $latestInboxMessage->getAttachments()->count();
-        $subject = $latestInboxMessage->getSubject();
-        $from = $latestInboxMessage->getFrom();
-        $to = json_encode($latestInboxMessage->getTo());
-        $cc = json_encode($latestInboxMessage->getCC());
-        $reply_to = $latestInboxMessage->getInReplyTo();
-        $reply_date = $latestInboxMessage->getDate();
-        $ticket_id = 1;
-        $connection_issue = new ConnectionIssueReply;
-        $connection_issue_fillable = $connection_issue->getFillable();
-        dd(json_encode($from));
-//    $connection_issue->create(compact($connection_issue_fillable));
-    }
-});
-
-Route::get('/test5', function () {
-    dd(\App\User::selectRaw('CONCAT_WS(" ",fName,mName,lName) as full_name,id')
-        ->whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%john edward%"')->get());
 
 });
 

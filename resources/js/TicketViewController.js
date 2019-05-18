@@ -28,6 +28,14 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
+
+    $('#emailTo').select2({
+        placeholder: "To",
+        width: '100%',
+        tags: true,
+        tokenSeparators: [',', ' ']
+    });
+
     $('#callerBranchSelect,.branchSelect').select2(branchSelect2);
     $('#ticketPositionSelect').select2(psitionSelect2);
     $('#positionDepSelect').select2(deptSelect2);
