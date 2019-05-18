@@ -392,3 +392,10 @@ Route::post('get/deppos', 'SDCController@getDepPos')->name('get.deppos');
  Route::get('/get/devprojects','DatatablesController@devProjects')->name('get.devprojs');
  Route::get('/show/{id}/editdevprojects','DevProjController@showEdit')->name('showEdit.devprojs');
 
+ Route::get('/show/mds','MDSIssuesController@show')->name('show.mds');
+ Route::get('/get/mdis','DatatablesController@addMDSissue')->name('get.mdis');
+ Route::post('/add/mdissue', 'MDSIssuesController@store')->name('add.mdissue');
+ Route::get('/show/{id}/editmdissue','MDSIssuesController@showEdit')->name('showEdit.mdIssue');
+ Route::post('/edit/mdis','MDSIssuesController@edit')->name('edit.mdis');
+ Route::get('/delete/{id}/mdis','MDSIssuesController@destroy')->name('delete.mdis');
+

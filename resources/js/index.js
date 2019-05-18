@@ -6,6 +6,7 @@ import {adminPageController} from  "./AdminPageController";
 import {maintenancePageController} from "./maintenancePageController";
 import {treasuryDashboardController} from "./treasury/index";
 import {devProjsController} from "./devprojs/datatable";
+import {MasterDataController} from "./masterdata/datatable";
 import {storeVisitController} from "./storeVisit/index";
 import User from './models/User';
 import * as Global from './global';
@@ -40,8 +41,8 @@ elements.popupClose.addEventListener('click',() => {
     const treasuryDashboard_route  = new RegExp("\/treasury/dashboard",'gm');
     const devprojs_route = new RegExp("\/show/devprojects",'gm');
     const storeVisit_route = new RegExp("\/technical/store-visit",'gm');
+    const mdis_route =  new RegExp("\/show/mds",'gm'); 
     const pathName = window.location.pathname;
-
     switch (true){
         case ticketView_route.test(pathName):
             const user = new User();
@@ -68,6 +69,9 @@ elements.popupClose.addEventListener('click',() => {
             break;
         case devprojs_route.test(pathName):
             devProjsController();
+        break;
+        case mdis_route.test(pathName):
+            MasterDataController();
         break;
         case storeVisit_route.test(pathName):
             storeVisitController();

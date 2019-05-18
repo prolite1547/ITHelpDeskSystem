@@ -140,7 +140,7 @@ class TicketController extends Controller
 
         $ticket = Ticket::findOrFail($id);
 
-        if ($ticket->logged_by === Auth::id()) {
+        if ($ticket->logged_by == Auth::id()) {
             return view('ticket.incomplete', compact('ticket'));
         } else {
             return redirect()->back();

@@ -15,6 +15,9 @@ use App\CategoryB;
 use App\Store;
 use App\Fix;
 use App\DevProject;
+use App\StoreVisitDetail;
+use App\StoreVisitTarget;
+use App\MasterDataIssue;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -293,11 +296,18 @@ public function loadChart(){
     date_default_timezone_set("Asia/Manila");
     $currentDate =  date('m/d/Y');
     $month =  date("m", strtotime($currentDate));
+    $mm = (int) date("m", strtotime($currentDate));
+    $yy = date("Y", strtotime($currentDate));
 
     $downCounts = 0;
     $downPending = 0;
     $pendingDays = 0;
     $temp = 0;
+    $visitCount = 0;
+    $visitDoneCount = 0;
+    $issueCount = 0;
+    $issueDoneCount = 0;
+
 
     $incidents = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at');
@@ -382,6 +392,17 @@ public function loadChart(){
       $devProjects = DevProject::where('md50_status','LIKE','%Done%')->whereNull('deleted_at')->count();
       $devDoneCount = DevProject::where('status','=','Done')->whereNull('deleted_at')->count();
 
+      $techTargets = StoreVisitTarget::where('month','=',$mm)->where('year','=',$yy)->get();
+      $visitDoneCount = StoreVisitDetail::where('status_id','=','3')->whereMonth('start_date','=',$month)->whereYear('start_date','=',$yy)->count();
+
+      foreach($techTargets as $target){
+        $visitCount+= (int) $target->num_of_stores;
+      }
+
+     $issueCount =  MasterDataIssue::whereNull('deleted_at')->count();
+     $issueDoneCount = MasterDataIssue::whereNull('deleted_at')->where('status','=','Done')->count();
+
+
       return view('reports.chart', 
       ['categories'=>$categories,
       'downCounts'=>$downCounts, 
@@ -393,7 +414,11 @@ public function loadChart(){
       'ssCountLog'=>$ssCountLog,
       'ssCountRes'=>$ssCountRes,
       'devProjects'=>$devProjects,
-      'devDoneCount'=>$devDoneCount
+      'devDoneCount'=>$devDoneCount,
+      'visitCount'=>$visitCount,
+      'visitDoneCount'=>$visitDoneCount,
+      'issueCount'=>$issueCount,
+      'issueDoneCount'=>$issueDoneCount
       ]);
     }
 

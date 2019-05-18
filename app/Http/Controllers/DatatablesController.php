@@ -18,7 +18,7 @@ use App\Store;
 use App\SystemDataCorrection;
 use App\ManualDataCorrection;
 use App\DevProject;
-
+use App\MasterDataIssue;
 
 
 
@@ -285,5 +285,13 @@ class DatatablesController extends Controller
         }
 
         return DataTables::of($model)->toJson();
+    }
+
+    public function addMDSissue(){
+        $query = DB::table('master_data_issues as mdi')
+        ->selectRaw('mdi.issue_name,mdi.status,mdi.start_date,mdi.end_date,mdi.logged_by,mdi.id');
+        $query = $query->whereNull('deleted_at');
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
     }
 }
