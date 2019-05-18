@@ -23,6 +23,7 @@ class CreateTicketsView extends Migration
         `p`.`name` AS `priority_name`,
         `s`.`name` AS `status_name`,
         `g`.`name` AS `ticket_group_name`,
+        `g`.`id` AS `ticket_group_id`,
         IF((`t`.`store_type` = 'App\\\Store'),
             (SELECT 
                     `homestead`.`stores`.`store_name`

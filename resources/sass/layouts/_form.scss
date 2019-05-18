@@ -164,25 +164,7 @@
 .form-branchAdd,
 .form-positionAdd{
 
-    &__button {
-        &,
-        &:link,
-        &:visited
-        {
-            text-transform: uppercase;
-            display: inline-block;
-            padding: 5.6px 10.5px;
-            font-size: 1rem;
-            text-decoration: none;
-            border-radius: 3px;
-            font-weight: 400;
-            position: relative;
-            z-index: 1;
-            border: none;
-            cursor: pointer;
-            background-color: $color-white;
-        }
-    }
+
 
     &__content-box {
         border: 1px solid $color-grey-light-3;
@@ -298,4 +280,23 @@
 
 .extend-form {
     padding: 1rem;
+}
+.form-emailGroupAdd{
+    &__email-table {
+        border-collapse: collapse;
+
+        & caption {
+            font-weight: bold;
+        }
+        & td {
+            border: 1px solid currentColor;
+            padding: .5rem;
+        }
+    }
+
+    &__remove-mail {
+        color: $color-red;
+        font-weight: bold;
+        cursor: pointer;
+    }
 }

@@ -158,7 +158,7 @@
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
                 {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue','files' => true))}}
-                    {{Form::email('to',null,array('placeholder' => 'To','class'=> 'form-email__input-text u-display-b u-width-full','required','multiple'))}}
+                    {{Form::select('to[]',$emailAndGroupSelect,null,array('class'=> 'form-email__input-text u-display-b u-width-full','required','multiple','id' => 'emailTo'))}}
                     {{Form::email('cc',null,array('placeholder' => 'Cc','class'=> 'form-email__input-text u-display-b u-width-full','multiple'))}}
                     {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text u-display-b u-width-full','required'))}}
                     {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','placeholder' => 'Details','required'))}}
@@ -167,7 +167,7 @@
                     </div>
                     <div class="form__group">
                         {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select branchSelect','required'])}}
-                        {{Form::select('concern',$categoryCGroupSelect,null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select form-email__input-select--concern','required'])}}
+                        {{Form::select('concern',$categoryCConnectionGroupSelect,null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select form-email__input-select--concern','required'])}}
                     </div>
                     <div class="form__group">
                         {{Form::select('tel',['083-554-7450' => '083-554-7450'],null,['placeholder' => '(choose telephone...)','class' => 'form-email__input-select form-email__input-select--tel u-display-n'])}}

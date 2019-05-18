@@ -19,7 +19,7 @@ class CreateStoreVisitDetailsTable extends Migration
             $table->smallInteger('it_personnel');
             $table->tinyInteger('status_id');
             $table->date('start_date');
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
             $table->smallInteger('logged_by');
             $table->timestamps();
         });

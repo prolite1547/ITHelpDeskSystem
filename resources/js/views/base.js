@@ -164,7 +164,8 @@ export const clearFormInputs = (form) => {
 
 
 export const toggleFormGroups = (e) => { /*FOR ELEMENTS THAT HAVE + ICON AND HIDDEN FORM GROUP*/
-        if(e.target.matches('button')){
+        if(e.target.matches('button.plusToggleContainer')){
+            console.log(e.target);
             e.target.firstElementChild.classList.toggle('fa-plus');
             e.target.firstElementChild.classList.toggle('fa-minus');
             e.target.nextElementSibling.classList.toggle('u-display-n');
