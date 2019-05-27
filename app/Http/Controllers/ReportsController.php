@@ -135,12 +135,19 @@ class ReportsController extends Controller
         $resinterval = "N/A";
         $countRow = 0;
         $countResolved = 0;
+        $categoryRelation = "";
 
       
         if($category != "all"){
+          if($category == '6'){
+            $incidents = Incident::whereHas('ticket', function($query){
+                $query->whereNull('deleted_at');
+            })->whereBetween('created_at', [$start, $end])->where('category', 3)->get();
+          }else{
             $incidents = Incident::whereHas('ticket', function($query){
                 $query->whereNull('deleted_at');
             })->whereBetween('created_at', [$start, $end])->where('catA', $category)->get();
+          }
         }else{
             $incidents = Incident::whereHas('ticket', function($query){
                 $query->whereNull('deleted_at');
@@ -192,20 +199,28 @@ class ReportsController extends Controller
                                 }
 
                             }
+
+                            if($incident->categoryRelation->name != 'Connection'){
+                                $categoryRelation = $incident->catARelation->name;
+                            }else{
+                                $categoryRelation = "Connection";
+                            }
+
+                            
                            
                             if($status1 == "all"){
-                                $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
+                                $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$categoryRelation."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                                 $countRow +=1;
                                 if(isset($resolved->resolve->created_at)){
                                     $countResolved +=1;
                                 }
                             }else{
                                 if($status1 == "resolved" AND isset($resolved->resolve->created_at)){
-                                    $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
+                                    $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$categoryRelation."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$resdate."</td><td>".$resinterval."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                                     $countRow +=1;
                                     $countResolved +=1;
                                 }elseif($status1 == "unresolved" AND !isset($resolved->resolve->created_at)){
-                                    $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$incident->catARelation->name."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
+                                    $rowdata .= "<tr><td>"."TID".$incident->ticket->id."</td><td>".$incident->subject."</td><td>".$categoryRelation."</td><td>".date('m/d/y | H:i:s A', strtotime($incident->ticket->created_at))."</td><td>".$pendingDuration."</td><td>".$incident->ticket->assigneeRelation->full_name."</td><td>".$status."</td></tr>";
                                     $countRow +=1;
                                     $countResolved = 0;
                                 }
@@ -311,7 +326,7 @@ public function loadChart(){
 
     $incidents = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at');
-    })->whereMonth('created_at',  $month)->where('catA', 6)->get();
+    })->whereMonth('created_at',  $month)->where('category', 3)->get();
 
     foreach($incidents as $i){
             
@@ -398,8 +413,12 @@ public function loadChart(){
       foreach($techTargets as $target){
         $visitCount+= (int) $target->num_of_stores;
       }
+    
+      $issueCount = Incident::whereHas('ticket', function($query){
+        $query->whereNull('deleted_at');
+     })->whereMonth('created_at',  $month)->where('catA', 11)->count();
 
-     $issueCount =  MasterDataIssue::whereNull('deleted_at')->count();
+    //  $issueCount =  MasterDataIssue::whereNull('deleted_at')->count();
      $issueDoneCount = MasterDataIssue::whereNull('deleted_at')->where('status','=','Done')->count();
 
 
@@ -571,7 +590,63 @@ public function loadChart(){
         return response()->json(array('success'=>true, 'topresolvers'=>$topresolvers, 'solveCount'=>$solveCount, 'supports'=>$supports ), 200);
     }
 
- 
+ public function showNetworkDowns(){
+    date_default_timezone_set("Asia/Manila");
+    $currentDate =  date('m/d/Y');
+    $month =  date("m", strtotime($currentDate));
+
+    $downCounts = 0;
+    $downPending = 0;
+    $pendingDays = 0;
+    $ticketOvrPendings = array();
+
+
+    $incidents = Incident::whereHas('ticket', function($query){
+        $query->whereNull('deleted_at');
+    })->whereMonth('created_at',  $month)->where('category', 3)->get();
+
+    foreach($incidents as $i){
+            
+        if($i->ticket->status == 3){
+            $res = Fix::where('ticket_id', '=', $i->ticket->id)->first();
+            $resDate = date_create(date('Y-m-d H:i:s', strtotime($res->resolve->created_at))) ;
+            $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->created_at)));
+            $diff = date_diff($logDate,$resDate);
+            $temp = (int)$diff->format("%a");
+            if($pendingDays == 0){
+                $pendingDays = $temp;
+            }
+
+            if($pendingDays < $temp){
+                $pendingDays = $temp;
+            }
+            array_push($ticketOvrPendings , [$i->ticket->id , $temp]);
+        }else{
+            date_default_timezone_set("Asia/Manila");
+            $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->ticket->created_at)));
+            $currentDate =  date('Y-m-d H:i:s');
+            $cDate =  date_create(date("Y-m-d H:i:s", strtotime($currentDate)));
+            $diff = date_diff($logDate,$cDate);
+            $temp = (int)$diff->format("%a");
+            
+            if($pendingDays == 0){
+                $pendingDays = $temp;
+            }
+
+            if($pendingDays < $temp){
+                $pendingDays = $temp;
+            }
+            // if((int)$diff->format("%a") == 0){
+            //     $pendingDuration =  $diff->format("%h Hour(s) %i Minute(s) %s Second(s)");
+            // }else{
+            //     $pendingDuration =  $diff->format("%a Day(s)");
+            // }
+            array_push($ticketOvrPendings , [$i->ticket->id , $temp]);
+        }
+        $downCounts+=1;
+    }
+    return response()->json(array('downCounts'=>$downCounts , 'MaxpendingDays'=>$pendingDays , 'ticketsId/pendingDays', $ticketOvrPendings), 200);
+}
 
 }
 

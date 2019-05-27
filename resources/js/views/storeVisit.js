@@ -24,7 +24,8 @@ export const fetchForm = (action) => {
 
 export const editModal = (action,id) => {
     beforeShowModal();
-    $.ajax(editUrl(action,id),{
+    const url = editUrl(action,id);
+    $.ajax(url,{
         type: 'GET'
     }).fail(() => alert('Failed to get details!'))
         .done((data) => {

@@ -122,7 +122,6 @@ class ViewServiceProvider extends ServiceProvider
                 'categoryBGroupSelect',
                 'selfOption',
                 'groupSelect',
-                'categoryCGroupSelect',
                 'CategoryCSelect',
                 'emailAndGroupSelect',
                 'categoryCConnectionGroupSelect',

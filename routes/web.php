@@ -354,4 +354,5 @@ Route::post('get/deppos', 'SDCController@getDepPos')->name('get.deppos');
  Route::get('/show/{id}/editmdissue','MDSIssuesController@showEdit')->name('showEdit.mdIssue');
  Route::post('/edit/mdis','MDSIssuesController@edit')->name('edit.mdis');
  Route::get('/delete/{id}/mdis','MDSIssuesController@destroy')->name('delete.mdis');
-
+ Route::get('/show/greport', 'ReportsController@showNetworkDowns')->name('show.GReport');
+ 
