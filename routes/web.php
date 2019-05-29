@@ -168,6 +168,7 @@ Route::post('/add/department', 'DepartmentController@create');
 ////////*Category A*//////
 //////////////////////////
 Route::post('/add/categoryA', 'MaintenanceController@storeCategoryA');
+Route::get('/categoryA/{catAID}/subBCategories', 'CategoryAController@subBCategories');
 //////////////////////////
 ////////*Category B*//////
 //////////////////////////

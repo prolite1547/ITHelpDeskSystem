@@ -267,13 +267,12 @@ class TicketController extends Controller
     {
         /*FETCH THE EXPIRATION HOURS COLUMN*/
         $expiration_hours = CategoryB::findOrFail($request->catB)->getExpiration->expiration;
-        $catA = CategoryB::findOrFail($request->catB)->group->id;
 
         /*GENERATE TE EXPIRATION DATE*/
         $expiration_date = Carbon::now()->addHours($expiration_hours);
 
         /*ADD EXPIRATION IN REQUEST ARRAY*/
-        $request->request->add(array('expiration' => $expiration_date, 'catA' => $catA));
+        $request->request->add(array('expiration' => $expiration_date));
 
         /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
         $ticket_id = $request->ticket_id;

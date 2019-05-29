@@ -8,6 +8,7 @@ import {treasuryDashboardController} from "./treasury/index";
 import {devProjsController} from "./devprojs/datatable";
 import {MasterDataController} from "./masterdata/datatable";
 import {storeVisitController} from "./storeVisit/index";
+import {incompletePageController} from "./incompletePage/index.js";
 import User from './models/User';
 import * as Global from './global';
 
@@ -44,6 +45,7 @@ elements.popupClose.addEventListener('click',() => {
     const devprojs_route = new RegExp("\/show/devprojects",'gm');
     const storeVisit_route = new RegExp("\/technical/store-visit",'gm');
     const mdis_route =  new RegExp("\/show/mds",'gm'); 
+    const incompleteTixRoute =  new RegExp("\/ticket/incomplete/\\d+",'gm');
     const pathName = window.location.pathname;
     switch (true){
         case ticketView_route.test(pathName):
@@ -77,6 +79,9 @@ elements.popupClose.addEventListener('click',() => {
         break;
         case storeVisit_route.test(pathName):
             storeVisitController();
+            break;
+        case incompleteTixRoute.test(pathName):
+            incompletePageController();
             break;
         default:
             console.log('route not set');

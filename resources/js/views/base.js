@@ -72,6 +72,9 @@ export const elements = {
     /* Maintenance Page El */
     plusToggleContainer: document.querySelector('.form-categoriesAdd'),
 
+    categoryASelect:$('.categoryASelect'),
+    categoryBSelect:$('.categoryBSelect')
+
 };
 
 export const elementStrings = {

@@ -9,6 +9,7 @@ import * as glboalScript from './global';
 import {renderLoader, clearLoader, showModal, insertToModal, hideModal} from "./views/base";
 import ConnectionIssueReply from "./models/ConnectionIssueReply";
 import {disableSubmitBtn} from "./global";
+import {categoryADynamicCategoryBSelect} from "./global";
 
 
 ////////////////////////////////
@@ -28,6 +29,7 @@ export const ticketAddController = () => {
         addTicketView.displayForm();
     })();
 
+    categoryADynamicCategoryBSelect();
 
     $('#emailTo').select2({
         placeholder: "To",
