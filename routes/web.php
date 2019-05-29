@@ -234,7 +234,9 @@ Route::get('/store-visit/target/{year}','StoreVisitController@getMonthsOnYear');
 
 
 Route::get('/test', function () {
-    $email_group = \App\EmailGroup::with('emails:id,mail')->pluck('group_name','id')->toArray();
+    $userSelect = \App\User::all()->toArray('full_name');
+
+    dd($userSelect);
 
 
 });
@@ -355,4 +357,3 @@ Route::post('get/deppos', 'SDCController@getDepPos')->name('get.deppos');
  Route::post('/edit/mdis','MDSIssuesController@edit')->name('edit.mdis');
  Route::get('/delete/{id}/mdis','MDSIssuesController@destroy')->name('delete.mdis');
  Route::get('/show/greport', 'ReportsController@showNetworkDowns')->name('show.GReport');
- 

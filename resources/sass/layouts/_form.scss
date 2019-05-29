@@ -196,6 +196,16 @@
         }
     }
 
+    &__radio-group {
+        margin-right: .3rem;
+        display: flex;
+        align-items: center;
+
+        & > label {
+            margin-right: .3rem;
+        }
+    }
+
     &__label {
         flex: 0 0 20%;
     }

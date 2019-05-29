@@ -77,10 +77,11 @@
                             </div>
                             <div class="form__group">
                                 {!! Form::select('category', $typeSelect, null, ['placeholder' => '(select category)','class' => 'form__input','required']) !!}
-                                {!! Form::select('group', $groupSelect, null, ['placeholder' => '(select group)','class' => 'form__input','required']) !!}
                                 {!! Form::select('catB', $categoryBGroupSelect, null, ['placeholder' => '(select sub-B)','class' => 'form__input categoryBSelect form__input--select2','required']) !!}
                                 {!! Form::select('catC', $CategoryCSelect, null, ['placeholder' => '(select sub-C)','class' => 'form__input categoryCSelect form__input--select2']) !!}
-
+                            </div>
+                            <div class="form__group">
+                                {!! Form::select('group', $groupSelect, null, ['placeholder' => '(select group)','class' => 'form__input','required']) !!}
                             </div>
                             <div class="form__group">
                                 {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
@@ -93,7 +94,7 @@
                     <div class="window__maintenance plusToggleContainer">
                         @if(in_array(Auth::user()->role_id,[$user_roles['admin'],$user_roles['tower']]))
                             <div class="form-branchAdd">
-                                <button class="form-branchAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                <button class="form-branchAdd__button plusToggleContainer__button u-margin-l " type="button"><i class="fas fa-plus"></i>
                                     Add Branch
                                 </button>
 
@@ -108,7 +109,7 @@
                                 </div>
                             </div>
                             <div class="form-departmentAdd">
-                                <button class="form-departmentAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                <button class="form-departmentAdd__button u-margin-l plusToggleContainer__button" type="button"><i class="fas fa-plus"></i>
                                     Add Department
                                 </button>
 
@@ -123,7 +124,7 @@
                                 </div>
                             </div>
                             <div class="form-positionAdd">
-                                <button class="form-positionAdd__button u-margin-l " type="button"><i class="fas fa-plus"></i>
+                                <button class="form-positionAdd__button u-margin-l plusToggleContainer__button" type="button"><i class="fas fa-plus"></i>
                                     Add Position
                                 </button>
                                 <div class="form-positionAdd__content-box u-display-n">

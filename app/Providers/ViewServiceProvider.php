@@ -84,7 +84,7 @@ class ViewServiceProvider extends ServiceProvider
             ]);
         });
 
-        view()->composer(['ticket.add_ticket', 'modal.ticket_edit', 'modal.user_add', 'ticket.incomplete', 'modal.r_ticket','maintenance'], function ($view) {
+        view()->composer(['ticket.add_ticket', 'modal.ticket_edit', 'modal.user_add', 'ticket.incomplete', 'modal.r_ticket','maintenance','includes.ticket_filter'], function ($view) {
             $selfOption = [null => 'None', Auth::id() => 'Self'];
             $statusSelect = DB::table('ticket_status')->pluck('name', 'id')->toArray();  /*Status*/
             $prioSelect = DB::table('priorities')->pluck('name', 'id')->toArray();   /*Priority*/
@@ -107,7 +107,8 @@ class ViewServiceProvider extends ServiceProvider
             $emailAndGroupSelect = array_merge($emailSelect_connection,$email_groups_connection);
             $branchSelect = Store::all()->pluck('store_name', 'id')->toArray();
             $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
-
+            $filterAssigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'full_name', 'full_name');
+            $categoryASelect = CategoryA::pluck('name','id')->toArray();
             $view->with(compact(
                 'statusSelect',
                 'prioSelect',
@@ -126,7 +127,9 @@ class ViewServiceProvider extends ServiceProvider
                 'emailAndGroupSelect',
                 'categoryCConnectionGroupSelect',
                 'email_groups_select',
-                'emailSelect'
+                'emailSelect',
+                'filterAssigneeSelect',
+                'categoryASelect'
             ));
         });
 
