@@ -87,6 +87,13 @@ class MaintenanceController extends Controller
     public function deleteEmailOnGroup($pivot_id){
         EmailGroupPivot::destroy($pivot_id);
     }
+    public function addEmail(Request $request){
+        $validatedData = $request->validate([
+            'user_id' => 'sometimes|numeric|nullable',
+            'email' => 'required|email|unique:emails,email',
+        ]);
 
+        Email::create($validatedData);
+    }
     
 }

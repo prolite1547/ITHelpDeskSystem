@@ -18,6 +18,13 @@ import {categoryADynamicCategoryBSelect} from "./global";
 ////////////////////////////////
 ////////////////////////////////
 
+const emailSelect2Options = {
+    placeholder: "To",
+    width: '100%',
+    tags: true,
+    tokenSeparators: [',', ' ']
+};
+
 export const ticketAddController = () => {
     /*INITIALIZE*/
     (function () {
@@ -31,12 +38,9 @@ export const ticketAddController = () => {
 
     categoryADynamicCategoryBSelect();
 
-    $('#emailTo').select2({
-        placeholder: "To",
-        width: '100%',
-        tags: true,
-        tokenSeparators: [',', ' ']
-    });
+    $('#emailTo').select2(emailSelect2Options);
+
+    $('#emailCc').select2(emailSelect2Options);
 
     $('#callerBranchSelect,.branchSelect').select2(branchSelect2);
     $('#ticketPositionSelect').select2(psitionSelect2);

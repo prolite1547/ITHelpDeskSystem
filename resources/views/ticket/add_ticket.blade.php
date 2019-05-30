@@ -158,8 +158,14 @@
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
                 {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue','files' => true))}}
-                    {{Form::select('to[]',$emailAndGroupSelect,null,array('class'=> 'form-email__input-text u-display-b u-width-full','required','multiple','id' => 'emailTo'))}}
-                    {{Form::email('cc',null,array('placeholder' => 'Cc','class'=> 'form-email__input-text u-display-b u-width-full','multiple'))}}
+                    <div class="form__group-flex">
+                        {{Form::label('emailTo','To:')}}
+                        {{Form::select('to[]',$emailAndGroupSelect,null,array('class'=> 'form-email__input-text u-display-b u-width-full','required','multiple','id' => 'emailTo'))}}
+                    </div>
+                    <div class="form__group-flex">
+                        {{Form::label('emailCc','Cc:')}}
+                        {{Form::select('cc[]',$emailAndGroupSelect,null,array('placeholder' => 'Cc','class'=> 'form-email__input-text u-display-b u-width-full','multiple','id' => 'emailCc'))}}
+                    </div>
                     {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text u-display-b u-width-full','required'))}}
                     {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','placeholder' => 'Details','required'))}}
                     <div class="form__group">

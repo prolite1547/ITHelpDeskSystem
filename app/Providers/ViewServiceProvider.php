@@ -7,6 +7,7 @@ use App\CategoryB;
 use App\CategoryC;
 use App\Department;
 use App\Email;
+use App\Http\Resources\UserResource;
 use App\Position;
 use App\Status;
 use Illuminate\Support\Facades\Auth;
@@ -109,6 +110,7 @@ class ViewServiceProvider extends ServiceProvider
             $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
             $filterAssigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'full_name', 'full_name');
             $categoryASelect = CategoryA::pluck('name','id')->toArray();
+            $usersSelect = User::all()->pluck('full_name','id')->toArray();
             $view->with(compact(
                 'statusSelect',
                 'prioSelect',
@@ -129,7 +131,8 @@ class ViewServiceProvider extends ServiceProvider
                 'email_groups_select',
                 'emailSelect',
                 'filterAssigneeSelect',
-                'categoryASelect'
+                'categoryASelect',
+                'usersSelect'
             ));
         });
 

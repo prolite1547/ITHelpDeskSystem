@@ -149,6 +149,11 @@ Route::get('/email/group/{id}/emails','MaintenanceController@getMailsFromGroup')
 Route::post('/email/group/add','MaintenanceController@addMailsFromGroup');
 Route::delete('/email/group/delete/pivot/{pivot_id}','MaintenanceController@deleteEmailOnGroup');
 
+/*EMAIL*/
+
+Route::post('/email/add','MaintenanceController@addEmail');
+
+
 //////////////////////////
 ////////*SEARCH*//////
 //////////////////////////

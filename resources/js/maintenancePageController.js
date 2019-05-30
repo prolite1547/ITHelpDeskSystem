@@ -106,10 +106,23 @@ export const maintenancePageController = () => {
         }
     });
 
-    $('.form-emailGroupAdd__email-table').on('click','.form-emailGroupAdd__remove-mail',(e) => {
+    $('.form-emailGroupAdd__email-table').on('click','.form-emailGroupAdd__remove-mail',(e)  => {
         $.ajax(`/email/group/delete/pivot/${e.target.id}`,{
             type:'DELETE'
         }).done(() => EmailGroup.getEmails(m_email_group.id)).fail(() => alert('failed to delete email from the group'));
+    });
+
+    document.getElementById('addEmail').addEventListener('submit',(e) => {
+       e.preventDefault();
+
+       $.ajax('/email/add',{
+           type: 'POST',
+           data: $(e.target).serialize()
+       }).done(() => alert('Successfully added email!'))
+           .fail((jqXHR) => {
+            displayError(jqXHR)
+       });
+
     });
 
 };

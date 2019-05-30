@@ -92,6 +92,20 @@
                     {!! Form::close() !!}
                 </div>
             </div>
+            <div class="form-emailAdd">
+                <button class="plusToggleContainer__button u-margin-l " type="button"><i
+                        class="fas fa-plus"></i> Add Emails
+                </button>
+                <div class="form-emailAdd__content-box u-display-n">
+                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addEmail']) !!}
+                    <div class="form__group">
+                        {{Form::email('email',null,array('placeholder' => 'Enter mail','class' => 'form__input','required'))}}
+                        {{Form::select('user_id',$usersSelect,null,array('class'=> 'form__input form__input--select2','placeholder' => 'Select User (optional)','id' => 'emailAdd'))}}
+                    </div>
+                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addCategory']) !!}
+                    {!! Form::close() !!}
+                </div>
+            </div>
         </div>
     </main>
 @endsection
