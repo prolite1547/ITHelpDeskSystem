@@ -147,6 +147,7 @@ Route::get('/maintenance', 'PublicController@maintenance')->name('maintenancePag
 //////////////////////////
 Route::get('/email/group/{id}/emails','MaintenanceController@getMailsFromGroup');
 Route::post('/email/group/add','MaintenanceController@addMailsFromGroup');
+Route::post('/email-group/add','MaintenanceController@addEmailGroup');
 Route::delete('/email/group/delete/pivot/{pivot_id}','MaintenanceController@deleteEmailOnGroup');
 
 /*EMAIL*/

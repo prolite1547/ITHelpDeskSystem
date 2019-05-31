@@ -164,7 +164,7 @@
                     </div>
                     <div class="form__group-flex">
                         {{Form::label('emailCc','Cc:')}}
-                        {{Form::select('cc[]',$emailAndGroupSelect,null,array('placeholder' => 'Cc','class'=> 'form-email__input-text u-display-b u-width-full','multiple','id' => 'emailCc'))}}
+                        {{Form::select('cc[]',$emailAndGroupSelect,null,array('class'=> 'form-email__input-text u-display-b u-width-full','multiple','id' => 'emailCc'))}}
                     </div>
                     {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text u-display-b u-width-full','required'))}}
                     {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','placeholder' => 'Details','required'))}}

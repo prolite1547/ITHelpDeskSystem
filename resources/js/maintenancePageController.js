@@ -125,4 +125,17 @@ export const maintenancePageController = () => {
 
     });
 
+    document.getElementById('addEmailGroup').addEventListener('submit',(e) => {
+        e.preventDefault();
+
+        $.ajax('/email-group/add',{
+            type: 'POST',
+            data: $(e.target).serialize()
+        }).done(() => alert('Successfully added email group!'))
+            .fail((jqXHR) => {
+                displayError(jqXHR)
+            });
+
+    });
+
 };

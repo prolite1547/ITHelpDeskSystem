@@ -95,5 +95,13 @@ class MaintenanceController extends Controller
 
         Email::create($validatedData);
     }
+
+    public function addEmailGroup(Request $request){
+        $validatedData = $request->validate([
+            'group_name' => 'required|string|unique:email_groups,group_name|min:2|max:25',
+        ]);
+
+        EmailGroup::create($validatedData);
+    }
     
 }
