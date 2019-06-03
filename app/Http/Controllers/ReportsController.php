@@ -322,7 +322,7 @@ public function loadChart(){
     $visitDoneCount = 0;
     $issueCount = 0;
     $issueDoneCount = 0;
-
+    // $month = '';
 
     $incidents = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at');
@@ -418,8 +418,12 @@ public function loadChart(){
         $query->whereNull('deleted_at');
      })->whereMonth('created_at',  $month)->where('catA', 11)->count();
 
+     $issueCount = Incident::whereHas('ticket', function($query){
+        $query->whereNull('deleted_at')->where('status' , '=', '3');
+     })->whereMonth('created_at',  $month)->where('catA', 11)->count();
+
     //  $issueCount =  MasterDataIssue::whereNull('deleted_at')->count();
-     $issueDoneCount = MasterDataIssue::whereNull('deleted_at')->where('status','=','Done')->count();
+    //  $issueDoneCount = MasterDataIssue::whereNull('deleted_at')->where('status','=','Done')->count();
 
 
       return view('reports.chart', 
