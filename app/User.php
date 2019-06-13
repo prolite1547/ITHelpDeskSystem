@@ -85,12 +85,21 @@ class User extends Authenticatable
             return false;
         } else {
             switch (true) {
+                case $this->id === 1833:
+                case $this->id === 1834:
+                    return 3;
+                    break;
                 case strpos(strtolower($this->position->position), 'support') !== false:
                     return 1;
+                    break;
                 case strpos(strtolower($this->position->position), 'technical') !== false:
                     return 2;
+                    break;
                 case strpos(strtolower($this->position->position),'system') !== false:
+                case $this->id === 1833:
+                case $this->id === 1834:
                     return 3;
+                    break;
                 default:
                     return 0;
             }
