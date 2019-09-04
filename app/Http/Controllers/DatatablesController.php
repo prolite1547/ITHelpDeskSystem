@@ -255,7 +255,7 @@ class DatatablesController extends Controller
 
     public function devProjects(){
         $query = DB::table('dev_projects as dp')
-        ->selectRaw('dp.id,dp.project_name,dp.assigned_to,dp.status,dp.date_start,dp.date_end,dp.md50_status');
+        ->selectRaw('dp.id,dp.project_name,dp.assigned_to,dp.status,dp.date_start,dp.date_end,dp.md50_status,dp.remarks');
         $query = $query->whereNull('deleted_at');
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);

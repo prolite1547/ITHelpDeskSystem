@@ -140,9 +140,17 @@ class ReportsController extends Controller
       
         if($category != "all"){
           if($category == '6'){
+            // $incidents = Incident::whereHas('ticket', function($query){
+            //     $query->whereNull('deleted_at');
+            // })->whereBetween('created_at', [$start, $end])->where('category', 3)->get();
+
             $incidents = Incident::whereHas('ticket', function($query){
                 $query->whereNull('deleted_at');
-            })->whereBetween('created_at', [$start, $end])->where('category', 3)->get();
+            })->whereBetween('created_at', [$start, $end])->where('catA', 6)->orWhere(function($query) use($start, $end){
+                $query->where('category', 3)
+                ->whereBetween('created_at', [$start, $end]);
+            })->get();
+
           }else{
             $incidents = Incident::whereHas('ticket', function($query){
                 $query->whereNull('deleted_at');
@@ -311,6 +319,8 @@ public function loadChart(){
     date_default_timezone_set("Asia/Manila");
     $currentDate =  date('m/d/Y');
     $month =  date("m", strtotime($currentDate));
+    $year = date("Y",strtotime($currentDate));
+
     $mm = (int) date("m", strtotime($currentDate));
     $yy = date("Y", strtotime($currentDate));
 
@@ -322,28 +332,49 @@ public function loadChart(){
     $visitDoneCount = 0;
     $issueCount = 0;
     $issueDoneCount = 0;
-    // $month = '5';
-    // $mm = 5;
+
+
+    // MONTHS AND YEAR TO BE GENERATED
+    // $month = '8';
+    // $year = '2019';
+    // $mm = 8;
+
+    // $incidents = Incident::whereHas('ticket', function($query){
+    //     $query->whereNull('deleted_at');
+    // })->whereMonth('created_at',  $month)->where('category', 3)->get();
+    
+    // $incidents = Incident::whereHas('ticket', function($query){
+    //     $query->whereNull('deleted_at');
+    // })->whereMonth('created_at',  $month)->where('catA', 6)->get();
+
 
     $incidents = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at');
-    })->whereMonth('created_at',  $month)->where('category', 3)->get();
+    })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->where('catA', 6)->orWhere(function($query) use($month, $year){
+        $query->where('category', 3)
+              ->whereMonth('created_at',  $month)->whereYear('created_at', $year);
+    })->get();
 
     foreach($incidents as $i){
             
         if($i->ticket->status == 3){
-            $res = Fix::where('ticket_id', '=', $i->ticket->id)->first();
-            $resDate = date_create(date('Y-m-d H:i:s', strtotime($res->resolve->created_at))) ;
-            $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->created_at)));
-            $diff = date_diff($logDate,$resDate);
-            $temp = (int)$diff->format("%a");
-            if($pendingDays == 0){
-                $pendingDays = $temp;
-            }
 
-            if($pendingDays < $temp){
-                $pendingDays = $temp;
-            }
+            $res = Fix::where('ticket_id', '=', $i->ticket->id)->first();
+             
+            // if(isset($res->resolve->created_at)){
+                $resDate = date_create(date('Y-m-d H:i:s', strtotime($res->resolve->created_at))) ;
+                $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->created_at)));
+                $diff = date_diff($logDate,$resDate);
+                $temp = (int)$diff->format("%a");
+                if($pendingDays == 0){
+                    $pendingDays = $temp;
+                }
+    
+                if($pendingDays < $temp){
+                    $pendingDays = $temp;
+                }
+            // } 
+           
         }else{
             date_default_timezone_set("Asia/Manila");
             $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->ticket->created_at)));
@@ -370,7 +401,7 @@ public function loadChart(){
     }
 
       $categories = CategoryA::all();
-      $tickets = Ticket::whereMonth('created_at','=', $month)->where('issue_type','=','App\Incident')->get();
+      $tickets = Ticket::whereMonth('created_at','=', $month)->whereYear('created_at', $year)->where('issue_type','=','App\Incident')->whereNull('deleted_at')->get();
       $ssCountLog = 0;
       $ssCountRes = 0;
       $dcsCountLog = 0;
@@ -380,7 +411,7 @@ public function loadChart(){
       
       foreach($tickets as $ticket){
             $store_name = $ticket->store->store_name;
-            if(strpos($store_name, 'Distribution Center') !== false){
+            if(strpos($store_name, 'Distribution Center') !== false || strpos($store_name, 'Warehouse') !== false){
                 if(isset($ticket->status)){
                     if($ticket->status == 3){
                         $dcsCountRes  += 1;
@@ -417,11 +448,35 @@ public function loadChart(){
     
       $issueCount = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at');
-     })->whereMonth('created_at',  $month)->where('catA', 11)->count();
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->where('catA', 11)->count();
 
      $issueDoneCount = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at')->where('status' , '=', '3');
-     })->whereMonth('created_at',  $month)->where('catA', 11)->count();
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->where('catA', 11)->count();
+
+
+
+    //  NUMBER OF RESOLVED AND UNRESOLVED TICKETS PER GROUP 
+
+     $techCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('group','=','2');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+     
+     $techDoneCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('status' , '=', '3')->where('group','=','2');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+
+
+     $SuppCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('group','=','1');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+
+     $SuppDoneCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('status' , '=', '3')->where('group','=','1');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+
+     
+
 
     //  $issueCount =  MasterDataIssue::whereNull('deleted_at')->count();
     //  $issueDoneCount = MasterDataIssue::whereNull('deleted_at')->where('status','=','Done')->count();
@@ -442,7 +497,12 @@ public function loadChart(){
       'visitCount'=>$visitCount,
       'visitDoneCount'=>$visitDoneCount,
       'issueCount'=>$issueCount,
-      'issueDoneCount'=>$issueDoneCount
+      'issueDoneCount'=>$issueDoneCount,
+
+      'techCount'=>$techCount,
+      'techDoneCount'=>$techDoneCount,
+      'SuppCount'=>$SuppCount,
+      'SuppDoneCount'=>$SuppDoneCount
       ]);
     }
 
@@ -608,7 +668,10 @@ public function loadChart(){
 
     $incidents = Incident::whereHas('ticket', function($query){
         $query->whereNull('deleted_at');
-    })->whereMonth('created_at',  $month)->where('category', 3)->get();
+    })->whereMonth('created_at',  $month)->where('catA', 6)->orWhere(function($query) use($month){
+        $query->where('category', 3)
+              ->whereMonth('created_at',  $month);
+    })->get();
 
     foreach($incidents as $i){
             

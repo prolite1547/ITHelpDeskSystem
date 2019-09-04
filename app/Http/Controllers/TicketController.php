@@ -9,6 +9,7 @@ use App\CategoryC;
 use App\ConnectionIssue;
 use App\File;
 use App\Fix;
+use App\User;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
 use App\Mail\PLDTIssue;
@@ -58,9 +59,10 @@ class TicketController extends Controller
             $incomplete_ticket = checkTicketDataIfIncomplete($id);
             if ($incomplete_ticket['incomplete'] && ($incomplete_ticket['logged_by'] === $request->user()->id)) {
                 return redirect()->route('incompleteTicket', ['id' => $id]);
-            } else if($incomplete_ticket['logged_by'] !== $request->user()->id){
-                return redirect()->back();
             }
+            //  else if($incomplete_ticket['logged_by'] !== $request->user()->id){
+            //     return redirect()->back();
+            // }
         }
 
         /*CHECK IF TICKET IS CREATED THROUGH CALL OR EMAIL*/
@@ -774,5 +776,16 @@ class TicketController extends Controller
             $fix->ticket->update(['status' => 3]);
             $fix->resolve()->create(['fixes_id' => $id,'resolved_by' => $request->user()->id]);
         });
+    }
+
+    public function usersGroup(Request $request){
+        if($request->assign != 'none'){
+            $id = $request->id;
+            $user = User::find($id);
+        }else{
+            $user = User::find(Auth::user()->id);
+        }
+       
+        return response()->json(array('success'=>true, 'id'=>$user->getGroupAttribute()));
     }
 }

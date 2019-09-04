@@ -57,7 +57,7 @@ class TicketPolicy
     public function update(User $user, Ticket $ticket)
     {
         $statuses = array(self::$ticket_statuses['Open'],self::$ticket_statuses['Ongoing'],self::$ticket_statuses['Rejected']);
-        return ($user->id === $ticket->assignee || in_array($user->role_id,self::$high_roles)) && in_array($ticket->status,$statuses);
+        return ($user->id === $ticket->assignee || in_array($user->role_id,self::$high_roles) || $user->id === $ticket->logged_by) && in_array($ticket->status,$statuses);
     }
 
 

@@ -25,6 +25,7 @@ class DevProjController extends Controller
             'date_start'=>$request->dateStart,
             'date_end'=>$request->dateEnd,
             'md50_status'=>$request->statusmd,
+            'remarks'=>$request->remarks
         ]);
 
         return redirect()->back();
@@ -38,6 +39,7 @@ class DevProjController extends Controller
           $project->date_start = $request->dateStart;
           $project->date_end = $request->dateEnd;
           $project->md50_status = $request->statusmd;
+          $project->remarks = $request->remarks;
           $project->save();
           return redirect()->back();
     }

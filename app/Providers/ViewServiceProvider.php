@@ -60,7 +60,7 @@ class ViewServiceProvider extends ServiceProvider
             $appRoutes = ['datacorrectons.approverALL', 'datacorrectons.approverDONE', 'datacorrectons.approverPENDING'];
 
             $ticketCounts = getNumberOfTicketsOnASpecStatus();
-            $ticketUserTicketsCount = Ticket::whereAssignee($userID)->where('status','!=',3)->count();
+            $ticketUserTicketsCount = Ticket::whereAssignee($userID)->where('status','!=',3)->whereNull('deleted_at')->count();
             $view->with(compact(
                 'ticketCounts',
                 'ticketUserTicketsCount',
@@ -107,7 +107,12 @@ class ViewServiceProvider extends ServiceProvider
             $email_groups_connection = $email_groups->pluck('group_name','temp')->toArray();
             $emailAndGroupSelect = array_merge($emailSelect_connection,$email_groups_connection);
             $branchSelect = Store::all()->pluck('store_name', 'id')->toArray();
-            $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
+            $cons = array(
+                'column'=>'id',
+                'values'=> [3,4,5,6,7,8]
+            );
+            $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name', $cons);
+            // $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
             $filterAssigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'full_name', 'full_name');
             $categoryASelect = CategoryA::pluck('name','id')->toArray();
             $usersSelect = User::all()->pluck('full_name','id')->toArray();

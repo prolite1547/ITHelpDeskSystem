@@ -23,6 +23,7 @@ export const devProjsController = () => {
             { data: 'date_start', name: 'date_start' },
             { data: 'date_end', name: 'date_end' },
             { data: 'md50_status', name: 'md50_status' },
+            { data: 'remarks', name: 'remarks' },
             { data: 'md50_status', name: 'actions' }
         ],
          columnDefs: [
@@ -31,7 +32,7 @@ export const devProjsController = () => {
                   targets: [0,1,2,3]
                 },
                 {
-                    targets: 6, /*ACTIONS*/
+                    targets: 7, /*ACTIONS*/
                     createdCell: ( cell, cellData,rowData) => {
                         // cell.setAttribute('title',rowData.subject);
                     },

@@ -20,7 +20,8 @@
                 </div>
             </div>
             <div class="col-3-of-4">
-                    <h2 class="heading-secondary">{{$user->name}}</h2>
+                <h2 class="heading-secondary">{{$user->getFullNameAttribute()}}</h2>
+                <p>{{ $user->position->position }}</p>
             </div>
         </div>
     </main>

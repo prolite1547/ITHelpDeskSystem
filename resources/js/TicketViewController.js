@@ -34,6 +34,7 @@ export const ticketAddController = () => {
 
         /*DISPLAY THE FORM*/
         addTicketView.displayForm();
+        addTicketView.genUserGroup();
     })();
 
     categoryADynamicCategoryBSelect();
@@ -206,6 +207,8 @@ export const ticketViewController = () => {
                             .done(data => {
                                 clearLoader();
                                 insertToModal(data);
+                                // editTicketView.addEventListenerToEditInputs(ticket);
+                                editTicketView.getAutoGroup();
                                 editTicketView.addEventListenerToEditInputs(ticket);
                             })
                             .fail(error => {
@@ -248,7 +251,8 @@ export const ticketViewController = () => {
                             if (action === 'cancel') {
                                 hideModal();
                             } else if (action === 'confirm') {
-                                console.log(ticket);
+                                ticket.detailsEditData['ticket']['group'] = $('#group').val();
+                                // console.log(ticket);
                                 ticket.saveEdit(ticket.detailsEditData).done(data => {
                                     if (data.success === true) {
                                         alert('Updated Successfully!');

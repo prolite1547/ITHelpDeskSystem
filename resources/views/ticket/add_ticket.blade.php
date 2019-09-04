@@ -80,12 +80,20 @@
                                 {!! Form::select('catC', $CategoryCSelect, null, ['placeholder' => '(select sub-C)','class' => 'form__input categoryCSelect form__input--select2']) !!}
                             </div>
                             <div class="form__group">
+                                <input type="hidden" name="group" value = null id="group" required>
+                            </div>
+
+                            <div class="form__group">
+                                {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
+                                {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input form__input--select2 assigneeSelect ','required','id' => 'assigneeSelect']) !!}
+                            </div>
+                            {{--  <div class="form__group">
                                 {!! Form::select('group', $groupSelect, null, ['placeholder' => '(select group)','class' => 'form__input','required']) !!}
                             </div>
                             <div class="form__group">
                                 {!! Form::label('assignee','Assign to user:',['class' => 'form__label'])!!}
                                 {!! Form::select('assignee', $selfOption + $assigneeSelect, null, ['placeholder' => '(assign to)','class' => 'form__input form__input--select2','required','id' => 'assigneeSelect']) !!}
-                            </div>
+                            </div>  --}}
                             {!! Form::button('Bind Details',['class' => 'btn btn--blue','type' => 'submit','id'=>'ticketAdd']) !!}
                             {!! Form::close() !!}
                         </div>
