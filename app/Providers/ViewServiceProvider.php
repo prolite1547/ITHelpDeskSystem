@@ -144,7 +144,7 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer('includes.ticket_filter', function ($view) {
 
-            $categoryFilter = DB::table('categories')->pluck('name', 'name');
+            $categoryFilter = DB::table('category_a')->pluck('name', 'name');
             $statusFilter = DB::table('ticket_status')->pluck('name', 'name');
             $storeFilter = Store::pluck('store_name', 'store_name');
 
