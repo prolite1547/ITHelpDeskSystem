@@ -44,7 +44,7 @@ class DatatablesController extends Controller
             $query = DB::table('v_tickets')
                 ->select(
                     'v_tickets.id', 'v_tickets.priority_name', 'v_tickets.status_id','v_tickets.status_name', 'v_tickets.expiration', 'v_tickets.created_at',
-                    'v_tickets.subject', 'v_tickets.details', 'v_tickets.category',
+                    'v_tickets.subject', 'v_tickets.details', 'v_tickets.category','v_tickets.catA_name',
                     'v_tickets.assigned_user',
                     'v_tickets.store_name',
                     'v_tickets.logger',

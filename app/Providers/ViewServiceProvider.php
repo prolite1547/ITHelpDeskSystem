@@ -113,7 +113,7 @@ class ViewServiceProvider extends ServiceProvider
             );
             $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name', $cons);
             // $assigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'id', 'full_name');
-            $filterAssigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'full_name', 'full_name');
+            $filterAssigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'full_name', 'full_name', $cons);
             $categoryASelect = CategoryA::pluck('name','id')->toArray();
             $usersSelect = User::all()->pluck('full_name','id')->toArray();
             $view->with(compact(
@@ -144,7 +144,7 @@ class ViewServiceProvider extends ServiceProvider
 
         view()->composer('includes.ticket_filter', function ($view) {
 
-            $categoryFilter = DB::table('categories')->pluck('name', 'name');
+            $categoryFilter = DB::table('category_a')->pluck('name', 'name');
             $statusFilter = DB::table('ticket_status')->pluck('name', 'name');
             $storeFilter = Store::pluck('store_name', 'store_name');
 

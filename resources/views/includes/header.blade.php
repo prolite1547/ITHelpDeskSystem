@@ -66,6 +66,9 @@
                             </li>
                         @endif
                     @endif
+                            <li class="nav__li">
+                                <a href="" class="nav__a ">Inventory</a>
+                            </li>
                    </ul>
             </nav>
         </div>

@@ -1,6 +1,9 @@
 import * as ticketTablesView from  './views/ticketTablesPage.js';
 
 export const ticketPageController = () => {
+    let filterUsers = ticketTablesView.myElements.userFilterByInput;
+    let userLabel = ticketTablesView.myElements.userLabel;
+    let userSelectInput = ticketTablesView.myElements.userSelectInput;
 
     /*SET DEFAULT CONFIG FOR DATATABLES*/
     ticketTablesView.setDataTablesConf();
@@ -14,6 +17,14 @@ export const ticketPageController = () => {
     /*Dynamic User Filter*/
    ticketTablesView.myElements.radios.forEach(el => {
        el.addEventListener('input',updateDOMFilterUser);
+    })
+
+    userLabel.textContent =  $(filterUsers).find('option:selected').text();
+    userSelectInput.setAttribute('name',$(filterUsers).val());
+    
+    $(filterUsers).on('change',function(e){
+        userLabel.textContent =  $(this).find('option:selected').text();
+        userSelectInput.setAttribute('name',$(this).val());
     })
 };
 

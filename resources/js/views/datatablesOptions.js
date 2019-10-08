@@ -7,7 +7,8 @@ const columnStrings = {
     resolved_by: 'resolver',
     logged_by: 'logger',
     assignee: 'assigned_user',
-    priority: 'priority_name'
+    priority: 'priority_name',
+    cat_a : 'catA_name'
 };
 
 
@@ -16,7 +17,7 @@ const userTickets = {
     order: [[5, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category', visible: false},
+        {data: columnStrings.cat_a, visible: false},
         {data: columnStrings.priority},
         {data: columnStrings.status_name,orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
@@ -33,7 +34,7 @@ const openTickets = {
     order: [[5, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category', visible: false,defaultContent: 'Not Set'},
+        {data: columnStrings.cat_a, visible: false,defaultContent: 'Not Set'},
         {data: columnStrings.priority,defaultContent: 'Not Set'},
         {data: columnStrings.status_name, orderable: false,defaultContent: 'Not Set'},
         {data: 'store_name',name:columnStrings.store_name},
@@ -50,7 +51,7 @@ const expiredTickets = {
     order: [[4, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category', visible: false,name:'category'},
+        {data: columnStrings.cat_a, visible: false},
         {data: columnStrings.priority},
         {data: columnStrings.status_name,orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
@@ -66,7 +67,7 @@ const ongoingTickets = {
     order: [[5, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category', visible: false},
+        {data: columnStrings.cat_a, visible: false},
         {data: columnStrings.priority},
         {data: columnStrings.status_name,orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
@@ -82,7 +83,7 @@ const closedTickets = {
     order: [[7, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category',visible: false},
+        {data: columnStrings.cat_a, visible: false},
         {data: columnStrings.priority},
         {data: columnStrings.status_name,orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
@@ -100,7 +101,7 @@ const fixedTickets = {
     order: [[5, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category', visible: false},
+        {data: columnStrings.cat_a, visible: false},
         {data: columnStrings.priority},
         {data: columnStrings.status_name,orderable: false},
         {data: 'store_name',name:columnStrings.store_name},
@@ -117,7 +118,7 @@ const allTickets = {
     order: [[5, 'desc']],
     columns: [
         {data: null,name: 'id'},
-        {data: 'category', visible: false},
+        {data: columnStrings.cat_a, visible: false},
         {data: columnStrings.priority},
         {data: columnStrings.status_name,orderable: false},
         {data: 'store_name',name:columnStrings.store_name},

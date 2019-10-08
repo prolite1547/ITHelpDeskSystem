@@ -226,10 +226,9 @@ if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*fetch new mail
 
         $inboxFolder = $oClient
             ->getFolder('INBOX');
-        
         $inboxMessages = $inboxFolder
             ->query()
-            ->on($date)
+            // ->on($date)
             ->subject($subject)
             ->setFetchFlags(false)
             ->setFetchBody(true)

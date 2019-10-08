@@ -144,7 +144,7 @@ export const ticketViewController = () => {
     ticket.fetchOriginalData()
         .done(data => {
             /*TICKET STATUS IS EQUAL TO FIX(4)*/
-            if (data.status === 4 || data.status === 3) {
+            if (data.status == 4 || data.status == 3) {
                 document.querySelector('button[data-action=viewFixDtls').addEventListener('click', editTicketView.getModalWithData.bind(null, data));
             } else {
 
@@ -261,7 +261,7 @@ export const ticketViewController = () => {
                                         alert('Failed to update...');
                                     }
                                 }).fail(data => {
-                                    alert('tae');
+                                    // alert('tae');
                                 });
 
                             }

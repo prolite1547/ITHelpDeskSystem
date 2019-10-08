@@ -365,7 +365,7 @@ export const generateRepliesMarkup = (replies) => {
 
             markup = replyTemplate.replace(/{%ID%}/g,reply.id);
             markup = markup.replace('{%FROM%}',reply_from);
-            markup = markup.replace('{%REPLY%}',reply.reply);
+            markup = markup.replace('{%REPLY%}',reply.html_body);
             markup = markup.replace('{%REPLY_DATE%}',reply.reply_date);
             reply.hasAttachments !== 0 ? markup = markup.replace('{%attachment_count%}',`<span class="message__attachment-count">${reply.hasAttachments}📎</span>`) : markup = markup.replace('{%attachment_count%}','');
 

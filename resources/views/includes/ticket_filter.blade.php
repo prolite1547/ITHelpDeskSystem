@@ -9,19 +9,21 @@
     <div class="side__content">
         <div class="filter u-display-n">
             {{Form::open(['class' => 'form-ticketFilter'])}}
-            <div class="form-ticketFilter__group">
+            {{--  <div class="form-ticketFilter__group">
                 {!! Form::label(0,'Ticket #:',['class' => 'form-ticketFilter__label']) !!}
                 {!! Form::text(0,null,['placeholder' => 'ticket #','class' => 'form-ticketFilter__input']) !!}
-            </div>
+            </div>  --}}
             <div class="form-ticketFilter__group">
-                <div class="form-ticketFilter__radio-group">
+                {{--  <div class="form-ticketFilter__radio-group">
                     <label for="fixBy">Fixed By:</label>
                     <input type="radio" name="filter_user" id="fixBy"  class="form-ticketFilter__radio" value="8">
                 </div>
                 <div class="form-ticketFilter__radio-group">
                     <label for="rslvBy">Resolved By:</label>
                     <input type="radio" name="filter_user" id="rslvBy"  class="form-ticketFilter__radio" value="9">
-                </div>
+                </div>  --}}
+                <label for="userFilters">Filter User :</label>
+                {!! Form::select("filter_user", [7=>'Assignee',8=>'Fixed by', 9=>'Resolved by'], null, ['class'=>'form__input--select2', 'id'=>'userFilters']) !!}
             </div>
             <div class="form-ticketFilter__group">
                 {!! Form::label(1,'User:',['class' => 'form-ticketFilter__label form-ticketFilter__label--user']) !!}
