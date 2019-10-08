@@ -516,7 +516,7 @@ public function loadChart(){
         $incidents;
         
         $incidents = Incident::whereHas('ticket', function($query){
-            $query->whereNull('deleted_at');
+            $query->whereNull('deleted_at')->where('status', '!=', '1');
         })->whereYear('created_at', '=', $request->year )
         ->whereMonth('created_at', '=', $request->month)
         ->get();             
