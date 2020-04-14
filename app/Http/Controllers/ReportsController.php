@@ -15,6 +15,7 @@ use App\CategoryB;
 use App\Store;
 use App\Fix;
 use App\DevProject;
+use App\ItemHistory;
 use App\StoreVisitDetail;
 use App\StoreVisitTarget;
 use App\MasterDataIssue;
@@ -307,6 +308,91 @@ class ReportsController extends Controller
 
     }
 
+    public function generateINV(Request $request){
+        $start = date('Y-m-d', strtotime($request->start)) . " 00:00:00";
+        $end = date('Y-m-d', strtotime($request->end)). " 23:59:59";
+        $status = $request->status;
+        $rowdata = "";
+
+        if($status == "all"){
+            $item_histoy = ItemHistory::with('ticket','item.workstation')->whereBetween('created_at', [$start, $end])->get();
+        }else{
+            $item_histoy = ItemHistory::with('ticket','item.workstation')->where('action', '=', $status)->whereBetween('created_at', [$start, $end])->get();
+        }
+      
+
+        $data = "<table id='demo-dt-basic' class='table table-striped table-bordered table-hover INVTable' cellspacing='0' width='100%'>";
+        $data .= "<thead style='font-size:14px;'>";
+        $data .= "<tr><th>Ticket ID</th><th>Workstation</th><th>Serial No</th><th>Item</th><th>Store</th><th>Department</th><th>Action</th><th>Item Replaced</th><th>User</th><th>Action Datetime</th></tr>";
+        $data .= "</thead>";
+        $data .= "<tbody style='font-size:12px;'>";
+            foreach($item_histoy as $history){
+                $workstation = $history->item->workstation;
+                $store = $workstation->store->store_name;
+                $department = $workstation->department->department;
+                
+                $rowdata .= "<tr>
+                                <td>".$history->ticket_id."</td>
+                                <td>".$workstation->ws_description."</td>
+                                <td>".$history->serial_no_old."</td>
+                                <td>".$history->item_desc_old."</td>
+                                <td>".$store."</td>
+                                <td>".$department."</td>
+                                <td>".$history->action."</td>
+                                <td>".$history->item_replaced."</td>
+                                <td>".$history->user->full_name."</td>
+                                <td>".$history->created_at."</td>
+                             </tr>";
+            }
+        $data .= $rowdata;
+        $data .= "</tbody>";
+        $data .= "</table>";
+
+        return response()->json(array('success'=>true, 'invdata'=>$data), 200);
+
+    }
+
+    public function getTicketSummary(Request $request){
+        $start = date('Y-m-d', strtotime($request->start)) . " 00:00:00";
+        $end = date('Y-m-d', strtotime($request->end)). " 23:59:59";
+        $relationArray = ['issue.incident.loggedBy','issue.incident.caller'];
+        $rowdata = "";
+        $tickets = Ticket::whereBetween('created_at', [$start, $end])->get();
+        $data = "<table id='demo-dt-basic' class='table table-striped table-bordered table-hover SUMMARYDATA' cellspacing='0' width='100%'>";
+        $data .= "<thead style='font-size:14px;'>";
+        $data .= "<tr><th>Ticket ID</th><th>Subject</th><th>Priority</th><th>Status</th><th>Store Name</th><th>Category</th><th>Caller</th><th>Assigned to</th><th>Logged by</th><th>Logged date</th><th>Expired date</th><th>Fixed by</th><th>Fixed date</th></tr>";
+        $data .= "</thead>";
+        $data .= "<tbody style='font-size:12px;'>";
+       
+            foreach($tickets as $ticket){
+                $caller = $ticket->issue->incident->caller->full_name ?? 'N/A';
+                $assignee = $ticket->assigneeRelation->full_name ?? 'N/A';
+                $logged_by = $ticket->issue->incident->loggedBy->full_name ?? 'N/A';
+                $fixed_by = $ticket->fixTicket()->latest('created_at')->first();
+                $fixer = $fixed_by->fixedBy->full_name ?? 'N/A';
+                $fixed_date = $fixed_by->created_at ?? 'N/A';
+                $rowdata .= "<tr>
+                                <td>".$ticket->id."</td>
+                                <td>".$ticket->issue->subject."</td>
+                                <td>".$ticket->priorityRelation->name."</td>
+                                <td>".$ticket->statusRelation->name."</td>
+                                <td>".$ticket->store->store_name."</td>
+                                <td>".$ticket->issue->catARelation->name."</td>
+                                <td>".$caller."</td>
+                                <td>".$assignee."</td>
+                                <td>".$logged_by."</td>
+                                <td>".$ticket->created_at."</td>
+                                <td>".$ticket->getOriginal('expiration')."</td>
+                                <td>".$fixer."</td>
+                                <td>".$fixed_date."</td>
+                            </tr>";
+             }
+        $data .= $rowdata;
+        $data .= "</tbody>";
+        $data .= "</table>";
+        return response()->json(array('success'=>true, 'summarydata'=>$data), 200);
+    }
+
 
 
 
@@ -335,9 +421,9 @@ public function loadChart(){
 
 
     // MONTHS AND YEAR TO BE GENERATED
-    // $month = '8';
+    // $month = '10';
     // $year = '2019';
-    // $mm = 8;
+    // $mm = 10;
 
     // $incidents = Incident::whereHas('ticket', function($query){
     //     $query->whereNull('deleted_at');
@@ -476,7 +562,34 @@ public function loadChart(){
      })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
 
      
+     $dailytickets = Ticket::whereDay('created_at', '=', date('d'))->whereMonth('created_at','=', $month)->whereYear('created_at', $year)->where('issue_type','=','App\Incident')->whereNull('deleted_at')->get();
+      
+     $topen = 0;
+     $tclosed = 0;
+     $tfixed = 0;
+     $tongoing = 0;
+     $texpired = 0;
+     $ttotal = 0;
 
+     foreach($dailytickets as $dticket){
+
+        if($dticket->status == 1){
+                    $topen  += 1;
+        }
+        else if($dticket->status == 2){
+                    $tclosed +=1;
+        } 
+        else if($dticket->status == 3){
+                    $tfixed +=1;
+        }
+        else if($dticket->status == 4){
+                    $tongoing +=1;
+        }
+        else if($dticket->status == 5){
+                    $texpired +=1;
+        } 
+        $ttotal += 1;
+      }
 
     //  $issueCount =  MasterDataIssue::whereNull('deleted_at')->count();
     //  $issueDoneCount = MasterDataIssue::whereNull('deleted_at')->where('status','=','Done')->count();
@@ -502,9 +615,192 @@ public function loadChart(){
       'techCount'=>$techCount,
       'techDoneCount'=>$techDoneCount,
       'SuppCount'=>$SuppCount,
-      'SuppDoneCount'=>$SuppDoneCount
+      'SuppDoneCount'=>$SuppDoneCount, 
+
+      'topen' => $topen,
+      'tclosed' => $tclosed,
+      'tfixed' => $tfixed,
+      'tongoing' => $tongoing,
+      'texpired' => $texpired,
+      'ttotal' => $ttotal
       ]);
     }
+
+
+// RETURN DATA FROM AJAX COMBOBOX
+
+public function ReturnOneGlance(Request $request){
+    date_default_timezone_set("Asia/Manila");
+    $currentDate =  date('m/d/Y');
+    $month =  $request->month;
+ 
+
+    $year = date("Y",strtotime($currentDate));
+
+    $mm = $request->month;
+    $yy = date("Y", strtotime($currentDate));
+
+    $downCounts = 0;
+    $downPending = 0;
+    $pendingDays = 0;
+    $temp = 0;
+    $visitCount = 0;
+    $visitDoneCount = 0;
+    $issueCount = 0;
+    $issueDoneCount = 0;
+ 
+
+
+    $incidents = Incident::whereHas('ticket', function($query){
+        $query->whereNull('deleted_at');
+    })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->where('catA', 6)->orWhere(function($query) use($month, $year){
+        $query->where('category', 3)
+              ->whereMonth('created_at',  $month)->whereYear('created_at', $year);
+    })->get();
+
+    foreach($incidents as $i){
+            
+        if($i->ticket->status == 3){
+
+            $res = Fix::where('ticket_id', '=', $i->ticket->id)->first();
+             
+            // if(isset($res->resolve->created_at)){
+                $resDate = date_create(date('Y-m-d H:i:s', strtotime($res->resolve->created_at))) ;
+                $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->created_at)));
+                $diff = date_diff($logDate,$resDate);
+                $temp = (int)$diff->format("%a");
+                if($pendingDays == 0){
+                    $pendingDays = $temp;
+                }
+    
+                if($pendingDays < $temp){
+                    $pendingDays = $temp;
+                }
+            // } 
+           
+        }else{
+            date_default_timezone_set("Asia/Manila");
+            $logDate = date_create(date('Y-m-d H:i:s', strtotime($i->ticket->created_at)));
+            $currentDate =  date('Y-m-d H:i:s');
+            $cDate =  date_create(date("Y-m-d H:i:s", strtotime($currentDate)));
+            $diff = date_diff($logDate,$cDate);
+            $temp = (int)$diff->format("%a");
+            
+            if($pendingDays == 0){
+                $pendingDays = $temp;
+            }
+
+            if($pendingDays < $temp){
+                $pendingDays = $temp;
+            }
+   
+        }
+        $downCounts+=1;
+    }
+
+      $categories = CategoryA::all();
+      $tickets = Ticket::whereMonth('created_at','=', $month)->whereYear('created_at', $year)->where('issue_type','=','App\Incident')->whereNull('deleted_at')->get();
+      $ssCountLog = 0;
+      $ssCountRes = 0;
+      $dcsCountLog = 0;
+      $dcsCountRes = 0;
+      $sscCountLog = 0;
+      $sscCountRes = 0;
+      
+      foreach($tickets as $ticket){
+            $store_name = $ticket->store->store_name;
+            if(strpos($store_name, 'Distribution Center') !== false || strpos($store_name, 'Warehouse') !== false){
+                if(isset($ticket->status)){
+                    if($ticket->status == 3){
+                        $dcsCountRes  += 1;
+                    }
+                }
+                $dcsCountLog  += 1;
+            }elseif(strpos($store_name, 'Main Office') !== false){
+                if(isset($ticket->status)){
+                    if($ticket->status == 3){
+                        $sscCountRes  += 1;
+                    }
+                }
+                $sscCountLog  += 1;
+            }else{
+                if(isset($ticket->status)){
+                    if($ticket->status == 3){
+                        $ssCountRes  += 1;
+                    }
+                }
+                $ssCountLog +=1;
+
+            }
+      }
+
+      $devProjects = DevProject::where('md50_status','LIKE','%Done%')->whereNull('deleted_at')->count();
+      $devDoneCount = DevProject::where('status','=','Done')->whereNull('deleted_at')->count();
+
+      $techTargets = StoreVisitTarget::where('month','=',$mm)->where('year','=',$yy)->get();
+      $visitDoneCount = StoreVisitDetail::where('status_id','=','3')->whereMonth('start_date','=',$month)->whereYear('start_date','=',$yy)->count();
+
+      foreach($techTargets as $target){
+        $visitCount+= (int) $target->num_of_stores;
+      }
+    
+      $issueCount = Incident::whereHas('ticket', function($query){
+        $query->whereNull('deleted_at');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->where('catA', 11)->count();
+
+     $issueDoneCount = Incident::whereHas('ticket', function($query){
+        $query->whereNull('deleted_at')->where('status' , '=', '3');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->where('catA', 11)->count();
+
+
+
+    //  NUMBER OF RESOLVED AND UNRESOLVED TICKETS PER GROUP 
+
+     $techCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('group','=','2');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+     
+     $techDoneCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('status' , '=', '3')->where('group','=','2');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+
+
+     $SuppCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('group','=','1');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+
+     $SuppDoneCount = Incident::whereHas('ticket', function($q){
+        $q->whereNull('deleted_at')->where('status' , '=', '3')->where('group','=','1');
+     })->whereMonth('created_at',  $month)->whereYear('created_at', $year)->count();
+
+      
+      return response()->json(array('categories'=>$categories,
+      'downCounts'=>$downCounts, 
+      'pendingDays'=>$pendingDays,
+      'dcsCountRes'=>$dcsCountRes , 
+      'dcsCountLog'=>$dcsCountLog,
+      'sscCountLog'=>$sscCountLog,
+      'sscCountRes'=>$sscCountRes,
+      'ssCountLog'=>$ssCountLog,
+      'ssCountRes'=>$ssCountRes,
+      'devProjects'=>$devProjects,
+      'devDoneCount'=>$devDoneCount,
+      'visitCount'=>$visitCount,
+      'visitDoneCount'=>$visitDoneCount,
+      'issueCount'=>$issueCount,
+      'issueDoneCount'=>$issueDoneCount,
+      'techCount'=>$techCount,
+      'techDoneCount'=>$techDoneCount,
+      'SuppCount'=>$SuppCount,
+      'SuppDoneCount'=>$SuppDoneCount),200);
+
+}
+
+
+
+
+
+
 
     public function loadLVR(Request $request){
 
@@ -513,7 +809,6 @@ public function loadChart(){
 
         $logs = array();
         $resolve = array();
-        $incidents;
         
         $incidents = Incident::whereHas('ticket', function($query){
             $query->whereNull('deleted_at')->where('status', '!=', '1');
@@ -615,9 +910,12 @@ public function loadChart(){
         $solveCount = array();
         $supports = array();
          
-        $resolvers = User::whereHas('resolved')->withCount(['resolved'=>function($query) use ($year, $month){
-            $query->whereYear('created_at', '=', $year)->whereMonth('created_at', '=', $month);
-        }])->orderBy('resolved_count', 'desc')->limit(10)->get();
+        // $resolvers = User::whereHas('fixedTicket')->withCount(['fixedTicket'=>function($query) use ($year, $month){
+        //     $query->whereYear('created_at', '=', $year)->whereMonth('created_at', '=', $month);
+        // }])->orderBy('resolved_count', 'desc')->limit(10)->get();
+        $resolvers = User::whereHas('fixedTicket')->withCount(['fixedTicket'=>function($query){
+            $query->whereYear('created_at', '=', '2019')->whereMonth('created_at', '=', '01');
+        }])->orderBy('fixed_ticket_count','desc')->limit(10)->get();
 
         
         // User::whereHas('resolved')->withCount(['resolved'=>function($query){
@@ -632,16 +930,16 @@ public function loadChart(){
         foreach($resolvers as $resolver){
             $rank = $count+1;
             array_push($topresolvers,[$count,  $resolver->full_name]);
-            array_push($solveCount,[$count, $resolver->resolved_count]);
+            array_push($solveCount,[$count, $resolver->fixed_ticket_count]);
 
             $ticketResolved =  Resolve::where('resolved_by', '=', $resolver->id)
             ->whereYear('created_at','=',$year)
             ->whereMonth('created_at',$month)->get();
              
-            foreach($ticketResolved as $fixedTicket){
-                $fix = Fix::find($fixedTicket->fixes_id);
-                array_push($supports, [$count,  $fix->fixedBy->id, $fix->fixedBy->full_name ]);
-            }
+            // foreach($ticketResolved as $fixedTicket){
+            //     $fix = Fix::find($fixedTicket->fixes_id);
+            //     array_push($supports, [$count,  $fix->fixedBy->id, $fix->fixedBy->full_name ]);
+            // }
 
             // foreach($resolver->resolved as $userResolved){
                 
@@ -652,6 +950,8 @@ public function loadChart(){
 
             $count+=1;
         }
+
+  
         return response()->json(array('success'=>true, 'topresolvers'=>$topresolvers, 'solveCount'=>$solveCount, 'supports'=>$supports ), 200);
     }
 

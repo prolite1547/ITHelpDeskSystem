@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\UpdateEmailReply;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\UpdateEmailReply',
     ];
 
     /**
@@ -24,21 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            $ongoingMailInc = \App\ConnectionIssue::whereHas('incident.ticket',function($query){
-                $query->where('status',2);
-            })->with(['incident.ticket.connectionIssueMailReplies' => function($query){
-                $query->latest('reply_date');
-            }])->get();
-                
-            foreach ($ongoingMailInc as $connection_issue){
-                $ticketID =  $connection_issue->incident->ticket->id;
-                $subject = $connection_issue->incident->subject . " (TID#{$ticketID})";
-                $latest_reply = $connection_issue->incident->ticket->connectionIssueMailReplies->first(); /*latest reply on the database*/
-                
-                fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
-            }
-        })->everyMinute()->runInBackground();
+        $schedule->command('update:emailreps')->everyMinute();
     }
 
     /**
@@ -49,7 +36,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

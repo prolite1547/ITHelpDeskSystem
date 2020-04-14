@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CategoryA;
 use App\CategoryB;
+use App\CategoryC;
 use App\Department;
 use App\Expiration;
 use App\Http\Resources\CallerCollection;
@@ -18,6 +19,12 @@ use App\Http\Resources\UserResource;
 use App\Position;
 use App\Store;
 use App\User;
+use App\PldtId;
+use App\Contact;
+use App\ContactPerson;
+use App\Email;
+use App\EmailGroup;
+use App\EmailGroupPivot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -64,14 +71,11 @@ class SelectController extends Controller
     }
 
     public function position(Request $request){
-
         if($request->query('q')){
             return new PositionCollection(Position::where('position', 'like', "%{$request->query('q')}%")->get(['id','position as text']));
         }else{
             return new PositionCollection(Position::all(['id','position as text']));
         }
-
-
     }
 
     public function department(Request $request){
@@ -90,9 +94,10 @@ class SelectController extends Controller
     public function users(Request $request){
 
         if($request->query('q')){
-            return UserResource::collection(User::whereRaw('CONCAT_WS(" ",fName,mName,lName) LIKE "%'.$request->q.'%"')->get());
+            return UserResource::collection(User::where('userable_type','!=','App\TempUser')->where('is_active', 1)->whereRaw('CONCAT_WS(" ",fName,lName) LIKE "%'.$request->q.'%"')
+             ->get());
         }else{
-            return UserResource::collection(User::where('userable_type','<>','App\TempUser')->orderBy('fName')->get());
+            return UserResource::collection(User::where('userable_type','!=','App\TempUser')->where('is_active', 1)->orderBy('fName')->get());
         }
     }
 
@@ -128,5 +133,63 @@ class SelectController extends Controller
             return CategoyBResource::collection(CategoryB::all('id','name as text'));
         }
     }
+
+    public function getPid($branchId){
+        $pid = PldtId::where('store_id', '=', $branchId)->get(['pid as text','pid as text']);
+        return response()->json($pid);
+    }
+    
+
+    public function getContact($branchId, $typeId){
+        $contact = Contact::where('store_id', '=', $branchId)->where('type_id', '=', $typeId)->get(['number as text', 'number as text']);
+        return response()->json($contact);
+    }
+
+    public function getTel($branchId, $typeId, $telcoId){
+        $contact = Contact::where('store_id', '=', $branchId)->where('telco_id', '=', $telcoId)->where('type_id', '=', $typeId)->get(['number as text', 'number as text']);
+        return response()->json($contact);
+    }
+
+    public function getContactPerson($branchId){
+        $cperson = ContactPerson::where('store_id', '=',$branchId)->get(['contact_name as text', 'contact_name as text']);
+        return response()->json($cperson);
+    }
+
+    public function getTelcoEmailsandGroups($telcoId){
+        $email_id = [];
+        $emails = Email::where('telco_id', '=', $telcoId)->get(['id','email as text']);
+        foreach($emails as $email){
+            array_push($email_id, $email->id);
+        }
+        $emailsGroupPivot = EmailGroupPivot::whereIn('email_id', $email_id)->get(['email_group_id']);
+        $emailGroup = EmailGroup::whereIn('id', $emailsGroupPivot)->get(['id','group_name as text']);
+        
+        $merged = $emails->merge($emailGroup); 
+        return response()->json($merged);
+
+    }
+
+    public function getConcerns($issue){
+        if($issue == "VPN"){
+            $categoryC = CategoryC::where('catB', '=', '17')->get(['id', 'name as text']);
+        }else{
+            $categoryC = CategoryC::where('catB', '=', '16')->get(['id', 'name as text']);
+        }
+
+        return response()->json($categoryC);
+    }
+
+    public function contactbranch(){
+        return UserResource::collection(
+              DB::table('users as u')
+                ->join('positions as p','u.position_id','=','p.id')
+                ->where('userable_type', 'LIKE', '%OracleUser%')
+                ->orderBy('fname', 'asc')
+                ->select('u.id', 'p.position',DB::raw("concat_ws(' ',fName,mName,lName) as full_name"))
+                ->get()
+        );
+    }   
+
+    
 
 }

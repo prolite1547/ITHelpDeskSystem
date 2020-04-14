@@ -1,12 +1,44 @@
 @include('reports.chartheader')
     
-     
+<?php 
+date_default_timezone_set("Asia/Manila");
+   $currentDate =  date('m/d/Y');
+   $month =  date("m", strtotime($currentDate));
+   $year =   date("Y", strtotime($currentDate));  
+  
+?>              
               <div class="container" style="margin-top:100px;margin-bottom:10px;">
+            @if ( Auth::user()->role_id == '3')
+                       
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                                
+                                <label class="control-label">Month of : </label>
+                                <select data-placeholder="Choose Month" id="ogmonth" name="ogmonth" class="filter demo-chosen-select" tabindex="2">
+                                        <option value="1" <?php if($month==1){ echo "selected";}?>>JANUARY</option>
+                                        <option value="2" <?php if($month==2){ echo "selected";}?>>FEBRUARY</option>
+                                        <option value="3" <?php if($month==3){ echo "selected";}?>>MARCH</option>
+                                        <option value="4" <?php if($month==4){ echo "selected";}?>>APRIL</option>
+                                        <option value="5" <?php if($month==5){ echo "selected";}?>>MAY</option>
+                                        <option value="6" <?php if($month==6){ echo "selected";}?>>JUNE</option>
+                                        <option value="7" <?php if($month==7){ echo "selected";}?>>JULY</option>
+                                        <option value="8" <?php if($month==8){ echo "selected";}?>>AUGUST</option>
+                                        <option value="9" <?php if($month==9){ echo "selected";}?>>SEPTEMBER</option>
+                                        <option value="10" <?php if($month==10){ echo "selected";}?>>OCTOBER</option>
+                                        <option value="11" <?php if($month==11){ echo "selected";}?>>NOVEMBER</option>
+                                        <option value="12" <?php if($month==12){ echo "selected";}?>>DECEMBER</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+
+                @endif
                 <div class="row">
                     <div class="col-md-3">
                         <div class="panel panel-primary panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $downCounts }}/{{  $pendingDays  }}</span>
+                            <span class="text-3x text-thin network-down">{{ $downCounts }}/{{  $pendingDays  }}</span>
                                 <p>NETWORK DOWN</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -16,7 +48,7 @@
                     <div class="col-md-3">
                         <div class="panel panel-dark panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $ssCountRes }}/{{ $ssCountLog }}</span>
+                            <span class="text-3x text-thin store-support">{{ $ssCountRes }}/{{ $ssCountLog }}</span>
                                 <p>STORE SUPPORT</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -26,7 +58,7 @@
                     <div class="col-md-3">
                         <div class="panel panel-primary panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $dcsCountRes }}/{{ $dcsCountLog }}</span>
+                            <span class="text-3x text-thin dc-support">{{ $dcsCountRes }}/{{ $dcsCountLog }}</span>
                                 <p>DC SUPPORT</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -36,7 +68,7 @@
                     <div class="col-md-3">
                         <div class="panel panel-dark panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $sscCountRes }}/{{$sscCountLog }}</span>
+                            <span class="text-3x text-thin ssc-support">{{ $sscCountRes }}/{{$sscCountLog }}</span>
                                 <p>SSC SUPPORT</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -45,12 +77,11 @@
                 </div>
 
                 <div class="row">
-                   
 
                     <div class="col-md-4">
                         <div class="panel panel-primary panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $devDoneCount }}/{{$devProjects }}</span>
+                            <span class="text-3x text-thin dev-projects">{{ $devDoneCount }}/{{$devProjects }}</span>
                                 <p>DEV Projects</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -60,7 +91,7 @@
                     <div class="col-md-4">
                         <div class="panel panel-dark panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $visitDoneCount }}/{{  $visitCount  }}</span>
+                            <span class="text-3x text-thin technical-visits">{{ $visitDoneCount }}/{{  $visitCount  }}</span>
                                 <p>Technical Visits</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -70,7 +101,7 @@
                     <div class="col-md-4">
                         <div class="panel panel-primary panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $issueDoneCount }}/{{ $issueCount }}</span>
+                            <span class="text-3x text-thin master-data">{{ $issueDoneCount }}/{{ $issueCount }}</span>
                                 <p>Master Data Services</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -85,7 +116,7 @@
                     <div class="col-md-6">
                         <div class="panel panel-dark panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $SuppDoneCount }}/{{  $SuppCount  }}</span>
+                            <span class="text-3x text-thin tickets-support">{{ $SuppDoneCount }}/{{  $SuppCount  }}</span>
                                 <p>Total Tickets (SUPPORT)</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
@@ -96,17 +127,83 @@
                     <div class="col-md-6">
                         <div class="panel panel-primary panel-colorful">
                             <div class="pad-all text-center">
-                            <span class="text-3x text-thin">{{ $techDoneCount }}/{{$techCount }}</span>
+                            <span class="text-3x text-thin tickets-technical">{{ $techDoneCount }}/{{$techCount }}</span>
                                 <p>Total Tickets (TECHNICAL)</p>
                                 <i class="demo-pli-shopping-bag icon-lg"></i>
                             </div>
                         </div>
                     </div>
-
-                  
-                    
                     
                 </div>
+                
+                @if (Auth::user()->role_id == 4)
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class=" pad-all panel panel-dark panel-colorful" style="background-color: #485460">
+                            <div class="pad-all text-center">
+                                <span class="text-2x text-thin tickets-daily-title">Daily Tickets Report</span>
+                                        <p>{{ $currentDate }} - as of {{ date("h:i:s a") }}</p>
+                            </div>
+
+                            <div class="row">
+                                    <div class="col-md-3">
+                                            <div class="panel panel-dark panel-colorful">
+                                                <div class="pad-all text-center">
+                                                    <span class="text-3x text-thin tickets-open">{{ $topen }}</span>
+                                                    <p>Open Tickets</p>
+                                                    <i class="demo-pli-shopping-bag icon-lg"></i>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="panel panel-dark panel-colorful">
+                                            <div class="pad-all text-center">
+                                                <span class="text-3x text-thin tickets-open">{{ $tongoing }}</span>
+                                                <p>OnGoing Tickets</p>
+                                                <i class="demo-pli-shopping-bag icon-lg"></i>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="panel panel-dark panel-colorful">
+                                        <div class="pad-all text-center">
+                                            <span class="text-3x text-thin tickets-open">{{ $tfixed }}</span>
+                                            <p>Fixed Tickets</p>
+                                            <i class="demo-pli-shopping-bag icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="panel panel-dark panel-colorful">
+                                        <div class="pad-all text-center">
+                                            <span class="text-3x text-thin tickets-open">{{ $tclosed }}</span>
+                                            <p>Closed Tickets</p>
+                                            <i class="demo-pli-shopping-bag icon-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-dark panel-colorful">
+                                        <div class="pad-all text-center">
+                                        <span class="text-5x text-thin tickets-daily-total">{{ $ttotal }}</span>
+                                                <p>Total Tickets Logged</p>
+                                                
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                            
+                    </div>
+                </div>
+                   
+                @endif
+                
+              
 
 
                 <hr>
@@ -118,13 +215,7 @@
                                   <div class="col-md-6">
                                         <div class="form-group">
                                                 <label class="control-label">Month : </label>
-                                                <?php 
-                                                     date_default_timezone_set("Asia/Manila");
-                                                        $currentDate =  date('m/d/Y');
-                                                        $month =  date("m", strtotime($currentDate));
-                                                        $year =   date("Y", strtotime($currentDate));  
-                                                       
-                                                ?>
+                                               
                                                 <select data-placeholder="Choose Month" id="ivrmonth" name="ivrmonth" class="filter demo-chosen-select" tabindex="2">
                                                     <option value="1" <?php if($month==1){ echo "selected";}?>>JANUARY</option>
                                                     <option value="2" <?php if($month==2){ echo "selected";}?>>FEBRUARY</option>

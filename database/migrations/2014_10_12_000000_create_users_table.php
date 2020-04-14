@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('position_id')->references('id')->on('positions')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade')->onUpdate('cascade');
+            $table->boolean('is_active')->dafault(1);
             $table->timestamps();
         });
     }

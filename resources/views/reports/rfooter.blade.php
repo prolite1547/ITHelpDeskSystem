@@ -238,4 +238,88 @@
                }
             });
          }
+
+
+         function getINVData(){
+            var start1 = $('#invstartDate').val();
+            var end1 = $('#invendDate').val();
+            var invstatus = $('#invstatus').val();
+
+
+            $.ajax({
+               type:'POST',
+               url: "/reports/geninv",
+               data:{ _token: '{{csrf_token()}}', start:start1, end:end1, status:invstatus},
+               success:function(data) {
+                
+                  $('#INVDATA').html(data.invdata);
+                            $('.INVTable').DataTable({
+                            pageLength: 25,
+                            responsive: true,
+                            "order": [[ 0, "desc" ]],
+                            dom: '<"html5buttons"B>lTfgitp',
+                            buttons: [
+                                {extend: 'copy'},
+                                {extend: 'csv',  title: 'Inventory Report ('+start1+'-'+end1+')'},
+                                {extend: 'excel', title: 'Inventory Report ('+start1+'-'+end1+')'},
+                                {extend: 'pdf',  title: 'Inventory Report ('+start1+'-'+end1+')'},
+                                {extend: 'print',
+                                customize: function (win){
+                                        $(win.document.body).addClass('white-bg');
+                                        $(win.document.body).css('font-size', '10px');
+                                        $(win.document.body).find('table')
+                                                .addClass('compact')
+                                                .css('font-size', 'inherit');
+                                }
+                                }
+                            ]
+
+                        });
+               }
+            });
+         }
+
+         function getReportSummary(){
+            var start1 = $('#summaryStartDate').val();
+            var end1 = $('#summaryEndDate').val();
+             $('#SUMMARYDATA').html('<p class="text-center">Fetching data, Please wait...</p>');
+             $.ajax({
+                type: "POST",
+                url: "/reports/gensummary",
+                data: {
+                  _token: '{{csrf_token()}}',
+                  start: start1,
+                  end: end1,
+                },
+                success : function(data){
+                  $('#SUMMARYDATA').html(data.summarydata);
+                  $('.SUMMARYDATA').DataTable({
+                     pageLength: 25,
+                     responsive: true,
+                     "order": [[ 0, "desc" ]],
+                     dom: '<"html5buttons"B>lTfgitp',
+                     buttons: [
+                         {extend: 'copy'},
+                         {extend: 'csv',  title: 'Ticket Summary Report ('+start1+'-'+end1+')'},
+                         {extend: 'excel', title: 'Ticket Summary Report ('+start1+'-'+end1+')'},
+                         {extend: 'pdf',  title: 'Ticket Summary Report ('+start1+'-'+end1+')'},
+                         {extend: 'print',
+                         customize: function (win){
+                                 $(win.document.body).addClass('white-bg');
+                                 $(win.document.body).css('font-size', '10px');
+                                 $(win.document.body).find('table')
+                                         .addClass('compact')
+                                         .css('font-size', 'inherit');
+                         }
+                         }
+                     ]
+   
+                 });
+                } 
+             });
+         }
+
+
+
+
 </script>

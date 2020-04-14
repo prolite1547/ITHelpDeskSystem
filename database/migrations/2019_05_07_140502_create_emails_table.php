@@ -17,6 +17,8 @@ class CreateEmailsTable extends Migration
             $table->increments('id');
             $table->unsignedSmallInteger('user_id')->nullable();
             $table->string('email', 50 )->unique();
+            $table->unsignedInteger('telco_id');
+            $table->foreign('telco_id')->references('id')->on('telcos')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });

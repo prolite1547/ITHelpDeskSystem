@@ -17,9 +17,11 @@ class CreateConnectionIssuesTable extends Migration
             $table->mediumIncrements('id');
             $table->string('to');
             $table->string('cc')->nullable();
-            $table->string('account')->nullable();
-            $table->string('pid')->nullable();
+            $table->string('accounts')->nullable();
+            $table->text('vpn_details')->nullable();
             $table->string('tel')->nullable();
+            $table->unsignedInteger('telco_id')->nullable();
+            $table->foreign('telco_id')->references('id')->on('telcos')->onUpdate('cascade')->onDelete('cascade');
             $table->string('contact_person');
             $table->string('contact_number');
             $table->timestamps();

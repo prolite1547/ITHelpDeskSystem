@@ -10,8 +10,8 @@ export const checkBoxListen = () => {
 
 
                 //show the menu
-                e.target.closest('tr').classList.toggle('selected-row');
-                console.log(e.target.parentNode.childNodes['1'].classList.toggle('u-display-n'));
+                // e.target.closest('tr').classList.toggle('selected-row');
+                // console.log(e.target.parentNode.childNodes['1'].classList.toggle('u-display-n'));
             }
         });
     }

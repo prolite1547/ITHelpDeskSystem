@@ -3,7 +3,7 @@
 @section('submenu')@endsection
 @section('content')
     <main>
-        <div class="window">
+        <di v class="window">
                 <div class="window__title-box">
                     <h3 class="heading-tertiary">New Ticket</h3>
                 </div>
@@ -165,37 +165,76 @@
 
             {{--PLDT FORM--}}
             <div class="window__content" id="PLDTFormContainer">
+                <div class="row-flex u-width-50">
                 {{Form::open(array('class' => 'form-email','id' => 'addPLDTIssue','files' => true))}}
                     <div class="form__group-flex">
-                        {{Form::label('emailTo','To:')}}
-                        {{Form::select('to[]',$emailAndGroupSelect,null,array('class'=> 'form-email__input-text u-display-b u-width-full','required','multiple','id' => 'emailTo'))}}
+                        {{Form::label('telco_id','Company : ')}}
+                        {{Form::select('telco_id',$TelcoFilter,null,['placeholder' => '(choose telco ...)','class' => 'form__input--select2', 'id'=> 'TelcoSelect','required'])}}
                     </div>
-                    <div class="form__group-flex">
-                        {{Form::label('emailCc','Cc:')}}
-                        {{Form::select('cc[]',$emailAndGroupSelect,null,array('class'=> 'form-email__input-text u-display-b u-width-full','multiple','id' => 'emailCc'))}}
+                    <div id="email__form" class="u-display-n">
+                        <div class="form__group">
+                            {{Form::label('emailTo','To:')}}
+                            {{Form::select('to[]',[],null,array('class'=> 'form-email__input-text u-display-b u-width-full','required','multiple','id' => 'emailTo'))}}
+                        </div>
+                        <div class="form__group">
+                            {{Form::label('emailCc','Cc:')}}
+                            {{Form::select('cc[]',[],null,array('class'=> 'form-email__input-text u-display-b u-width-full','multiple','id' => 'emailCc'))}}
+                        </div>
+                        
+                        <div class="form__group">
+                            {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text u-display-b u-width-full','required'))}}
+                        </div>
+                       
+                        {{Form::text('greetings',null,array('placeholder' => 'Hi PLDT/Globe,','class'=> 'form-email__input-text u-display-b u-width-full','required'))}}
+                        {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','placeholder' => 'Details','required'))}}
+                        <div class="form__group">
+                            {{Form::file('attachments[]',['multiple'])}}
+                        </div>
+                        <div class="form__group">
+                            {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select branchSelect', 'id'=>'connBranchSelect','required'])}}
+                            <div class="form__issue-details u-display-ib u-display-n">
+                                {{Form::select('issueSelect',['VPN'=>'VPN','Telephone'=>'Telephone'],null,['placeholder' => '(choose issue ...)','class' => 'form__input--select2', 'id'=> 'issueSelect', 'required'])}}
+                                <div class="vpnCategory u-display-ib u-display-n">
+                                        {{Form::select('vpnCategorySelect',$VpnCategoryFilter,null,['placeholder' => '(choose vpn group ...)','class' => 'form__input--select2', 'id'=> 'vpnCategorySelect'])}}
+                                </div>
+                                <div class="u-display-ib concernForm">
+                                        {{Form::select('concernSelect',[],null,['placeholder' => '(choose concern ...)','class' => 'form__input--select2', 'id'=> 'concernSelect', 'required'])}}
+                                </div>
+                            </div>
+                            {{-- {{Form::select('concern',$categoryCConnectionGroupSelect,null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select form-email__input-select--concern','required'])}} --}}
+                        </div>
+
+                        <div class="form__vpn u-display-n">
+                                
+                        </div>
+
+                        <div class="form__telephone u-display-n">
+                            <div class="form__group">
+                                {{Form::label('telnos','Tel no(s):')}}
+                                {{Form::select('tel[]',[],null,array('class'=> 'form-email__input-text u-display-b u-width-full selectTelNos','required','multiple','id' => 'telnos'))}}
+                            </div>
+                        </div>
+                      
+
+                        {{-- <div class="form__group">
+                            {{Form::select('tel',[],null,['placeholder' => '(choose telephone...)','class' => 'form-email__input-select form-email__input-select--tel u-display-n'])}}
+                            {{Form::select('pid',[],null,['placeholder' => '(choose pid/cid...)','class' => 'form-email__input-select form-email__input-select--pid u-display-n'])}}
+                        </div> --}}
+                    <fieldset class="fieldset">
+                            <legend class="fieldset__legend">Contact Details</legend>
+                        <div class="form__group">
+                            {{Form::label('contact_person','Contact Person:','form-email__label u-width-full')}}
+                            {{Form::text('contact_person',null,array('placeholder' => '','class'=> 'form__input form__input--100w','required'))}}
+                      
+                            {{Form::label('contact_number','Contact no(s) :','form-email__label')}}
+                            {{Form::select('contact_number[]',[],null,array('class'=> 'form-email__input-text selectContactNo','multiple','id' => 'contactNums'))}}
+                        </div>
+                    </fieldset>
+                        {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                     </div>
-                    {{Form::text('subject',null,array('placeholder' => 'Subject','class'=> 'form-email__input-text u-display-b u-width-full','required'))}}
-                    {{Form::textarea('details',null,array('class' => 'form-email__input-textarea','placeholder' => 'Details','required'))}}
-                    <div class="form__group">
-                        {{Form::file('attachments[]',['multiple'])}}
-                    </div>
-                    <div class="form__group">
-                        {{Form::select('branch',[],null,['placeholder' => '(choose branch...)','class' => 'form-email__input-select branchSelect','required'])}}
-                        {{Form::select('concern',$categoryCConnectionGroupSelect,null,['placeholder' => '(choose concern...)','class' => 'form-email__input-select form-email__input-select--concern','required'])}}
-                    </div>
-                    <div class="form__group">
-                        {{Form::select('tel',['083-554-7450' => '083-554-7450'],null,['placeholder' => '(choose telephone...)','class' => 'form-email__input-select form-email__input-select--tel u-display-n'])}}
-                        {{Form::select('pid',['PID#578070' => 'PID#578070'],null,['placeholder' => '(choose pid...)','class' => 'form-email__input-select form-email__input-select--pid u-display-n'])}}
-                    </div>
-                    <div class="form__group">
-                        {{Form::label('contact_person','Contact Person:','form-email__label')}}
-                        {{Form::tel('contact_person',null,['placeholder' => 'contact person','class' => 'form-email__input-text','required'])}}
-                        {{Form::label('contact_number','Contact #:','form-email__label')}}
-                        {{Form::tel('contact_number',null,['placeholder' => 'number','class' => 'form-email__input-text','required'])}}
-                    </div>
-                    {{Form::button('Send',array('type' => 'submit','class' => 'btn btn--blue','data-action' => 'addPLDTIssue'))}}
                 {{Form::close()}}
+                </div>
             </div>
-        </div>
+        </di>
     </main>
 @endsection

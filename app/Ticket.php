@@ -123,7 +123,7 @@ class Ticket extends Model
 
     public function connectionIssueMailReplies()
     {
-        return $this->hasMany('App\ConnectionIssueReply', 'ticket_id', 'id');
+        return $this->hasMany('App\ConnectionIssueReply', 'ticket_id', 'id')->orderBy('reply_date','desc');
     }
 
     public function resolve()

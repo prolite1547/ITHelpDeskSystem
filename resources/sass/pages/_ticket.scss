@@ -13,4 +13,20 @@
     }
 }
 
+.header-title{
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
 
+.file-links{
+    padding: 5px;
+    background-color: $color-grey-light-2;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+.file-links a{
+   text-decoration: none;
+   color: black;
+}

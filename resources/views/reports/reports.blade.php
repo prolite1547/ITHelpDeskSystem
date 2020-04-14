@@ -33,6 +33,12 @@
 										<li>
 											<a data-toggle="tab" href="#demo-lft-tab-4">Reported Downtime Per Store</a>
 										</li>
+										<li>
+											<a data-toggle="tab" href="#demo-lft-tab-5">Inventory Report</a>
+										</li>
+										<li>
+											<a data-toggle="tab" href="#demo-lft-tab-6">Ticket Summary Report</a>
+										</li>
 									</ul>
 
 									<div class="tab-content" style="border: 1px solid #c1c1c1;">
@@ -206,7 +212,7 @@
 																</select>
 
 														</div>
-												</div>
+												    </div>
 
 												</div>
 
@@ -282,6 +288,103 @@
 
 											</div>
 											</div>
+
+											<div id="demo-lft-tab-5" class="tab-pane fade">
+												<div class="row" style="margin-top:30px;">
+													<div class="col-md-4">
+														<div class="form-group" id = "data_5">
+															<label class="control-label">Date range from </label>
+																<div class="input-daterange input-group" id="datepicker">
+																<?php
+																	date_default_timezone_set("Asia/Manila");
+																	$currentDate =  date('m/d/Y');
+																	$newDate = date("m/d/Y", strtotime($currentDate));
+
+																?>
+
+																<input type="text" id = "invstartDate" class="form-control-sm form-control" name="start" value="<?php echo $newDate ?>"/>
+																<span class="input-group-addon">to</span>
+																<input type="text" id = "invendDate" class="form-control-sm form-control" name="end" value="<?php echo $newDate ?>" />
+														</div>
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<div class="form-group">
+																<label class="control-label">Action</label>
+																<select data-placeholder="Choose Category." id="invstatus" name="invstatus" class="filter demo-chosen-select" tabindex="2">
+																	<option value="all">All</option>
+																	<option value="Repaired">Repaired</option>
+																	<option value="Replaced">Replaced</option>
+																</select>
+
+														</div>
+												    </div>
+												</div>
+												<div class="row">
+													<div class="col-md-12">
+															<div class="form-group">
+																	<button style="float:right;" onclick="getINVData()" class="btn btn-primary">Generate Report</button>
+															</div>
+													</div>
+											</div>
+											<hr>
+											<div class="row" style="margin-top: 50px;">
+													<div class="panel">
+															<div class="panel-body" id="INVDATA" >
+																 <p class="text-center">click Generate Report to show data . .</p>
+															</div>
+														</div>
+
+											</div>
+											</div>
+
+
+
+											<div id="demo-lft-tab-6" class="tab-pane fade">
+												<div class="row" style="margin-top:30px;">
+													<div class="col-md-4">
+														<div class="form-group" id = "data_5">
+															<label class="control-label">Date range from </label>
+																<div class="input-daterange input-group" id="datepicker">
+																<?php
+																	date_default_timezone_set("Asia/Manila");
+																	$currentDate =  date('m/d/Y');
+																	$newDate = date("m/d/Y", strtotime($currentDate));
+
+																?>
+
+																<input type="text" id = "summaryStartDate" class="form-control-sm form-control" name="start" value="<?php echo $newDate ?>"/>
+																<span class="input-group-addon">to</span>
+																<input type="text" id = "summaryEndDate" class="form-control-sm form-control" name="end" value="<?php echo $newDate ?>" />
+														</div>
+														</div>
+													</div>
+												 
+												</div>
+												<div class="row">
+													<div class="col-md-12">
+															<div class="form-group">
+																	<button style="float:right;" onclick="getReportSummary()" class="btn btn-primary">Generate Report</button>
+															</div>
+													</div>
+											</div>
+											<hr>
+											<div class="row" style="margin-top: 50px;">
+													<div class="panel">
+															<div class="panel-body" id="SUMMARYDATA" >
+																 <p class="text-center">click Generate Report to show data . .</p>
+															</div>
+														</div>
+
+											</div>
+											</div>
+
+											
+
+
+
+
+
 									</div>
 							</div>
 

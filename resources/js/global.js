@@ -1,13 +1,16 @@
-import {setDisable, displayError, showModal, renderLoader, elements, clearLoader, hideModal} from "./views/base";
+import {setDisable, displayError, showModal, renderLoader, elements, clearLoader, hideModal, elementStrings} from "./views/base";
 import Caller from './models/Caller';
 import Store from './models/Store';
 import Contact from './models/Contact';
+import ContactPerson from './models/ContactPerson';
 import ConnectionIssue from "./models/ConnectionIssue";
 import Position from "./models/Position";
 import Department from "./models/Department";
+import Pid from "./models/Pid";
 import StoreVisitTarget from "./models/StoreVisitTarget";
 import StoreVisitDetail from "./models/StoreVisitDetail";
 import {reloadTable} from "./views/storeVisit";
+import * as addTicketView from './views/ticket_add';
 
 
 export const sendForm = (e) => {
@@ -51,6 +54,12 @@ export const sendForm = (e) => {
             case 'addStoreVisitDetail':
                 object = new StoreVisitDetail();
                 break;
+            case 'addContactPerson':
+                object = new ContactPerson();
+                break;
+            case 'addPid':
+                object = new Pid();
+                break;
             default:
                 alert('form not found');
         }
@@ -59,9 +68,11 @@ export const sendForm = (e) => {
             object.storeData(formdata)
                 .done((data) => {
                         alert('Added Successfully!!');
+                        console.log(data);
                         clearLoader();
                         hideModal();
                         form.reset();
+                        $(elementStrings.select2element).val('').trigger('change');
                         setDisable(formSbmtBtn,false);
                         responseHandler(data);
                 })
@@ -70,7 +81,7 @@ export const sendForm = (e) => {
                         hideModal();
                         setDisable(formSbmtBtn,false);
                         if(jqXHR){
-                            displayError(jqXHR)
+                          displayError(jqXHR);
                         }else if(errorThrown) {
                             alert(errorThrown);
                         }else if(textStatus){
@@ -100,7 +111,11 @@ export const toggleHiddenGroup = (e) => {
     hiddenGroup = form.querySelector('.u-display-n');
     if(data.id !== ""){
         // addTicketView.showContactFormGroup();
-        hiddenGroup.classList.toggle('u-display-n');
+       try{
+         hiddenGroup.classList.toggle('u-display-n');
+       }catch(err){
+           
+       }
     }else{
         // addTicketView.hideContactFormGroup();
     }
@@ -137,7 +152,7 @@ function responseHandler(data){
             data.success === true ? reloadTable('detailsTable') : false;
             break;
         default:
-            alert('response not found!');
+            console.log('response not found!');
     }
 }
 
@@ -163,3 +178,37 @@ export const categoryADynamicCategoryBSelect = () => {
         });
     });
 };
+
+export const dynamicContactBranchSelect = () => {
+    elements.ticketBranchSelect.on('change', (e)=> {
+         let branchId =  $(e.target).val();
+          elements.contactBranchSelect.empty().trigger('change');
+          elements.contactBranchSelect.select2({
+              placeholder: '(contact)'
+          });
+         
+          $.ajax(`/get/contactBranch/${branchId}`, {
+              type: 'GET'
+          }).done( contactData => {
+               for(const contact of contactData.data ){
+                   let display = contact.text + " ("+ contact.position+")"
+                   elements.contactBranchSelect.append( new Option(display, contact.id)).trigger('change');
+               }
+               elements.contactBranchSelect.append( new Option('Others', 0)).trigger('change');
+          }).fail(() => {
+              alert("failed to get contacts from this branch")
+          });
+    });
+
+
+    elements.contactBranchSelect.on('change', ()=> {
+
+       let id =  elements.contactBranchSelect.val();
+       
+        if( parseInt(id) === 0) {
+            addTicketView.showUserForm(true);
+        }else {
+            addTicketView.showUserForm(false);
+        }
+    });
+}

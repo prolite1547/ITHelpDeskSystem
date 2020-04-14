@@ -7,8 +7,9 @@
             {!! Form::hidden('group', null, ['id'=>'group','class'=>'ticket-details__select']) !!}
             {!! Form::select('assignee',$assigneeSelect, $ticket->assigneeRelation->id, ['placeholder' => '(assign to)','class' => 'ticket-details__select','required', 'id'=>'assigneeSelect']) !!}
         </li>
+        
         @can('updateDetails',$ticket)
-        <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>
+        <li class="ticket-details__item"><span class="ticket-details__field">Caller:</span>          
             <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->issue->incident->caller->full_name}}</a>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Logged date:</span>
@@ -26,12 +27,16 @@
         <li class="ticket-details__item"><span class="ticket-details__field">Type:</span>
             <span class="ticket-details__value">{{$ticket->typeRelation->name}}</span>
         </li>
-        <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>
-            <a href="javascript:void(0);" class="ticket-details__value ticket-details__value--link">{{$ticket->storestore_name}}</a>
+        <li class="ticket-details__item"><span class="ticket-details__field">Store name:</span>  
+            {!! Form::select('store_id', $branchSelect,$ticket->store->id, ['placeholder' => '(select store)','class' => 'ticket-details__select','required']) !!}
+            {{-- <a href="javascript:void(0);" class="ticket-details__value ticket-details__value--link">{{$ticket->store->store_name}}</a> --}}
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Category:</span>
             {!! Form::select('category', $typeSelect, $ticket->issue->categoryRelation->id, ['placeholder' => '(select category)','class' => 'ticket-details__select','required']) !!}
         </li>
+        {{-- <li class="ticket-details__item"><span class="ticket-details__field">Category A:</span>
+            {!! Form::select('catA', $incASelect, $ticket->issue->catARelation->id , ['placeholder' => '(select category)','class' => 'ticket-details__select','required']) !!}
+        </li> --}}
         <li class="ticket-details__item"><span class="ticket-details__field">Sub-B Category:</span>
             {!! Form::select('catB', $incBSelect, $ticket->issue->catBRelation->id, ['placeholder' => '(select sub-B)','class' => 'ticket-details__select','required']) !!}
         </li>

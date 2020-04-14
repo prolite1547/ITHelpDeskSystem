@@ -15,12 +15,14 @@ class TicketPolicy
     private static $user_roles;
     private static $ticket_statuses;
     private static $high_roles;
+    private static $admin;
 
     public function __construct()
     {
         self::$user_roles = Role::pluck('id','role');
         self::$ticket_statuses = Status::pluck('id','name');
         self::$high_roles = Role::whereIn('id',[2,4])->pluck('id','role')->toArray();
+        self::$admin = Role::whereIn('id', [4])->pluck('id', 'role')->toArray();
 
     }
 
@@ -83,7 +85,7 @@ class TicketPolicy
      */
     public function delete(User $user)
     {
-        return in_array($user->role_id,self::$high_roles);
+        return in_array($user->role_id,self::$admin);
     }
 
     /**
@@ -150,5 +152,18 @@ class TicketPolicy
     public function resolveReject(User $user, Ticket $ticket)
     {
         return in_array($user->role_id,self::$high_roles) && $ticket->status === self::$ticket_statuses['Fixed'];
+    }
+
+
+     /**
+     * Determine whether the user can add repaired items to list
+     *
+     * @param  \App\User  $user
+     * @param  \App\Ticket  $ticket
+     * @return mixed
+     */
+    public function addRepair(User $user, Ticket $ticket)
+    {
+        return $ticket->assignee == $user->id &&  $ticket->status == self::$ticket_statuses['Ongoing'];
     }
 }

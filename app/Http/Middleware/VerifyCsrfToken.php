@@ -25,5 +25,7 @@ class VerifyCsrfToken extends Middleware
         '*/image',
         '*/message/delete/*',
         '*/tickets/status/fixed/*',
+        '*/delete/ws/*',
+        '*/delete/item/canvass/*'
     ];
 }

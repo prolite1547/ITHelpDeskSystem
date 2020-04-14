@@ -36,6 +36,11 @@
         }
     }
 
+    &__flex-spacebetween{
+        display: flex;
+        padding: 10px 2px 10px 2px;
+        justify-content:  space-between;
+    }
 
     &__icon {
         text-align: center;
@@ -53,11 +58,15 @@
         padding: .5rem;
         color: inherit;
         font-family: inherit;
-        border: 1px solid $color-grey-light-2;
+        border: 1px solid $color-grey-light-3;
 
 
         &--100w {
             width: 100%;
+        }
+
+        &--300fw {
+            width: 300px;
         }
 
         &--checkbox {
@@ -159,12 +168,22 @@
             left: 2rem;
         }
     }
+    &__vpn{
+        padding: 10px 10px;
+        margin-bottom: 10px;
+        background-color: $color-grey-light-1;
+    }
+    &__telephone{
+        margin-bottom: 10px;
+    }
 }
 
 
 .form-callerAdd,
 .form-departmentAdd,
 .form-contactAdd,
+.form-contactPersonAdd,
+.form-pid,
 .form-branchAdd,
 .form-positionAdd{
 
@@ -220,6 +239,7 @@
         color: currentColor;
     }
 }
+
 
 .form-email {
    width: 100%;

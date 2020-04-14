@@ -67,14 +67,18 @@
                         @endif
                     @endif
                             <li class="nav__li">
-                                <a href="" class="nav__a ">Inventory</a>
+                                <a href="{{route('show.inv')}}" class="nav__a {{Route::currentRouteName() == 'show.inv' ? 'nav__a--active' : ''}}" class="nav__a ">Inventory</a>
                             </li>
                    </ul>
             </nav>
         </div>
 
         <div class="right">
-            <a href="{{route('addTicketView')}}" id="addTicketPageBtn" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
+            @if(Auth::user()->position->department->id === 60666)
+                <a href="{{ route('addTicketView') }}" id="addTicketPageBtn" class="btn btn--green btn--add"><i class="fas fa-plus"></i> New Ticket</a>
+            @else
+                <a href="{{ route('addDeptReportView') }}" id="addTicketPageBtn" class="btn btn--green btn--add"><i class="fas fa-plus"></i> Report an issue</a>
+            @endif
             {{Form::open(['method' => 'GET','url'=>'/search','class' => 'form form--search'])}}
                 <i class="fas fa-search form--search__icon"></i>
                 {{Form::text('q',null,array('class' => 'form__search','placeholder' => 'search... (or ticket ID)'))}}
@@ -120,6 +124,9 @@
                 @endif
                 <li class="submenu__li">
                     <a href="{{route('allTickets')}}" class="submenu__a {{Route::currentRouteName() == 'allTickets' ? 'submenu__a--active' : ''}}">All <span>({{$ticketCounts['All']}})</span></a>
+                </li>
+                <li class="submenu__li">
+                    <a href="{{route('viewReported')}}"  class="submenu__a {{Route::currentRouteName() == 'viewReported' ? 'submenu__a--active' : ''}}">Reported Issues <span>({{$ticketCounts['All']}})</span></a>
                 </li>
             </ul>
         @show

@@ -34,7 +34,7 @@ class PLDTIssue extends Mailable
         $this->myAttachments = $request->attachments;
         $this->incidentSubject = $request->subject;
         $this->branch = $this->getBranchName($request->branch);
-        $this->concern = $this->getConcernName($request->concern);
+        $this->concern = $this->getConcernName($request->concernSelect);
         $this->ticket_id = $ticket_id;
         $this->td_header = $td_header;
         $this->concern_number = $concern_number;

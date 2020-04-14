@@ -79,29 +79,27 @@ class User extends Authenticatable
         }
     }
 
+    public function getCallerNameAttribute(){
+        return  ucwords(strtolower($this->lName)).', '. ucwords(strtolower($this->fName));
+    }
+
     public function getGroupAttribute()
     {
         if (strtolower($this->role->role) === 'admin') {
             return 1;
         } else {
             switch (true) {
-                case $this->id === 1833:
-                case $this->id === 1834:
-                    return 3;
-                    break;
                 case strpos(strtolower($this->position->position), 'support') !== false:
                     return 1;
                     break;
-                case strpos(strtolower($this->position->position), 'technical') !== false:
+                case strpos(strtolower($this->position->position), 'technician') !== false:
                     return 2;
                     break;
                 case strpos(strtolower($this->position->position),'system') !== false:
-                case $this->id === 1833:
-                case $this->id === 1834:
                     return 3;
                     break;
                 default:
-                    return 0;
+                    return 5;
             }
         }
     }

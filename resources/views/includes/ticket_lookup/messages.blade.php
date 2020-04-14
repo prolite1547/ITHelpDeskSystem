@@ -25,13 +25,13 @@
 
 <div class="group u-display-n" data-thread="reply">
     <div class="thread">
-        <svg class="thread__refresh" data-refresh="conIssue"><use xlink:href="{{asset('svg/sprite2.svg#icon-cw')}}"></use></svg>
+        <svg class="thread__refresh" data-ticket="{{ $ticket->id }}" data-issue="{{ $ticket->issue->incident_id }}" data-refresh="conIssue"><use xlink:href="{{asset('svg/sprite2.svg#icon-cw')}}"></use></svg>
         @foreach($ticket->connectionIssueMailReplies as $replies)
             <div class="message" data-id="{{$replies->id}}">
                 <div class="message__content">
                     <div class="message__message-box">
                         <div class="message__name">{{$replies->from['full']}}</div>
-                        <div class="message__message">{!! $replies->reply !!}</div>
+                        <div class="message__message">{!! $replies->html_body !!}</div>
                         <div class="message__flex message__flex--sb">
                             <span class="message__time">{{$replies->reply_date}}</span>
                             <div>

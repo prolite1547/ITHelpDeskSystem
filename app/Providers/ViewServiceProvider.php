@@ -20,8 +20,17 @@ use App\Role;
 use App\Store;
 use App\Ticket;
 use App\User;
+use App\ItemCateg;
+use App\CanvassApproval;
+use App\Workstation;
+
+use App\Telco;
+use App\VpnCategory;
+
+
 use App\SystemDataCorrection;
 use App\ManualDataCorrection;
+use App\TelAccount;
 use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -53,7 +62,7 @@ class ViewServiceProvider extends ServiceProvider
             $userID = Auth::id();
             $notificationContent = getNotificationContent($userID);
             $dcRoutes = ['datacorrections.system', 'datacorrections.manual', 'datacorrectons.sdcDeployment', 'datacorrectons.sdcTreasury1', 'datacorrectons.sdcTreasury2', 'datacorrectons.sdcGovComp', 'datacorrectons.sdcFinalApp', 'datacorrectons.sdcDraft', 'datacorrectons.sdcDone', 'datacorrectons.sdcRejected', 'datacorrectons.sdcAll'];
-            $ticketRoutes = ['openTickets', 'myTickets', 'ongoingTickets', 'closedTickets', 'allTickets'];
+            $ticketRoutes = ['openTickets', 'myTickets', 'ongoingTickets', 'closedTickets', 'allTickets', 'viewReported'];
             $tyRoutes = ['datacorrectons.treasuryALL', 'datacorrectons.treasuryDONE', 'datacorrectons.treasuryPENDING'];
             $ty2Routes = ['datacorrectons.treasury2ALL', 'datacorrectons.treasury2DONE', 'datacorrectons.treasury2PENDING'];
             $gcRoutes = ['datacorrectons.govcompALL', 'datacorrectons.govcompDONE', 'datacorrectons.govcompPENDING'];
@@ -61,6 +70,16 @@ class ViewServiceProvider extends ServiceProvider
 
             $ticketCounts = getNumberOfTicketsOnASpecStatus();
             $ticketUserTicketsCount = Ticket::whereAssignee($userID)->where('status','!=',3)->whereNull('deleted_at')->count();
+
+            $emails = Email::all();
+            $emailSelect = $emails->pluck('email','email')->toArray();
+            $emailSelect_connection = $emails->pluck('email','email')->toArray();
+            $email_groups = \App\EmailGroup::select(DB::raw('CONCAT_WS("_","group",id) as temp'),'group_name','id')->get(['text','group_name','id']);
+            $email_groups_select = $email_groups->pluck('group_name','id')->toArray();
+            $email_groups_connection = $email_groups->pluck('group_name','temp')->toArray();
+            $emailAndGroupSelect = array_merge($emailSelect_connection,$email_groups_connection);
+
+
             $view->with(compact(
                 'ticketCounts',
                 'ticketUserTicketsCount',
@@ -71,7 +90,9 @@ class ViewServiceProvider extends ServiceProvider
                 'ty2Routes',
                 'dcRoutes',
                 'gcRoutes',
-                'appRoutes'
+                'appRoutes',
+                'emailAndGroupSelect',
+                'emailSelect'
             ));
         });
 
@@ -85,13 +106,17 @@ class ViewServiceProvider extends ServiceProvider
             ]);
         });
 
-        view()->composer(['ticket.add_ticket', 'modal.ticket_edit', 'modal.user_add', 'ticket.incomplete', 'modal.r_ticket','maintenance','includes.ticket_filter'], function ($view) {
+        view()->composer(['ticket.add_ticket','ticket.add_report_dept','ticket.reportedissues','modal.ticket_edit', 'modal.user_add', 'ticket.incomplete', 'modal.r_ticket','maintenance','includes.ticket_filter', 'modal.add_ws', 'modal.add_ws_item', 'modal.edit_ws','modal.canvass_item', 'modal.canvass_item_update', 'inventory.workstations', 'ticket.reported_ticket'], function ($view) {
             $selfOption = [null => 'None', Auth::id() => 'Self'];
             $statusSelect = DB::table('ticket_status')->pluck('name', 'id')->toArray();  /*Status*/
             $prioSelect = DB::table('priorities')->pluck('name', 'id')->toArray();   /*Priority*/
             $typeSelect = DB::table('categories')->where('name','!=','Connection')->pluck('name', 'id')->toArray();   /*Incident category*/
-            $incBSelect = DB::table('category_b')->whereNotIn('id',[16,17,18])->pluck('name', 'id')->toArray(); /*A Sub category for incident*/
-            $groupSelect = DB::table('ticket_groups')->pluck('name', 'id')->toArray(); /*TICKET_GROUP*/
+            $incASelect = DB::table('category_a')->pluck('name', 'id')->toArray();
+            $incBSelect = DB::table('category_b')->pluck('name', 'id')->toArray(); /*A Sub category for incident*/
+
+            $contactTypes = DB::table('contact_types')->pluck('name', 'id')->toArray();
+
+            $groupSelect = DB::table('ticket_groups')->orderBy('name', 'asc')->pluck('name', 'id')->toArray(); /*TICKET_GROUP*/
             $rolesSelect = selectArray('', Role::class, 'id', 'role'); /*Roles*/
             $positionsSelect = selectArray('', Position::class, 'id', 'position'); /*Roles*/
             $departmentSelect = selectArray('', Department::class, 'id', 'department'); /*Roles*/
@@ -116,10 +141,24 @@ class ViewServiceProvider extends ServiceProvider
             $filterAssigneeSelect = groupListSelectArray(Role::class, 'role', 'users', 'full_name', 'full_name', $cons);
             $categoryASelect = CategoryA::pluck('name','id')->toArray();
             $usersSelect = User::all()->pluck('full_name','id')->toArray();
+            $itemCategSelect = ItemCateg::whereNull('deleted_at')->pluck('name','id')->toArray();
+            $canvass_approval = CanvassApproval::pluck('name', 'id')->toArray();
+
+            $workstationsFilter = Workstation::groupBy('ws_description')->whereNull('deleted_at')->pluck('ws_description', 
+            'ws_description')->toArray();
+            $departmentFilter = selectArray('', Department::class, 'department', 'department');
+            $branchFilter = Store::all()->pluck('store_name', 'store_name')->toArray();
+
+            $TelcoFilter = Telco::all()->pluck('name', 'id')->toArray();
+
+            $VpnCategoryFilter = VpnCategory::all()->pluck('name', 'id')->toArray();
+            $tel_accounts = TelAccount::all()->pluck('account_number', 'id')->toArray();
+
             $view->with(compact(
                 'statusSelect',
                 'prioSelect',
                 'typeSelect',
+                'incASelect',
                 'incBSelect',
                 'callerSelect',
                 'branchSelect',
@@ -137,7 +176,18 @@ class ViewServiceProvider extends ServiceProvider
                 'emailSelect',
                 'filterAssigneeSelect',
                 'categoryASelect',
-                'usersSelect'
+                'usersSelect',
+                'itemCategSelect',
+                'canvass_approval',
+
+                'workstationsFilter',
+                'departmentFilter',
+                'branchFilter',
+                'contactTypes',
+
+                'TelcoFilter',
+                'VpnCategoryFilter',
+                'tel_accounts'
             ));
         });
 

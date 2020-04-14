@@ -103,7 +103,6 @@ export const genUserGroup = () => {
         .fail(() => {
             console.log("failed to get user group")
         });
-    
     });
 }
 

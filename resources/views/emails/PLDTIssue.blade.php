@@ -7,12 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .mail{font-family:Sans-serif}.mail__greeting{margin-bottom:2rem}.mail__table{border:1px solid #000;border-collapse:collapse;margin:1rem 0;text-transform:uppercase}.mail__table td,.mail__table th{border:1px solid #000;padding:1rem}.mail__table tbody th{text-align:left}.mail__email{text-transform:lowercase}.mail__footer{font-style:italic;font-size:.8rem}.mail__sender-name{color:#162da1}.mail__sender-position{font-size:1rem;font-weight:700;font-style:normal;margin-bottom:1rem}.mail__mobile{color:#0a6aa1}.mail__info{margin-top:1rem;font-style:normal}
+        .vpn_id{margin-left:10px;}li{padding:0px;}*{list-style: none;}.mail{font-family:Sans-serif}.mail__greeting{margin-bottom:2rem}.mail__table{border:1px solid #000;border-collapse:collapse;margin:1rem 0;text-transform:uppercase}.mail__table td,.mail__table th{border:1px solid #000;padding:1rem}.mail__table tbody th{text-align:left}.mail__email{text-transform:lowercase}.mail__footer{font-style:italic;font-size:.8rem}.mail__sender-name{color:#162da1}.mail__sender-position{font-size:1rem;font-weight:700;font-style:normal;margin-bottom:1rem}.mail__mobile{color:#0a6aa1}.mail__info{margin-top:1rem;font-style:normal}
     </style>
 </head>
 <body>
 <div class="mail">
-    <div class="mail__greeting">Hi PLDT,</div>
+    {{--  <div class="mail__greeting">Hi PLDT,</div>  --}}
+    <div class="mail__greeting">{{ $data->greetings }}</div>
     <div class="mail__content">
         <div class="mail__intro">
             {{$data->details}}
@@ -29,12 +30,12 @@
                     <td>CITIHARDWARE {{$branch}}</td>
                 </tr>
                 <tr>
-                    <th>Account#</th>
-                    <td>{{$data->dial ?? ''}}</td>
+                    <th>Account #</th>
+                    <td>{{$data->accounts ?? ''}}</td>
                 </tr>
                 <tr>
-                    <th>{{$td_header}}#</th>
-                    <td>{{$concern_number}}</td>
+                    <th>{{$td_header}}</th>
+                    <td>{!! $concern_number !!}</td>
                 </tr>
                 <tr>
                     <th>Concern</th>
@@ -45,7 +46,7 @@
                     <td>{{$data->contact_person}}</td>
                 </tr>
                 <tr>
-                    <th>Contact Number</th>
+                    <th>Contact #</th>
                     <td>{{$data->contact_number}}</td>
                 </tr>
                 <tr>

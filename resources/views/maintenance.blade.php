@@ -7,7 +7,7 @@
         <div class="plusToggleContainer">
             <div class="form-contactAdd">
                 <button class="plusToggleContainer__button u-margin-l " type="button"><i
-                        class="fas fa-plus"></i> Add Contact Number
+                        class="fas fa-plus"></i> Add Contact Number.
                 </button>
 
                 <div class="form-contactAdd__content-box u-display-n">
@@ -17,9 +17,57 @@
                         {!! Form::select('store_id',[] ,null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'contactBranchSelect','required']) !!}
                     </div>
                     <div class="form__group u-display-n" id="contactFormGroup">
+
                         {!! Form::label('number','#',['class' => 'form__label']) !!}
                         {!! Form::text('number',null, ['placeholder' => 'Enter number...','class' => 'form__input','required']) !!}
+                        {!! Form::select('type_id',  $contactTypes, null, ['placeholder' => '(Choose contact type..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'contactTypeSelect','required']) !!}
+                        <div class="tel-accounts-display" style="display:none !important;">
+                            {!! Form::select('account_id', $tel_accounts,null, ['placeholder'=>'(choose account number ..)','class' => 'form__input form__input--select2', 'id'=> 'telAccountSelect']) !!}
+                            {!! Form::select('telco_id', $TelcoFilter,null, ['placeholder'=>'(choose company ..)','class' => 'form__input form__input--select2', 'id'=> 'telCompanySelect']) !!}
+                        </div>
                         {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addContact']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+
+                
+            </div>
+
+            <div class="form-contactPersonAdd">
+                <button class="plusToggleContainer__button u-margin-l " type="button"><i
+                        class="fas fa-plus"></i> Add Contact Person.
+                </button>
+
+                <div class="form-contactPersonAdd__content-box u-display-n">
+                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addContactPerson']) !!}
+                    <div class="form__group">
+                        {!! Form::label('store_id','Branch:',['class' => 'form__label']) !!}
+                        {!! Form::select('store_id',[] ,null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'contactPersonBranchSelect','required']) !!}
+                    </div>
+                    <div class="form__group u-display-n" id="contactFormGroup">
+                        {!! Form::label('contact_name','Name: ',['class' => 'form__label']) !!}
+                        {!! Form::text('contact_name',null, ['placeholder' => 'Enter contact name...','class' => 'form__input','required']) !!}
+                        {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addContactPerson']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+
+            <div class="form-pid">
+                <button class="plusToggleContainer__button u-margin-l " type="button"><i
+                        class="fas fa-plus"></i> Add PID / CID.
+                </button>
+
+                <div class="form-pid__content-box u-display-n">
+                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addPid']) !!}
+                    <div class="form__group">
+                        {!! Form::label('store_id','Branch:',['class' => 'form__label']) !!}
+                        {!! Form::select('store_id',[] ,null, ['placeholder' => '(Choose branch..)','class' => 'form__input form__input--select2','data-select' => 'contact','id' => 'pidBranchSelect','required']) !!}
+                    </div>
+                    <div class="form__group u-display-n" id="contactFormGroup">
+                        {!! Form::label('pid','PID : ',['class' => 'form__label']) !!}
+                        {!! Form::text('pid',null, ['placeholder' => 'Enter PID...','class' => 'form__input','required']) !!}
+                        {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addPid']) !!}
                     </div>
                     {!! Form::close() !!}
                 </div>
@@ -118,6 +166,21 @@
                         {{Form::text('group_name',null,array('placeholder' => 'Enter email group','class' => 'form__input','required'))}}
                     </div>
                     {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addCategory']) !!}
+                    {!! Form::close() !!}
+                </div>
+            </div>
+
+
+            <div class="form-ItemCategoryAdd">
+                <button class="plusToggleContainer__button u-margin-l " type="button"><i
+                        class="fas fa-plus"></i> Add Item Category
+                </button>
+                <div class="form-ItemCategoryAdd-box u-display-n">
+                    {!! Form::open(['method' => 'POST','class' => 'form','id' => 'addItemCategory']) !!}
+                    <div class="form__group">
+                        {{Form::text('name',null,array('placeholder' => 'Enter Item Category','class' => 'form__input','required', 'id'=>'item_categ'))}}
+                    </div>
+                    {!! Form::button('Add',['type' => 'submit','class'=>'btn','data-action' => 'addItemCategory']) !!}
                     {!! Form::close() !!}
                 </div>
             </div>

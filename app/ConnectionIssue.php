@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class ConnectionIssue extends Model
 {
     protected $fillable = [
-        'account',
-        'pid',
+        'accounts',
+        'vpn_details',
         'tel',
         'branch',
         'contact_person',
         'contact_number',
         'to',
-        'cc'
+        'cc',
+        'telco_id'
     ];
 
 
@@ -29,5 +30,9 @@ class ConnectionIssue extends Model
         $expiration = Carbon::now()->addHours($expirationHours);
 
         return ['assignee' => $userID,'logged_by' => $userID,'type' => 1,'priority' => 4,'status' => 2,'store' => $store,'group' => 1,'expiration' => $expiration];
+    }
+
+    public function telco(){
+        return $this->belongsTo('App\Telco', 'telco_id');
     }
 }

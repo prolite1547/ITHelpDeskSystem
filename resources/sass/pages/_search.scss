@@ -1,5 +1,5 @@
 .search {
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
 
     &__header {
@@ -8,7 +8,8 @@
     }
 
     &__item {
-
+        background-color: white;
+        padding: 10px;
         &,
         &:visited,
         &:link{

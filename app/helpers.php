@@ -220,6 +220,7 @@ if (! function_exists('getGroupIDDependingOnUser')) { /*uppercase words and remo
 
 if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*fetch new mails then add to database*/
      function fetchNewConnectionIssueEmailReplies(int $ticketID,string $subject,$latest_reply){
+      try{
         $date = \Carbon\Carbon::now()->format('d.m.Y');
         $oClient = new \Webklex\IMAP\Client;
         $oClient->connect();
@@ -228,7 +229,7 @@ if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*fetch new mail
             ->getFolder('INBOX');
         $inboxMessages = $inboxFolder
             ->query()
-            // ->on($date)
+            ->on($date)
             ->subject($subject)
             ->setFetchFlags(false)
             ->setFetchBody(true)
@@ -259,6 +260,9 @@ if (! function_exists('fetchNewConnectionIssueEmailReplies')) { /*fetch new mail
                     $connection_issue->create(compact($connection_issue_fillable));
                 }
         }
+      }catch(Exception $ex){
+            
+      }
 
          
 

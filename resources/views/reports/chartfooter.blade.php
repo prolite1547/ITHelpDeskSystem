@@ -54,6 +54,8 @@
             loadAjaxTopResolvers()
         });
 
+        $('#ogmonth').change(()=>loadOneGlanceReport());
+
     // END OF SELECT EVENTS 
 
     // --------------------------------------------------
@@ -122,6 +124,26 @@
                 }
             });
             
+        }
+
+        function loadOneGlanceReport(){
+            var ogmonth = $('#ogmonth').val();
+            $.ajax({
+                method: "POST",
+                url: "/reports/og",
+                data:{ _token: '{{csrf_token()}}', month:ogmonth},
+                success: function(data){
+                      $('.network-down').html(data.downCounts+"/"+data.pendingDays);
+                      $('.store-support').html(data.ssCountRes+"/"+data.ssCountLog);
+                      $('.dc-support').html(data.dcsCountRes+"/"+data.dcsCountLog);
+                      $('.ssc-support').html(data.sscCountRes+"/"+data.sscCountLog);
+                      $('.dc-support').html(data.dcsCountRes+"/"+data.dcsCountLog);
+                      $('.ssc-support').html(data.sscCountRes+"/"+data.sscCountLog);
+                      $('.dev-projects').html(data.devDoneCount+"/"+data.devProjects);
+                      $('.technical-visits').html(data.visitDoneCount+"/"+data.visitCount);
+                   
+                }
+            })
         }
     // END OF FUNCTIONS LOAD AJAX 
 
@@ -264,7 +286,9 @@
             $("#topresolvers").bind("plothover", function (event, pos, item) {
                     $("#tooltip").remove();
                     if (item) {
-                      var tooltip =  "<b>"+topresolvers[item.dataIndex][1]+"</b> ("+solveCount[item.dataIndex][1]+" tickets resolved) "+ "<br><br> <b>Supports :</b> <br>" ;
+                      var tooltip =  "<b>"+topresolvers[item.dataIndex][1]+"</b> <br> ("+solveCount[item.dataIndex][1]+" tickets resolved) ";
+
+                    /**    var tooltip =  "<b>"+topresolvers[item.dataIndex][1]+"</b> ("+solveCount[item.dataIndex][1]+" tickets resolved) "+ "<br><br> <b>Supports :</b> <br>" ; **/
                       var sid = "";
                       var count = 0;
                       var newSupports = [];

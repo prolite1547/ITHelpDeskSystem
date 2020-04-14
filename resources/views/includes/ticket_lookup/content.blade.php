@@ -32,11 +32,8 @@
                                  @endif
                         @endforeach
                 @endif
-                
                 @if(!in_array($ticket->status,[$ticket_status_arr['Fixed'],$ticket_status_arr['Closed'],$ticket_status_arr['Expired']]) && $ticket->assigneeRelation->id === Auth::id() && $onTicketCount == 0 && $sdcStatusDone)
-
                     <li class="ticket-content__item"><a href="javascript:void(0);" class="ticket-content__link ticket-content__link--fix">Mark as fixed..</a></li>
-
                 @endif
               
                 {{-- @can('markAsFix',$ticket)
@@ -63,16 +60,26 @@
     </p>
     @if($ticket->status !== $ticket_status_arr['Expired'])
         <form class="chat" data-form="chat" enctype="multipart/form-data">
+            
             <ul class="chat__menu">
                 <li class="chat__item" data-form="chat">Chat</li>
-                <li class="chat__item u-display-n" data-form="reply">Reply</li>
+                <li class="chat__item u-display-n" data-form="reply">Email Reply</li>
             </ul>
+            
             <div class="form__group u-display-n">
-                <label for="to" class="chat__label">To:</label>
-                <input type="email" name="to" class="chat__text" multiple required disabled>
+                {!! Form::label('to-email', 'To : ', ['class'=>'']) !!}
+                {!! Form::select("to[]",[], null , ['class'=>'chat__text form-email__input-text u-display-b u-width-full', 'id'=>'to-email','multiple','required', 'data-emailto'=>$ticket->issue->email_to_text]) !!}
+                
+                {!! Form::label('cc-email', 'Cc : ', ['class'=>'']) !!}
+                {!! Form::select("cc[]",[], null, ['class'=>'chat__text form-email__input-text u-display-b u-width-full', 'id'=>'cc-email','multiple', 'data-emailCc'=>$ticket->issue->email_cc_text]) !!}
+            
+         
+
+                <input type="hidden" name="incident_id" value="{{ $ticket->issue->incident_id }}">
             </div>
+ 
             <div class="form__group-flex">
-                <textarea name="reply" rows="3" class="chat__textarea" placeholder="Enter message here..." maxlength="1000" minlength="5" required></textarea>
+                <textarea name="reply" rows=9" class="chat__textarea" placeholder="Enter message here..." maxlength="1000" minlength="5" required></textarea>
                 <input value="Send" class="chat__button" type="submit" name="chat__button">
             </div>
             <input type="file" class="chat__attachment u-display-n" name="reply_attachments[]" multiple>

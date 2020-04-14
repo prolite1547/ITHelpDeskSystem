@@ -11,7 +11,7 @@
                     <a class="search__item" href="{{route('lookupTicketView',['id' => $results->id])}}">
                         <div class="search__label">Ticket #{{$results->id}}</div>
                         <div class="search__details">
-                        {{$results->details}}
+                             {{ \Illuminate\Support\Str::limit($results->details, 150, $end='...') }}
                         </div>
                     </a>
                 @empty

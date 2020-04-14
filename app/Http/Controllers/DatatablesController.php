@@ -51,15 +51,19 @@ class DatatablesController extends Controller
                     'v_tickets.ticket_group_name',
                     'v_tickets.times_extended'
                 )
-                ->when($group, function ($query, $group) {
-                    return $query->whereTicketGroupId($group);
-                })
+                // ->when($group, function ($query, $group) {
+                //     return $query->whereTicketGroupId($group);
+                // })
                 ->when(in_array(strtolower($status), array_map('strtolower', $statuses), true), function ($query) use ($status) {
                     $get_status = Status::where('name', $status)->firstOrFail();
                     return $query->whereStatusId($get_status->id);
                 })
                 ->when($status === 'my', function ($query) {
                     return $query->whereAssigneeId(Auth::id())->where('status_id', '!=', 3);
+                },function ($query, $group) {
+                    if($group){
+                        return $query->whereTicketGroupId($group);
+                    }
                 })
                 ->when($status === 'fixed', function ($query) {
 
@@ -73,6 +77,39 @@ class DatatablesController extends Controller
                 });
         }
         return DataTables::of($query)->toJson();
+    }
+
+    public function fetchReported($department){     
+     $group = Auth::user()->group;
+     $query = DB::table('tickets')
+                    ->join('incidents', 'incidents.id', 'tickets.issue_id')
+                    ->join('ticket_groups', 'ticket_groups.id', 'tickets.group')
+                    ->join('calls', 'calls.id', 'incidents.incident_id')
+                    ->join('users', 'users.id', 'calls.caller_id')
+                    ->join('positions', 'positions.id', 'users.position_id')
+                    ->join('departments', 'departments.id', 'positions.department_id')
+                    ->join('stores', 'stores.id', 'users.store_id')
+                    ->where('tickets.status', '=', 7)
+                    ->when($department != 60666, function($query) use ($department){
+                        return  $query ->where('departments.id', '=', $department);
+                    },function($query) use($group){
+                        return $query->where('tickets.group', '=', $group);
+                    })
+                    ->select('tickets.id as ticket_id',
+                    'incidents.subject',
+                    'tickets.created_at',
+                    DB::raw('CONCAT_WS(" ",users.fname,users.lName) as caller_name'), 
+                    'positions.position',
+                    'departments.department',
+                    'stores.store_name as branch',
+                    'ticket_groups.name as group_name',
+                    'departments.id as department_id');
+
+
+    //   if($department != 60666){
+    //     $query = $query ->where('departments.id', '=', $department);
+    //   }
+     return Datatables::of($query)->toJson();
     }
 
     // public function sdc(){
@@ -287,6 +324,55 @@ class DatatablesController extends Controller
         $query = DB::table('master_data_issues as mdi')
         ->selectRaw('mdi.issue_name,mdi.status,mdi.start_date,mdi.end_date,mdi.logged_by,mdi.id');
         $query = $query->whereNull('deleted_at');
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+    }
+
+
+    public function workstations(){
+        $query = DB::table('workstations as ws')
+        ->leftjoin('stores as s', 's.id', 'ws.store_id')
+        ->leftjoin('departments as d', 'd.id', 'ws.department_id')
+        ->select('ws.id','ws.ws_description', 's.store_name', 'd.department', 'ws.created_at')
+        ->where('ws.deleted_at', '=', null)
+        ->get();
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+    }
+
+    public function items($wid){
+        $query = DB::table('items as i')
+        ->leftJoin('workstations as ws', 'ws.id', 'i.workstation_id')
+        ->leftjoin('item_categs as ic', 'ic.id', 'i.itemcateg_id')
+        ->select('i.serial_no','i.item_description','ic.name as item_category', 'i.no_repaired', 'i.no_replace', 'i.date_used', 'i.updated_at')
+        ->where('i.workstation_id', '=', $wid)
+        ->get();
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+    }
+
+    public function repairedItems($tid){
+        $query = DB::table('item_repairs as ir')
+        ->leftJoin('workstations as ws','ws.id','ir.workstation_id')
+        ->leftJoin('items as i', 'i.id', 'ir.item_id')
+        ->leftJoin('item_categs as ic', 'ic.id','i.itemcateg_id')
+        ->select('ws.ws_description', 'i.serial_no', 'i.item_description','ic.name as category','ir.date_repaired', 'ir.reason')
+        ->where('ir.ticket_id','=',$tid)
+        ->get();
+        $datatablesJSON = DataTables::of($query);
+        return $datatablesJSON->make(true);
+    }
+
+    public function canvassItems($tid){
+        $query = DB::table('canvasses as cv')
+        ->leftJoin('tickets as t', 't.id' , 'cv.ticket_id')
+        ->leftJoin('items as i', 'i.id', 'cv.item_id')
+        ->leftJoin('canvass_approvals as cva', 'cva.id', 'cv.approval_id')
+        ->select('cv.id','cv.c_storename', 'cv.c_itemdesc', 'cv.c_qty', 'cv.c_price', 'cv.is_approved', 'cva.name as approval_type',
+        'cv.app_code','cv.purchase_date', 'cv.date_installed')
+        ->where('t.id', '=', $tid)
+        ->whereNull('cv.deleted_at')
+        ->get();
         $datatablesJSON = DataTables::of($query);
         return $datatablesJSON->make(true);
     }

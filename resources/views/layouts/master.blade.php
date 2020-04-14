@@ -11,6 +11,7 @@
 </head>
 <body>
     @include('includes.modal')
+    @include('includes.mymodal')
 
     <div class="container">
         @yield('inside_container')

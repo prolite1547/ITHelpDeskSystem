@@ -22,6 +22,7 @@
             <div class="col-3-of-4">
                 <h2 class="heading-secondary">{{$user->fullname}}</h2>
                 <p>{{ $user->position->position }}</p>
+                <button class="btn btn--mblue btn--add" id="btn-changepass">Change Password</button>
             </div>
         </div>
     </main>

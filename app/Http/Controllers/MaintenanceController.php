@@ -8,6 +8,7 @@ use App\CategoryC;
 use App\Email;
 use App\EmailGroup;
 use App\EmailGroupPivot;
+use App\ItemCateg;
 use App\Http\Requests\StoreCategoryA;
 use App\Http\Requests\StoreCategoryBandC;
 use Illuminate\Http\Request;
@@ -103,5 +104,9 @@ class MaintenanceController extends Controller
 
         EmailGroup::create($validatedData);
     }
-    
+
+    public function addItemCateg(Request $request){
+        ItemCateg::create(['name'=>$request->name]);
+    }
+
 }

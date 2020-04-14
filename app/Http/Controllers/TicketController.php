@@ -7,14 +7,19 @@ use App\Caller;
 use App\CategoryB;
 use App\CategoryC;
 use App\ConnectionIssue;
+use App\Contact;
 use App\File;
 use App\Fix;
+use App\Http\Requests\DeptReportRequest;
 use App\User;
 use App\Http\Requests\StoreTicket;
 use App\Incident;
 use App\Mail\PLDTIssue;
 use App\Ticket;
 use App\SystemDataCorrection;
+use App\TelAccount;
+use App\Vpn;
+use App\VpnCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +71,7 @@ class TicketController extends Controller
         }
 
         /*CHECK IF TICKET IS CREATED THROUGH CALL OR EMAIL*/
+        $telco = null;
         if ($ticket->issue->incident_type === \App\Call::class) {
             $relationArray = [
                 'issue.incident.loggedBy',
@@ -80,6 +86,7 @@ class TicketController extends Controller
                 'issue.getFiles'
             ];
         } else {
+            $telco = $ticket->issue->incident->telco;
             $relationArray = [
                 'userLogged',
                 'statusRelation',
@@ -119,7 +126,7 @@ class TicketController extends Controller
         }else {
             $view = 'ticket.ticket_lookup';
         }
-        return view($view, compact(['ticket','cTicket', 'pTicket', 'sdc']));
+        return view($view, compact(['ticket','cTicket', 'pTicket', 'sdc','telco']));
     }
 
     public function addTicketView()
@@ -135,6 +142,48 @@ class TicketController extends Controller
             return view('ticket.add_ticket');
         }
 
+    }
+    
+    public function addDeptReportView(){
+        return view('ticket.add_report_dept');
+    }
+
+    public function reportedIssues(){
+        $ticketTotals = ticketTypeCount('status', 7);
+
+        return view('ticket.reportedissues', $ticketTotals)->with('department_id', Auth::user()->position->department->id);
+    }
+
+    public function viewReportedTicket($id){
+        $ticket = Ticket::where('id', '=', $id)->where('status', '=', 7)->first();
+       if($ticket){
+            return view('ticket.reported_ticket', compact(['ticket']));
+       }else{
+           return redirect()->back();
+       }
+    }
+
+    public function addDeptReport(DeptReportRequest $request){
+        try{
+            $user = Auth::user();
+            $ticket_id = Call::create(['caller_id' => $user->id,'caller_type' => 'App\User'])
+            ->incident()->create(['subject'=> $request->subject, 'details'=>$request->details])->ticket()->create(['store_id' => $user->store_id, 'group' => $request->group ,'store_type' => 'App\Store', 'status' => 7])->id;
+            $ticket = Ticket::findorFail($ticket_id);
+            $ticketDirectoryName = str_replace(':', '', preg_replace('/[-,\s]/', '_', $ticket->created_at)) . '_' .  $ticket->id;
+                if ($request->hasFile('attachments')) {
+                    foreach ($request->attachments as $attachment) {
+                        $original_name = $attachment->getClientOriginalName();
+                        $mime_type = $attachment->getMimeType();
+                        $original_ext = $attachment->getClientOriginalExtension();
+                        $path = $attachment->store("$ticketDirectoryName", 'ticket');
+
+                        File::create(['incident_id' => $ticket->issue_id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
+                    };
+             }
+            return response()->json(array('response'=>'Report successfully submitted'), 200);
+        }catch(Exception $e){
+            return response()->json(array('response'=>'An error occured during operation..'), 200);
+        }
     }
 
     public function incompleteTicket($id)
@@ -312,6 +361,45 @@ class TicketController extends Controller
 
     }
 
+    public function addTicketFromReport(Request $request){
+        // try{
+          /*FETCH THE EXPIRATION HOURS COLUMN*/
+          $expiration_hours = CategoryB::findOrFail($request->catB)->getExpiration->expiration;
+
+          /*GENERATE TE EXPIRATION DATE*/
+          $expiration_date = Carbon::now()->addHours($expiration_hours);
+  
+          /*ADD EXPIRATION IN REQUEST ARRAY*/
+          $request->request->add(array('expiration' => $expiration_date));
+          $request->request->add(array('logged_by' => Auth::user()->id));
+
+          /*ID OF THE TICKET AND INCIDENT THAT THE DETAILS WILL BE INSERTED TO*/
+          $ticket_id = $request->ticket_id;
+  
+          /*CHECK IF THE STATUS OF TICKET WILL BE OPEN OR ONGOING*/
+          $request->request->add(self::assignStatus($request->assignee));
+       
+            DB::transaction(function () use ($ticket_id, $request) {
+                $ticket = Ticket::findOrFail($ticket_id);
+                $incident = Incident::findOrFail($ticket->issue_id);
+                $call = Call::findOrFail($incident->incident_id);
+
+
+                $call->update(['user_id'=> Auth::user()->id]);
+                $ticket->update($request->only('expiration', 'type', 'priority', 'assignee', 'status', 'group', 'logged_by'));
+              
+
+
+            });
+          return redirect()->route('lookupTicketView', ['id' => $ticket_id]);
+            //   return response()->json(['response' => 'Ticket has been successfully added' , 'ticket_id'=> $ticket_id], 200);
+        // }catch(Excpetion $e){
+        //     return response()->json(['response'=> $e], 200);
+        // }
+ 
+
+    }
+
 
     public function open()
     {
@@ -464,43 +552,88 @@ class TicketController extends Controller
     }
 
     public function addConnectionIssue(Request $request)
-    {
+    {   
+        
+        $contactNums = implode(" / ",$request->contact_number);
+        $request->merge(['contact_number'=> $contactNums]);
+      
+
+        if(isset($request->tel)){
+       
+            $account_ids = Contact::whereIn('number', $request->tel)->get(['account_id']);
+            $accounts = TelAccount::whereIn('id', $account_ids)->pluck('account_number')->toArray();
+            $account_numbers = implode(" / ", $accounts);
+            $request->merge(["accounts"=>$account_numbers]);
+            $telnos = implode(" / ", $request->tel);
+            $request->merge(["tel"=> $telnos]);
+            
+        }
+
+        if($request->issueSelect == "VPN"){
+            $data = $this->getVpnDetails($request->branch, $request->vpnCategorySelect);
+            $request->request->add(['vpn_details'=>$data]);
+        }
+
         $validation = [
             'to' => 'required',
             'subject' => 'required|string|min:5',
-            'cc' => 'string|nullable',
+            'cc' => 'nullable',
             'details' => 'required|string|min:5',
             'branch' => 'required|numeric',
-            'contact_number' => 'required|string|min:5',
-            'contact_person' => 'required|string|min:5',
+            'contact_number' => 'required|string',
+            'contact_person' => 'required|string',
         ];
-        $voice = ['tel' => 'required|string|min:5'];
-        $data = ['pid' => 'required|string|min:5'];
+        $voice = ['tel' => 'required|string'];
+        $data = ['vpn_details' => 'required|string'];
 
+     
         $to = array();
         $group = array();
+        $cc = array();
+        $ccgroup = array();
+
 
         /*split ang grouped emails and individual emails*/
         foreach ($request->to as $mail){
-            (str_contains($mail,'group')) ? array_push($group,$mail) : array_push($to,$mail);
+            (str_contains($mail,'Group')) ? array_push($group,$mail) : array_push($to,$mail);
         }
-
+        
+       
         /*iterate grouped emails and get emails and check if present already on the individual emails*/
         foreach ($group as $email_group){
-          [$group,$id] = explode("_",$email_group);
-          $emails = \App\EmailGroup::find($id)->emails;
+        //   [$group,$id] = explode("_",$email_group);
+          $emailGroup = \App\EmailGroup::where('group_name', '=', $email_group)->first();
             /*check if present already on the individual emails*/
-            foreach ($emails as $mail){
+            foreach ($emailGroup->emails as $mail){
                 $cur_mail = $mail->email;
                 /*append to indivial emails*/
                 if (!in_array($cur_mail,$to)) array_push($to,$cur_mail);
             }
         }
-        
-        /*change value of to in the request*/
-        $request->request->add(['to' => implode(',',$to)]);
 
-        $catC = $request->concern;
+        /*change value of to in the request*/
+        $request->request->add(['to' => implode(',',$to)]);       
+        
+        if(!is_null($request->cc)){
+            foreach($request->cc as $ccmail){
+                (str_contains($ccmail, 'Group')) ? array_push($ccgroup, $ccmail) :  array_push($cc, $ccmail);
+             }
+             foreach ($ccgroup as $email_group){
+                //  [$ccgroup,$id] = explode("_",$email_group);
+                $emailGroup = \App\EmailGroup::where('group_name', '=', $email_group)->first();
+                   /*check if present already on the individual emails*/
+                   foreach ($emailGroup->emails as $mail){
+                       $cur_mail = $mail->email;
+                       /*append to indivial emails*/
+                       if (!in_array($cur_mail,$cc)) array_push($cc,$cur_mail);
+                   }
+            }
+            $request->request->add(['cc' => implode(',',$cc)]);
+        }
+
+      
+
+        $catC = $request->concernSelect;
         /*GET CATEGORY B id*/
         $catB = CategoryC::findOrFail($catC)->catB;
         /*GET CATEGORY A id*/
@@ -514,38 +647,42 @@ class TicketController extends Controller
             $validation = $validation + $voice;
         } elseif ((int)$catB === 17) {
             $validation = $validation + $data;
-        } else {
-            $validation = $validation + $data + $voice;
-        }
+        } 
+        // else {
+        //     $validation = $validation + $data + $voice;
+        // }
         
         $request->validate($validation);
+ 
         $expiration = Carbon::now()->addHours($catB_relations->getExpiration->expiration);
 
-        if ($catB_relations->name === 'Both') {
-            $td_header = 'PID/TEL';
-            $concern_number = "{$request->pid}/{$request->tel}";
-        } elseif ($catB_relations->name === 'Data') {
-            $td_header = 'PID';
-            $concern_number = $request->pid;
+        // if ($catB_relations->name === 'Both') {
+        //     $td_header = 'ID/TEL';
+        //     $concern_number = "{$request->pid}/{$request->tel}";
+        // } else
+         if ($catB_relations->name === 'Data') {       
+            $td_header = 'VPN Details';
+            $concern_number = $request->vpn_details;
         } elseif ($catB_relations->name === 'Voice') {
-            $td_header = 'TEL';
+            $td_header = 'TEL #';
             $concern_number = $request->tel;
         } else {
             $td_header = 'UNKNOWN';
         }
-
+     
+        $request->merge(['telco_id'=> (int) $request->telco_id]);
 
         $ticket_id = DB::transaction(function () use ($expiration, $request, $td_header, $concern_number) {
+          
             /*INSERT TO DATABASE*/
-            $ticket_id = ConnectionIssue::create($request->only(['cc', 'to', 'account', 'pid', 'tel', 'contact_person', 'contact_number']))
+            $ticket_id = ConnectionIssue::create($request->only(['cc', 'to', 'accounts', 'vpn_details', 'tel', 'contact_person', 'contact_number','telco_id']))
                 ->incident()->create($request->only(['subject', 'details', 'catC', 'catB', 'catA', 'category']))
                 ->ticket()->create(['assignee' => $request->user()->id, 'logged_by' => $request->user()->id, 'type' => 1, 'priority' => 4, 'status' => 2, 'store_id' => $request->branch, 'group' => 1, 'expiration' => $expiration,'store_type' => "App\Store"])->id;
-
             /*SEND MAIL*/
+
             $mail = new Mail;
             $to = explode(',', $request->to);
-
-            /*include cc if request has cc*/
+            // /*include cc if request has cc*/
             if (!is_null($request->cc)) {
                 $cc = explode(',', $request->cc);
                 $mail::to($to)->cc($cc)->send(new PLDTIssue($request, $ticket_id, $td_header, $concern_number));
@@ -787,5 +924,45 @@ class TicketController extends Controller
         }
        
         return response()->json(array('success'=>true, 'id'=>$user->getGroupAttribute()));
+    }
+
+    public function getVpn($branch, $category){
+        $count = 0;
+      
+        $vpn = Vpn::where('store_id', '=', $branch)->where('vpn_cat_id', '=', $category)->get(); 
+        $htmlElement = "<h2>VPN Details</h2><ul class='ticket-details__list'>";
+        $htmlData  = "";
+        foreach($vpn as $v)
+        {   
+          $htmlData .= "<li class='ticket-details__item'><span class='ticket-details__field'>".$v->vpnId->name.": </span>".$v->vpn_num."</li>";
+          $count +=1;
+        }
+        $htmlElement .= $htmlData;
+        $htmlElement .= "</ul>";
+        
+        if($count == 0){
+            return  response()->json(array('markup'=> "<p>No vpn details found ..</p>", 'success'=> false));
+        }
+        return  response()->json(array('markup'=> $htmlElement, 'success'=> true));
+    }
+
+    public function getVpnDetails($branch, $category){
+        $count = 0;
+        $categ_name = VpnCategory::find($category)->name;
+        $vpn = Vpn::where('store_id', '=', $branch)->where('vpn_cat_id', '=', $category)->get(); 
+        $htmlElement = "<h4>".$categ_name."</h4>";
+        $htmlData  = "";
+        foreach($vpn as $v)
+        {   
+          $htmlData .= "<span class='vpn_id'>".$v->vpnId->name."</span> : ".$v->vpn_num."<br>";
+          $count +=1;
+        }
+        $htmlElement .= $htmlData;
+        // $htmlElement .= "</ul>";
+        
+        if($count == 0){
+            return "<p>No vpn details found ..</p>";
+        }
+        return $htmlElement;
     }
 }

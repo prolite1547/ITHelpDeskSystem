@@ -89,4 +89,10 @@ export default class Ticket {
             type: 'GET'
         })
     }
+
+    getRepliesfromMail(id){
+        return $.ajax(`/get/replyfrommail/${id}`, {
+            type : 'GET'
+        });
+    }
 }

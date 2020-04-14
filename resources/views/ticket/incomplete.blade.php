@@ -11,12 +11,23 @@
                         {!! Form::model($ticket->issue,['method'=>'PATCH','route' => ['addTicketDetails'],'class'=>'form-addTicketDetails','enctype'=>'multipart/form-data']) !!}
                         {{Form::hidden('_method','PATCH')}}
                         <label class="form-addTicketDetails__ticket">Ticket #: <input name="ticket_id" type="text" value="{{$ticket->id}}" readonly class="form-addTicketDetails__ticket-value"></label>
+                        <div class="incomplete__flex-spacebetween">
+                               <div>
+                                    <label class="form__label" for="reported_by">Reported by : </label>
+                                    <label class="form__label" id="reported_by">{{ $ticket->store->store_name }}</label>
+                               </div>
+                               <div>
+                                    <label class="form__label" for="caller_name">Caller : </label>
+                                    <label class="form__label" id="caller_name">{{$ticket->issue->incident->caller->caller_name}}
+                                        </label>
+                              </div>
+                        </div>
                         <div class="form__group">
                             {!! Form::label('subject','Subject :',['class' => 'form__label form__label--block'])!!}
                             {!! Form::text('subject',null,['class' => 'form__input form__input--100w','placeholder' => 'Subject','required','minlength' => '10']) !!}
                         </div>
                         <div class="form__group">
-                            {!! Form::textarea('details',null,['rows' => '5','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength' => '10']) !!}
+                            {!! Form::textarea('details',null,['rows' => '10','class' => 'form__input u-width-full','placeholder' => 'details...','required','minlength' => '10']) !!}
                         </div>
                         <div class="form__group">
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\ConnectionIssueReply;
 use App\Mail\ConnectionIssueReply as ConnectionIssueReplyMail;
 use App\Ticket;
+use App\ConnectionIssue;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -95,23 +97,58 @@ class ConnectionIssueReplyController extends Controller
 
 
     public function connIssReplyAPI($id){
-
         return  new \App\Http\Resources\ConnectionIssueReplyCollection(Ticket::with(['connectionIssueMailReplies' => function($query){
             return $query->latest('reply_date');
         }])->findOrFail($id)->connectionIssueMailReplies
         );
     }
 
-    public function replyMail(Request $request){
+    public function getReplyfromMail($id){
+        try{
+            $ongoingMailInc = \App\ConnectionIssue::with(['incident.ticket.connectionIssueMailReplies' => function($query){
+                $query->latest('reply_date');
+            }])->find($id);
+            $ticketID =  $ongoingMailInc->incident->ticket->id;
+            $subject = $ongoingMailInc->incident->subject . " (TID#{$ticketID})";
+                /*latest reply on the database*/
+            $latest_reply = $ongoingMailInc->incident->ticket->connectionIssueMailReplies->first(); 
+        
+            fetchNewConnectionIssueEmailReplies($ticketID,$subject,$latest_reply);
+        return response()->json(array('success'=>true), 200);
+        }catch(Exception $ex){  
+            return response()->json(array('success'=>false), 200);
+        }
 
+        return response()->json(array('success'=>false), 200);
+    }
+
+    public function replyMail(Request $request){
+        
+        // |string|min:5|max:500
         $validatedData = $request->validate([
-            'to' => 'required|string|min:5|max:500',
+            'to' => 'required',
             'subject' => 'required|string|min:5|max:500',
             'reply' => 'required|string|min:5',
             'reply_attachments.*' => 'file'
         ]);
 
-        $to = explode(',',$validatedData['to']);
-        Mail::to($to)->send(new ConnectionIssueReplyMail($validatedData));
+        $to =  $validatedData['to'];
+        $cc =  $request->cc;
+        // $cc =  explode(',',$validatedData['cc']);
+        // $to = explode(',',$validatedData['to']);
+        if($cc){
+            Mail::to($to)->cc($cc)->send(new ConnectionIssueReplyMail($validatedData));
+        }else{
+            Mail::to($to)->send(new ConnectionIssueReplyMail($validatedData));
+        }
+        $incident_id = $request->incident_id;
+        $c_email  = ConnectionIssue::findorfail($incident_id);
+        $c_email->to = implode(',', $to);
+        if(count($cc) > 0){
+            $c_email->cc = implode(',', $cc);
+        }else{
+            $c_email->cc = '';
+        }
+        $c_email->save(); 
     }
 }

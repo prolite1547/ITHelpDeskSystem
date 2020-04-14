@@ -23,6 +23,8 @@ export const elements = {
     addBranchForm: document.getElementById('addBranch'),
     addPositionForm: document.getElementById('addPosition'),
     addContactForm: document.getElementById('addContact'),
+    addContactPersonForm : document.getElementById('addContactPerson'),
+    addPidForm : document.getElementById('addPid'),
     addDepartmentForm: document.getElementById('addDepartment'),
     addTicketForm: document.querySelector('#form-addTicket'),
     contactFormGroup: document.getElementById('contactFormGroup'),
@@ -40,9 +42,32 @@ export const elements = {
     addTicketDetailsFormTicketEl: document.querySelector('.form-addTicketDetails__ticket-value'),
     btnShwExtndDtails: document.querySelector('.ticket-details__value--extend'),
 
-    selectPID: document.querySelector('.form-email__input-select--pid'),
-    selectTel: document.querySelector('.form-email__input-select--tel'),
-    selectConcern: document.querySelector('.form-email__input-select--concern'),
+    addDeptReportForm:  $('.addDeptReportForm'),
+    addTicketFromReported : $('#addReportedTicket'),
+
+    selectPID: $('.form-email__input-select--pid'),
+    selectTel:  $('.form-email__input-select--tel'),
+    selectConcern:$('.form-email__input-select--concern'),
+    selectContactP : $('.form-email__input-select--cperson'),
+
+    connBranchSelect : $('#connBranchSelect'),
+    selectContactNo: $('.selectContactNo'),
+    selectTelNos : $('.selectTelNos'),
+
+    email_form : $('#email__form'),
+    telcoSelect : $('#TelcoSelect'),
+    form__issue_details : $('.form__issue-details'),
+    issueSelect : $('#issueSelect'),
+    vpnCategory : $('.vpnCategory'),
+    vpnCategorySelect : $('#vpnCategorySelect'),
+    concernSelect : $('#concernSelect'),
+
+    form__telephone : $('.form__telephone'),
+    form__vpn : $('.form__vpn'),
+
+    emailsToCC_Telco : $('#emails-tocc').data('telco'),
+    emailTo : $('#emailTo'),
+    emailCc : $('#emailCc'),
 
     fixButtonShowDetails: document.querySelector('button[data-action=viewFixDtls'),
     chatForm: document.querySelector('.chat'),
@@ -58,6 +83,7 @@ export const elements = {
     filterTicketsIcon:document.querySelector('#ticketFilter'),
     filterContent: document.querySelector('.filter'),
     filterTicketForm: document.querySelector('.form-ticketFilter'),
+    filterWorkstations : document.querySelector('.formFilterWorkstations'),
     clearFilter: document.querySelector('#clearFilter'),
     rejectDetailsBtn: document.querySelector('button[data-action=viewRjctDtls]'),
 
@@ -73,8 +99,26 @@ export const elements = {
     plusToggleContainer: document.querySelector('.form-categoriesAdd'),
 
     categoryASelect:$('.categoryASelect'),
-    categoryBSelect:$('.categoryBSelect')
+    categoryBSelect:$('.categoryBSelect'),
+    btnAddWs: document.querySelector('button[data-action=add-ws]'),
 
+    pModal : document.querySelector('.pModal'),
+    pModalContent : document.querySelector(".pModal__content"),
+    pModalClose: document.querySelector(".pModal__close"),
+    headerPModalTitle : document.querySelector(".header__title"),
+
+    vwrepairedItems: document.querySelector("button[data-action=vwrepairedItems]"),
+    vwcanvassForm : document.querySelector("button[data-action=vwcanvassform]"),
+    connBranchSelect2 : $('.connBranchSelect2'),
+
+    btn_changepass: $('#btn-changepass'),
+    confirmChangeP: $('#confirm-changepass'),
+    ticketBranchSelect : $('#ticketBranchSelect'),
+    contactBranchSelect : $('#contactBranch'),
+    contactTypeSelect : $('#contactTypeSelect'),
+    telAccountSelect : $('#telAccountSelect'),
+    telCompanySelect : $('#telCompanySelect'),
+    telAccountSelectDisplay : $('.tel-accounts-display')
 };
 
 export const elementStrings = {
@@ -179,5 +223,21 @@ export const toggleFormGroups = (e) => { /*FOR ELEMENTS THAT HAVE + ICON AND HID
             e.target.classList.toggle('fa-minus');
         }
 };
+
+export const showPModal = () => {
+   elements.pModal.style.visibility = "visible";
+   elements.pModal.style.opacity = "1";
+
+}
+
+export const insertPModalContent = (markup) => {
+    $(elements.pModalContent).html('');
+    $(elements.pModalContent).html(markup);
+}
+
+export const closePModal = () => {
+    elements.pModal.style.visibility = "hidden";
+    elements.pModal.style.opacity = "0";
+}
 
 

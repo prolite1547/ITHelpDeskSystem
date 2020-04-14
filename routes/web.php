@@ -37,8 +37,15 @@ Route::post('/user/add', 'UserController@create');
 Route::get('/ticket/incomplete/{id}', 'TicketController@incompleteTicket')->name('incompleteTicket');
 Route::get('/ticket/{id}', 'TicketController@getTicket');
 Route::get('/tickets/add', 'TicketController@addTicketView')->name('addTicketView');
+Route::get('/view/dept/report', 'TicketController@addDeptReportView')->name('addDeptReportView');
 Route::post('/ticket/add', 'TicketController@addTicket')->name('addTicket');
+Route::get('/get/vpn/{branch}/{category}', 'TicketController@getVpn')->name('get.vpn');
+Route::post('/add/dept/report', 'TicketController@addDeptReport')->name('addDeptReport');
+Route::get('/get/reported/{department}', 'DatatablesController@fetchReported')->name('fetchReported');
+Route::get('/reported/issues/view', 'TicketController@reportedIssues')->name('viewReported');
+Route::get('/view/reported/ticket/{id}', 'TicketController@viewReportedTicket')->name('viewReportedTicket');
 Route::patch('/ticket/add/details', 'TicketController@addTicketDetails')->name('addTicketDetails');
+Route::patch('/add/reported/ticket', 'TicketController@addTicketFromReport')->name('addTicketFromReport');
 Route::post('/ticket/pldt/add', 'TicketController@addConnectionIssue')->name('addConnectionIssue');
 Route::get('/tickets/view/{id}', 'TicketController@lookupView')->name('lookupTicketView');
 Route::patch('/ticket/edit/{id}', 'TicketController@edit')->name('editTicket');
@@ -105,6 +112,13 @@ Route::post('/store/save', 'StoreController@create');
 ////////*CONTACT*/////////
 //////////////////////////
 Route::post('/contact/save', 'ContactController@create');
+Route::post('/contact_person/add', 'ContactController@addContactPerson');
+
+//////////////////////////
+////////*ADDING OF PID*/////////
+//////////////////////////
+Route::post('/add/pid', 'PidController@store');
+
 
 //////////////////////////
 ////////*ADMIN*/////////
@@ -149,6 +163,7 @@ Route::get('/email/group/{id}/emails','MaintenanceController@getMailsFromGroup')
 Route::post('/email/group/add','MaintenanceController@addMailsFromGroup');
 Route::post('/email-group/add','MaintenanceController@addEmailGroup');
 Route::delete('/email/group/delete/pivot/{pivot_id}','MaintenanceController@deleteEmailOnGroup');
+Route::post('/item-category/add', 'MaintenanceController@addItemCateg');
 
 /*EMAIL*/
 
@@ -277,10 +292,13 @@ Route::post('reports/genipp', 'ReportsController@generateIPP')->name('reports.ge
 Route::post('reports/genipc', 'ReportsController@generateIPC')->name('reports.genipc');
 Route::post('reports/genilr', 'ReportsController@generateILR')->name('reports.genilr');
 Route::post('reports/genrds', 'ReportsController@generateRDS')->name('reports.genrds');
+Route::post('reports/geninv', 'ReportsController@generateINV')->name('reports.geninv');
+Route::post("reports/gensummary", 'ReportsController@getTicketSummary')->name('reports.gensumm');
 Route::get('reports/charts', 'ReportsController@loadChart')->name('reports.charts');
 Route::post('reports/lvr', 'ReportsController@loadLVR')->name('reports.lvrchart');
 Route::post('reports/ipcr', 'ReportsController@loadIPCR')->name('reports.ipcr');
 Route::post('reports/tpr', 'ReportsController@loadTR')->name('reports.tpr');
+Route::post('reports/og', 'ReportsController@ReturnOneGlance')->name('reports.og');
 
 Route::post('get/positions', 'SDCController@getPosition')->name('get.positions');
 Route::post('get/deppos', 'SDCController@getDepPos')->name('get.deppos');
@@ -366,3 +384,78 @@ Route::post('get/deppos', 'SDCController@getDepPos')->name('get.deppos');
  Route::get('/show/greport', 'ReportsController@showNetworkDowns')->name('show.GReport');
 
  Route::post('/get/group', 'TicketController@usersGroup')->name('get.usergroup');
+
+//  INVENTORY TAB
+Route::get('/inventory/ws', 'InventoryController@index')->name('show.inv');
+
+//  WORKSTATIONS
+Route::get('/get/ws', 'DatatablesController@workstations')->name('get.ws');
+Route::get('/get/modal/ws', 'WorkstationController@getModal')->name('get.modalws');
+Route::get('/get/modal/ws/up/{wid}', 'WorkstationController@getUpdateModal')->name('get.modalwsup');
+Route::post('/add/workstation', 'WorkstationController@addWorkstation')->name('add.ws');
+Route::post('/edit/workstation', 'WorkstationController@editWorkstation')->name('edit.ws');
+Route::delete('/delete/ws/{wid}', 'WorkstationController@deleteWorkstation')->name('delete.ws');
+
+
+//  ITEMS of WORKSTATION
+ Route::post('/add/itemws', 'ItemController@addItem')->name('add.itemws');
+ Route::get('/show/modal/additem/{wid}', 'ItemController@getModal')->name('get.modal');
+ Route::get('/get/items/{wid}', 'DatatablesController@items')->name('get.items');
+ Route::get('/show/ws/partscompo/{id}', 'ItemController@getCompoModal')->name('show.compoparts');
+
+ Route::get('/show/repaired/modal/{id}/{sid}', 'ItemController@getrepairedModal')->name('get.modalRepaired');
+
+ Route::get('/get/item/ws/{wid}', 'ItemController@getItemsfromWS')->name('get.itemws');
+
+//  GET DATA OF REPAIRED ITEMS
+Route::get('/get/repaired/{tid}', 'DatatablesController@repairedItems')->name('get.repaired');
+
+// ADD TO REPAIR TO LIST
+Route::post('/add/tolist/repair', 'ItemController@addrepairedItem')->name('add.repaired');
+
+// GET SERIAL_NO
+Route::post('/get/serial_no', 'ItemController@getSerial')->name('get.serials');
+
+
+// SHOW CANvASS FORM
+Route::get('/show/canvass/form/{tid}', 'CanvassController@showCanvassForm')->name('show.canvass');
+
+// GET CANVASS DATATABLE
+Route::get('/get/canvass/data/{tid}', 'DatatablesController@canvassItems')->name('get.canvassdata');
+
+// SHOW MODAL ADD TO CANVASS
+Route::get('/show/add/citem/{sid}/{tid}', 'CanvassController@showAddCitem')->name('show.addcitem');
+// SHOW MODAL UPDATE TO CANVASS
+Route::get('/show/update/citem/{id}/{sid}', 'CanvassController@showUpdateCitem')->name('show.updatecitem');
+
+
+// SUBMIT DATA FROM ADD TO CANVAS FORM
+Route::post('/add/to/canvass', 'CanvassController@addToCanvass')->name('add.tocanvass');
+Route::post('/update/item/canvass', 'CanvassController@updateItemCanvass')->name('update.itemcanvass');
+Route::delete('/delete/item/canvass/{id}', 'CanvassController@deleteItemCanvass')->name('delete.itemcanvass');
+
+// CANVASS FORM 
+Route::post('/post/canvass', 'CanvassController@postCanvass')->name('post.canvass');
+Route::get('/download/canvassatt/{id}', 'FileController@getCanvassAttach')->name('download.catt');
+
+// Select ConnbranchSelect
+Route::get('/get/pid/{branchId}', 'SelectController@getPid')->name('pid.get');
+Route::get('/get/contact/{branchId}/{typeId}', 'SelectController@getContact')->name('pid.get');
+Route::get('/get/tel/{branchId}/{typeId}/{telcoId}', 'SelectController@getTel')->name('pid.get');
+Route::get('/get/cperson/{branchId}', 'SelectController@getContactPerson')->name('pid.get');
+
+Route::get('/get/emails/{telcoId}', 'SelectController@getTelcoEmailsandGroups')->name('get.emails');
+Route::get('/get/concerns/{issue}', 'SelectController@getConcerns')->name('get.concerns');
+
+
+
+
+Route::get('/modal/changep/{id}', 'UserController@modalChangePass')->name('show.changep');
+
+Route::post('/change/pass', 'UserController@changePass')->name('change.pass');
+Route::post('/check/pass', 'UserController@checkPass')->name('check.pass');
+
+Route::get('/oracle/users', 'UserController@getOracleUsers')->name('oracle.users');
+
+Route::get('/get/replyfrommail/{id}', 'ConnectionIssueReplyController@getReplyfromMail');
+Route::get('/get/contactBranch/{branchId}', 'SelectController@contactbranch');

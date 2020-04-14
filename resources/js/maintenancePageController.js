@@ -1,5 +1,5 @@
 import {displayError, elements, elementStrings, setDisable, toggleFormGroups} from "./views/base";
-import * as glboalScript from "./global";
+import * as globalScript from "./global";
 import {branchSelect2} from "./select2";
 import * as maintenanceView from "./views/v_maintenance";
 import CategoryA from "./models/CategoryA";
@@ -13,11 +13,20 @@ export const maintenancePageController = () => {
     };
 
     window.test = m_email_group;
-    $(elementStrings.branchSelectContact).on('select2:select', glboalScript.toggleHiddenGroup);
-    elements.addContactForm.addEventListener('submit',glboalScript.sendForm);
+    $(elementStrings.branchSelectContact).on('select2:select', globalScript.toggleHiddenGroup);
+    elements.addContactForm.addEventListener('submit',globalScript.sendForm);
+    elements.addContactPersonForm.addEventListener('submit', globalScript.sendForm);
+    elements.addPidForm.addEventListener('submit', globalScript.sendForm);
     $('#contactBranchSelect').select2(branchSelect2);
+    $('#contactPersonBranchSelect').select2(branchSelect2);
+    $('#pidBranchSelect').select2(branchSelect2);
     elements.maintenanceCol.addEventListener('click',toggleFormGroups); /*EVENT LISTENER ON PLUS ICONS*/
-
+    elements.contactTypeSelect.on('change', {
+        form: elements.telAccountSelectDisplay ,
+        value: 1,
+        element : elements.telAccountSelect,
+        element2 : elements.telCompanySelect,
+    } ,ToggleElementwithCondition );
     /*category radio inputs*/
     const categories_select = elements.plusToggleContainer.querySelectorAll('input[name=category]');
     /*add new categories form*/
@@ -134,8 +143,42 @@ export const maintenancePageController = () => {
         }).done(() => alert('Successfully added email group!'))
             .fail((jqXHR) => {
                 displayError(jqXHR)
-            });
+        });
 
     });
 
+    document.getElementById('addItemCategory').addEventListener('submit', (e)=>{
+        e.preventDefault();
+  
+        let frmElements = e.target.elements;
+        let txtCateg = $(frmElements.item_categ);
+          console.log($(e.target).serialize());
+        $.ajax('/item-category/add',{
+            type: 'POST',
+            data: $(e.target).serialize()
+        }).done((data) => {
+            alert('Successfully added item category!')
+            txtCateg.val('');
+        }).fail((jqXHR) => {
+                displayError(jqXHR)
+        });
+
+    })
+
+
 };
+
+const ToggleElementwithCondition = (e) => {
+    let currVal = $(e.target).val();
+        if(currVal == e.data.value){
+            e.data.form.css('display', 'inline-block')
+            e.data.element.prop('required', true)
+            e.data.element2.prop('required', true)
+        }else{
+            e.data.form.css('display', 'none')
+            e.data.element.prop('required', false)
+            e.data.element2.prop('required', false)
+            e.data.element.val('').trigger('change')
+            e.data.element2.val('').trigger('change')
+        }
+}

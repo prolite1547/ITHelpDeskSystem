@@ -6,7 +6,7 @@
     <div class="form__group">
         {!! Form::label('resolution','Resolution:',['class' => 'form__label--block']) !!}
             <div class="form__group">
-                {!! Form::select('fix_category',$resolutionOptions,null,['placeholder' => 'Resolved through..','required','minlength' => 5,'maxlength' => 500]) !!}
+                {!! Form::select('fix_category',$resolutionOptions,null,['placeholder' => 'Resolved through..','required','minlength' => 5,'maxlength' => 500, 'id'=>'cbResolution']) !!}
             </div>
         {!! Form::textarea('resolution',null,['class' => 'form__input--textarea','required','id' => 'resolution','minlength' => 5,'maxlength' => 500]) !!}
     </div>

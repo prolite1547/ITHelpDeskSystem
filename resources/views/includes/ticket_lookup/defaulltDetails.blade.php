@@ -186,6 +186,12 @@
     <button class="btn u-margin-top-xsmall {{$ticket->status !== $ticket_status_arr['Rejected'] ? 'u-display-n' : ''}}"
             data-action="viewRjctDtls">Reject Details
     </button>
+    <button class="btn btn--mblue u-margin-top-xsmall"
+            data-tid="{{$ticket->id}}" data-action="vwrepairedItems" data-sid="{{ $ticket->store->id }}">Repaired Item(s)
+    </button>
+    <button class="btn btn--pumpkin u-margin-top-xsmall"
+    data-tid="{{$ticket->id}}" data-action="vwcanvassform" data-sid="{{ $ticket->store->id }}">Canvass Item(s)
+</button>
 </div>
 
 @if ((!$ticket->SDC && !$ticket->MDC) && ($ticket->status != $ticket_status_arr['Closed'] && $ticket->status != $ticket_status_arr['Fixed'] && $ticket->status != $ticket_status_arr['Expired']))

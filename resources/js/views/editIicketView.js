@@ -293,25 +293,139 @@ export const showSelects = (e) => {
 
         /*generate selects to be show depend on the option group name*/
         if(option_group === 'Both'){
-            elements.selectPID.classList.remove('u-display-n');
-            elements.selectTel.classList.remove('u-display-n');
+            elements.selectPID.removeClass('u-display-n');
+            elements.selectPID.prop('required', true);
+            elements.selectTel.removeClass('u-display-n');
+            elements.selectTel.prop('required', true);
         }else if(option_group === 'Data'){
-            elements.selectPID.classList.remove('u-display-n');
-            elements.selectTel.classList.add('u-display-n');
+            elements.selectPID.removeClass('u-display-n');
+            elements.selectPID.prop('required', true);
+            elements.selectTel.addClass('u-display-n');
+            elements.selectTel.prop('required', false);
         }else if(option_group === 'Voice'){
-            elements.selectTel.classList.remove('u-display-n');
-            elements.selectPID.classList.add('u-display-n');
+            elements.selectTel.removeClass('u-display-n');
+            elements.selectTel.prop('required', true);
+            elements.selectPID.addClass('u-display-n');
+            elements.selectPID.prop('required', false);
         }else{
-            elements.selectPID.classList.add('u-display-n');
-            elements.selectTel.classList.add('u-display-n');
+            elements.selectPID.addClass('u-display-n');
+            elements.selectPID.prop('required', false);
+            elements.selectTel.addClass('u-display-n');
+            elements.selectTel.prop('required', false);
         }
 
     }else{
-        elements.selectPID.classList.add('u-display-n');
-        elements.selectTel.classList.add('u-display-n');
+        elements.selectPID.addClass('u-display-n');
+        elements.selectPID.prop('required', false);
+        elements.selectTel.addClass('u-display-n');
+        elements.selectTel.prop('required', false);
     }
 
 };
+
+
+// CREATE EMAIL ADD TICKET  EVENTS 
+
+export const connBranchChanged = (e) => {
+   var branchId = $(e.target).val();
+   var telcoId = elements.telcoSelect.val();
+   elements.form__issue_details.removeClass('u-display-n');
+   elements.vpnCategorySelect.val('').trigger('change');
+   elements.form__vpn.html('<p>Choose vpn group to show details..</p>');
+//    getSelectAjaxData(`/get/pid/${branchId}`, elements.selectPID, '(choose pid/cid...)');
+   getSelectAjaxData(`/get/tel/${branchId}/1/${telcoId}`, elements.selectTelNos, '');
+   getSelectAjaxData(`/get/contact/${branchId}/2`, elements.selectContactNo, '(choose contact no..)'); 
+//    getSelectAjaxData(`/get/cperson/${branchId}`, elements.selectContactP, '(choose contact person..)');
+}
+
+export const telcoSelectChanged = (e) => {
+    let currIndex = $(e.target).prop('selectedIndex');
+    if(currIndex != 0){
+        elements.email_form.removeClass('u-display-n');
+        let currVal = $(e.target).val();
+        getSelectAjaxData(`/get/emails/${currVal}`,  elements.emailTo, '');
+        getSelectAjaxData(`/get/emails/${currVal}`,  elements.emailCc, '');
+    }else{
+        elements.email_form.addClass('u-display-n');
+    }
+}
+
+function getSelectAjaxData(url , element, placeholder){
+    element.empty();
+    element.append(new Option(placeholder, ''));
+    $.ajax(url, {
+        type: 'GET'
+    }).done( data => {
+        if(data != null){
+            for(const el of data){
+                    element.append(new Option(el.text, el.text));
+            }
+        }
+    })
+}
+
+export const issueTypeChanged =  (e) => {
+    var issue = $(e.target).val();
+    if(issue == "VPN"){
+        elements.vpnCategory.removeClass('u-display-n');
+        elements.vpnCategorySelect.prop('required', true);
+        getConcernsOnChange(`/get/concerns/${issue}`)
+        elements.form__telephone.addClass('u-display-n');
+        elements.form__vpn.removeClass('u-display-n');
+        elements.selectTelNos.prop('required', false);
+    }else if(issue == "Telephone"){
+        elements.vpnCategory.addClass('u-display-n');
+        elements.vpnCategorySelect.val('').trigger('change');
+        elements.vpnCategorySelect.prop('required', false);
+        getConcernsOnChange(`/get/concerns/${issue}`)
+        elements.form__telephone.removeClass('u-display-n');
+        elements.form__vpn.addClass('u-display-n');
+        elements.selectTelNos.prop('required', true);
+    }else{
+        getConcernsOnChange(`/get/concerns/${issue}`)
+        elements.vpnCategorySelect.prop('required', false);
+        elements.selectTelNos.prop('required', false);
+        elements.vpnCategory.removeClass('u-display-n');
+        elements.vpnCategory.addClass('u-display-n');
+        elements.form__vpn.removeClass('u-display-n');
+        elements.form__telephone.removeClass('u-display-n');
+        elements.form__telephone.addClass('u-display-n');
+        elements.form__vpn.addClass('u-display-n');
+    }
+
+}
+
+function getConcernsOnChange(url){
+    elements.concernSelect.empty().trigger('change');
+    elements.concernSelect.append(new Option('(choose concern ...)','')).trigger('change');
+    $.ajax(url, {
+        type: 'GET',
+    }).done( data =>{
+        if(data != null){
+            for(const el of data){
+                elements.concernSelect.append(new Option(el.text, el.id)).trigger('change');
+            }
+        }
+    });
+}
+
+export const generateVpn = (e)=> {
+    let branch = elements.connBranchSelect.val();
+    let category = $(e.target).val();
+    let currIndex = $(e.target).prop('selectedIndex');
+    if(currIndex != 0){
+        $.ajax(`/get/vpn/${branch}/${category}`, {
+            type: 'GET'
+        }).done(response => {
+           elements.form__vpn.html(response.markup) ;
+        });
+    }else{
+        elements.form__vpn.html('<p>Choose vpn group to show details..</p>');
+    }
+}
+
+
+// END OF EMAIL ADD 
 
 /*generate form depending on the type of incident*/
 export const generateForm = identifier => {
@@ -325,16 +439,18 @@ export const generateForm = identifier => {
         chat_form_childElem['reply_attachments[]'].classList.remove('u-display-n'); /*attachments input*/
         elements.chatForm__reply.classList.remove('u-display-n');
         elements.chatForm__chat.classList.add('u-display-n');
-        chat_form_inputs.to.disabled = false;  /*to input*/
+        elements.reply.rows = 10;
+        // chat_form_inputs.to.disabled = false;  /*to input*/
     }else if(identifier === 'chat'){
         elements.chatForm.dataset.form = 'chat';
         chat_form_childElem[1].classList.add('u-display-n');  /*to form__group*/
-         chat_form_inputs.to.disabled = true;  /*to input*/
-         chat_form_childElem['reply_attachments[]'].classList.add('u-display-n'); /*attachments input*/
+        //  chat_form_inputs.to.disabled = true;  /*to input*/
+        chat_form_childElem['reply_attachments[]'].classList.add('u-display-n'); /*attachments input*/
         elements.chatForm__reply.classList.add('u-display-n');
         elements.chatForm__chat.classList.remove('u-display-n');
+        elements.reply.rows = 5;
     }else{
-        alert('Error on retrieving chat form!');
+        console.log('Error on retrieving chat form!');
     }
 
 };

@@ -53,5 +53,21 @@ class Incident extends Model
         return nl2br($value);
     }
 
+    public function getEmailToAttribute(){
+        return explode(',',$this->incident->to);
+    }
+
+    public function getEmailCcAttribute(){
+        return explode(',',$this->incident->cc);
+    }
+
+    public function getEmailToTextAttribute(){
+        return $this->incident->to;
+    }
+
+    public function getEmailCcTextAttribute(){
+        return $this->incident->cc;
+    }
+
 
 }

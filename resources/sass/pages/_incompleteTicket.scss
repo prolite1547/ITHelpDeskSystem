@@ -6,6 +6,12 @@
         margin-bottom: 1rem;
     }
 
+    &__flex-spacebetween{
+        display: flex;
+        padding: 10px 2px 10px 2px;
+        justify-content:  space-between;
+    }
+
     &__flex{
         display: flex;
         justify-content: center;

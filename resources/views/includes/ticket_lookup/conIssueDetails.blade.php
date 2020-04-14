@@ -11,7 +11,7 @@
         {{--</div>--}}
     {{--@endif--}}
 </div>
-<div class="ticket-details__content">
+<div class="ticket-details__content" id="emails-tocc" data-telco="{{ $telco->id }}">
     <span class="ticket-details__id">Ticket ID: #{{$ticket->id}}</span>
     <ul class="ticket-details__list">
         @if($ticket->extended->count() > 0)
@@ -23,6 +23,9 @@
         @endif
         <li class="ticket-details__item"><span class="ticket-details__field">Status:</span>
             <span class="ticket-details__value ticket-details__value--status">{{$ticket->statusRelation->name}}</span>
+        </li>
+        <li class="ticket-details__item"><span class="ticket-details__field">Company:</span>
+            <span class="ticket-details__value ticket-details__value">{{$telco->name}}</span>
         </li>
         <li class="ticket-details__item"><span class="ticket-details__field">Sent To:</span>
             <a href="javascript:void(0);" class="ticket-details__value">{{$ticket->issue->incident->to}}</a>

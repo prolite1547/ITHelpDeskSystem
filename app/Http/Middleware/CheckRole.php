@@ -14,8 +14,9 @@ class CheckRole
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
-        if($request->user()->position->department->id === 60666){
+    {   
+        // if($request->user()->position->department->id === 60666 || $request->user()->position->department->id === 60656 ){
+        if($request->user()->position->department->id){
             if($request->is('/admin')){
                 if($request->user()->role === 4){
                     return $next($request);
